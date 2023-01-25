@@ -1,27 +1,24 @@
 import { StyleSheet } from 'react-native';
+import { Theme } from '../../app/theme/theme';
 
 export default StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: 'grey',
-  },
   contentContainer: {
     flex: 1,
     alignItems: 'center',
   },
   divider: {
-    borderTopWidth: 0.2,
+    borderTopWidth: 0.9,
     marginLeft: '2%',
     width: '96%',
     borderColor: 'white',
   },
   closeLineContainer: {
+    paddingBottom: 20,
     alignSelf: 'center',
   },
   closeLine: {
-    width: 40,
-    height: 4,
+    width: 70,
+    height: 5,
     borderRadius: 3,
     backgroundColor: 'white',
     marginTop: 9,
@@ -37,4 +34,25 @@ export default StyleSheet.create({
     shadowRadius: 12.35,
     elevation: 19,
   },
+  statusBarContainer: {
+    height: '15%',
+    paddingTop: '2%',
+  },
+  statusBar: {
+    width: '98%',
+    backgroundColor: Theme().color.b400,
+    marginLeft: '1%',
+    height: '90%',
+    borderRadius: 100,
+    alignContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  velocityContainer: {
+    width: 120,
+    height: '100%',
+    marginLeft: '5%',
+  },
+  velocityLabel: {color: 'white', marginBottom: 0},
+  velocity: {color: 'white', fontSize: 60},
 });

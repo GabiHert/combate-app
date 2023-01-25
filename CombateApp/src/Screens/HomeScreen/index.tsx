@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground, Pressable, Text } from 'react-native';
+import { Dimensions, ImageBackground, Pressable, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Config } from '../../app/config/config';
@@ -14,7 +14,15 @@ class HomeScreen extends React.Component<{
 }> {
   constructor(props) {
     super(props);
-    this.state = {startButtonPressed: true};
+    this.state = {
+      startButtonPressed: true,
+      dimensions: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+      },
+    };
+
+    console.log(this.state);
   }
   onStartButtonPressed() {
     this.props.navigation.navigate('ExecutionScreen');
@@ -31,7 +39,12 @@ class HomeScreen extends React.Component<{
           source={image}
           style={style.container}>
           <Pressable
-            style={{transform: [{translateY: -300}, {translateX: 160}]}}
+            style={{
+              transform: [
+                {translateY: this.state.dimensions.height - 1350},
+                {translateX: this.state.dimensions.width - 350},
+              ],
+            }}
             onPressOut={() => {
               this.onSettingsButtonPressed();
             }}>
@@ -47,7 +60,13 @@ class HomeScreen extends React.Component<{
               this.onStartButtonPressed();
             }}
           />
-          <Text style={style.versionText}>{Config().APPLICATION.VERSION}</Text>
+          <Text
+            style={{
+              transform: [{translateY: this.state.dimensions.height - 600}],
+              ...style.versionText,
+            }}>
+            {Config().APPLICATION.VERSION}
+          </Text>
         </ImageBackground>
       </SafeAreaView>
     );

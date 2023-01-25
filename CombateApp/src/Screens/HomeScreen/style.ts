@@ -21,5 +21,5 @@ export default StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
   },
-  versionText: {transform: [{translateY: 400}], color: 'white'},
+  versionText: {color: 'white'},
 });
