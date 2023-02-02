@@ -1,6 +1,6 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Theme } from '../../app/theme/theme';
 import StatusIndicator from '../../Components/StatusIndicator';
@@ -52,7 +52,11 @@ class ExecutionScreen extends React.Component<{navigation: any}> {
         </View>
 
         <View style={style.doseSelectorContainer} />
-        <View style={style.doseButtonContainer} />
+        <View style={style.doseButtonContainer}>
+          <Pressable style={style.doseButton}>
+            <Text style={style.doseButtonLabel}>Dosar</Text>
+          </Pressable>
+        </View>
 
         <BottomSheet
           ref={this.bottomSheetRef}

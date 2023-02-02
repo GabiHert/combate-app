@@ -60,5 +60,20 @@ export default StyleSheet.create({
     width: '100%',
     height: '60%',
   },
-  doseButtonContainer: {backgroundColor: 'blue', width: '100%', height: '25%'},
+  doseButtonContainer: {
+    backgroundColor: 'blue',
+    width: '100%',
+    height: '20%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  doseButton: {
+    height: '90%',
+    backgroundColor: Theme().color.b100,
+    borderRadius: 10,
+    width: '60%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  doseButtonLabel: {color: 'black', fontSize: 25},
 });
