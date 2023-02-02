@@ -51,6 +51,9 @@ class ExecutionScreen extends React.Component<{navigation: any}> {
           </View>
         </View>
 
+        <View style={style.doseSelectorContainer} />
+        <View style={style.doseButtonContainer} />
+
         <BottomSheet
           ref={this.bottomSheetRef}
           index={0}

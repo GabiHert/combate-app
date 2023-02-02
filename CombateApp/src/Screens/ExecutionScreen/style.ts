@@ -55,4 +55,10 @@ export default StyleSheet.create({
   },
   velocityLabel: {color: 'white', marginBottom: 0},
   velocity: {color: 'white', fontSize: 60},
+  doseSelectorContainer: {
+    backgroundColor: 'black',
+    width: '100%',
+    height: '60%',
+  },
+  doseButtonContainer: {backgroundColor: 'blue', width: '100%', height: '25%'},
 });
