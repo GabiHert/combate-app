@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
 	statusIndicator: {
@@ -10,7 +10,7 @@ export default StyleSheet.create({
 	},
 	label: {color: 'white', alignSelf: 'center', marginBottom: '5%'},
 	statusIndicatorContainer: {
-		width: 120,
+		width: "20%",
 		height: '100%',
 	},
 	status: {alignSelf: 'center'},

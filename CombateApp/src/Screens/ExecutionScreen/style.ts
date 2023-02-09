@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { Theme } from '../../app/theme/theme';
 
 export default StyleSheet.create({
 	contentContainer: {
@@ -35,36 +34,13 @@ export default StyleSheet.create({
 	},
 	statusBarContainer: {
 		height: '15%',
-		paddingTop: '2%',
 	},
-	statusBar: {
-		width: '98%',
-		backgroundColor: Theme().color.b400,
-		marginLeft: '1%',
-		height: '90%',
-		borderRadius: 100,
-		flexDirection: 'row',
-	},
+
 	velocityContainer: {
-		width: 120,
+		width: "20%",
 		height: '100%',
-		marginLeft: '5%',
+		marginLeft: '3%',
 	},
-	velocityLabel: {color: 'white', marginBottom: 0},
+	velocityLabel: {color: 'white'},
 	velocity: {color: 'white', fontSize: 60},
-	doseSelectorContainer: {
-		backgroundColor: 'black',
-		width: '100%',
-		height: '60%',
-	},
-	doseButtonContainer: {
-		width: '100%',
-		height: '20%',
-	},
-	doseButton: {
-		height: '90%',
-		borderRadius: 10,
-		width: '60%',
-	},
-	doseButtonLabel: {color: 'black', fontSize: 25},
 });
