@@ -11,7 +11,7 @@ export default StyleSheet.create({
 		borderColor: 'white',
 	},
 	closeLineContainer: {
-		paddingBottom: 20,
+		paddingBottom: 5,
 		alignSelf: 'center',
 	},
 	closeLine: {
