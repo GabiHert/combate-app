@@ -15,7 +15,7 @@ class HomeScreen extends React.Component<{
 		super(props);
 	}
 	onStartButtonPressed() {
-		this.props.navigation.navigate('ExecutionScreen');
+		this.props.navigation.navigate('PreExecutionScreen');
 	}
 
 	onSettingsButtonPressed() {

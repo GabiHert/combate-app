@@ -2,7 +2,7 @@ import { Box, Button, Stack, Text } from 'native-base';
 import React from 'react';
 import { Theme } from '../../../../app/theme/theme';
 
-class Sheet extends React.Component<{}> {
+class Sheet extends React.Component<{onFinishPressed:()=>void}> {
 
 	constructor(props) {
 		super(props);
@@ -64,7 +64,7 @@ class Sheet extends React.Component<{}> {
 						</Box>
 
 						<Box height={"15%"} justifyContent="center" alignItems="center" width={"100%"} marginBottom={1}>
-							<Button borderRadius={10} width="60%" height="100%" _pressed={{opacity:0.8}} backgroundColor={Theme().color.sError}>Encerrar</Button>
+							<Button borderRadius={10} onPressOut={()=>{this.props.onFinishPressed()}} width="60%" height="100%" _pressed={{opacity:0.8}} backgroundColor={Theme().color.sError}>Encerrar</Button>
 						</Box>
 					</Box>
 		);
