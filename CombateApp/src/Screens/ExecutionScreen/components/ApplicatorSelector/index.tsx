@@ -1,98 +1,129 @@
 import { Box, Button, Stack, Text } from 'native-base';
-import React from 'react';
+import React, { useState } from 'react';
 import { Theme } from '../../../../app/theme/theme';
+import { Applicator } from '../../types/applicator';
 
-class ApplicatorSelector extends React.Component<{	applicator:{
-	left:{
-		load:number,
-		available:boolean,
-		active:boolean
-	},
-	center:{
-		load:number,
-		available:boolean,
-		active:boolean
-	},
-	right:{
-		load:number,
-		available:boolean,
-		active:boolean
-	}
-}},{	applicator:{
-	left:{
-		load:number,
-		available:boolean,
-		active:boolean
-	},
-	center:{
-		load:number,
-		available:boolean,
-		active:boolean
-	},
-	right:{
-		load:number,
-		available:boolean,
-		active:boolean
-	}
-}}> {
+function ApplicatorSelector(props: {
+  leftApplicator: Applicator;
+  centerApplicator: Applicator;
+  rightApplicator: Applicator;
+}) {
+  const [leftApplicatorActive, setLeftApplicatorActive] = useState<boolean>(
+    props.leftApplicator.active
+  );
+  const [centerApplicatorActive, setCenterApplicatorActive] = useState<boolean>(
+    props.centerApplicator.active
+  );
+  const [rightApplicatorActive, setRightApplicatorActive] = useState<boolean>(
+    props.rightApplicator.active
+  );
 
-	constructor(props) {
-		super(props);
-		this.state = {...this.props}
-	}
+  function onLeftApplicatorPress() {
+    if (props.leftApplicator.available) {
+      setLeftApplicatorActive(!leftApplicatorActive);
+    }
+  }
 
-	onLeftApplicatorPress(){
-		if (this.state.applicator.left.available){
-			const state = this.state
-			state.applicator.left.active = !state.applicator.left.active
-			this.setState(state)
-		}
-	}
+  function onRightApplicatorPress() {
+    if (props.rightApplicator.available) {
+      setRightApplicatorActive(!rightApplicatorActive);
+    }
+  }
 
-	onRightApplicatorPress(){
-		if (this.state.applicator.right.available){
-			const state = this.state
-			state.applicator.right.active = !state.applicator.right.active
-			this.setState(state)
-		}
-	}
+  function onCenterApplicatorPress() {
+    if (props.centerApplicator.available) {
+      setCenterApplicatorActive(!centerApplicatorActive);
+    }
+  }
 
-	onCenterApplicatorPress(){
-		if (this.state.applicator.center.available){
-			const state = this.state
-			state.applicator.center.active = !state.applicator.center.active
-			this.setState(state)
-		}
-	}
+  return (
+    <>
+      <Box width="85%" borderRadius={20} height="95%" bgColor={Theme().color.b400}>
+        <Text alignSelf={'center'} color="white" position={'absolute'}>
+          Dosadores
+        </Text>
+        <Stack
+          direction={'row'}
+          alignItems="center"
+          justifyContent="center"
+          width="100%"
+          paddingTop={'2'}
+        >
+          <Box width={'30%'} height="95%" alignItems="center" justifyContent="center">
+            <Box
+              width={'90%'}
+              height="100%"
+              alignItems="center"
+              justifyContent="center"
+              _text={{ color: 'white' }}
+            >
+              <Button
+                isDisabled={!props.leftApplicator.available}
+                onPressOut={onLeftApplicatorPress}
+                _disabled={{ opacity: 0.5 }}
+                bgColor={leftApplicatorActive ? Theme().color.sOk : Theme().color.b200}
+                width="100%"
+                height={'70%'}
+                _text={{ color: 'black' }}
+                borderRadius={50}
+                _pressed={{ opacity: 0.8 }}
+              >
+                Esquerdo
+              </Button>
+            </Box>
+          </Box>
 
-	render() {
-		return (
-			<>
-                	<Box width="85%" borderRadius={20} height="95%" bgColor={Theme().color.b400}>
-						<Text alignSelf={"center"} color="white" position={"absolute"}>Dosadores</Text>
-						<Stack  direction={"row"} alignItems="center" justifyContent="center" width="100%" paddingTop={"2"}>
-							<Box width={"30%"} height="95%" alignItems="center" justifyContent="center">
-								<Box width={"90%"} height="100%" alignItems="center" justifyContent="center" _text={{color:"white"}}>
-								<Button isDisabled={!this.props.applicator.left.available}  onPressOut={()=>{this.onLeftApplicatorPress()}} _disabled={{opacity:0.5}} bgColor={this.state.applicator.left.active?Theme().color.sOk:Theme().color.b200} width="100%" height={"70%"} _text={{color:"black"}} borderRadius={50} _pressed={{opacity:0.8}}>Esquerdo</Button>
-								</Box>
-							</Box>
+          <Box width={'30%'} height="95%" alignItems="center" justifyContent="center">
+            <Box
+              width={'90%'}
+              height="100%"
+              alignItems="center"
+              justifyContent="center"
+              _text={{ color: 'white' }}
+            >
+              <Button
+                isDisabled={!props.centerApplicator.available}
+                onPressOut={onCenterApplicatorPress}
+                _disabled={{ opacity: 0.5 }}
+                bgColor={centerApplicatorActive ? Theme().color.sOk : Theme().color.b200}
+                width="100%"
+                height={'70%'}
+                borderRadius={50}
+                _text={{ color: 'black' }}
+                _pressed={{ opacity: 0.8 }}
+              >
+                Central
+              </Button>
+            </Box>
+          </Box>
 
-							<Box width={"30%"} height="95%" alignItems="center" justifyContent="center">
-								<Box width={"90%"} height="100%" alignItems="center" justifyContent="center" _text={{color:"white"}}>
-								<Button isDisabled={!this.props.applicator.center.available}  onPressOut={()=>{this.onCenterApplicatorPress()}} _disabled={{opacity:0.5}} bgColor={this.state.applicator.center.active?Theme().color.sOk:Theme().color.b200} width="100%" height={"70%"} borderRadius={50} _text={{color:"black"}} _pressed={{opacity:0.8}}>Central</Button>
-								</Box>
-							</Box>
-
-							<Box width={"30%"} height="95%" alignItems="center" justifyContent="center">
-								<Box width={"90%"} height="100%" alignItems="center" justifyContent="center" _text={{color:"white"}}>
-								<Button isDisabled={!this.props.applicator.right.available}  onPressOut={()=>{this.onRightApplicatorPress()}} _disabled={{opacity:0.5}} bgColor={this.state.applicator.right.active?Theme().color.sOk:Theme().color.b200} width="100%" height={"70%"} borderRadius={50} _text={{color:"black"}} _pressed={{opacity:0.8}}>Direito</Button>
-								</Box>
-							</Box>
-						</Stack>
-					</Box>
-            </>
-		);
-	}
+          <Box width={'30%'} height="95%" alignItems="center" justifyContent="center">
+            <Box
+              width={'90%'}
+              height="100%"
+              alignItems="center"
+              justifyContent="center"
+              _text={{ color: 'white' }}
+            >
+              <Button
+                isDisabled={!props.rightApplicator.available}
+                onPressOut={onRightApplicatorPress}
+                _disabled={{ opacity: 0.5 }}
+                bgColor={rightApplicatorActive ? Theme().color.sOk : Theme().color.b200}
+                width="100%"
+                height={'70%'}
+                borderRadius={50}
+                _text={{ color: 'black' }}
+                _pressed={{ opacity: 0.8 }}
+              >
+                Direito
+              </Button>
+            </Box>
+          </Box>
+        </Stack>
+      </Box>
+    </>
+  );
 }
 
 export default ApplicatorSelector;
