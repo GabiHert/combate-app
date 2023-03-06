@@ -1,8 +1,43 @@
 import { Box, Button, Stack, Text } from 'native-base';
-import React from 'react';
+import React, { memo, useState } from 'react';
+import { ILocation } from '../../../../api/interface/location';
 import { Theme } from '../../../../app/theme/theme';
 
-function Sheet(props: { onFinishPressed: () => void }) {
+export interface IApplicatorsPercentage {
+  left: number;
+  right: number;
+  center: number;
+}
+
+function getLoadPercentageStatusColor(loadPercentage: number): string {
+  if (loadPercentage <= 33.33) {
+    return Theme().color.sError;
+  }
+  if (loadPercentage > 33.33 && loadPercentage < 66.66) {
+    return Theme().color.sWarning;
+  }
+  if (loadPercentage >= 66.66) {
+    return Theme().color.sOk;
+  }
+}
+
+function Sheet(props: {
+  onFinishPressed: () => void;
+  location: ILocation;
+  applicatorsLoadPercentage: IApplicatorsPercentage;
+}) {
+  const leftLoadPercentageColor = getLoadPercentageStatusColor(
+    props.applicatorsLoadPercentage.left
+  );
+  const rightLoadPercentageColor = getLoadPercentageStatusColor(
+    props.applicatorsLoadPercentage.right
+  );
+  const centerLoadPercentageColor = getLoadPercentageStatusColor(
+    props.applicatorsLoadPercentage.center
+  );
+
+  console.log(props.applicatorsLoadPercentage);
+
   return (
     <Box alignItems="center" justifyContent="flex-end">
       <Box height={'85%'}>
@@ -39,11 +74,11 @@ function Sheet(props: { onFinishPressed: () => void }) {
             >
               Latitude
               <Text fontSize={20} marginBottom={2} fontWeight="bold">
-                -30.066916126
+                {props.location.latitude}
               </Text>
               Longitude
               <Text fontSize={20} marginBottom={2} fontWeight="bold">
-                -30.066916126
+                {props.location.longitude}
               </Text>
             </Box>
           </Stack>
@@ -92,7 +127,7 @@ function Sheet(props: { onFinishPressed: () => void }) {
               <Stack direction={'row'} alignItems="center" justifyContent="center" height={'75%'}>
                 <Box
                   borderRadius={20}
-                  bgColor={Theme().color.sOk}
+                  bgColor={leftLoadPercentageColor}
                   width="30%"
                   alignItems="center"
                   justifyContent="center"
@@ -100,13 +135,13 @@ function Sheet(props: { onFinishPressed: () => void }) {
                 >
                   <Text fontSize={10}>Esquerdo</Text>
                   <Text fontSize={20} fontWeight="bold">
-                    100%
+                    {props.applicatorsLoadPercentage.left}%
                   </Text>
                 </Box>
 
                 <Box
                   borderRadius={20}
-                  bgColor={Theme().color.sWarning}
+                  bgColor={centerLoadPercentageColor}
                   width="30%"
                   alignItems="center"
                   justifyContent="center"
@@ -114,20 +149,20 @@ function Sheet(props: { onFinishPressed: () => void }) {
                 >
                   <Text fontSize={10}>Central</Text>
                   <Text fontSize={20} fontWeight="bold">
-                    50%
+                    {props.applicatorsLoadPercentage.center}%
                   </Text>
                 </Box>
 
                 <Box
                   borderRadius={20}
-                  bgColor={Theme().color.sError}
+                  bgColor={rightLoadPercentageColor}
                   width="30%"
                   alignItems="center"
                   justifyContent="center"
                 >
                   <Text fontSize={10}>Direito</Text>
                   <Text fontSize={20} fontWeight="bold">
-                    10%
+                    {props.applicatorsLoadPercentage.right}%
                   </Text>
                 </Box>
               </Stack>
@@ -158,4 +193,4 @@ function Sheet(props: { onFinishPressed: () => void }) {
   );
 }
 
-export default Sheet;
+export default memo(Sheet);

@@ -1,5 +1,5 @@
 export interface Applicator {
-  load: number;
+  loadKg: number;
   active: boolean;
   available: boolean;
 }

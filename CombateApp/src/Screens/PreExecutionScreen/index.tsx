@@ -37,11 +37,12 @@ function PreExecutionScreen(props: { navigation: any }) {
     //   weather,
     //   vehicleName,
     // };
+
     props.navigation.navigate('ExecutionScreen', {
       applicator: {
-        center: { load: centerApplicatorLoad },
-        right: { load: rightApplicatorLoad },
-        left: { load: leftApplicatorLoad },
+        center: { loadKg: centerApplicatorLoad },
+        right: { loadKg: rightApplicatorLoad },
+        left: { loadKg: leftApplicatorLoad },
       },
     });
   }
