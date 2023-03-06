@@ -59,7 +59,7 @@ function ApplicatorSelector(props: {
             >
               <Button
                 isDisabled={!props.leftApplicator.available}
-                onPressOut={onLeftApplicatorPress}
+                onPress={onLeftApplicatorPress}
                 _disabled={{ opacity: 0.5 }}
                 bgColor={leftApplicatorActive ? Theme().color.sOk : Theme().color.b200}
                 width="100%"
@@ -83,7 +83,7 @@ function ApplicatorSelector(props: {
             >
               <Button
                 isDisabled={!props.centerApplicator.available}
-                onPressOut={onCenterApplicatorPress}
+                onPress={onCenterApplicatorPress}
                 _disabled={{ opacity: 0.5 }}
                 bgColor={centerApplicatorActive ? Theme().color.sOk : Theme().color.b200}
                 width="100%"
@@ -107,7 +107,7 @@ function ApplicatorSelector(props: {
             >
               <Button
                 isDisabled={!props.rightApplicator.available}
-                onPressOut={onRightApplicatorPress}
+                onPress={onRightApplicatorPress}
                 _disabled={{ opacity: 0.5 }}
                 bgColor={rightApplicatorActive ? Theme().color.sOk : Theme().color.b200}
                 width="100%"

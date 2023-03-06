@@ -9,6 +9,7 @@ function FormInput(props: {
   errorMessage: string;
   placeholder: string;
   keyboardType?: KeyboardTypeOptions;
+  onChangeText?: (value: string) => void;
 }) {
   return (
     <FormControl
@@ -17,6 +18,7 @@ function FormInput(props: {
     >
       <FormControl.Label _text={{ bold: true, fontSize: 15 }}>{props.title}</FormControl.Label>
       <Input
+        onChangeText={props.onChangeText}
         keyboardType={props.keyboardType}
         borderRadius={20}
         placeholder={props.placeholder}

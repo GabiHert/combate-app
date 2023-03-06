@@ -1,30 +1,32 @@
 import { Box, Button, IconButton, Stack, Text } from 'native-base';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Config } from '../../../../app/config/config';
 import { Theme } from '../../../../app/theme/theme';
 
 function PoisonAmountSelector(props: {
   onDoseAmountChange: (amount: number) => void;
+  onPresetPressed: (amount: number) => void;
   doseAmount: number;
 }) {
   const [doseAmount, setDoseAmount] = useState<number>(props.doseAmount);
 
-  function onUpPressed() {
+  const onUpPressed = useCallback(() => {
     if (doseAmount < Config().APPLICATION.MAX_DOSES) {
       setDoseAmount(doseAmount + 1);
     }
-  }
+  }, [doseAmount]);
 
-  function onDownPressed() {
+  const onDownPressed = useCallback(() => {
     if (doseAmount > Config().APPLICATION.MIN_DOSES) {
       setDoseAmount(doseAmount - 1);
     }
-  }
+  }, [doseAmount]);
 
-  function onPreset1Pressed() {
+  const onPreset1Pressed = useCallback(() => {
     setDoseAmount(Config().PRESETS.P1);
-  }
+    // props.onPresetPressed(Config().PRESETS.P1);
+  }, []);
 
   function onPreset2Pressed() {
     setDoseAmount(Config().PRESETS.P2);
@@ -61,7 +63,7 @@ function PoisonAmountSelector(props: {
             Doses
           </Text>
           <IconButton
-            onPressOut={onUpPressed}
+            onPress={onUpPressed}
             width="100%"
             height={'5%'}
             bgColor={'transparent'}
@@ -72,7 +74,7 @@ function PoisonAmountSelector(props: {
             {doseAmount}
           </Text>
           <IconButton
-            onPressOut={onDownPressed}
+            onPress={onDownPressed}
             width="100%"
             height={'20%'}
             bgColor={'transparent'}
@@ -103,7 +105,7 @@ function PoisonAmountSelector(props: {
             Presets
           </Text>
           <Button
-            onPressOut={onPreset1Pressed}
+            onPress={onPreset1Pressed}
             marginBottom={5}
             bgColor={Theme().color.b200}
             width="90%"
@@ -114,7 +116,7 @@ function PoisonAmountSelector(props: {
             TESTE
           </Button>
           <Button
-            onPressOut={onPreset2Pressed}
+            onPress={onPreset2Pressed}
             marginBottom={5}
             bgColor={Theme().color.b200}
             width="90%"
@@ -125,7 +127,7 @@ function PoisonAmountSelector(props: {
             TESTE
           </Button>
           <Button
-            onPressOut={onPreset3Pressed}
+            onPress={onPreset3Pressed}
             marginBottom={5}
             bgColor={Theme().color.b200}
             width="90%"
@@ -136,7 +138,7 @@ function PoisonAmountSelector(props: {
             TESTE
           </Button>
           <Button
-            onPressOut={onPreset4Pressed}
+            onPress={onPreset4Pressed}
             bgColor={Theme().color.b200}
             width="90%"
             height={'15%'}

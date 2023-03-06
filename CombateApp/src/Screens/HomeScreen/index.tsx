@@ -22,7 +22,7 @@ function HomeScreen(props: { navigation: any }) {
         <IconButton
           style={{ alignSelf: 'flex-end' }}
           _icon={{ as: Icon, name: 'settings', size: 30, color: 'black' }}
-          onPressOut={() => {
+          onPress={() => {
             onSettingsButtonPressed();
           }}
         ></IconButton>
@@ -32,7 +32,7 @@ function HomeScreen(props: { navigation: any }) {
             _pressed={{ opacity: 0.8 }}
             bgColor={Theme().color.b200}
             _text={{ color: 'black', fontSize: 25 }}
-            onPressOut={() => {
+            onPress={() => {
               onStartButtonPressed();
             }}
             width="40%"

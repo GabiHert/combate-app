@@ -8,28 +8,35 @@ import {
   Stack,
   VStack,
 } from 'native-base';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import { Weather, WeatherEnum } from '../../api/core/enum/weather';
 import { Theme } from '../../app/theme/theme';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
-import SlideInput from '../../Components/SlideInput';
-
-interface state {
-  applicator: {
-    center: { load: number };
-    right: { load: number };
-    left: { load: number };
-  };
-}
 
 function PreExecutionScreen(props: { navigation: any }) {
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState<number>(0);
   const [centerApplicatorLoad, setCenterApplicatorLoad] = useState<number>(0);
   const [rightApplicatorLoad, setRightApplicatorLoad] = useState<number>(0);
+  const [clientName, setClientName] = useState<string>('');
+  const [projectName, setProjectName] = useState<string>('');
+  const [plotNumber, setPlotNumber] = useState<number>(0);
+  const [vehicleName, setVehicleName] = useState<string>('');
+  const [spaceBetweenLines, setSpaceBetweenLines] = useState<number>(0);
+  const [streetsAmount, setStreetsAmount] = useState<number>(0);
+  const [weather, setWeather] = useState<Weather>();
 
   function onNextPressed() {
-    console.log('onNextPressed');
+    // const data = {
+    //   clientName,
+    //   projectName,
+    //   plotNumber,
+    //   spaceBetweenLines,
+    //   streetsAmount,
+    //   weather,
+    //   vehicleName,
+    // };
     props.navigation.navigate('ExecutionScreen', {
       applicator: {
         center: { load: centerApplicatorLoad },
@@ -38,6 +45,67 @@ function PreExecutionScreen(props: { navigation: any }) {
       },
     });
   }
+
+  const setLeftApplicatorLoadCallback = useCallback(
+    (value: string) => {
+      //todo: throw error when NAN
+      const valueNumber = Number(value);
+      setLeftApplicatorLoad(valueNumber);
+    },
+    [setLeftApplicatorLoad]
+  );
+
+  const setCenterApplicatorLoadCallback = useCallback(
+    (value: string) => {
+      //todo: throw error when NAN
+      const valueNumber = Number(value);
+      setCenterApplicatorLoad(valueNumber);
+    },
+    [setCenterApplicatorLoad]
+  );
+
+  const setRightApplicatorLoadCallback = useCallback(
+    (value: string) => {
+      //todo: throw error when NAN
+      const valueNumber = Number(value);
+      setRightApplicatorLoad(valueNumber);
+    },
+    [setRightApplicatorLoad]
+  );
+
+  const setPlotNumberCallback = useCallback(
+    (value: string) => {
+      //todo: throw error when NAN
+      const valueNumber = Number(value);
+      setPlotNumber(valueNumber);
+    },
+    [setPlotNumber]
+  );
+
+  const setSpaceBetweenLinesCallback = useCallback(
+    (value: string) => {
+      //todo: throw error when NAN
+      const valueNumber = Number(value);
+      setSpaceBetweenLines(valueNumber);
+    },
+    [setSpaceBetweenLines]
+  );
+
+  const setStreetsAmountCallback = useCallback(
+    (value: string) => {
+      //todo: throw error when NAN
+      const valueNumber = Number(value);
+      setStreetsAmount(valueNumber);
+    },
+    [setStreetsAmount]
+  );
+
+  const setWeatherCallback = useCallback(
+    (value: string) => {
+      setWeather(new Weather(value));
+    },
+    [setWeather]
+  );
 
   return (
     <Box justifyContent={'center'} alignItems={'center'} h="100%">
@@ -52,12 +120,14 @@ function PreExecutionScreen(props: { navigation: any }) {
             description="Preencha este campo com o nome do cliente"
             errorMessage=""
             placeholder="Cliente X"
+            onChangeText={setClientName}
           />
           <FormInput
             title="Projeto"
             description="Preencha este campo com o nome do projeto"
             errorMessage=""
             placeholder="Projeto x"
+            onChangeText={setProjectName}
           />
           <FormInput
             title="Numero do talhão"
@@ -65,6 +135,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             errorMessage=""
             placeholder="22"
             keyboardType="numeric"
+            onChangeText={setPlotNumberCallback}
           />
 
           <Divider w="80%" />
@@ -78,6 +149,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             description="Preencha este campo com o nome do veículo que está sendo utilizado"
             errorMessage=""
             placeholder="A25"
+            onChangeText={setVehicleName}
           />
 
           <Divider w="80%" />
@@ -86,15 +158,13 @@ function PreExecutionScreen(props: { navigation: any }) {
             Informações do local
           </FormControl.Label>
 
-          <SlideInput
-            unit={'m'}
-            title="Espaçamento entre linhas"
-            defaultValue={0}
-            disabled={false}
-            maxValue={20}
-            minValue={1}
-            step={0.5}
-            onChangeEnd={() => {}}
+          <FormInput
+            title="Espaçamento entre linhas (m)"
+            description="Preencha este campo com o espaçamento entre linhas em metros"
+            errorMessage=""
+            placeholder="1"
+            keyboardType="numeric"
+            onChangeText={setSpaceBetweenLinesCallback}
           />
           <FormInput
             title="Numero de ruas"
@@ -102,9 +172,15 @@ function PreExecutionScreen(props: { navigation: any }) {
             errorMessage=""
             placeholder="1"
             keyboardType="numeric"
+            onChangeText={setStreetsAmountCallback}
           />
 
-          <Radio.Group name="exampleGroup" defaultValue="1" accessibilityLabel="pick a size">
+          <Radio.Group
+            onChange={setWeatherCallback}
+            name="exampleGroup"
+            defaultValue="1"
+            accessibilityLabel="pick a size"
+          >
             <Stack
               direction={{
                 base: 'row',
@@ -117,13 +193,13 @@ function PreExecutionScreen(props: { navigation: any }) {
               space={4}
               w="60%"
             >
-              <Radio value="1" colorScheme="green" size="md" my={1}>
+              <Radio value={WeatherEnum.DRY.name} colorScheme="green" size="md" my={1}>
                 Seco
               </Radio>
-              <Radio value="2" colorScheme="green" size="md" my={1}>
+              <Radio value={WeatherEnum.HUMID.name} colorScheme="green" size="md" my={1}>
                 Ùmido
               </Radio>
-              <Radio value="3" colorScheme="green" size="md" my={1}>
+              <Radio value={WeatherEnum.MUGGY.name} colorScheme="green" size="md" my={1}>
                 Abafado
               </Radio>
             </Stack>
@@ -148,41 +224,32 @@ function PreExecutionScreen(props: { navigation: any }) {
           <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
             Carga nos reservatórios
           </FormControl.Label>
-          <SlideInput
-            unit={'g'}
-            title="Reservatório esquerdo"
-            defaultValue={0}
-            disabled={false}
-            maxValue={10000}
-            minValue={0}
-            step={100}
-            onChangeEnd={(value) => {
-              setLeftApplicatorLoad(value);
-            }}
+
+          <FormInput
+            title="Reservatório direito (Kg)"
+            description="Preencha este campo com a carga no reservatório direito em kilos"
+            errorMessage=""
+            placeholder="1.5"
+            keyboardType="numeric"
+            onChangeText={setRightApplicatorLoadCallback}
           />
-          <SlideInput
-            unit={'g'}
-            title="Reservatório central"
-            defaultValue={0}
-            disabled={false}
-            maxValue={10000}
-            minValue={0}
-            step={100}
-            onChangeEnd={(value) => {
-              setCenterApplicatorLoad(value);
-            }}
+
+          <FormInput
+            title="Reservatório central (Kg)"
+            description="Preencha este campo com a carga no reservatório central em kilos"
+            errorMessage=""
+            placeholder="1.5"
+            keyboardType="numeric"
+            onChangeText={setCenterApplicatorLoadCallback}
           />
-          <SlideInput
-            unit={'g'}
-            title="Reservatório direito"
-            defaultValue={0}
-            disabled={false}
-            maxValue={10000}
-            minValue={0}
-            step={100}
-            onChangeEnd={(value) => {
-              setRightApplicatorLoad(value);
-            }}
+
+          <FormInput
+            title="Reservatório esquerdo (Kg)"
+            description="Preencha este campo com a carga no reservatório esquerdo em kilos"
+            errorMessage=""
+            placeholder="1.5"
+            keyboardType="numeric"
+            onChangeText={setLeftApplicatorLoadCallback}
           />
         </VStack>
         <Box w="20%" h="60px" />
@@ -198,9 +265,7 @@ function PreExecutionScreen(props: { navigation: any }) {
         h="60px"
       />
       <IconButton
-        onPressOut={() => {
-          onNextPressed();
-        }}
+        onPress={onNextPressed}
         position={'absolute'}
         bottom={2}
         right={2}

@@ -36,7 +36,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
   });
   const [rightApplicator, setRightApplicator] = useState<Applicator>({
     active: false,
-    available: false,
+    available: true,
     load: 0,
   });
 
@@ -60,12 +60,16 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
       </Box>
 
       <Box height={'45%'}>
-        <PoisonAmountSelector onDoseAmountChange={setDoseAmount} doseAmount={doseAmount} />
+        <PoisonAmountSelector
+          onPresetPressed={() => {}}
+          onDoseAmountChange={setDoseAmount}
+          doseAmount={doseAmount}
+        />
       </Box>
 
       <Box alignItems="center" justifyContent="center" width="100%" height="20%">
         <Button
-          onPressOut={onDoseButtonPress}
+          onPress={onDoseButtonPress}
           width="60%"
           borderRadius={10}
           height="80%"

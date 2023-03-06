@@ -145,7 +145,7 @@ function Sheet(props: { onFinishPressed: () => void }) {
       >
         <Button
           borderRadius={10}
-          onPressOut={props.onFinishPressed}
+          onPress={props.onFinishPressed}
           width="60%"
           height="100%"
           _pressed={{ opacity: 0.8 }}
