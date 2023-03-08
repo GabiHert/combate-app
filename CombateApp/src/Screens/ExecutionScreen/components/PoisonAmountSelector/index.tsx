@@ -10,34 +10,49 @@ function PoisonAmountSelector(props: {
   doseAmount: number;
 }) {
   const [doseAmount, setDoseAmount] = useState<number>(props.doseAmount);
+  const onDoseAmountChangeCallback = useCallback(
+    (amount: number) => {
+      props.onDoseAmountChange(amount);
+    },
+    [doseAmount]
+  );
 
   const onUpPressed = useCallback(() => {
     if (doseAmount < Config().APPLICATION.MAX_DOSES) {
       setDoseAmount(doseAmount + 1);
+      onDoseAmountChangeCallback(doseAmount + 1);
     }
-  }, [doseAmount]);
+  }, [doseAmount, setDoseAmount]);
 
   const onDownPressed = useCallback(() => {
     if (doseAmount > Config().APPLICATION.MIN_DOSES) {
       setDoseAmount(doseAmount - 1);
+      onDoseAmountChangeCallback(doseAmount - 1);
     }
-  }, [doseAmount]);
+  }, [doseAmount, setDoseAmount]);
 
   const onPreset1Pressed = useCallback(() => {
     setDoseAmount(Config().PRESETS.P1);
-    // props.onPresetPressed(Config().PRESETS.P1);
+    onDoseAmountChangeCallback(Config().PRESETS.P1);
+    props.onPresetPressed(Config().PRESETS.P1);
   }, []);
 
   function onPreset2Pressed() {
     setDoseAmount(Config().PRESETS.P2);
+    onDoseAmountChangeCallback(Config().PRESETS.P1);
+    props.onPresetPressed(Config().PRESETS.P2);
   }
 
   function onPreset3Pressed() {
     setDoseAmount(Config().PRESETS.P3);
+    onDoseAmountChangeCallback(Config().PRESETS.P3);
+    props.onPresetPressed(Config().PRESETS.P3);
   }
 
   function onPreset4Pressed() {
     setDoseAmount(Config().PRESETS.P4);
+    onDoseAmountChangeCallback(Config().PRESETS.P4);
+    props.onPresetPressed(Config().PRESETS.P4);
   }
 
   return (

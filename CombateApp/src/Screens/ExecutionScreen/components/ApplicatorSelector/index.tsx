@@ -7,6 +7,9 @@ function ApplicatorSelector(props: {
   leftApplicator: Applicator;
   centerApplicator: Applicator;
   rightApplicator: Applicator;
+  onLeftApplicatorSelected: (state: boolean) => void;
+  onRightApplicatorSelected: (state: boolean) => void;
+  onCenterApplicatorSelected: (state: boolean) => void;
 }) {
   const [leftApplicatorActive, setLeftApplicatorActive] = useState<boolean>(
     props.leftApplicator.active
@@ -21,18 +24,21 @@ function ApplicatorSelector(props: {
   function onLeftApplicatorPress() {
     if (props.leftApplicator.available) {
       setLeftApplicatorActive(!leftApplicatorActive);
+      props.onLeftApplicatorSelected(!leftApplicatorActive);
     }
   }
 
   function onRightApplicatorPress() {
     if (props.rightApplicator.available) {
       setRightApplicatorActive(!rightApplicatorActive);
+      props.onRightApplicatorSelected(!rightApplicatorActive);
     }
   }
 
   function onCenterApplicatorPress() {
     if (props.centerApplicator.available) {
       setCenterApplicatorActive(!centerApplicatorActive);
+      props.onCenterApplicatorSelected(!centerApplicatorActive);
     }
   }
 

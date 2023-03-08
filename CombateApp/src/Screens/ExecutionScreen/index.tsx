@@ -21,7 +21,6 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
     left: { loadKg: number };
   } = props.route.params.applicator;
 
-  console.log(applicator);
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
   const snapPoints: Array<string> = ['3.5%', '20%', '52%'];
   let handleSheetChanges: any;
@@ -50,8 +49,6 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
     latitude: '00.00000',
     longitude: '00.00000',
   });
-
-  console.log(rightApplicator.loadKg);
 
   const [applicatorsLoadPercentage, setApplicatorsLoadPercentage] =
     useState<IApplicatorsPercentage>({
@@ -100,6 +97,8 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
   }
 
   function processDose(amount: number) {
+    console.log('processDose', amount);
+    setApplicatorsStatus(SeverityEnum.WARN);
     setDoseInProgress(true);
     //call backend
 
@@ -112,6 +111,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
     }
 
     if (rightApplicator.active) {
+      console.log('hete');
       setRightApplicator({
         active: true,
         available: rightApplicator.available,
@@ -140,6 +140,8 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
       leftApplicator.loadKg
     );
     setApplicatorsLoadPercentage({ center, right, left });
+    setApplicatorsStatus(SeverityEnum.OK);
+    setDoseInProgress(false);
   }
 
   function onDoseButtonPress() {
@@ -163,7 +165,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
 
       <Box height={'45%'}>
         <PoisonAmountSelector
-          onPresetPressed={() => {}}
+          onPresetPressed={onPresetPressed}
           onDoseAmountChange={setDoseAmount}
           doseAmount={doseAmount}
         />
@@ -188,6 +190,13 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
           leftApplicator={leftApplicator}
           centerApplicator={centerApplicator}
           rightApplicator={rightApplicator}
+          onLeftApplicatorSelected={() => {
+            console.log('Left Applicator Selected');
+          }}
+          onCenterApplicatorSelected={() => {}}
+          onRightApplicatorSelected={(b) => {
+            console.log('Left Applicator Selected');
+          }}
         />
       </Box>
 

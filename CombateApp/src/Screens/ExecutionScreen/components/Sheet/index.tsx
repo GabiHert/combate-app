@@ -26,17 +26,15 @@ function Sheet(props: {
   location: ILocation;
   applicatorsLoadPercentage: IApplicatorsPercentage;
 }) {
-  const leftLoadPercentageColor = getLoadPercentageStatusColor(
-    props.applicatorsLoadPercentage.left
+  const [leftLoadPercentageColor] = useState<string>(
+    getLoadPercentageStatusColor(props.applicatorsLoadPercentage.left)
   );
-  const rightLoadPercentageColor = getLoadPercentageStatusColor(
-    props.applicatorsLoadPercentage.right
+  const [rightLoadPercentageColor] = useState<string>(
+    getLoadPercentageStatusColor(props.applicatorsLoadPercentage.right)
   );
-  const centerLoadPercentageColor = getLoadPercentageStatusColor(
-    props.applicatorsLoadPercentage.center
+  const [centerLoadPercentageColor] = useState<string>(
+    getLoadPercentageStatusColor(props.applicatorsLoadPercentage.center)
   );
-
-  console.log(props.applicatorsLoadPercentage);
 
   return (
     <Box alignItems="center" justifyContent="flex-end">
