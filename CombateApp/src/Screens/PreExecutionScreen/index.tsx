@@ -15,6 +15,20 @@ import { Theme } from '../../app/theme/theme';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
 
+interface IValidationResult {
+  clientName: { errorMessage: string };
+  projectName: { errorMessage: string };
+  plotNumber: { errorMessage: undefined };
+  spaceBetweenLines: { errorMessage: string };
+  streetsAmount: { errorMessage: string };
+  weather: { errorMessage: string };
+  vehicleName: { errorMessage: string };
+  rightLoad: { errorMessage: string };
+  leftLoad: { errorMessage: string };
+  centerLoad: { errorMessage: string };
+  valid: boolean;
+}
+
 function PreExecutionScreen(props: { navigation: any }) {
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState<number>(0);
   const [centerApplicatorLoad, setCenterApplicatorLoad] = useState<number>(0);
@@ -26,6 +40,19 @@ function PreExecutionScreen(props: { navigation: any }) {
   const [spaceBetweenLines, setSpaceBetweenLines] = useState<number>(0);
   const [streetsAmount, setStreetsAmount] = useState<number>(0);
   const [weather, setWeather] = useState<Weather>();
+  const [validationResult, setValidationResult] = useState<IValidationResult>({
+    clientName: { errorMessage: undefined },
+    projectName: { errorMessage: undefined },
+    plotNumber: { errorMessage: undefined },
+    spaceBetweenLines: { errorMessage: undefined },
+    streetsAmount: { errorMessage: undefined },
+    weather: { errorMessage: undefined },
+    vehicleName: { errorMessage: undefined },
+    rightLoad: { errorMessage: undefined },
+    leftLoad: { errorMessage: undefined },
+    centerLoad: { errorMessage: undefined },
+    valid: true,
+  });
 
   function onNextPressed() {
     // const data = {
@@ -38,13 +65,31 @@ function PreExecutionScreen(props: { navigation: any }) {
     //   vehicleName,
     // };
 
-    props.navigation.navigate('ExecutionScreen', {
-      applicator: {
-        center: { loadKg: centerApplicatorLoad },
-        right: { loadKg: rightApplicatorLoad },
-        left: { loadKg: leftApplicatorLoad },
-      },
-    });
+    const validation = {
+      clientName: { errorMessage: undefined },
+      projectName: { errorMessage: undefined },
+      plotNumber: { errorMessage: undefined },
+      spaceBetweenLines: { errorMessage: undefined },
+      streetsAmount: { errorMessage: undefined },
+      weather: { errorMessage: undefined },
+      vehicleName: { errorMessage: undefined },
+      rightLoad: { errorMessage: undefined },
+      leftLoad: { errorMessage: undefined },
+      centerLoad: { errorMessage: undefined },
+      valid: true,
+    };
+
+    setValidationResult(validation);
+
+    if (validation.valid) {
+      props.navigation.navigate('ExecutionScreen', {
+        applicator: {
+          center: { loadKg: centerApplicatorLoad },
+          right: { loadKg: rightApplicatorLoad },
+          left: { loadKg: leftApplicatorLoad },
+        },
+      });
+    }
   }
 
   const setLeftApplicatorLoadCallback = useCallback(
@@ -119,21 +164,21 @@ function PreExecutionScreen(props: { navigation: any }) {
           <FormInput
             title="Nome"
             description="Preencha este campo com o nome do cliente"
-            errorMessage=""
+            errorMessage={validationResult.clientName.errorMessage}
             placeholder="Cliente X"
             onChangeText={setClientName}
           />
           <FormInput
             title="Projeto"
             description="Preencha este campo com o nome do projeto"
-            errorMessage=""
+            errorMessage={validationResult.projectName.errorMessage}
             placeholder="Projeto x"
             onChangeText={setProjectName}
           />
           <FormInput
             title="Numero do talhão"
             description="Preencha este campo com o numero do talhão da aplicação"
-            errorMessage=""
+            errorMessage={validationResult.plotNumber.errorMessage}
             placeholder="22"
             keyboardType="numeric"
             onChangeText={setPlotNumberCallback}
@@ -148,7 +193,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           <FormInput
             title="Nome do veículo"
             description="Preencha este campo com o nome do veículo que está sendo utilizado"
-            errorMessage=""
+            errorMessage={validationResult.vehicleName.errorMessage}
             placeholder="A25"
             onChangeText={setVehicleName}
           />
@@ -162,7 +207,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           <FormInput
             title="Espaçamento entre linhas (m)"
             description="Preencha este campo com o espaçamento entre linhas em metros"
-            errorMessage=""
+            errorMessage={validationResult.spaceBetweenLines.errorMessage}
             placeholder="1"
             keyboardType="numeric"
             onChangeText={setSpaceBetweenLinesCallback}
@@ -170,7 +215,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           <FormInput
             title="Numero de ruas"
             description="Preencha este campo com o numero de ruas a serem percorridas"
-            errorMessage=""
+            errorMessage={validationResult.streetsAmount.errorMessage}
             placeholder="1"
             keyboardType="numeric"
             onChangeText={setStreetsAmountCallback}
@@ -179,8 +224,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           <Radio.Group
             onChange={setWeatherCallback}
             name="exampleGroup"
-            defaultValue="1"
-            accessibilityLabel="pick a size"
+            defaultValue={WeatherEnum.DRY.name}
           >
             <Stack
               direction={{
@@ -229,7 +273,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           <FormInput
             title="Reservatório direito (Kg)"
             description="Preencha este campo com a carga no reservatório direito em kilos"
-            errorMessage=""
+            errorMessage={validationResult.rightLoad.errorMessage}
             placeholder="1.5"
             keyboardType="numeric"
             onChangeText={setRightApplicatorLoadCallback}
@@ -238,7 +282,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           <FormInput
             title="Reservatório central (Kg)"
             description="Preencha este campo com a carga no reservatório central em kilos"
-            errorMessage=""
+            errorMessage={validationResult.centerLoad.errorMessage}
             placeholder="1.5"
             keyboardType="numeric"
             onChangeText={setCenterApplicatorLoadCallback}
@@ -247,7 +291,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           <FormInput
             title="Reservatório esquerdo (Kg)"
             description="Preencha este campo com a carga no reservatório esquerdo em kilos"
-            errorMessage=""
+            errorMessage={validationResult.leftLoad.errorMessage}
             placeholder="1.5"
             keyboardType="numeric"
             onChangeText={setLeftApplicatorLoadCallback}

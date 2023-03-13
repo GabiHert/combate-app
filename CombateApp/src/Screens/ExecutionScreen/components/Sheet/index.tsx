@@ -1,39 +1,48 @@
 import { Box, Button, Stack, Text } from 'native-base';
-import React, { memo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react';
+import { min } from 'react-native-reanimated';
+import { Severity } from '../../../../api/core/enum/severity';
 import { ILocation } from '../../../../api/interface/location';
+import { Config } from '../../../../app/config/config';
 import { Theme } from '../../../../app/theme/theme';
 
 export interface IApplicatorsPercentage {
-  left: number;
-  right: number;
-  center: number;
-}
-
-function getLoadPercentageStatusColor(loadPercentage: number): string {
-  if (loadPercentage <= 33.33) {
-    return Theme().color.sError;
-  }
-  if (loadPercentage > 33.33 && loadPercentage < 66.66) {
-    return Theme().color.sWarning;
-  }
-  if (loadPercentage >= 66.66) {
-    return Theme().color.sOk;
-  }
+  left: { percentage: number; severity: Severity };
+  right: { percentage: number; severity: Severity };
+  center: { percentage: number; severity: Severity };
 }
 
 function Sheet(props: {
   onFinishPressed: () => void;
   location: ILocation;
   applicatorsLoadPercentage: IApplicatorsPercentage;
+  appliedDoses: number;
 }) {
-  const [leftLoadPercentageColor] = useState<string>(
-    getLoadPercentageStatusColor(props.applicatorsLoadPercentage.left)
-  );
-  const [rightLoadPercentageColor] = useState<string>(
-    getLoadPercentageStatusColor(props.applicatorsLoadPercentage.right)
-  );
-  const [centerLoadPercentageColor] = useState<string>(
-    getLoadPercentageStatusColor(props.applicatorsLoadPercentage.center)
+  const [executionTimeMinutes, setExecutionTimeMinutes] = useState<number>(0);
+  const [executionTimeHours, setExecutionTimeHours] = useState<number>(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (executionTimeMinutes + 1 > 59) {
+        setExecutionTimeMinutes(0);
+        setExecutionTimeHours(executionTimeHours + 1);
+      } else {
+        setExecutionTimeMinutes(executionTimeMinutes + 1);
+      }
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [executionTimeHours, executionTimeMinutes, setExecutionTimeMinutes, setExecutionTimeHours]);
+
+  const formatExecutionTime = useCallback(
+    (hours: number, minutes: number) => {
+      const formatted =
+        (hours < 10 ? `0${hours}` : hours.toString()) +
+        ':' +
+        (minutes < 10 ? `0${minutes}` : minutes.toString());
+      return formatted;
+    },
+    [executionTimeHours, executionTimeMinutes]
   );
 
   return (
@@ -59,7 +68,7 @@ function Sheet(props: {
             >
               Tempo em execução
               <Text fontSize={35} fontWeight="bold">
-                01:29
+                {formatExecutionTime(executionTimeHours, executionTimeMinutes)}
               </Text>
             </Box>
             <Box
@@ -102,13 +111,13 @@ function Sheet(props: {
               Total aplicado
               <Stack direction={'row'} alignItems="baseline" justifyContent="center">
                 <Text fontSize={35} fontWeight="bold">
-                  20
+                  {props.appliedDoses}
                 </Text>
                 <Text fontSize={10}>Doses</Text>
               </Stack>
               <Stack direction={'row'} alignItems="baseline" justifyContent="center">
                 <Text fontSize={35} fontWeight="bold">
-                  1000
+                  {Math.trunc(props.appliedDoses * Config().APPLICATION.DOSE_WEIGHT_KG * 1000)}
                 </Text>
                 <Text fontSize={10}>g</Text>
               </Stack>
@@ -125,7 +134,7 @@ function Sheet(props: {
               <Stack direction={'row'} alignItems="center" justifyContent="center" height={'75%'}>
                 <Box
                   borderRadius={20}
-                  bgColor={leftLoadPercentageColor}
+                  bgColor={props.applicatorsLoadPercentage.left.severity.color}
                   width="30%"
                   alignItems="center"
                   justifyContent="center"
@@ -133,13 +142,13 @@ function Sheet(props: {
                 >
                   <Text fontSize={10}>Esquerdo</Text>
                   <Text fontSize={20} fontWeight="bold">
-                    {props.applicatorsLoadPercentage.left}%
+                    {props.applicatorsLoadPercentage.left.percentage}%
                   </Text>
                 </Box>
 
                 <Box
                   borderRadius={20}
-                  bgColor={centerLoadPercentageColor}
+                  bgColor={props.applicatorsLoadPercentage.center.severity.color}
                   width="30%"
                   alignItems="center"
                   justifyContent="center"
@@ -147,20 +156,20 @@ function Sheet(props: {
                 >
                   <Text fontSize={10}>Central</Text>
                   <Text fontSize={20} fontWeight="bold">
-                    {props.applicatorsLoadPercentage.center}%
+                    {props.applicatorsLoadPercentage.center.percentage}%
                   </Text>
                 </Box>
 
                 <Box
                   borderRadius={20}
-                  bgColor={rightLoadPercentageColor}
+                  bgColor={props.applicatorsLoadPercentage.right.severity.color}
                   width="30%"
                   alignItems="center"
                   justifyContent="center"
                 >
                   <Text fontSize={10}>Direito</Text>
                   <Text fontSize={20} fontWeight="bold">
-                    {props.applicatorsLoadPercentage.right}%
+                    {props.applicatorsLoadPercentage.right.percentage}%
                   </Text>
                 </Box>
               </Stack>

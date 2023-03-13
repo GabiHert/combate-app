@@ -31,15 +31,15 @@ function PoisonAmountSelector(props: {
     }
   }, [doseAmount, setDoseAmount]);
 
-  const onPreset1Pressed = useCallback(() => {
+  function onPreset1Pressed() {
     setDoseAmount(Config().PRESETS.P1);
     onDoseAmountChangeCallback(Config().PRESETS.P1);
     props.onPresetPressed(Config().PRESETS.P1);
-  }, []);
+  }
 
   function onPreset2Pressed() {
     setDoseAmount(Config().PRESETS.P2);
-    onDoseAmountChangeCallback(Config().PRESETS.P1);
+    onDoseAmountChangeCallback(Config().PRESETS.P2);
     props.onPresetPressed(Config().PRESETS.P2);
   }
 

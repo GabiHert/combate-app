@@ -1,12 +1,13 @@
 import BottomSheet from '@gorhom/bottom-sheet';
-import { Box, Button } from 'native-base';
-import React, { memo, useEffect, useState } from 'react';
+import { Box, Button, Toast, useToast } from 'native-base';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { BackHandler } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { max } from 'react-native-reanimated';
 import { Severity, SeverityEnum } from '../../api/core/enum/severity';
 import { ILocation } from '../../api/interface/location';
 import { Config } from '../../app/config/config';
 import { Theme } from '../../app/theme/theme';
+import { AlertToast, ShowToast } from '../../Components/AlertToast';
 import ApplicatorSelector from './components/ApplicatorSelector';
 import PoisonAmountSelector from './components/PoisonAmountSelector';
 import Sheet, { IApplicatorsPercentage } from './components/Sheet';
@@ -20,9 +21,8 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
     right: { loadKg: number };
     left: { loadKg: number };
   } = props.route.params.applicator;
-
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
-  const snapPoints: Array<string> = ['3.5%', '20%', '52%'];
+  const snapPoints: Array<string> = ['3.5%', '20%', '40%', '52%'];
   let handleSheetChanges: any;
   const [doseAmount, setDoseAmount] = useState<number>(Config().APPLICATION.MIN_DOSES);
   const [velocity, setVelocity] = useState<number>(0);
@@ -32,7 +32,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
   const [doseInProgress, setDoseInProgress] = useState<boolean>(false);
   const [leftApplicator, setLeftApplicator] = useState<Applicator>({
     active: false,
-    available: false,
+    available: true,
     loadKg: applicator.left.loadKg || 0,
   });
   const [centerApplicator, setCenterApplicator] = useState<Applicator>({
@@ -49,7 +49,6 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
     latitude: '00.00000',
     longitude: '00.00000',
   });
-
   const [applicatorsLoadPercentage, setApplicatorsLoadPercentage] =
     useState<IApplicatorsPercentage>({
       center: calculateApplicatorsLoadPercentage(
@@ -65,19 +64,44 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
         rightApplicator.loadKg
       ),
     });
+  const [appliedDoses, setAppliedDoses] = useState<number>(0);
+  const [showRightNoLoadWarnOnce, setShowRightNoLoadWarnOnce] = useState(false);
+  const [showLeftNoLoadWarnOnce, setShowLeftNoLoadWarnOnce] = useState(false);
+  const [showCenterNoLoadWarnOnce, setShowCenterNoLoadWarnOnce] = useState(false);
 
-  function calculateApplicatorsLoadPercentage(maxLoad: number, currentLoadKg: number): number {
-    return Math.round((currentLoadKg / maxLoad) * 100);
+  function getLoadPercentageStatusSeverity(loadPercentage: number): Severity {
+    if (loadPercentage <= 33.33) {
+      return SeverityEnum.ERROR;
+    }
+    if (loadPercentage > 33.33 && loadPercentage < 66.66) {
+      return SeverityEnum.WARN;
+    }
+    if (loadPercentage >= 66.66) {
+      return SeverityEnum.OK;
+    }
   }
+  function calculateApplicatorsLoadPercentage(
+    maxLoad: number,
+    currentLoadKg: number
+  ): { percentage: number; severity: Severity } {
+    const percentage = Math.round((currentLoadKg / maxLoad) * 100);
+    const severity = getLoadPercentageStatusSeverity(percentage);
+    return { severity, percentage };
+  }
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (!doseInProgress) {
         //todo: perform CB request
-        const response = {
+        let response = {
           gpsStatus: SeverityEnum.WARN,
           bluetoothStatus: SeverityEnum.OK,
-          applicatorsStatus: SeverityEnum.ERROR,
+          applicatorsStatus: SeverityEnum.OK,
           velocity: 10,
           location: { latitude: '', longitude: '' },
         };
@@ -90,74 +114,218 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
     }, Config().APPLICATION.REQUEST_INTERVAL_MS);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [doseInProgress]);
 
   function onFinishButtonPress() {
     props.navigation.navigate('HomeScreen');
   }
 
-  function processDose(amount: number) {
-    console.log('processDose', amount);
-    setApplicatorsStatus(SeverityEnum.WARN);
-    setDoseInProgress(true);
-    //call backend
+  const onLeftApplicatorSelectedCallback = useCallback(
+    (state: boolean) => {
+      const aux = { ...leftApplicator };
+      aux.active = state;
+      setLeftApplicator(aux);
+    },
+    [leftApplicator, setLeftApplicator]
+  );
 
-    if (leftApplicator.active) {
-      setLeftApplicator({
-        active: true,
-        available: leftApplicator.available,
-        loadKg: leftApplicator.loadKg - amount * Config().APPLICATION.DOSE_WEIGHT_KG,
-      });
-    }
+  const onRightApplicatorSelectedCallback = useCallback(
+    (state: boolean) => {
+      const aux = { ...rightApplicator };
+      aux.active = state;
+      setRightApplicator(aux);
+    },
+    [rightApplicator, setRightApplicator]
+  );
 
-    if (rightApplicator.active) {
-      console.log('hete');
-      setRightApplicator({
-        active: true,
-        available: rightApplicator.available,
-        loadKg: rightApplicator.loadKg - amount * Config().APPLICATION.DOSE_WEIGHT_KG,
-      });
-    }
+  const onCenterApplicatorSelectedCallback = useCallback(
+    (state: boolean) => {
+      const aux = { ...centerApplicator };
+      aux.active = state;
+      setCenterApplicator(aux);
+    },
+    [rightApplicator, setRightApplicator]
+  );
 
-    if (centerApplicator.active) {
-      setCenterApplicator({
-        active: true,
-        available: centerApplicator.available,
-        loadKg: centerApplicator.loadKg - amount * Config().APPLICATION.DOSE_WEIGHT_KG,
-      });
-    }
+  const processDose = useCallback(
+    async (amount: number) => {
+      setApplicatorsStatus(SeverityEnum.WARN);
+      setDoseInProgress(true);
+      //call backend
+      let activeApplicators = 0;
+      if (leftApplicator.active) {
+        activeApplicators++;
+        let load = leftApplicator.loadKg;
+        if (load <= 0) {
+          load = 0;
+          if (!showLeftNoLoadWarnOnce) {
+            ShowToast({
+              durationMs: 15000,
+              title: 'Reservatório Esquerdo Vazio',
+              message:
+                'Por favor, verifique a carga do dosador esquerdo e o desative se estiver vazio.',
+              severity: SeverityEnum.WARN,
+              closeButton: true,
+            });
+            setShowLeftNoLoadWarnOnce(true);
+          }
+        } else {
+          load -= amount * Config().APPLICATION.DOSE_WEIGHT_KG;
+        }
+        setLeftApplicator({
+          active: true,
+          available: leftApplicator.available,
+          loadKg: load,
+        });
+      }
 
-    const center = calculateApplicatorsLoadPercentage(
-      Config().APPLICATION.TOTAL_LOAD_KG,
-      centerApplicator.loadKg
-    );
-    const right = calculateApplicatorsLoadPercentage(
-      Config().APPLICATION.TOTAL_LOAD_KG,
-      rightApplicator.loadKg
-    );
-    const left = calculateApplicatorsLoadPercentage(
-      Config().APPLICATION.TOTAL_LOAD_KG,
-      leftApplicator.loadKg
-    );
-    setApplicatorsLoadPercentage({ center, right, left });
-    setApplicatorsStatus(SeverityEnum.OK);
-    setDoseInProgress(false);
-  }
+      if (rightApplicator.active) {
+        activeApplicators++;
+        let load = rightApplicator.loadKg;
+        if (load <= 0) {
+          load = 0;
+          if (!showRightNoLoadWarnOnce) {
+            ShowToast({
+              durationMs: 15000,
+              title: 'Reservatório Direito Vazio',
+              message:
+                'Por favor, verifique a carga do dosador direito e o desative se estiver vazio.',
+              severity: SeverityEnum.WARN,
+              closeButton: true,
+            });
+            setShowRightNoLoadWarnOnce(true);
+          }
+        } else {
+          load -= amount * Config().APPLICATION.DOSE_WEIGHT_KG;
+        }
+        setRightApplicator({
+          active: true,
+          available: rightApplicator.available,
+          loadKg: load,
+        });
+      }
 
-  function onDoseButtonPress() {
+      if (centerApplicator.active) {
+        activeApplicators++;
+        let load = centerApplicator.loadKg;
+        if (load <= 0) {
+          load = 0;
+          if (!showCenterNoLoadWarnOnce) {
+            ShowToast({
+              durationMs: 15000,
+              title: 'Reservatório Central Vazio',
+              message:
+                'Por favor, verifique a carga do dosador central e o desative se estiver vazio.',
+              severity: SeverityEnum.WARN,
+              closeButton: true,
+            });
+            setShowCenterNoLoadWarnOnce(true);
+          }
+        } else {
+          load -= amount * Config().APPLICATION.DOSE_WEIGHT_KG;
+        }
+        setCenterApplicator({
+          active: true,
+          available: centerApplicator.available,
+          loadKg: load,
+        });
+      }
+
+      const center = calculateApplicatorsLoadPercentage(
+        Config().APPLICATION.TOTAL_LOAD_KG,
+        centerApplicator.loadKg
+      );
+      const right = calculateApplicatorsLoadPercentage(
+        Config().APPLICATION.TOTAL_LOAD_KG,
+        rightApplicator.loadKg
+      );
+      const left = calculateApplicatorsLoadPercentage(
+        Config().APPLICATION.TOTAL_LOAD_KG,
+        leftApplicator.loadKg
+      );
+      if (left.severity.name != applicatorsLoadPercentage.left.severity.name) {
+        let durationMs = 5000;
+        let closeButton = false;
+        if (left.severity.name == SeverityEnum.ERROR.name) {
+          durationMs = 10000;
+          closeButton = true;
+        }
+        ShowToast({
+          title: `Reservatório Esquerdo: ${left.percentage}%`,
+          message: `Atingido menos de ${left.percentage}% de sua capacidade total.`,
+          durationMs,
+          severity: left.severity,
+          closeButton,
+        });
+      }
+      if (right.severity.name != applicatorsLoadPercentage.right.severity.name) {
+        let durationMs = 5000;
+        let closeButton = false;
+        if (right.severity.name == SeverityEnum.ERROR.name) {
+          durationMs = 10000;
+          closeButton = true;
+        }
+        ShowToast({
+          title: `Reservatório Direito: ${right.percentage}%`,
+          message: `Atingido menos de ${right.percentage}% de sua capacidade total.`,
+          durationMs,
+          severity: right.severity,
+          closeButton,
+        });
+      }
+      if (center.severity.name != applicatorsLoadPercentage.center.severity.name) {
+        let durationMs = 5000;
+        let closeButton = false;
+        if (center.severity.name == SeverityEnum.ERROR.name) {
+          durationMs = 10000;
+          closeButton = true;
+        }
+        ShowToast({
+          title: `Reservatório Cenral: ${center.percentage}%`,
+          message: `Atingido menos de ${center.percentage}% de sua capacidade total.`,
+          durationMs,
+          severity: center.severity,
+          closeButton,
+        });
+      }
+      setApplicatorsLoadPercentage({ center, right, left });
+      setApplicatorsStatus(SeverityEnum.OK);
+      setDoseInProgress(false);
+      setAppliedDoses(appliedDoses + amount * activeApplicators);
+    },
+    [
+      centerApplicator,
+      leftApplicator,
+      rightApplicator,
+      doseInProgress,
+      setAppliedDoses,
+      setApplicatorsLoadPercentage,
+      applicatorsLoadPercentage,
+      appliedDoses,
+    ]
+  );
+
+  const onDoseButtonPress = useCallback(() => {
     processDose(doseAmount);
-  }
+  }, [doseAmount, processDose]);
 
-  function onPresetPressed(value: number) {
-    processDose(value);
-  }
+  const onPresetPressed = useCallback(
+    (value: number) => {
+      processDose(value);
+    },
+    [processDose]
+  );
+
+  const onApplicatorsStatusChange = useCallback(() => {
+    return applicatorsStatus;
+  }, [applicatorsStatus]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Box height={'15%'} alignItems="center" justifyContent="center" width="100%">
         <StatusBar
           velocity={velocity}
-          applicatorStatus={applicatorsStatus}
+          applicatorStatusChange={onApplicatorsStatusChange}
           gpsStatus={gpsStatus}
           bluetoothStatus={bluetoothStatus}
         />
@@ -190,13 +358,9 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
           leftApplicator={leftApplicator}
           centerApplicator={centerApplicator}
           rightApplicator={rightApplicator}
-          onLeftApplicatorSelected={() => {
-            console.log('Left Applicator Selected');
-          }}
-          onCenterApplicatorSelected={() => {}}
-          onRightApplicatorSelected={(b) => {
-            console.log('Left Applicator Selected');
-          }}
+          onLeftApplicatorSelected={onLeftApplicatorSelectedCallback}
+          onCenterApplicatorSelected={onCenterApplicatorSelectedCallback}
+          onRightApplicatorSelected={onRightApplicatorSelectedCallback}
         />
       </Box>
 
@@ -217,10 +381,10 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
           onFinishPressed={onFinishButtonPress}
           location={location}
           applicatorsLoadPercentage={applicatorsLoadPercentage}
+          appliedDoses={appliedDoses}
         />
       </BottomSheet>
     </GestureHandlerRootView>
   );
 }
-
 export default memo(ExecutionScreen);

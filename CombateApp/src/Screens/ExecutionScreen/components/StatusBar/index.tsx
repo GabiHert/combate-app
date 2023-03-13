@@ -1,14 +1,31 @@
 import { Box, Stack } from 'native-base';
-import React, { memo } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { Severity } from '../../../../api/core/enum/severity';
 import { Theme } from '../../../../app/theme/theme';
 
 function StatusBar(props: {
-  applicatorStatus: Severity;
+  applicatorStatusChange: () => Severity;
   gpsStatus: Severity;
   bluetoothStatus: Severity;
   velocity: number;
 }) {
+  const [applicatorStatus, setApplicatorStatus] = useState(props.applicatorStatusChange());
+  const [gpsStatus, setGpsStatus] = useState(props.gpsStatus);
+  const [bluetoothStatus, setBluetoothStatus] = useState(props.bluetoothStatus);
+
+  useEffect(() => {
+    console.log(props.applicatorStatusChange().name);
+    setApplicatorStatus(props.applicatorStatusChange());
+  }, [props.applicatorStatusChange]);
+
+  useEffect(() => {
+    setGpsStatus(props.gpsStatus);
+  }, [props.gpsStatus]);
+
+  useEffect(() => {
+    setBluetoothStatus(props.bluetoothStatus);
+  }, [props.bluetoothStatus]);
+
   return (
     <>
       <Stack
@@ -30,14 +47,14 @@ function StatusBar(props: {
           >
             Dosadores
             <Box
-              bgColor={props.applicatorStatus.color}
+              bgColor={applicatorStatus.color}
               borderRadius={50}
               alignItems="center"
               justifyContent="center"
               width="100%"
               height={'70%'}
             >
-              USO
+              {applicatorStatus.message}
             </Box>
           </Box>
         </Box>
@@ -52,14 +69,14 @@ function StatusBar(props: {
           >
             GPS
             <Box
-              bgColor={props.gpsStatus.color}
+              bgColor={gpsStatus.color}
               borderRadius={50}
               alignItems="center"
               justifyContent="center"
               width="100%"
               height={'70%'}
             >
-              OK
+              {gpsStatus.message}
             </Box>
           </Box>
         </Box>
@@ -74,14 +91,14 @@ function StatusBar(props: {
           >
             Bluetooth
             <Box
-              bgColor={props.bluetoothStatus.color}
+              bgColor={bluetoothStatus.color}
               borderRadius={50}
               alignItems="center"
               justifyContent="center"
               width="100%"
               height={'70%'}
             >
-              ERROR
+              {bluetoothStatus.message}
             </Box>
           </Box>
         </Box>

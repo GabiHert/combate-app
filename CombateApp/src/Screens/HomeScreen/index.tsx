@@ -1,27 +1,44 @@
 import { Box, Button, IconButton, Text } from 'native-base';
-import React from 'react';
+import React, { useState } from 'react';
 import { ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Config } from '../../app/config/config';
 import { Theme } from '../../app/theme/theme';
+import LoginModal from '../../Components/LoginModal';
 import style from './style';
 const image = require('../../app/assets/homebackground.png');
 
 function HomeScreen(props: { navigation: any }) {
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   function onStartButtonPressed() {
     props.navigation.navigate('PreExecutionScreen');
   }
 
   function onSettingsButtonPressed() {
-    props.navigation.navigate('ConfigScreen');
+    setIsLoginOpen(true);
+  }
+
+  function loginValidator(loginProps: { user: string; password: string }): boolean {
+    const valid = true;
+    if (valid) {
+      props.navigation.navigate('ConfigScreen');
+    }
+    return valid;
   }
   return (
     <SafeAreaView>
       <ImageBackground resizeMode="cover" source={image} style={style.container}>
+        <LoginModal
+          onClose={() => {
+            setIsLoginOpen(false);
+          }}
+          isOpen={isLoginOpen}
+          loginValidator={loginValidator}
+        />
         <IconButton
           style={{ alignSelf: 'flex-end' }}
-          _icon={{ as: Icon, name: 'settings', size: 30, color: 'black' }}
+          _icon={{ as: Icon, name: 'settings', size: 30, color: 'white' }}
           onPress={() => {
             onSettingsButtonPressed();
           }}
@@ -45,7 +62,6 @@ function HomeScreen(props: { navigation: any }) {
 
         <Box width={'100%'} height={'5%'} justifyContent="center" alignItems="center">
           <Text color="white" fontSize={20}>
-            {' '}
             {Config().APPLICATION.VERSION}
           </Text>
         </Box>
