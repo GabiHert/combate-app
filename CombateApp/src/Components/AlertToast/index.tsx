@@ -12,7 +12,7 @@ import {
 } from 'native-base';
 import { getRandomString } from 'native-base/lib/typescript/theme/v33x-theme/tools';
 import { Severity, SeverityEnum } from '../../api/core/enum/severity';
-import { Config } from '../../app/config/config';
+import { Config } from '../../api/core/adapter/config';
 import { Theme } from '../../app/theme/theme';
 
 export function AlertToast(props: {

@@ -5,9 +5,25 @@ import { Theme } from '../../app/theme/theme';
 import { ShowToast } from '../../Components/AlertToast';
 import { SeverityEnum } from '../../api/core/enum/severity';
 
-interface Preset {
+interface IPreset {
   name: string;
   doseAmount: number;
+}
+
+interface IConfigValidationResult {
+  isValid: boolean;
+  rightTankMaxLoadError: string;
+  centerTankMaxLoadError: string;
+  leftTankMaxLoadError: string;
+  doseWeightKgError: string;
+  preset1NameError: string;
+  preset2NameError: string;
+  preset3NameError: string;
+  preset4NameError: string;
+  preset1DoseError: string;
+  preset2DoseError: string;
+  preset3DoseError: string;
+  preset4DoseError: string;
 }
 
 function ConfigScreen(props: { navigation: any }) {
@@ -15,10 +31,23 @@ function ConfigScreen(props: { navigation: any }) {
   const [centerTankMaxLoad, setCenterTankMaxLoad] = useState<number>();
   const [leftTankMaxLoad, setLeftTankMaxLoad] = useState<number>();
   const [doseWeightKg, setDoseWeightKg] = useState<number>();
-  const [preset1, setPreset1] = useState<Preset>();
-  const [preset2, setPreset2] = useState<Preset>();
-  const [preset3, setPreset3] = useState<Preset>();
-  const [preset4, setPreset4] = useState<Preset>();
+  const [preset1, setPreset1] = useState<IPreset>();
+  const [preset2, setPreset2] = useState<IPreset>();
+  const [preset3, setPreset3] = useState<IPreset>();
+  const [preset4, setPreset4] = useState<IPreset>();
+
+  const [rightTankMaxLoadError, setRightTankMaxLoadError] = useState<string>();
+  const [centerTankMaxLoadError, setCenterTankMaxLoadError] = useState<string>();
+  const [leftTankMaxLoadError, setLeftTankMaxLoadError] = useState<string>();
+  const [doseWeightKgError, setDoseWeightKgError] = useState<string>();
+  const [preset1NameError, setPreset1NameError] = useState<string>();
+  const [preset2NameError, setPreset2NameError] = useState<string>();
+  const [preset3NameError, setPreset3NameError] = useState<string>();
+  const [preset4NameError, setPreset4NameError] = useState<string>();
+  const [preset1DoseError, setPreset1DoseError] = useState<string>();
+  const [preset2DoseError, setPreset2DoseError] = useState<string>();
+  const [preset3DoseError, setPreset3DoseError] = useState<string>();
+  const [preset4DoseError, setPreset4DoseError] = useState<string>();
 
   function onRightTankMaxLoadChange(text: string) {
     setRightTankMaxLoad(Number(text));
@@ -35,22 +64,122 @@ function ConfigScreen(props: { navigation: any }) {
     setDoseWeightKg(kg);
   }
 
-  const onPreset1NameChange = useCallback((text: string) => {}, [preset1]);
-  const onPreset2NameChange = useCallback((text: string) => {}, [preset2]);
-  const onPreset3NameChange = useCallback((text: string) => {}, [preset3]);
-  const onPreset4NameChange = useCallback((text: string) => {}, [preset4]);
+  const onPreset1NameChange = useCallback(
+    (text: string) => {
+      const aux = preset1;
+      aux.name = text;
+      setPreset1(aux);
+    },
+    [preset1]
+  );
+  const onPreset2NameChange = useCallback(
+    (text: string) => {
+      const aux = preset2;
+      aux.name = text;
+      setPreset2(aux);
+    },
+    [preset2]
+  );
+  const onPreset3NameChange = useCallback(
+    (text: string) => {
+      const aux = preset3;
+      aux.name = text;
+      setPreset3(aux);
+    },
+    [preset3]
+  );
+  const onPreset4NameChange = useCallback(
+    (text: string) => {
+      const aux = preset4;
+      aux.name = text;
+      setPreset4(aux);
+    },
+    [preset4]
+  );
 
-  const onPreset1DoseChange = useCallback((text: string) => {}, [preset1]);
-  const onPreset2DoseChange = useCallback((text: string) => {}, [preset2]);
-  const onPreset3DoseChange = useCallback((text: string) => {}, [preset3]);
-  const onPreset4DoseChange = useCallback((text: string) => {}, [preset4]);
+  const onPreset1DoseChange = useCallback(
+    (text: string) => {
+      const aux = preset1;
+      const doses = Math.trunc(Number(text));
+      aux.doseAmount = doses;
+      setPreset1(aux);
+    },
+    [preset1]
+  );
+  const onPreset2DoseChange = useCallback(
+    (text: string) => {
+      const aux = preset2;
+      const doses = Math.trunc(Number(text));
+      aux.doseAmount = doses;
+      setPreset2(aux);
+    },
+    [preset2]
+  );
+  const onPreset3DoseChange = useCallback(
+    (text: string) => {
+      const aux = preset3;
+      const doses = Math.trunc(Number(text));
+      aux.doseAmount = doses;
+      setPreset3(aux);
+    },
+    [preset3]
+  );
+  const onPreset4DoseChange = useCallback(
+    (text: string) => {
+      const aux = preset4;
+      const doses = Math.trunc(Number(text));
+      aux.doseAmount = doses;
+      setPreset4(aux);
+    },
+    [preset4]
+  );
 
   const onSavePressed = useCallback(() => {
-    ShowToast({
-      title: 'Alterações salvas com sucesso',
-      severity: SeverityEnum.OK,
-      durationMs: 2000,
-    });
+    //todo: call validation
+    const result = {
+      isValid: false,
+      rightTankMaxLoadError: '',
+      centerTankMaxLoadError: '',
+      leftTankMaxLoadError: '',
+      doseWeightKgError: '',
+      preset1NameError: '',
+      preset2NameError: '',
+      preset3NameError: '',
+      preset4NameError: '',
+      preset1DoseError: '',
+      preset2DoseError: '',
+      preset3DoseError: '',
+      preset4DoseError: '',
+    };
+    if (!result.isValid) {
+      ShowToast({
+        title: 'Erro ao salvar alterações',
+        severity: SeverityEnum.ERROR,
+        durationMs: 2000,
+      });
+      setRightTankMaxLoadError(result.rightTankMaxLoadError);
+      setLeftTankMaxLoadError(result.leftTankMaxLoadError);
+      setCenterTankMaxLoadError(result.centerTankMaxLoadError);
+      setPreset1NameError(result.preset1NameError);
+      setPreset2NameError(result.preset2NameError);
+      setPreset3NameError(result.preset3NameError);
+      setPreset4NameError(result.preset4NameError);
+      setPreset1DoseError(result.preset1DoseError);
+      setPreset2DoseError(result.preset2DoseError);
+      setPreset3DoseError(result.preset3DoseError);
+      setPreset4DoseError(result.preset4DoseError);
+    } else {
+      //todo: call backend to persist
+      ShowToast({
+        title: 'Alterações salvas com sucesso',
+        severity: SeverityEnum.OK,
+        durationMs: 2000,
+      });
+    }
+  }, []);
+
+  const onBackPressed = useCallback(() => {
+    props.navigation.navigate('HomeScreen');
   }, []);
 
   return (
@@ -63,7 +192,7 @@ function ConfigScreen(props: { navigation: any }) {
           <FormInput
             title="Reservatório direito"
             description="Preencha este campo com a capacidade máxima do reservatório direito (Kg)"
-            errorMessage={''}
+            errorMessage={rightTankMaxLoadError}
             placeholder="25"
             onChangeText={onRightTankMaxLoadChange}
             keyboardType={'numeric'}
@@ -71,7 +200,7 @@ function ConfigScreen(props: { navigation: any }) {
           <FormInput
             title="Reservatório central"
             description="Preencha este campo com a capacidade máxima do reservatório central (Kg)"
-            errorMessage={''}
+            errorMessage={centerTankMaxLoadError}
             placeholder="25"
             onChangeText={onCenterTankMaxLoadChange}
             keyboardType={'numeric'}
@@ -79,7 +208,7 @@ function ConfigScreen(props: { navigation: any }) {
           <FormInput
             title="Reservatório esquerdo"
             description="Preencha este campo com a capacidade máxima do reservatório esquerdo (Kg)"
-            errorMessage={''}
+            errorMessage={leftTankMaxLoadError}
             placeholder="25"
             onChangeText={onLeftTankMaxLoadChange}
             keyboardType={'numeric'}
@@ -91,7 +220,7 @@ function ConfigScreen(props: { navigation: any }) {
           <FormInput
             title="Peso dose"
             description="Preencha este campo com o peso de cada dose (g)"
-            errorMessage={''}
+            errorMessage={doseWeightKgError}
             placeholder="25"
             onChangeText={onDoseWeightChange}
             keyboardType={'numeric'}
@@ -103,16 +232,16 @@ function ConfigScreen(props: { navigation: any }) {
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 1"
-            errorMessage={''}
+            errorMessage={preset1NameError}
             placeholder="Quadrante"
-            onChangeText={() => {}}
+            onChangeText={onPreset1NameChange}
           />
           <FormInput
             title="Doses"
             description="Preencha este campo com a quantidade de doses do Preset 1"
-            errorMessage={''}
+            errorMessage={preset1DoseError}
             placeholder="10"
-            onChangeText={() => {}}
+            onChangeText={onPreset1DoseChange}
             keyboardType={'numeric'}
           />
 
@@ -123,16 +252,16 @@ function ConfigScreen(props: { navigation: any }) {
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 2"
-            errorMessage={''}
+            errorMessage={preset2NameError}
             placeholder="Quadrante"
-            onChangeText={() => {}}
+            onChangeText={onPreset2NameChange}
           />
           <FormInput
             title="Doses"
             description="Preencha este campo com a quantidade de doses do Preset 2"
-            errorMessage={''}
+            errorMessage={preset2DoseError}
             placeholder="10"
-            onChangeText={() => {}}
+            onChangeText={onPreset2DoseChange}
             keyboardType={'numeric'}
           />
 
@@ -143,16 +272,16 @@ function ConfigScreen(props: { navigation: any }) {
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 3"
-            errorMessage={''}
+            errorMessage={preset3NameError}
             placeholder="Quadrante"
-            onChangeText={() => {}}
+            onChangeText={onPreset3NameChange}
           />
           <FormInput
             title="Doses"
             description="Preencha este campo com a quantidade de doses do Preset 3"
-            errorMessage={''}
+            errorMessage={preset3DoseError}
             placeholder="10"
-            onChangeText={() => {}}
+            onChangeText={onPreset3DoseChange}
             keyboardType={'numeric'}
           />
 
@@ -163,21 +292,21 @@ function ConfigScreen(props: { navigation: any }) {
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 4"
-            errorMessage={''}
+            errorMessage={preset4NameError}
             placeholder="Quadrante"
-            onChangeText={() => {}}
+            onChangeText={onPreset4NameChange}
           />
           <FormInput
             title="Doses"
             description="Preencha este campo com a quantidade de doses do Preset 4"
-            errorMessage={''}
+            errorMessage={preset4DoseError}
             placeholder="10"
-            onChangeText={() => {}}
+            onChangeText={onPreset4DoseChange}
             keyboardType={'numeric'}
           />
         </VStack>
 
-        <Box w="20%" h="60px" />
+        <Box w="20%" h="70px" />
       </ScrollView>
 
       <Box
@@ -186,7 +315,16 @@ function ConfigScreen(props: { navigation: any }) {
         right={2}
         bgColor={Theme().color.b500}
         borderRadius={20}
-        w="20%"
+        w="25%"
+        h="60px"
+      />
+      <Box
+        position={'absolute'}
+        bottom={2}
+        left={2}
+        bgColor={Theme().color.b500}
+        borderRadius={20}
+        w="25%"
         h="60px"
       />
       <Button
@@ -197,10 +335,24 @@ function ConfigScreen(props: { navigation: any }) {
         bgColor={Theme().color.b300}
         borderRadius={20}
         _pressed={{ opacity: 0.8 }}
-        w="20%"
+        w="25%"
         h="60px"
       >
         Salvar
+      </Button>
+
+      <Button
+        onPress={onBackPressed}
+        position={'absolute'}
+        bottom={2}
+        left={2}
+        bgColor={Theme().color.sError}
+        borderRadius={20}
+        _pressed={{ opacity: 0.8 }}
+        w="25%"
+        h="60px"
+      >
+        Cancelar
       </Button>
     </Box>
   );

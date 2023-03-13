@@ -3,13 +3,14 @@ import React, { useState } from 'react';
 import { ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Config } from '../../app/config/config';
+import { AConfig } from '../../api/core/adapter/config';
 import { Theme } from '../../app/theme/theme';
 import LoginModal from '../../Components/LoginModal';
 import style from './style';
 const image = require('../../app/assets/homebackground.png');
 
-function HomeScreen(props: { navigation: any }) {
+function HomeScreen(props: { navigation: any; route: any }) {
+  const config: AConfig = props.route.param.config;
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   function onStartButtonPressed() {
     props.navigation.navigate('PreExecutionScreen');
@@ -39,9 +40,11 @@ function HomeScreen(props: { navigation: any }) {
         <IconButton
           style={{ alignSelf: 'flex-end' }}
           _icon={{ as: Icon, name: 'settings', size: 30, color: 'white' }}
+          _pressed={{ opacity: 0.8 }}
           onPress={() => {
             onSettingsButtonPressed();
           }}
+          background="transparent"
         ></IconButton>
 
         <Box width={'100%'} height={'90%'} justifyContent="center" alignItems="center">
@@ -56,13 +59,13 @@ function HomeScreen(props: { navigation: any }) {
             height="15%"
             borderRadius={50}
           >
-            {Config().LABELS.PT_BT.HOME_SCREEN.START_BUTTON}
+            Iniciar
           </Button>
         </Box>
 
         <Box width={'100%'} height={'5%'} justifyContent="center" alignItems="center">
           <Text color="white" fontSize={20}>
-            {Config().APPLICATION.VERSION}
+            {config.get().APPLICATION.VERSION}
           </Text>
         </Box>
       </ImageBackground>

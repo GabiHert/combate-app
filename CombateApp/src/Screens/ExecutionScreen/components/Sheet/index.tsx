@@ -1,9 +1,9 @@
 import { Box, Button, Stack, Text } from 'native-base';
 import React, { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { min } from 'react-native-reanimated';
+import { AConfig } from '../../../../api/core/adapter/config';
 import { Severity } from '../../../../api/core/enum/severity';
 import { ILocation } from '../../../../api/interface/location';
-import { Config } from '../../../../app/config/config';
 import { Theme } from '../../../../app/theme/theme';
 
 export interface IApplicatorsPercentage {
@@ -13,6 +13,7 @@ export interface IApplicatorsPercentage {
 }
 
 function Sheet(props: {
+  config: AConfig;
   onFinishPressed: () => void;
   location: ILocation;
   applicatorsLoadPercentage: IApplicatorsPercentage;
@@ -117,7 +118,9 @@ function Sheet(props: {
               </Stack>
               <Stack direction={'row'} alignItems="baseline" justifyContent="center">
                 <Text fontSize={35} fontWeight="bold">
-                  {Math.trunc(props.appliedDoses * Config().APPLICATION.DOSE_WEIGHT_KG * 1000)}
+                  {Math.trunc(
+                    props.appliedDoses * props.config.get().APPLICATION.DOSE_WEIGHT_KG * 1000
+                  )}
                 </Text>
                 <Text fontSize={10}>g</Text>
               </Stack>

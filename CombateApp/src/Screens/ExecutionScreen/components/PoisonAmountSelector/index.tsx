@@ -1,10 +1,11 @@
 import { Box, Button, IconButton, Stack, Text } from 'native-base';
 import React, { useCallback, useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Config } from '../../../../app/config/config';
+import { AConfig } from '../../../../api/core/adapter/config';
 import { Theme } from '../../../../app/theme/theme';
 
 function PoisonAmountSelector(props: {
+  config: AConfig;
   onDoseAmountChange: (amount: number) => void;
   onPresetPressed: (amount: number) => void;
   doseAmount: number;
@@ -18,41 +19,41 @@ function PoisonAmountSelector(props: {
   );
 
   const onUpPressed = useCallback(() => {
-    if (doseAmount < Config().APPLICATION.MAX_DOSES) {
+    if (doseAmount < props.config.get().APPLICATION.MAX_DOSES) {
       setDoseAmount(doseAmount + 1);
       onDoseAmountChangeCallback(doseAmount + 1);
     }
   }, [doseAmount, setDoseAmount]);
 
   const onDownPressed = useCallback(() => {
-    if (doseAmount > Config().APPLICATION.MIN_DOSES) {
+    if (doseAmount > props.config.get().APPLICATION.MIN_DOSES) {
       setDoseAmount(doseAmount - 1);
       onDoseAmountChangeCallback(doseAmount - 1);
     }
   }, [doseAmount, setDoseAmount]);
 
   function onPreset1Pressed() {
-    setDoseAmount(Config().PRESETS.P1);
-    onDoseAmountChangeCallback(Config().PRESETS.P1);
-    props.onPresetPressed(Config().PRESETS.P1);
+    setDoseAmount(props.config.get().PRESETS.P1);
+    onDoseAmountChangeCallback(props.config.get().PRESETS.P1);
+    props.onPresetPressed(props.config.get().PRESETS.P1);
   }
 
   function onPreset2Pressed() {
-    setDoseAmount(Config().PRESETS.P2);
-    onDoseAmountChangeCallback(Config().PRESETS.P2);
-    props.onPresetPressed(Config().PRESETS.P2);
+    setDoseAmount(props.config.get().PRESETS.P2);
+    onDoseAmountChangeCallback(props.config.get().PRESETS.P2);
+    props.onPresetPressed(props.config.get().PRESETS.P2);
   }
 
   function onPreset3Pressed() {
-    setDoseAmount(Config().PRESETS.P3);
-    onDoseAmountChangeCallback(Config().PRESETS.P3);
-    props.onPresetPressed(Config().PRESETS.P3);
+    setDoseAmount(props.config.get().PRESETS.P3);
+    onDoseAmountChangeCallback(props.config.get().PRESETS.P3);
+    props.onPresetPressed(props.config.get().PRESETS.P3);
   }
 
   function onPreset4Pressed() {
-    setDoseAmount(Config().PRESETS.P4);
-    onDoseAmountChangeCallback(Config().PRESETS.P4);
-    props.onPresetPressed(Config().PRESETS.P4);
+    setDoseAmount(props.config.get().PRESETS.P4);
+    onDoseAmountChangeCallback(props.config.get().PRESETS.P4);
+    props.onPresetPressed(props.config.get().PRESETS.P4);
   }
 
   return (

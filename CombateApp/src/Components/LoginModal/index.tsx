@@ -2,6 +2,7 @@ import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } fr
 import { useCallback, useState } from 'react';
 import { Text } from 'react-native-svg';
 import { Theme } from '../../app/theme/theme';
+import FormInput from '../FormInput';
 
 function LoginModal(props: {
   isOpen: boolean;
@@ -40,13 +41,17 @@ function LoginModal(props: {
         <Modal.CloseButton />
         <Modal.Header>Configurações</Modal.Header>
         <Modal.Body>
-          <FormControl isInvalid={!isValid}>
-            <FormControl.Label>Usuário</FormControl.Label>
-            <Input borderRadius={20} onChangeText={onChangeUser} />
+          <FormControl>
+            <FormInput title="Usuário" isInvalid={!isValid} w="100%" onChangeText={onChangeUser} />
           </FormControl>
-          <FormControl isInvalid={!isValid} mt="3">
-            <FormControl.Label>Senha</FormControl.Label>
-            <Input borderRadius={20} type={'password'} onChangeText={onChangePassword} />
+          <FormControl mt="3">
+            <FormInput
+              title="Senha"
+              isInvalid={!isValid}
+              w="100%"
+              onChangeText={onChangePassword}
+              isPassword={true}
+            />
           </FormControl>
         </Modal.Body>
         <Modal.Footer

@@ -3,9 +3,9 @@ import { Box, Button, Toast, useToast } from 'native-base';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { BackHandler } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { AConfig } from '../../api/core/adapter/config';
 import { Severity, SeverityEnum } from '../../api/core/enum/severity';
 import { ILocation } from '../../api/interface/location';
-import { Config } from '../../app/config/config';
 import { Theme } from '../../app/theme/theme';
 import { AlertToast, ShowToast } from '../../Components/AlertToast';
 import ApplicatorSelector from './components/ApplicatorSelector';
@@ -16,6 +16,7 @@ import style from './style';
 import { Applicator } from './types/applicator';
 
 function ExecutionScreen(props: { navigation: any; route: any }) {
+  const config: AConfig = props.route.param.config;
   const applicator: {
     center: { loadKg: number };
     right: { loadKg: number };
@@ -24,7 +25,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
   const snapPoints: Array<string> = ['3.5%', '20%', '40%', '52%'];
   let handleSheetChanges: any;
-  const [doseAmount, setDoseAmount] = useState<number>(Config().APPLICATION.MIN_DOSES);
+  const [doseAmount, setDoseAmount] = useState<number>(config.get().APPLICATION.MIN_DOSES);
   const [velocity, setVelocity] = useState<number>(0);
   const [bluetoothStatus, setBluetoothStatus] = useState<Severity>(SeverityEnum.WARN);
   const [gpsStatus, setGpsStatus] = useState<Severity>(SeverityEnum.WARN);
@@ -52,15 +53,15 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
   const [applicatorsLoadPercentage, setApplicatorsLoadPercentage] =
     useState<IApplicatorsPercentage>({
       center: calculateApplicatorsLoadPercentage(
-        Config().APPLICATION.TOTAL_LOAD_KG,
+        config.get().APPLICATION.TOTAL_LOAD_KG,
         centerApplicator.loadKg
       ),
       left: calculateApplicatorsLoadPercentage(
-        Config().APPLICATION.TOTAL_LOAD_KG,
+        config.get().APPLICATION.TOTAL_LOAD_KG,
         leftApplicator.loadKg
       ),
       right: calculateApplicatorsLoadPercentage(
-        Config().APPLICATION.TOTAL_LOAD_KG,
+        config.get().APPLICATION.TOTAL_LOAD_KG,
         rightApplicator.loadKg
       ),
     });
@@ -111,7 +112,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
         setGpsStatus(response.gpsStatus);
         setVelocity(response.velocity);
       }
-    }, Config().APPLICATION.REQUEST_INTERVAL_MS);
+    }, config.get().APPLICATION.REQUEST_INTERVAL_MS);
 
     return () => clearInterval(interval);
   }, [doseInProgress]);
@@ -170,7 +171,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
             setShowLeftNoLoadWarnOnce(true);
           }
         } else {
-          load -= amount * Config().APPLICATION.DOSE_WEIGHT_KG;
+          load -= amount * config.get().APPLICATION.DOSE_WEIGHT_KG;
         }
         setLeftApplicator({
           active: true,
@@ -196,7 +197,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
             setShowRightNoLoadWarnOnce(true);
           }
         } else {
-          load -= amount * Config().APPLICATION.DOSE_WEIGHT_KG;
+          load -= amount * config.get().APPLICATION.DOSE_WEIGHT_KG;
         }
         setRightApplicator({
           active: true,
@@ -222,7 +223,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
             setShowCenterNoLoadWarnOnce(true);
           }
         } else {
-          load -= amount * Config().APPLICATION.DOSE_WEIGHT_KG;
+          load -= amount * config.get().APPLICATION.DOSE_WEIGHT_KG;
         }
         setCenterApplicator({
           active: true,
@@ -232,15 +233,15 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
       }
 
       const center = calculateApplicatorsLoadPercentage(
-        Config().APPLICATION.TOTAL_LOAD_KG,
+        config.get().APPLICATION.TOTAL_LOAD_KG,
         centerApplicator.loadKg
       );
       const right = calculateApplicatorsLoadPercentage(
-        Config().APPLICATION.TOTAL_LOAD_KG,
+        config.get().APPLICATION.TOTAL_LOAD_KG,
         rightApplicator.loadKg
       );
       const left = calculateApplicatorsLoadPercentage(
-        Config().APPLICATION.TOTAL_LOAD_KG,
+        config.get().APPLICATION.TOTAL_LOAD_KG,
         leftApplicator.loadKg
       );
       if (left.severity.name != applicatorsLoadPercentage.left.severity.name) {
@@ -333,6 +334,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
 
       <Box height={'45%'}>
         <PoisonAmountSelector
+          config={config}
           onPresetPressed={onPresetPressed}
           onDoseAmountChange={setDoseAmount}
           doseAmount={doseAmount}
@@ -378,6 +380,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
         style={style.bottomSheet}
       >
         <Sheet
+          config={config}
           onFinishPressed={onFinishButtonPress}
           location={location}
           applicatorsLoadPercentage={applicatorsLoadPercentage}
