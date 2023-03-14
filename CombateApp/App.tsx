@@ -16,18 +16,18 @@ const Stack = createNativeStackNavigator();
 const repository: PRepository = new AAsyncStorage();
 const initialConfig: IConfigsProps = {
   APPLICATION: {
-    TOTAL_LOAD_KG: 0,
-    VERSION: '',
-    MAX_DOSES: 0,
-    MIN_DOSES: 0,
-    DOSE_WEIGHT_KG: 0,
-    REQUEST_INTERVAL_MS: 0,
+    TOTAL_LOAD_KG: 30,
+    VERSION: '0.0.1',
+    MAX_DOSES: 20,
+    MIN_DOSES: 1,
+    DOSE_WEIGHT_KG: 0.025,
+    REQUEST_INTERVAL_MS: 2000,
   },
   PRESETS: {
-    P1: 0,
-    P2: 0,
-    P3: 0,
-    P4: 0,
+    P1: 1,
+    P2: 4,
+    P3: 6,
+    P4: 10,
   },
 };
 const config = new AConfig(repository, initialConfig);

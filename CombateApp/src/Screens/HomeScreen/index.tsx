@@ -10,7 +10,7 @@ import style from './style';
 const image = require('../../app/assets/homebackground.png');
 
 function HomeScreen(props: { navigation: any; route: any }) {
-  const config: AConfig = props.route.param.config;
+  const config: AConfig = props.route.params.config;
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   function onStartButtonPressed() {
     props.navigation.navigate('PreExecutionScreen');

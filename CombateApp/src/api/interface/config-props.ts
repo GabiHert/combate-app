@@ -1,6 +1,8 @@
 export interface IConfigsProps {
   APPLICATION: {
-    TOTAL_LOAD_KG: number;
+    RIGHT_TANK_MAX_LOAD: number;
+    LEFT_TANK_MAX_LOAD: number;
+    CENTER_TANK_MAX_LOAD: number;
     VERSION: string;
     MAX_DOSES: number;
     MIN_DOSES: number;
@@ -9,9 +11,9 @@ export interface IConfigsProps {
   };
 
   PRESETS: {
-    P1: number;
-    P2: number;
-    P3: number;
-    P4: number;
+    P1: { NAME: string; DOSE_AMOUNT: number };
+    P2: { NAME: string; DOSE_AMOUNT: number };
+    P3: { NAME: string; DOSE_AMOUNT: number };
+    P4: { NAME: string; DOSE_AMOUNT: number };
   };
 }

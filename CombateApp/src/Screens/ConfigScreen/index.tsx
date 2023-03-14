@@ -4,6 +4,7 @@ import FormInput from '../../Components/FormInput';
 import { Theme } from '../../app/theme/theme';
 import { ShowToast } from '../../Components/AlertToast';
 import { SeverityEnum } from '../../api/core/enum/severity';
+import { AConfig } from '../../api/core/adapter/config';
 
 interface IPreset {
   name: string;
@@ -26,7 +27,9 @@ interface IConfigValidationResult {
   preset4DoseError: string;
 }
 
-function ConfigScreen(props: { navigation: any }) {
+function ConfigScreen(props: { navigation: any; route: any }) {
+  const config: AConfig = props.route.params.config;
+
   const [rightTankMaxLoad, setRightTankMaxLoad] = useState<number>();
   const [centerTankMaxLoad, setCenterTankMaxLoad] = useState<number>();
   const [leftTankMaxLoad, setLeftTankMaxLoad] = useState<number>();
@@ -136,8 +139,40 @@ function ConfigScreen(props: { navigation: any }) {
 
   const onSavePressed = useCallback(() => {
     //todo: call validation
+
+    const data = {
+      rightTankMaxLoad,
+      centerTankMaxLoad,
+      leftTankMaxLoad,
+      doseWeightKg,
+      preset1,
+      preset2,
+      preset3,
+      preset4,
+    };
+
+    console.log(data);
+
+    const cache = config.get();
+
+    cache.APPLICATION.DOSE_WEIGHT_KG = data.doseWeightKg;
+    cache.APPLICATION.RIGHT_TANK_MAX_LOAD = data.rightTankMaxLoad;
+    cache.APPLICATION.CENTER_TANK_MAX_LOAD = data.centerTankMaxLoad;
+    cache.APPLICATION.LEFT_TANK_MAX_LOAD = data.leftTankMaxLoad;
+    cache.APPLICATION.DOSE_WEIGHT_KG = data.doseWeightKg;
+    cache.PRESETS.P1.DOSE_AMOUNT = preset1.doseAmount;
+    cache.PRESETS.P1.NAME = preset1.name;
+    cache.PRESETS.P2.DOSE_AMOUNT = preset2.doseAmount;
+    cache.PRESETS.P2.NAME = preset2.name;
+    cache.PRESETS.P3.DOSE_AMOUNT = preset3.doseAmount;
+    cache.PRESETS.P3.NAME = preset3.name;
+    cache.PRESETS.P4.DOSE_AMOUNT = preset4.doseAmount;
+    cache.PRESETS.P4.NAME = preset4.name;
+
+    config.update(cache);
+
     const result = {
-      isValid: false,
+      isValid: true,
       rightTankMaxLoadError: '',
       centerTankMaxLoadError: '',
       leftTankMaxLoadError: '',

@@ -5,15 +5,20 @@ import { PRepository } from '../port/repository-port';
 
 export class AConfig implements PConfig {
   private cache: IConfigsProps;
-  constructor(private repository: PRepository, initialConfig: IConfigsProps) {
-    this.cache = initialConfig;
+  constructor(private repository: PRepository, def?: IConfigsProps) {
+    this.cache = def;
   }
   async update(config: IConfigsProps) {
     this.cache = config;
     const str = JSON.stringify(config);
     await this.repository.persist('CONFIG', str);
   }
-  get(): IConfigsProps {
+  getCache(): IConfigsProps {
     return this.cache;
+  }
+  async updateCache(): Promise<void> {
+    const str = await this.repository.get('CONFIG');
+    // const config = ;
+    this.cache = config;
   }
 }

@@ -16,7 +16,7 @@ import style from './style';
 import { Applicator } from './types/applicator';
 
 function ExecutionScreen(props: { navigation: any; route: any }) {
-  const config: AConfig = props.route.param.config;
+  const config: AConfig = props.route.params.config;
   const applicator: {
     center: { loadKg: number };
     right: { loadKg: number };
@@ -53,15 +53,15 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
   const [applicatorsLoadPercentage, setApplicatorsLoadPercentage] =
     useState<IApplicatorsPercentage>({
       center: calculateApplicatorsLoadPercentage(
-        config.get().APPLICATION.TOTAL_LOAD_KG,
+        config.get().APPLICATION.CENTER_TANK_MAX_LOAD,
         centerApplicator.loadKg
       ),
       left: calculateApplicatorsLoadPercentage(
-        config.get().APPLICATION.TOTAL_LOAD_KG,
+        config.get().APPLICATION.LEFT_TANK_MAX_LOAD,
         leftApplicator.loadKg
       ),
       right: calculateApplicatorsLoadPercentage(
-        config.get().APPLICATION.TOTAL_LOAD_KG,
+        config.get().APPLICATION.RIGHT_TANK_MAX_LOAD,
         rightApplicator.loadKg
       ),
     });
@@ -233,15 +233,15 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
       }
 
       const center = calculateApplicatorsLoadPercentage(
-        config.get().APPLICATION.TOTAL_LOAD_KG,
+        config.get().APPLICATION.CENTER_TANK_MAX_LOAD,
         centerApplicator.loadKg
       );
       const right = calculateApplicatorsLoadPercentage(
-        config.get().APPLICATION.TOTAL_LOAD_KG,
+        config.get().APPLICATION.RIGHT_TANK_MAX_LOAD,
         rightApplicator.loadKg
       );
       const left = calculateApplicatorsLoadPercentage(
-        config.get().APPLICATION.TOTAL_LOAD_KG,
+        config.get().APPLICATION.LEFT_TANK_MAX_LOAD,
         leftApplicator.loadKg
       );
       if (left.severity.name != applicatorsLoadPercentage.left.severity.name) {
