@@ -1,19 +1,19 @@
-import BottomSheet from '@gorhom/bottom-sheet';
-import { Box, Button, Toast, useToast } from 'native-base';
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { BackHandler } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { AConfig } from '../../api/core/adapter/config';
-import { Severity, SeverityEnum } from '../../api/core/enum/severity';
-import { ILocation } from '../../api/interface/location';
-import { Theme } from '../../app/theme/theme';
-import { AlertToast, ShowToast } from '../../Components/AlertToast';
-import ApplicatorSelector from './components/ApplicatorSelector';
-import PoisonAmountSelector from './components/PoisonAmountSelector';
-import Sheet, { IApplicatorsPercentage } from './components/Sheet';
-import StatusBar from './components/StatusBar';
-import style from './style';
-import { Applicator } from './types/applicator';
+import BottomSheet from "@gorhom/bottom-sheet";
+import { Box, Button, Toast, useToast } from "native-base";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import { BackHandler } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { AConfig } from "../../api/core/adapter/config";
+import { Severity, SeverityEnum } from "../../api/core/enum/severity";
+import { ILocation } from "../../api/interface/location";
+import { Theme } from "../../app/theme/theme";
+import { AlertToast, ShowToast } from "../../Components/AlertToast";
+import ApplicatorSelector from "./components/ApplicatorSelector";
+import PoisonAmountSelector from "./components/PoisonAmountSelector";
+import Sheet, { IApplicatorsPercentage } from "./components/Sheet";
+import StatusBar from "./components/StatusBar";
+import style from "./style";
+import { Applicator } from "./types/applicator";
 
 function ExecutionScreen(props: { navigation: any; route: any }) {
   const config: AConfig = props.route.params.config;
@@ -23,13 +23,19 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
     left: { loadKg: number };
   } = props.route.params.applicator;
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
-  const snapPoints: Array<string> = ['3.5%', '20%', '40%', '52%'];
+  const snapPoints: Array<string> = ["3.5%", "20%", "40%", "52%"];
   let handleSheetChanges: any;
-  const [doseAmount, setDoseAmount] = useState<number>(config.get().APPLICATION.MIN_DOSES);
+  const [doseAmount, setDoseAmount] = useState<number>(
+    config.getCache().APPLICATION.MIN_DOSES
+  );
   const [velocity, setVelocity] = useState<number>(0);
-  const [bluetoothStatus, setBluetoothStatus] = useState<Severity>(SeverityEnum.WARN);
+  const [bluetoothStatus, setBluetoothStatus] = useState<Severity>(
+    SeverityEnum.WARN
+  );
   const [gpsStatus, setGpsStatus] = useState<Severity>(SeverityEnum.WARN);
-  const [applicatorsStatus, setApplicatorsStatus] = useState<Severity>(SeverityEnum.WARN);
+  const [applicatorsStatus, setApplicatorsStatus] = useState<Severity>(
+    SeverityEnum.WARN
+  );
   const [doseInProgress, setDoseInProgress] = useState<boolean>(false);
   const [leftApplicator, setLeftApplicator] = useState<Applicator>({
     active: false,
@@ -47,28 +53,29 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
     loadKg: applicator.right.loadKg || 0,
   });
   const [location, setLocation] = useState<ILocation>({
-    latitude: '00.00000',
-    longitude: '00.00000',
+    latitude: "00.00000",
+    longitude: "00.00000",
   });
   const [applicatorsLoadPercentage, setApplicatorsLoadPercentage] =
     useState<IApplicatorsPercentage>({
       center: calculateApplicatorsLoadPercentage(
-        config.get().APPLICATION.CENTER_TANK_MAX_LOAD,
+        config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD,
         centerApplicator.loadKg
       ),
       left: calculateApplicatorsLoadPercentage(
-        config.get().APPLICATION.LEFT_TANK_MAX_LOAD,
+        config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD,
         leftApplicator.loadKg
       ),
       right: calculateApplicatorsLoadPercentage(
-        config.get().APPLICATION.RIGHT_TANK_MAX_LOAD,
+        config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD,
         rightApplicator.loadKg
       ),
     });
   const [appliedDoses, setAppliedDoses] = useState<number>(0);
   const [showRightNoLoadWarnOnce, setShowRightNoLoadWarnOnce] = useState(false);
   const [showLeftNoLoadWarnOnce, setShowLeftNoLoadWarnOnce] = useState(false);
-  const [showCenterNoLoadWarnOnce, setShowCenterNoLoadWarnOnce] = useState(false);
+  const [showCenterNoLoadWarnOnce, setShowCenterNoLoadWarnOnce] =
+    useState(false);
 
   function getLoadPercentageStatusSeverity(loadPercentage: number): Severity {
     if (loadPercentage <= 33.33) {
@@ -91,7 +98,10 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
   }
 
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => true
+    );
     return () => backHandler.remove();
   }, []);
 
@@ -104,7 +114,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
           bluetoothStatus: SeverityEnum.OK,
           applicatorsStatus: SeverityEnum.OK,
           velocity: 10,
-          location: { latitude: '', longitude: '' },
+          location: { latitude: "", longitude: "" },
         };
 
         setApplicatorsStatus(response.applicatorsStatus);
@@ -112,13 +122,13 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
         setGpsStatus(response.gpsStatus);
         setVelocity(response.velocity);
       }
-    }, config.get().APPLICATION.REQUEST_INTERVAL_MS);
+    }, config.getCache().APPLICATION.REQUEST_INTERVAL_MS);
 
     return () => clearInterval(interval);
   }, [doseInProgress]);
 
   function onFinishButtonPress() {
-    props.navigation.navigate('HomeScreen');
+    props.navigation.navigate("HomeScreen");
   }
 
   const onLeftApplicatorSelectedCallback = useCallback(
@@ -162,16 +172,16 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
           if (!showLeftNoLoadWarnOnce) {
             ShowToast({
               durationMs: 15000,
-              title: 'Reservatório Esquerdo Vazio',
+              title: "Reservatório Esquerdo Vazio",
               message:
-                'Por favor, verifique a carga do dosador esquerdo e o desative se estiver vazio.',
+                "Por favor, verifique a carga do dosador esquerdo e o desative se estiver vazio.",
               severity: SeverityEnum.WARN,
               closeButton: true,
             });
             setShowLeftNoLoadWarnOnce(true);
           }
         } else {
-          load -= amount * config.get().APPLICATION.DOSE_WEIGHT_KG;
+          load -= amount * config.getCache().APPLICATION.DOSE_WEIGHT_KG;
         }
         setLeftApplicator({
           active: true,
@@ -188,16 +198,16 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
           if (!showRightNoLoadWarnOnce) {
             ShowToast({
               durationMs: 15000,
-              title: 'Reservatório Direito Vazio',
+              title: "Reservatório Direito Vazio",
               message:
-                'Por favor, verifique a carga do dosador direito e o desative se estiver vazio.',
+                "Por favor, verifique a carga do dosador direito e o desative se estiver vazio.",
               severity: SeverityEnum.WARN,
               closeButton: true,
             });
             setShowRightNoLoadWarnOnce(true);
           }
         } else {
-          load -= amount * config.get().APPLICATION.DOSE_WEIGHT_KG;
+          load -= amount * config.getCache().APPLICATION.DOSE_WEIGHT_KG;
         }
         setRightApplicator({
           active: true,
@@ -214,16 +224,16 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
           if (!showCenterNoLoadWarnOnce) {
             ShowToast({
               durationMs: 15000,
-              title: 'Reservatório Central Vazio',
+              title: "Reservatório Central Vazio",
               message:
-                'Por favor, verifique a carga do dosador central e o desative se estiver vazio.',
+                "Por favor, verifique a carga do dosador central e o desative se estiver vazio.",
               severity: SeverityEnum.WARN,
               closeButton: true,
             });
             setShowCenterNoLoadWarnOnce(true);
           }
         } else {
-          load -= amount * config.get().APPLICATION.DOSE_WEIGHT_KG;
+          load -= amount * config.getCache().APPLICATION.DOSE_WEIGHT_KG;
         }
         setCenterApplicator({
           active: true,
@@ -233,15 +243,15 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
       }
 
       const center = calculateApplicatorsLoadPercentage(
-        config.get().APPLICATION.CENTER_TANK_MAX_LOAD,
+        config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD,
         centerApplicator.loadKg
       );
       const right = calculateApplicatorsLoadPercentage(
-        config.get().APPLICATION.RIGHT_TANK_MAX_LOAD,
+        config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD,
         rightApplicator.loadKg
       );
       const left = calculateApplicatorsLoadPercentage(
-        config.get().APPLICATION.LEFT_TANK_MAX_LOAD,
+        config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD,
         leftApplicator.loadKg
       );
       if (left.severity.name != applicatorsLoadPercentage.left.severity.name) {
@@ -259,7 +269,9 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
           closeButton,
         });
       }
-      if (right.severity.name != applicatorsLoadPercentage.right.severity.name) {
+      if (
+        right.severity.name != applicatorsLoadPercentage.right.severity.name
+      ) {
         let durationMs = 5000;
         let closeButton = false;
         if (right.severity.name == SeverityEnum.ERROR.name) {
@@ -274,7 +286,9 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
           closeButton,
         });
       }
-      if (center.severity.name != applicatorsLoadPercentage.center.severity.name) {
+      if (
+        center.severity.name != applicatorsLoadPercentage.center.severity.name
+      ) {
         let durationMs = 5000;
         let closeButton = false;
         if (center.severity.name == SeverityEnum.ERROR.name) {
@@ -323,7 +337,12 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Box height={'15%'} alignItems="center" justifyContent="center" width="100%">
+      <Box
+        height={"15%"}
+        alignItems="center"
+        justifyContent="center"
+        width="100%"
+      >
         <StatusBar
           velocity={velocity}
           applicatorStatusChange={onApplicatorsStatusChange}
@@ -332,7 +351,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
         />
       </Box>
 
-      <Box height={'45%'}>
+      <Box height={"45%"}>
         <PoisonAmountSelector
           config={config}
           onPresetPressed={onPresetPressed}
@@ -341,7 +360,12 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
         />
       </Box>
 
-      <Box alignItems="center" justifyContent="center" width="100%" height="20%">
+      <Box
+        alignItems="center"
+        justifyContent="center"
+        width="100%"
+        height="20%"
+      >
         <Button
           onPress={onDoseButtonPress}
           width="60%"
@@ -349,13 +373,18 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
           height="80%"
           bgColor={Theme().color.b200}
           _pressed={{ opacity: 0.8 }}
-          _text={{ color: 'black' }}
+          _text={{ color: "black" }}
         >
           Dosar
         </Button>
       </Box>
 
-      <Box alignItems="center" justifyContent="center" width="100%" height="15%">
+      <Box
+        alignItems="center"
+        justifyContent="center"
+        width="100%"
+        height="15%"
+      >
         <ApplicatorSelector
           leftApplicator={leftApplicator}
           centerApplicator={centerApplicator}

@@ -1,6 +1,7 @@
-import { IConfigsProps } from '../../interface/config-props';
+import { IConfigsProps } from "../../interface/config-props";
 
 export interface PConfig {
   getCache(): IConfigsProps;
   update(config: IConfigsProps): Promise<void>;
+  updateCache(): Promise<void>;
 }

@@ -1,10 +1,17 @@
-import { Box, Button, Stack, Text } from 'native-base';
-import React, { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { min } from 'react-native-reanimated';
-import { AConfig } from '../../../../api/core/adapter/config';
-import { Severity } from '../../../../api/core/enum/severity';
-import { ILocation } from '../../../../api/interface/location';
-import { Theme } from '../../../../app/theme/theme';
+import { Box, Button, Stack, Text } from "native-base";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
+import { min } from "react-native-reanimated";
+import { AConfig } from "../../../../api/core/adapter/config";
+import { Severity } from "../../../../api/core/enum/severity";
+import { ILocation } from "../../../../api/interface/location";
+import { Theme } from "../../../../app/theme/theme";
 
 export interface IApplicatorsPercentage {
   left: { percentage: number; severity: Severity };
@@ -33,13 +40,18 @@ function Sheet(props: {
     }, 60000);
 
     return () => clearInterval(interval);
-  }, [executionTimeHours, executionTimeMinutes, setExecutionTimeMinutes, setExecutionTimeHours]);
+  }, [
+    executionTimeHours,
+    executionTimeMinutes,
+    setExecutionTimeMinutes,
+    setExecutionTimeHours,
+  ]);
 
   const formatExecutionTime = useCallback(
     (hours: number, minutes: number) => {
       const formatted =
         (hours < 10 ? `0${hours}` : hours.toString()) +
-        ':' +
+        ":" +
         (minutes < 10 ? `0${minutes}` : minutes.toString());
       return formatted;
     },
@@ -48,20 +60,20 @@ function Sheet(props: {
 
   return (
     <Box alignItems="center" justifyContent="flex-end">
-      <Box height={'85%'}>
+      <Box height={"85%"}>
         <Box
-          height={'44%'}
+          height={"44%"}
           width="100%"
           alignItems="center"
           justifyContent="center"
           paddingLeft={2}
           paddingRight={2}
         >
-          <Stack direction={'row'}>
+          <Stack direction={"row"}>
             <Box
               background={Theme().color.b200}
               width="45%"
-              height={'100%'}
+              height={"100%"}
               marginRight={2}
               borderRadius={20}
               alignItems="center"
@@ -75,7 +87,7 @@ function Sheet(props: {
             <Box
               background={Theme().color.b200}
               width="55%"
-              height={'100%'}
+              height={"100%"}
               borderRadius={20}
               alignItems="center"
               justifyContent="center"
@@ -92,34 +104,44 @@ function Sheet(props: {
           </Stack>
         </Box>
         <Box
-          height={'44%'}
+          height={"44%"}
           width="100%"
           alignItems="center"
           justifyContent="center"
           paddingLeft={2}
           paddingRight={2}
         >
-          <Stack direction={'row'}>
+          <Stack direction={"row"}>
             <Box
               background={Theme().color.b200}
               width="45%"
-              height={'100%'}
+              height={"100%"}
               marginRight={2}
               borderRadius={20}
               alignItems="center"
               justifyContent="center"
             >
               Total aplicado
-              <Stack direction={'row'} alignItems="baseline" justifyContent="center">
+              <Stack
+                direction={"row"}
+                alignItems="baseline"
+                justifyContent="center"
+              >
                 <Text fontSize={35} fontWeight="bold">
                   {props.appliedDoses}
                 </Text>
                 <Text fontSize={10}>Doses</Text>
               </Stack>
-              <Stack direction={'row'} alignItems="baseline" justifyContent="center">
+              <Stack
+                direction={"row"}
+                alignItems="baseline"
+                justifyContent="center"
+              >
                 <Text fontSize={35} fontWeight="bold">
                   {Math.trunc(
-                    props.appliedDoses * props.config.get().APPLICATION.DOSE_WEIGHT_KG * 1000
+                    props.appliedDoses *
+                      props.config.getCache().APPLICATION.DOSE_WEIGHT_KG *
+                      1000
                   )}
                 </Text>
                 <Text fontSize={10}>g</Text>
@@ -128,13 +150,18 @@ function Sheet(props: {
             <Box
               background={Theme().color.b200}
               width="55%"
-              height={'100%'}
+              height={"100%"}
               borderRadius={20}
               alignItems="center"
               justifyContent="center"
             >
               <Text>Reservatórios</Text>
-              <Stack direction={'row'} alignItems="center" justifyContent="center" height={'75%'}>
+              <Stack
+                direction={"row"}
+                alignItems="center"
+                justifyContent="center"
+                height={"75%"}
+              >
                 <Box
                   borderRadius={20}
                   bgColor={props.applicatorsLoadPercentage.left.severity.color}
@@ -151,7 +178,9 @@ function Sheet(props: {
 
                 <Box
                   borderRadius={20}
-                  bgColor={props.applicatorsLoadPercentage.center.severity.color}
+                  bgColor={
+                    props.applicatorsLoadPercentage.center.severity.color
+                  }
                   width="30%"
                   alignItems="center"
                   justifyContent="center"
@@ -182,10 +211,10 @@ function Sheet(props: {
       </Box>
 
       <Box
-        height={'15%'}
+        height={"15%"}
         justifyContent="center"
         alignItems="center"
-        width={'100%'}
+        width={"100%"}
         marginBottom={1}
       >
         <Button

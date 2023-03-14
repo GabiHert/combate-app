@@ -1,8 +1,8 @@
-import { Box, Button, IconButton, Stack, Text } from 'native-base';
-import React, { useCallback, useState } from 'react';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { AConfig } from '../../../../api/core/adapter/config';
-import { Theme } from '../../../../app/theme/theme';
+import { Box, Button, IconButton, Stack, Text } from "native-base";
+import React, { useCallback, useState } from "react";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { AConfig } from "../../../../api/core/adapter/config";
+import { Theme } from "../../../../app/theme/theme";
 
 function PoisonAmountSelector(props: {
   config: AConfig;
@@ -19,83 +19,98 @@ function PoisonAmountSelector(props: {
   );
 
   const onUpPressed = useCallback(() => {
-    if (doseAmount < props.config.get().APPLICATION.MAX_DOSES) {
+    if (doseAmount < props.config.getCache().APPLICATION.MAX_DOSES) {
       setDoseAmount(doseAmount + 1);
       onDoseAmountChangeCallback(doseAmount + 1);
     }
   }, [doseAmount, setDoseAmount]);
 
   const onDownPressed = useCallback(() => {
-    if (doseAmount > props.config.get().APPLICATION.MIN_DOSES) {
+    if (doseAmount > props.config.getCache().APPLICATION.MIN_DOSES) {
       setDoseAmount(doseAmount - 1);
       onDoseAmountChangeCallback(doseAmount - 1);
     }
   }, [doseAmount, setDoseAmount]);
 
   function onPreset1Pressed() {
-    setDoseAmount(props.config.get().PRESETS.P1);
-    onDoseAmountChangeCallback(props.config.get().PRESETS.P1);
-    props.onPresetPressed(props.config.get().PRESETS.P1);
+    setDoseAmount(props.config.getCache().PRESETS.P1);
+    onDoseAmountChangeCallback(props.config.getCache().PRESETS.P1);
+    props.onPresetPressed(props.config.getCache().PRESETS.P1);
   }
 
   function onPreset2Pressed() {
-    setDoseAmount(props.config.get().PRESETS.P2);
-    onDoseAmountChangeCallback(props.config.get().PRESETS.P2);
-    props.onPresetPressed(props.config.get().PRESETS.P2);
+    setDoseAmount(props.config.getCache().PRESETS.P2);
+    onDoseAmountChangeCallback(props.config.getCache().PRESETS.P2);
+    props.onPresetPressed(props.config.getCache().PRESETS.P2);
   }
 
   function onPreset3Pressed() {
-    setDoseAmount(props.config.get().PRESETS.P3);
-    onDoseAmountChangeCallback(props.config.get().PRESETS.P3);
-    props.onPresetPressed(props.config.get().PRESETS.P3);
+    setDoseAmount(props.config.getCache().PRESETS.P3);
+    onDoseAmountChangeCallback(props.config.getCache().PRESETS.P3);
+    props.onPresetPressed(props.config.getCache().PRESETS.P3);
   }
 
   function onPreset4Pressed() {
-    setDoseAmount(props.config.get().PRESETS.P4);
-    onDoseAmountChangeCallback(props.config.get().PRESETS.P4);
-    props.onPresetPressed(props.config.get().PRESETS.P4);
+    setDoseAmount(props.config.getCache().PRESETS.P4);
+    onDoseAmountChangeCallback(props.config.getCache().PRESETS.P4);
+    props.onPresetPressed(props.config.getCache().PRESETS.P4);
   }
 
   return (
     <Stack
       direction="row"
       width="100%"
-      alignItems={'center'}
-      justifyContent={'center'}
+      alignItems={"center"}
+      justifyContent={"center"}
       height="100%"
     >
-      <Box width="40%" height={'100%'} alignItems={'center'} justifyContent={'center'}>
+      <Box
+        width="40%"
+        height={"100%"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
         <Stack
           direction="column"
           width="90%"
-          height={'90%'}
+          height={"90%"}
           borderRadius={20}
-          alignItems={'center'}
-          justifyContent={'center'}
+          alignItems={"center"}
+          justifyContent={"center"}
           backgroundColor={Theme().color.b300}
           marginLeft={2}
         >
-          <Text fontSize={15} height={'20%'} marginBottom={1} color={'black'}>
+          <Text fontSize={15} height={"20%"} marginBottom={1} color={"black"}>
             Doses
           </Text>
           <IconButton
             onPress={onUpPressed}
             width="100%"
-            height={'5%'}
-            bgColor={'transparent'}
+            height={"5%"}
+            bgColor={"transparent"}
             _pressed={{ opacity: 0.8 }}
-            _icon={{ as: Icon, name: 'keyboard-arrow-up', size: 250, color: Theme().color.b200 }}
+            _icon={{
+              as: Icon,
+              name: "keyboard-arrow-up",
+              size: 250,
+              color: Theme().color.b200,
+            }}
           />
-          <Text fontSize={90} fontWeight="bold" color={'black'}>
+          <Text fontSize={90} fontWeight="bold" color={"black"}>
             {doseAmount}
           </Text>
           <IconButton
             onPress={onDownPressed}
             width="100%"
-            height={'20%'}
-            bgColor={'transparent'}
+            height={"20%"}
+            bgColor={"transparent"}
             _pressed={{ opacity: 0.8 }}
-            _icon={{ as: Icon, name: 'keyboard-arrow-down', size: 250, color: Theme().color.b200 }}
+            _icon={{
+              as: Icon,
+              name: "keyboard-arrow-down",
+              size: 250,
+              color: Theme().color.b200,
+            }}
           />
         </Stack>
       </Box>
@@ -109,7 +124,7 @@ function PoisonAmountSelector(props: {
         paddingLeft={5}
       >
         <Stack
-          direction={'column'}
+          direction={"column"}
           alignItems="center"
           justifyContent="center"
           height="85%"
@@ -117,7 +132,14 @@ function PoisonAmountSelector(props: {
           borderRadius={20}
           backgroundColor={Theme().color.b300}
         >
-          <Text style={{ color: 'black', fontSize: 15, textAlign: 'center', marginBottom: 10 }}>
+          <Text
+            style={{
+              color: "black",
+              fontSize: 15,
+              textAlign: "center",
+              marginBottom: 10,
+            }}
+          >
             Presets
           </Text>
           <Button
@@ -125,8 +147,8 @@ function PoisonAmountSelector(props: {
             marginBottom={5}
             bgColor={Theme().color.b200}
             width="90%"
-            height={'15%'}
-            _text={{ color: 'black' }}
+            height={"15%"}
+            _text={{ color: "black" }}
             _pressed={{ opacity: 0.8 }}
           >
             TESTE
@@ -136,8 +158,8 @@ function PoisonAmountSelector(props: {
             marginBottom={5}
             bgColor={Theme().color.b200}
             width="90%"
-            height={'15%'}
-            _text={{ color: 'black' }}
+            height={"15%"}
+            _text={{ color: "black" }}
             _pressed={{ opacity: 0.8 }}
           >
             TESTE
@@ -147,8 +169,8 @@ function PoisonAmountSelector(props: {
             marginBottom={5}
             bgColor={Theme().color.b200}
             width="90%"
-            height={'15%'}
-            _text={{ color: 'black' }}
+            height={"15%"}
+            _text={{ color: "black" }}
             _pressed={{ opacity: 0.8 }}
           >
             TESTE
@@ -157,8 +179,8 @@ function PoisonAmountSelector(props: {
             onPress={onPreset4Pressed}
             bgColor={Theme().color.b200}
             width="90%"
-            height={'15%'}
-            _text={{ color: 'black' }}
+            height={"15%"}
+            _text={{ color: "black" }}
           >
             TESTE
           </Button>

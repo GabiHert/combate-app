@@ -1,10 +1,18 @@
-import { Box, Button, Divider, FormControl, Input, ScrollView, VStack } from 'native-base';
-import React, { useCallback, useState } from 'react';
-import FormInput from '../../Components/FormInput';
-import { Theme } from '../../app/theme/theme';
-import { ShowToast } from '../../Components/AlertToast';
-import { SeverityEnum } from '../../api/core/enum/severity';
-import { AConfig } from '../../api/core/adapter/config';
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  Input,
+  ScrollView,
+  VStack,
+} from "native-base";
+import React, { useCallback, useState } from "react";
+import FormInput from "../../Components/FormInput";
+import { Theme } from "../../app/theme/theme";
+import { ShowToast } from "../../Components/AlertToast";
+import { SeverityEnum } from "../../api/core/enum/severity";
+import { AConfig } from "../../api/core/adapter/config";
 
 interface IPreset {
   name: string;
@@ -40,7 +48,8 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const [preset4, setPreset4] = useState<IPreset>();
 
   const [rightTankMaxLoadError, setRightTankMaxLoadError] = useState<string>();
-  const [centerTankMaxLoadError, setCenterTankMaxLoadError] = useState<string>();
+  const [centerTankMaxLoadError, setCenterTankMaxLoadError] =
+    useState<string>();
   const [leftTankMaxLoadError, setLeftTankMaxLoadError] = useState<string>();
   const [doseWeightKgError, setDoseWeightKgError] = useState<string>();
   const [preset1NameError, setPreset1NameError] = useState<string>();
@@ -137,58 +146,28 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     [preset4]
   );
 
-  const onSavePressed = useCallback(() => {
+  const onSavePressed = useCallback(async () => {
     //todo: call validation
-
-    const data = {
-      rightTankMaxLoad,
-      centerTankMaxLoad,
-      leftTankMaxLoad,
-      doseWeightKg,
-      preset1,
-      preset2,
-      preset3,
-      preset4,
-    };
-
-    console.log(data);
-
-    const cache = config.get();
-
-    cache.APPLICATION.DOSE_WEIGHT_KG = data.doseWeightKg;
-    cache.APPLICATION.RIGHT_TANK_MAX_LOAD = data.rightTankMaxLoad;
-    cache.APPLICATION.CENTER_TANK_MAX_LOAD = data.centerTankMaxLoad;
-    cache.APPLICATION.LEFT_TANK_MAX_LOAD = data.leftTankMaxLoad;
-    cache.APPLICATION.DOSE_WEIGHT_KG = data.doseWeightKg;
-    cache.PRESETS.P1.DOSE_AMOUNT = preset1.doseAmount;
-    cache.PRESETS.P1.NAME = preset1.name;
-    cache.PRESETS.P2.DOSE_AMOUNT = preset2.doseAmount;
-    cache.PRESETS.P2.NAME = preset2.name;
-    cache.PRESETS.P3.DOSE_AMOUNT = preset3.doseAmount;
-    cache.PRESETS.P3.NAME = preset3.name;
-    cache.PRESETS.P4.DOSE_AMOUNT = preset4.doseAmount;
-    cache.PRESETS.P4.NAME = preset4.name;
-
-    config.update(cache);
 
     const result = {
       isValid: true,
-      rightTankMaxLoadError: '',
-      centerTankMaxLoadError: '',
-      leftTankMaxLoadError: '',
-      doseWeightKgError: '',
-      preset1NameError: '',
-      preset2NameError: '',
-      preset3NameError: '',
-      preset4NameError: '',
-      preset1DoseError: '',
-      preset2DoseError: '',
-      preset3DoseError: '',
-      preset4DoseError: '',
+      rightTankMaxLoadError: "",
+      centerTankMaxLoadError: "",
+      leftTankMaxLoadError: "",
+      doseWeightKgError: "",
+      preset1NameError: "",
+      preset2NameError: "",
+      preset3NameError: "",
+      preset4NameError: "",
+      preset1DoseError: "",
+      preset2DoseError: "",
+      preset3DoseError: "",
+      preset4DoseError: "",
     };
+
     if (!result.isValid) {
       ShowToast({
-        title: 'Erro ao salvar alterações',
+        title: "Erro ao salvar alterações",
         severity: SeverityEnum.ERROR,
         durationMs: 2000,
       });
@@ -204,9 +183,45 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       setPreset3DoseError(result.preset3DoseError);
       setPreset4DoseError(result.preset4DoseError);
     } else {
-      //todo: call backend to persist
+      const data = {
+        rightTankMaxLoad,
+        centerTankMaxLoad,
+        leftTankMaxLoad,
+        doseWeightKg,
+        preset1,
+        preset2,
+        preset3,
+        preset4,
+      };
+
+      console.log(data);
+
+      const cache = config.getCache();
+
+      cache.APPLICATION.DOSE_WEIGHT_KG = data.doseWeightKg;
+      cache.APPLICATION.RIGHT_TANK_MAX_LOAD = data.rightTankMaxLoad;
+      cache.APPLICATION.CENTER_TANK_MAX_LOAD = data.centerTankMaxLoad;
+      cache.APPLICATION.LEFT_TANK_MAX_LOAD = data.leftTankMaxLoad;
+      cache.APPLICATION.DOSE_WEIGHT_KG = data.doseWeightKg;
+      cache.PRESETS.P1.DOSE_AMOUNT = preset1.doseAmount;
+      cache.PRESETS.P1.NAME = preset1.name;
+      cache.PRESETS.P2.DOSE_AMOUNT = preset2.doseAmount;
+      cache.PRESETS.P2.NAME = preset2.name;
+      cache.PRESETS.P3.DOSE_AMOUNT = preset3.doseAmount;
+      cache.PRESETS.P3.NAME = preset3.name;
+      cache.PRESETS.P4.DOSE_AMOUNT = preset4.doseAmount;
+      cache.PRESETS.P4.NAME = preset4.name;
+
       ShowToast({
-        title: 'Alterações salvas com sucesso',
+        title: "Aguarde, alterações sendo salvas...",
+        severity: SeverityEnum.WARN,
+        durationMs: 2000,
+      });
+
+      await config.update(cache);
+
+      ShowToast({
+        title: "Alterações salvas com sucesso",
         severity: SeverityEnum.OK,
         durationMs: 2000,
       });
@@ -214,14 +229,22 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   }, []);
 
   const onBackPressed = useCallback(() => {
-    props.navigation.navigate('HomeScreen');
+    props.navigation.navigate("HomeScreen");
   }, []);
 
   return (
-    <Box justifyContent={'center'} alignItems={'center'} h="100%">
+    <Box justifyContent={"center"} alignItems={"center"} h="100%">
       <ScrollView w="100%">
-        <VStack space={4} justifyContent={'center'} alignItems={'center'} overflow={'hidden'}>
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+        <VStack
+          space={4}
+          justifyContent={"center"}
+          alignItems={"center"}
+          overflow={"hidden"}
+        >
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: "bold", fontSize: 20 }}
+          >
             Capacidade Reservatórios
           </FormControl.Label>
           <FormInput
@@ -230,7 +253,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             errorMessage={rightTankMaxLoadError}
             placeholder="25"
             onChangeText={onRightTankMaxLoadChange}
-            keyboardType={'numeric'}
+            keyboardType={"numeric"}
           />
           <FormInput
             title="Reservatório central"
@@ -238,7 +261,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             errorMessage={centerTankMaxLoadError}
             placeholder="25"
             onChangeText={onCenterTankMaxLoadChange}
-            keyboardType={'numeric'}
+            keyboardType={"numeric"}
           />
           <FormInput
             title="Reservatório esquerdo"
@@ -246,10 +269,13 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             errorMessage={leftTankMaxLoadError}
             placeholder="25"
             onChangeText={onLeftTankMaxLoadChange}
-            keyboardType={'numeric'}
+            keyboardType={"numeric"}
           />
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: "bold", fontSize: 20 }}
+          >
             Informações Dosagem
           </FormControl.Label>
           <FormInput
@@ -258,10 +284,13 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             errorMessage={doseWeightKgError}
             placeholder="25"
             onChangeText={onDoseWeightChange}
-            keyboardType={'numeric'}
+            keyboardType={"numeric"}
           />
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: "bold", fontSize: 20 }}
+          >
             Preset 1
           </FormControl.Label>
           <FormInput
@@ -277,11 +306,14 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             errorMessage={preset1DoseError}
             placeholder="10"
             onChangeText={onPreset1DoseChange}
-            keyboardType={'numeric'}
+            keyboardType={"numeric"}
           />
 
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: "bold", fontSize: 20 }}
+          >
             Preset 2
           </FormControl.Label>
           <FormInput
@@ -297,11 +329,14 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             errorMessage={preset2DoseError}
             placeholder="10"
             onChangeText={onPreset2DoseChange}
-            keyboardType={'numeric'}
+            keyboardType={"numeric"}
           />
 
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: "bold", fontSize: 20 }}
+          >
             Preset 3
           </FormControl.Label>
           <FormInput
@@ -317,11 +352,14 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             errorMessage={preset3DoseError}
             placeholder="10"
             onChangeText={onPreset3DoseChange}
-            keyboardType={'numeric'}
+            keyboardType={"numeric"}
           />
 
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: "bold", fontSize: 20 }}
+          >
             Preset 4
           </FormControl.Label>
           <FormInput
@@ -337,7 +375,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             errorMessage={preset4DoseError}
             placeholder="10"
             onChangeText={onPreset4DoseChange}
-            keyboardType={'numeric'}
+            keyboardType={"numeric"}
           />
         </VStack>
 
@@ -345,7 +383,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       </ScrollView>
 
       <Box
-        position={'absolute'}
+        position={"absolute"}
         bottom={2}
         right={2}
         bgColor={Theme().color.b500}
@@ -354,7 +392,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         h="60px"
       />
       <Box
-        position={'absolute'}
+        position={"absolute"}
         bottom={2}
         left={2}
         bgColor={Theme().color.b500}
@@ -364,7 +402,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       />
       <Button
         onPress={onSavePressed}
-        position={'absolute'}
+        position={"absolute"}
         bottom={2}
         right={2}
         bgColor={Theme().color.b300}
@@ -378,7 +416,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
       <Button
         onPress={onBackPressed}
-        position={'absolute'}
+        position={"absolute"}
         bottom={2}
         left={2}
         bgColor={Theme().color.sError}
