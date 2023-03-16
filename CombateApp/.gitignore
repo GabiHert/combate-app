@@ -31,6 +31,9 @@ local.properties
 *.iml
 *.hprof
 .cxx/
+android/app/build/outputs/apk
+android/app/build/outputs/logs
+
 
 # node.js
 #
@@ -62,3 +65,4 @@ buck-out/
 # Ruby / CocoaPods
 /ios/Pods/
 /vendor/bundle/
+
