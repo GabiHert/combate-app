@@ -1,3 +1,5 @@
+import { PError } from '../error/error-port';
+
 export interface PErrorHandlerService {
-  handle(err: any): Promise<void>;
+  handle(err: PError): Promise<void>;
 }

@@ -1,33 +1,35 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NativeBaseProvider } from "native-base";
-import * as React from "react";
-import { AAsyncStorage } from "./src/api/core/adapter/async-storage-adapter";
-import { PRepository } from "./src/api/core/port/repository-port";
-import { AConfig } from "./src/api/core/adapter/config";
-import ConfigScreen from "./src/Screens/ConfigScreen";
-import ExecutionScreen from "./src/Screens/ExecutionScreen";
-import HomeScreen from "./src/Screens/HomeScreen";
-import PreExecutionScreen from "./src/Screens/PreExecutionScreen";
-import { IConfigsProps } from "./src/api/interface/config-props";
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NativeBaseProvider } from 'native-base';
+import * as React from 'react';
+import { AAsyncStorage } from './src/api/core/adapter/async-storage-adapter';
+import { PRepository } from './src/api/core/port/repository-port';
+import { AConfig } from './src/api/core/adapter/config';
+import ConfigScreen from './src/Screens/ConfigScreen';
+import ExecutionScreen from './src/Screens/ExecutionScreen';
+import HomeScreen from './src/Screens/HomeScreen';
+import PreExecutionScreen from './src/Screens/PreExecutionScreen';
+import { IConfigsProps } from './src/api/interface/config-props';
 
 const Stack = createNativeStackNavigator();
 
 const repository: PRepository = new AAsyncStorage();
 const initialConfig: IConfigsProps = {
   APPLICATION: {
-    TOTAL_LOAD_KG: 30,
-    VERSION: "0.0.1",
+    LEFT_TANK_MAX_LOAD: 30,
+    CENTER_TANK_MAX_LOAD: 30,
+    RIGHT_TANK_MAX_LOAD: 30,
+    VERSION: '0.0.1',
     MAX_DOSES: 20,
     MIN_DOSES: 1,
     DOSE_WEIGHT_KG: 0.025,
     REQUEST_INTERVAL_MS: 2000,
   },
   PRESETS: {
-    P1: 1,
-    P2: 4,
-    P3: 6,
-    P4: 10,
+    P1: { NAME: 'Preset 1', DOSE_AMOUNT: 2 },
+    P2: { NAME: 'Preset 2', DOSE_AMOUNT: 3 },
+    P3: { NAME: 'Preset 3', DOSE_AMOUNT: 4 },
+    P4: { NAME: 'Preset 4', DOSE_AMOUNT: 5 },
   },
 };
 const config = new AConfig(repository, initialConfig);

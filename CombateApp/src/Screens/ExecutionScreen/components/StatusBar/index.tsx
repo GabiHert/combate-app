@@ -14,7 +14,6 @@ function StatusBar(props: {
   const [bluetoothStatus, setBluetoothStatus] = useState(props.bluetoothStatus);
 
   useEffect(() => {
-    console.log(props.applicatorStatusChange().name);
     setApplicatorStatus(props.applicatorStatusChange());
   }, [props.applicatorStatusChange]);
 

@@ -1,5 +1,5 @@
 import { FormControl, Input, WarningOutlineIcon } from 'native-base';
-import React, { memo } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { KeyboardTypeOptions } from 'react-native';
 import { Theme } from '../../app/theme/theme';
 
@@ -13,7 +13,18 @@ function FormInput(props: {
   isPassword?: boolean;
   keyboardType?: KeyboardTypeOptions;
   onChangeText?: (value: string) => void;
+  defaultValue?: string;
 }) {
+  const [defaultValue, setDefaultValue] = useState(props.defaultValue);
+
+  const onChangeText = useCallback(
+    (text: string) => {
+      setDefaultValue(null);
+      props.onChangeText(text);
+    },
+    [setDefaultValue, props.onChangeText]
+  );
+
   return (
     <FormControl
       width={props.w ? props.w : '60%'}
@@ -22,9 +33,10 @@ function FormInput(props: {
       <FormControl.Label _text={{ bold: true, fontSize: 15 }}>{props.title}</FormControl.Label>
       <Input
         type={props.isPassword ? 'password' : 'text'}
-        onChangeText={props.onChangeText}
+        onChangeText={onChangeText}
         keyboardType={props.keyboardType}
         borderRadius={20}
+        value={defaultValue}
         placeholder={props.placeholder}
         _invalid={{ borderColor: Theme().color.sError, borderWidth: 3 }}
         borderWidth={1.5}

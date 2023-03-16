@@ -1,18 +1,10 @@
-import {
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  Input,
-  ScrollView,
-  VStack,
-} from "native-base";
-import React, { useCallback, useState } from "react";
-import FormInput from "../../Components/FormInput";
-import { Theme } from "../../app/theme/theme";
-import { ShowToast } from "../../Components/AlertToast";
-import { SeverityEnum } from "../../api/core/enum/severity";
-import { AConfig } from "../../api/core/adapter/config";
+import { Box, Button, Divider, FormControl, Input, ScrollView, VStack } from 'native-base';
+import React, { useCallback, useState } from 'react';
+import FormInput from '../../Components/FormInput';
+import { Theme } from '../../app/theme/theme';
+import { ShowToast } from '../../Components/AlertToast';
+import { SeverityEnum } from '../../api/core/enum/severity';
+import { AConfig } from '../../api/core/adapter/config';
 
 interface IPreset {
   name: string;
@@ -48,8 +40,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const [preset4, setPreset4] = useState<IPreset>();
 
   const [rightTankMaxLoadError, setRightTankMaxLoadError] = useState<string>();
-  const [centerTankMaxLoadError, setCenterTankMaxLoadError] =
-    useState<string>();
+  const [centerTankMaxLoadError, setCenterTankMaxLoadError] = useState<string>();
   const [leftTankMaxLoadError, setLeftTankMaxLoadError] = useState<string>();
   const [doseWeightKgError, setDoseWeightKgError] = useState<string>();
   const [preset1NameError, setPreset1NameError] = useState<string>();
@@ -148,103 +139,101 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
   const onSavePressed = useCallback(async () => {
     //todo: call validation
-
-    const result = {
-      isValid: true,
-      rightTankMaxLoadError: "",
-      centerTankMaxLoadError: "",
-      leftTankMaxLoadError: "",
-      doseWeightKgError: "",
-      preset1NameError: "",
-      preset2NameError: "",
-      preset3NameError: "",
-      preset4NameError: "",
-      preset1DoseError: "",
-      preset2DoseError: "",
-      preset3DoseError: "",
-      preset4DoseError: "",
-    };
-
-    if (!result.isValid) {
-      ShowToast({
-        title: "Erro ao salvar alterações",
-        severity: SeverityEnum.ERROR,
-        durationMs: 2000,
-      });
-      setRightTankMaxLoadError(result.rightTankMaxLoadError);
-      setLeftTankMaxLoadError(result.leftTankMaxLoadError);
-      setCenterTankMaxLoadError(result.centerTankMaxLoadError);
-      setPreset1NameError(result.preset1NameError);
-      setPreset2NameError(result.preset2NameError);
-      setPreset3NameError(result.preset3NameError);
-      setPreset4NameError(result.preset4NameError);
-      setPreset1DoseError(result.preset1DoseError);
-      setPreset2DoseError(result.preset2DoseError);
-      setPreset3DoseError(result.preset3DoseError);
-      setPreset4DoseError(result.preset4DoseError);
-    } else {
-      const data = {
-        rightTankMaxLoad,
-        centerTankMaxLoad,
-        leftTankMaxLoad,
-        doseWeightKg,
-        preset1,
-        preset2,
-        preset3,
-        preset4,
+    try {
+      const result = {
+        isValid: true,
+        rightTankMaxLoadError: '',
+        centerTankMaxLoadError: '',
+        leftTankMaxLoadError: '',
+        doseWeightKgError: '',
+        preset1NameError: '',
+        preset2NameError: '',
+        preset3NameError: '',
+        preset4NameError: '',
+        preset1DoseError: '',
+        preset2DoseError: '',
+        preset3DoseError: '',
+        preset4DoseError: '',
       };
 
-      console.log(data);
+      if (!result.isValid) {
+        ShowToast({
+          title: 'Erro ao salvar alterações',
+          severity: SeverityEnum.ERROR,
+          durationMs: 2000,
+        });
+        setRightTankMaxLoadError(result.rightTankMaxLoadError);
+        setLeftTankMaxLoadError(result.leftTankMaxLoadError);
+        setCenterTankMaxLoadError(result.centerTankMaxLoadError);
+        setPreset1NameError(result.preset1NameError);
+        setPreset2NameError(result.preset2NameError);
+        setPreset3NameError(result.preset3NameError);
+        setPreset4NameError(result.preset4NameError);
+        setPreset1DoseError(result.preset1DoseError);
+        setPreset2DoseError(result.preset2DoseError);
+        setPreset3DoseError(result.preset3DoseError);
+        setPreset4DoseError(result.preset4DoseError);
+      } else {
+        const data = {
+          rightTankMaxLoad,
+          centerTankMaxLoad,
+          leftTankMaxLoad,
+          doseWeightKg,
+          preset1,
+          preset2,
+          preset3,
+          preset4,
+        };
 
-      const cache = config.getCache();
+        const cache = config.getCache();
 
-      cache.APPLICATION.DOSE_WEIGHT_KG = data.doseWeightKg;
-      cache.APPLICATION.RIGHT_TANK_MAX_LOAD = data.rightTankMaxLoad;
-      cache.APPLICATION.CENTER_TANK_MAX_LOAD = data.centerTankMaxLoad;
-      cache.APPLICATION.LEFT_TANK_MAX_LOAD = data.leftTankMaxLoad;
-      cache.APPLICATION.DOSE_WEIGHT_KG = data.doseWeightKg;
-      cache.PRESETS.P1.DOSE_AMOUNT = preset1.doseAmount;
-      cache.PRESETS.P1.NAME = preset1.name;
-      cache.PRESETS.P2.DOSE_AMOUNT = preset2.doseAmount;
-      cache.PRESETS.P2.NAME = preset2.name;
-      cache.PRESETS.P3.DOSE_AMOUNT = preset3.doseAmount;
-      cache.PRESETS.P3.NAME = preset3.name;
-      cache.PRESETS.P4.DOSE_AMOUNT = preset4.doseAmount;
-      cache.PRESETS.P4.NAME = preset4.name;
+        cache.APPLICATION.DOSE_WEIGHT_KG = data.doseWeightKg;
+        cache.APPLICATION.RIGHT_TANK_MAX_LOAD = data.rightTankMaxLoad;
+        cache.APPLICATION.CENTER_TANK_MAX_LOAD = data.centerTankMaxLoad;
+        cache.APPLICATION.LEFT_TANK_MAX_LOAD = data.leftTankMaxLoad;
+        cache.APPLICATION.DOSE_WEIGHT_KG = data.doseWeightKg;
+        cache.PRESETS.P1.DOSE_AMOUNT = preset1.doseAmount;
+        cache.PRESETS.P1.NAME = preset1.name;
+        cache.PRESETS.P2.DOSE_AMOUNT = preset2.doseAmount;
+        cache.PRESETS.P2.NAME = preset2.name;
+        cache.PRESETS.P3.DOSE_AMOUNT = preset3.doseAmount;
+        cache.PRESETS.P3.NAME = preset3.name;
+        cache.PRESETS.P4.DOSE_AMOUNT = preset4.doseAmount;
+        cache.PRESETS.P4.NAME = preset4.name;
 
+        ShowToast({
+          title: 'Aguarde, alterações sendo salvas...',
+          severity: SeverityEnum.WARN,
+          durationMs: 2000,
+        });
+
+        await config.update(cache);
+
+        ShowToast({
+          title: 'Alterações salvas com sucesso',
+          severity: SeverityEnum.OK,
+          durationMs: 2000,
+        });
+      }
+    } catch (err) {
       ShowToast({
-        title: "Aguarde, alterações sendo salvas...",
-        severity: SeverityEnum.WARN,
-        durationMs: 2000,
-      });
-
-      await config.update(cache);
-
-      ShowToast({
-        title: "Alterações salvas com sucesso",
-        severity: SeverityEnum.OK,
+        title: 'Erro ao salvar alterações',
+        severity: SeverityEnum.ERROR,
+        message: err.message,
         durationMs: 2000,
       });
     }
   }, []);
 
   const onBackPressed = useCallback(() => {
-    props.navigation.navigate("HomeScreen");
+    props.navigation.navigate('HomeScreen');
   }, []);
 
   return (
-    <Box justifyContent={"center"} alignItems={"center"} h="100%">
+    <Box justifyContent={'center'} alignItems={'center'} h="100%">
       <ScrollView w="100%">
-        <VStack
-          space={4}
-          justifyContent={"center"}
-          alignItems={"center"}
-          overflow={"hidden"}
-        >
-          <FormControl.Label
-            mt={5}
-            _text={{ fontWeight: "bold", fontSize: 20 }}
-          >
+        <VStack space={4} justifyContent={'center'} alignItems={'center'} overflow={'hidden'}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
             Capacidade Reservatórios
           </FormControl.Label>
           <FormInput
@@ -252,51 +241,50 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             description="Preencha este campo com a capacidade máxima do reservatório direito (Kg)"
             errorMessage={rightTankMaxLoadError}
             placeholder="25"
+            defaultValue={config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD.toString()}
             onChangeText={onRightTankMaxLoadChange}
-            keyboardType={"numeric"}
+            keyboardType={'numeric'}
           />
           <FormInput
             title="Reservatório central"
             description="Preencha este campo com a capacidade máxima do reservatório central (Kg)"
             errorMessage={centerTankMaxLoadError}
             placeholder="25"
+            defaultValue={config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD.toString()}
             onChangeText={onCenterTankMaxLoadChange}
-            keyboardType={"numeric"}
+            keyboardType={'numeric'}
           />
           <FormInput
             title="Reservatório esquerdo"
             description="Preencha este campo com a capacidade máxima do reservatório esquerdo (Kg)"
             errorMessage={leftTankMaxLoadError}
             placeholder="25"
+            defaultValue={config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD.toString()}
             onChangeText={onLeftTankMaxLoadChange}
-            keyboardType={"numeric"}
+            keyboardType={'numeric'}
           />
           <Divider w="80%" />
-          <FormControl.Label
-            mt={5}
-            _text={{ fontWeight: "bold", fontSize: 20 }}
-          >
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
             Informações Dosagem
           </FormControl.Label>
           <FormInput
             title="Peso dose"
             description="Preencha este campo com o peso de cada dose (g)"
             errorMessage={doseWeightKgError}
+            defaultValue={(config.getCache().APPLICATION.DOSE_WEIGHT_KG * 1000).toString()}
             placeholder="25"
             onChangeText={onDoseWeightChange}
-            keyboardType={"numeric"}
+            keyboardType={'numeric'}
           />
           <Divider w="80%" />
-          <FormControl.Label
-            mt={5}
-            _text={{ fontWeight: "bold", fontSize: 20 }}
-          >
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
             Preset 1
           </FormControl.Label>
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 1"
             errorMessage={preset1NameError}
+            defaultValue={config.getCache().PRESETS.P1.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset1NameChange}
           />
@@ -305,21 +293,20 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             description="Preencha este campo com a quantidade de doses do Preset 1"
             errorMessage={preset1DoseError}
             placeholder="10"
+            defaultValue={config.getCache().PRESETS.P1.DOSE_AMOUNT.toString()}
             onChangeText={onPreset1DoseChange}
-            keyboardType={"numeric"}
+            keyboardType={'numeric'}
           />
 
           <Divider w="80%" />
-          <FormControl.Label
-            mt={5}
-            _text={{ fontWeight: "bold", fontSize: 20 }}
-          >
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
             Preset 2
           </FormControl.Label>
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 2"
             errorMessage={preset2NameError}
+            defaultValue={config.getCache().PRESETS.P2.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset2NameChange}
           />
@@ -327,22 +314,21 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title="Doses"
             description="Preencha este campo com a quantidade de doses do Preset 2"
             errorMessage={preset2DoseError}
+            defaultValue={config.getCache().PRESETS.P2.DOSE_AMOUNT.toString()}
             placeholder="10"
             onChangeText={onPreset2DoseChange}
-            keyboardType={"numeric"}
+            keyboardType={'numeric'}
           />
 
           <Divider w="80%" />
-          <FormControl.Label
-            mt={5}
-            _text={{ fontWeight: "bold", fontSize: 20 }}
-          >
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
             Preset 3
           </FormControl.Label>
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 3"
             errorMessage={preset3NameError}
+            defaultValue={config.getCache().PRESETS.P3.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset3NameChange}
           />
@@ -350,22 +336,21 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title="Doses"
             description="Preencha este campo com a quantidade de doses do Preset 3"
             errorMessage={preset3DoseError}
+            defaultValue={config.getCache().PRESETS.P3.DOSE_AMOUNT.toString()}
             placeholder="10"
             onChangeText={onPreset3DoseChange}
-            keyboardType={"numeric"}
+            keyboardType={'numeric'}
           />
 
           <Divider w="80%" />
-          <FormControl.Label
-            mt={5}
-            _text={{ fontWeight: "bold", fontSize: 20 }}
-          >
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
             Preset 4
           </FormControl.Label>
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 4"
             errorMessage={preset4NameError}
+            defaultValue={config.getCache().PRESETS.P4.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset4NameChange}
           />
@@ -373,9 +358,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title="Doses"
             description="Preencha este campo com a quantidade de doses do Preset 4"
             errorMessage={preset4DoseError}
+            defaultValue={config.getCache().PRESETS.P4.DOSE_AMOUNT.toString()}
             placeholder="10"
             onChangeText={onPreset4DoseChange}
-            keyboardType={"numeric"}
+            keyboardType={'numeric'}
           />
         </VStack>
 
@@ -383,7 +369,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       </ScrollView>
 
       <Box
-        position={"absolute"}
+        position={'absolute'}
         bottom={2}
         right={2}
         bgColor={Theme().color.b500}
@@ -392,7 +378,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         h="60px"
       />
       <Box
-        position={"absolute"}
+        position={'absolute'}
         bottom={2}
         left={2}
         bgColor={Theme().color.b500}
@@ -402,7 +388,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       />
       <Button
         onPress={onSavePressed}
-        position={"absolute"}
+        position={'absolute'}
         bottom={2}
         right={2}
         bgColor={Theme().color.b300}
@@ -416,7 +402,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
       <Button
         onPress={onBackPressed}
-        position={"absolute"}
+        position={'absolute'}
         bottom={2}
         left={2}
         bgColor={Theme().color.sError}

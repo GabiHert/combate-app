@@ -29,7 +29,6 @@ function LoginModal(props: {
 
   const onLogin = useCallback(() => {
     const isValid = props.loginValidator({ user, password });
-    console.log(isValid);
     setIsValid(isValid);
     if (isValid) {
       props.onClose();
