@@ -30,14 +30,34 @@ interface IConfigValidationResult {
 function ConfigScreen(props: { navigation: any; route: any }) {
   const config: AConfig = props.route.params.config;
 
-  const [rightTankMaxLoad, setRightTankMaxLoad] = useState<number>();
-  const [centerTankMaxLoad, setCenterTankMaxLoad] = useState<number>();
-  const [leftTankMaxLoad, setLeftTankMaxLoad] = useState<number>();
-  const [doseWeightKg, setDoseWeightKg] = useState<number>();
-  const [preset1, setPreset1] = useState<IPreset>();
-  const [preset2, setPreset2] = useState<IPreset>();
-  const [preset3, setPreset3] = useState<IPreset>();
-  const [preset4, setPreset4] = useState<IPreset>();
+  const [rightTankMaxLoad, setRightTankMaxLoad] = useState<number>(
+    config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD
+  );
+  const [centerTankMaxLoad, setCenterTankMaxLoad] = useState<number>(
+    config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD
+  );
+  const [leftTankMaxLoad, setLeftTankMaxLoad] = useState<number>(
+    config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD
+  );
+  const [doseWeightKg, setDoseWeightKg] = useState<number>(
+    config.getCache().APPLICATION.DOSE_WEIGHT_KG
+  );
+  const [preset1, setPreset1] = useState<IPreset>({
+    doseAmount: config.getCache().PRESETS.P1.DOSE_AMOUNT,
+    name: config.getCache().PRESETS.P1.NAME,
+  });
+  const [preset2, setPreset2] = useState<IPreset>({
+    doseAmount: config.getCache().PRESETS.P2.DOSE_AMOUNT,
+    name: config.getCache().PRESETS.P2.NAME,
+  });
+  const [preset3, setPreset3] = useState<IPreset>({
+    doseAmount: config.getCache().PRESETS.P3.DOSE_AMOUNT,
+    name: config.getCache().PRESETS.P3.NAME,
+  });
+  const [preset4, setPreset4] = useState<IPreset>({
+    doseAmount: config.getCache().PRESETS.P4.DOSE_AMOUNT,
+    name: config.getCache().PRESETS.P4.NAME,
+  });
 
   const [rightTankMaxLoadError, setRightTankMaxLoadError] = useState<string>();
   const [centerTankMaxLoadError, setCenterTankMaxLoadError] = useState<string>();
@@ -173,6 +193,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         setPreset2DoseError(result.preset2DoseError);
         setPreset3DoseError(result.preset3DoseError);
         setPreset4DoseError(result.preset4DoseError);
+        setDoseWeightKgError(result.doseWeightKgError);
       } else {
         const data = {
           rightTankMaxLoad,
