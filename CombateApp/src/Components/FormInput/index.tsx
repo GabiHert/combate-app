@@ -39,7 +39,7 @@ function FormInput(props: {
         value={defaultValue}
         placeholder={props.placeholder}
         _invalid={{ borderColor: Theme().color.sError, borderWidth: 3 }}
-        borderWidth={1.5}
+        borderWidth={2}
       />
       {props.errorMessage ? (
         <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon />}>

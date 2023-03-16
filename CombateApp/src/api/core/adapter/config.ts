@@ -18,7 +18,11 @@ export class AConfig implements PConfig {
     return this.cache;
   }
   async updateCache(): Promise<void> {
-    const str = await this.repository.get('CONFIG');
+    let str = await this.repository.get('CONFIG');
+    if (!str) {
+      this.update(this.cache);
+      return;
+    }
     const config = JSON.parse(str);
     //todo: validate config
     this.cache = config;

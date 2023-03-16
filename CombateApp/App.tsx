@@ -11,41 +11,43 @@ import HomeScreen from './src/Screens/HomeScreen';
 import PreExecutionScreen from './src/Screens/PreExecutionScreen';
 import { IConfigsProps } from './src/api/interface/config-props';
 import { DEFAULT_CONFIG } from './src/api/config/config';
+import { useWindowDimensions } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
 const repository: PRepository = new AAsyncStorage();
 const config = new AConfig(repository, DEFAULT_CONFIG);
+console.log(config.getCache());
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <NativeBaseProvider>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen
-              name="HomeScreen"
-              component={HomeScreen}
-              initialParams={{ config, repository }}
-            />
-            <Stack.Screen
-              name="ExecutionScreen"
-              component={ExecutionScreen}
-              initialParams={{ config, repository }}
-            />
-            <Stack.Screen
-              name="ConfigScreen"
-              component={ConfigScreen}
-              initialParams={{ config, repository }}
-            />
-            <Stack.Screen
-              name="PreExecutionScreen"
-              component={PreExecutionScreen}
-              initialParams={{ config, repository }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </NativeBaseProvider>
-    );
-  }
+export default function App() {
+  const { width, height } = useWindowDimensions();
+
+  return (
+    <NativeBaseProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen
+            name="HomeScreen"
+            component={HomeScreen}
+            initialParams={{ config, repository, screen: { width, height } }}
+          />
+          <Stack.Screen
+            name="ExecutionScreen"
+            component={ExecutionScreen}
+            initialParams={{ config, repository, screen: { width, height } }}
+          />
+          <Stack.Screen
+            name="ConfigScreen"
+            component={ConfigScreen}
+            initialParams={{ config, repository, screen: { width, height } }}
+          />
+          <Stack.Screen
+            name="PreExecutionScreen"
+            component={PreExecutionScreen}
+            initialParams={{ config, repository, screen: { width, height } }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </NativeBaseProvider>
+  );
 }

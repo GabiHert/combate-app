@@ -1,7 +1,7 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Box, Button, Toast, useToast } from 'native-base';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { BackHandler } from 'react-native';
+import { BackHandler, useWindowDimensions } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AConfig } from '../../api/core/adapter/config';
 import { Severity, SeverityEnum } from '../../api/core/enum/severity';
@@ -15,7 +15,12 @@ import StatusBar from './components/StatusBar';
 import style from './style';
 import { Applicator } from './types/applicator';
 
-function ExecutionScreen(props: { navigation: any; route: any }) {
+function ExecutionScreen(props: {
+  navigation: any;
+  route: {
+    params: { config: AConfig; applicator: any; screen: { width: number; height: number } };
+  };
+}) {
   const config: AConfig = props.route.params.config;
   const applicator: {
     center: { loadKg: number };
@@ -23,7 +28,15 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
     left: { loadKg: number };
   } = props.route.params.applicator;
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
-  const snapPoints: Array<string> = ['3.5%', '21%', '40%', '52%'];
+  const sheetHeight = props.route.params.screen.height / 2 - 25;
+  const blockHeight = sheetHeight / 3;
+  const spaceBetweenBlocksHeight = 3;
+  const snapPoints = [
+    30,
+    blockHeight + spaceBetweenBlocksHeight + 30,
+    blockHeight * 2 + spaceBetweenBlocksHeight + 50,
+    props.route.params.screen.height / 2,
+  ];
   let handleSheetChanges: any;
   const [doseAmount, setDoseAmount] = useState<number>(config.getCache().APPLICATION.MIN_DOSES);
   const [velocity, setVelocity] = useState<number>(0);
@@ -334,6 +347,7 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
 
       <Box height={'45%'}>
         <PoisonAmountSelector
+          w={props.route.params.screen.width}
           config={config}
           onPresetPressed={onPresetPressed}
           onDoseAmountChange={setDoseAmount}
@@ -380,6 +394,9 @@ function ExecutionScreen(props: { navigation: any; route: any }) {
         style={style.bottomSheet}
       >
         <Sheet
+          blockHeight={blockHeight}
+          sheetHeight={sheetHeight}
+          spaceBetweenBlocksHeight={spaceBetweenBlocksHeight}
           config={config}
           onFinishPressed={onFinishButtonPress}
           location={location}

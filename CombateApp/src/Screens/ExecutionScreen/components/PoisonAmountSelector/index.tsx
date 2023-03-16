@@ -1,5 +1,6 @@
 import { Box, Button, IconButton, Stack, Text } from 'native-base';
 import React, { useCallback, useState } from 'react';
+import { useWindowDimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { AConfig } from '../../../../api/core/adapter/config';
 import { Theme } from '../../../../app/theme/theme';
@@ -9,7 +10,11 @@ function PoisonAmountSelector(props: {
   onDoseAmountChange: (amount: number) => void;
   onPresetPressed: (amount: number) => void;
   doseAmount: number;
+  w: number;
 }) {
+  function getIconSize(width: number): number {
+    return width >= 400 ? 300 : 230;
+  }
   const [doseAmount, setDoseAmount] = useState<number>(props.doseAmount);
   const onDoseAmountChangeCallback = useCallback(
     (amount: number) => {
@@ -17,7 +22,6 @@ function PoisonAmountSelector(props: {
     },
     [doseAmount]
   );
-
   const onUpPressed = useCallback(() => {
     if (doseAmount < props.config.getCache().APPLICATION.MAX_DOSES) {
       setDoseAmount(doseAmount + 1);
@@ -75,35 +79,36 @@ function PoisonAmountSelector(props: {
           backgroundColor={Theme().color.b300}
           marginLeft={2}
         >
-          <Text fontSize={15} height={'20%'} marginBottom={1} color={'black'}>
+          <Text fontSize={15} top={1} position={'absolute'} marginBottom={1} color={'black'}>
             Doses
           </Text>
           <IconButton
             onPress={onUpPressed}
             width="100%"
-            height={'5%'}
+            height={'3%'}
+            mt={5}
             bgColor={'transparent'}
             _pressed={{ opacity: 0.8 }}
             _icon={{
               as: Icon,
               name: 'keyboard-arrow-up',
-              size: 250,
+              size: getIconSize(props.w),
               color: Theme().color.b200,
             }}
           />
-          <Text fontSize={90} fontWeight="bold" color={'black'}>
+          <Text fontSize={90} mt={2} mb={2} fontWeight="bold" color={'black'}>
             {doseAmount}
           </Text>
           <IconButton
             onPress={onDownPressed}
             width="100%"
-            height={'20%'}
+            height={'3%'}
             bgColor={'transparent'}
             _pressed={{ opacity: 0.8 }}
             _icon={{
               as: Icon,
               name: 'keyboard-arrow-down',
-              size: 250,
+              size: getIconSize(props.w),
               color: Theme().color.b200,
             }}
           />
@@ -132,14 +137,16 @@ function PoisonAmountSelector(props: {
               color: 'black',
               fontSize: 15,
               textAlign: 'center',
-              marginBottom: 10,
             }}
+            position={'absolute'}
+            top={1}
           >
             Presets
           </Text>
           <Button
             onPress={onPreset1Pressed}
             marginBottom={5}
+            mt={4}
             bgColor={Theme().color.b200}
             width="90%"
             height={'15%'}

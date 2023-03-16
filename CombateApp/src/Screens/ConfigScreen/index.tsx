@@ -29,7 +29,7 @@ interface IConfigValidationResult {
 
 function ConfigScreen(props: { navigation: any; route: any }) {
   const config: AConfig = props.route.params.config;
-
+  console.log(config.getCache());
   const [rightTankMaxLoad, setRightTankMaxLoad] = useState<number>(
     config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD
   );
@@ -398,15 +398,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         w="25%"
         h="60px"
       />
-      <Box
-        position={'absolute'}
-        bottom={2}
-        left={2}
-        bgColor={Theme().color.b500}
-        borderRadius={20}
-        w="25%"
-        h="60px"
-      />
+
       <Button
         onPress={onSavePressed}
         position={'absolute'}
@@ -419,20 +411,6 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         h="60px"
       >
         Salvar
-      </Button>
-
-      <Button
-        onPress={onBackPressed}
-        position={'absolute'}
-        bottom={2}
-        left={2}
-        bgColor={Theme().color.sError}
-        borderRadius={20}
-        _pressed={{ opacity: 0.8 }}
-        w="25%"
-        h="60px"
-      >
-        Cancelar
       </Button>
     </Box>
   );

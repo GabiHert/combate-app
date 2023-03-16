@@ -1,4 +1,4 @@
-import { Box, Button, Stack, Text } from 'native-base';
+import { Box, Button, Spacer, Stack, Text } from 'native-base';
 import React, { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { min } from 'react-native-reanimated';
 import { AConfig } from '../../../../api/core/adapter/config';
@@ -18,6 +18,9 @@ function Sheet(props: {
   location: ILocation;
   applicatorsLoadPercentage: IApplicatorsPercentage;
   appliedDoses: number;
+  sheetHeight: number;
+  blockHeight: number;
+  spaceBetweenBlocksHeight: number;
 }) {
   const [executionTimeMinutes, setExecutionTimeMinutes] = useState<number>(0);
   const [executionTimeHours, setExecutionTimeHours] = useState<number>(0);
@@ -47,13 +50,14 @@ function Sheet(props: {
   );
 
   return (
-    <Box alignItems="center" justifyContent="flex-end">
-      <Box height={'85%'}>
+    <Box alignItems="center" justifyContent="flex-end" paddingTop={1}>
+      <Box height={'90%'}>
         <Box
-          height={'44%'}
+          height={props.blockHeight}
           width="100%"
           alignItems="center"
           justifyContent="center"
+          mt={3}
           paddingLeft={2}
           paddingRight={2}
         >
@@ -91,8 +95,9 @@ function Sheet(props: {
             </Box>
           </Stack>
         </Box>
+        <Box h={props.spaceBetweenBlocksHeight} />
         <Box
-          height={'44%'}
+          height={props.blockHeight}
           width="100%"
           alignItems="center"
           justifyContent="center"
@@ -181,13 +186,7 @@ function Sheet(props: {
         </Box>
       </Box>
 
-      <Box
-        height={'15%'}
-        justifyContent="center"
-        alignItems="center"
-        width={'100%'}
-        marginBottom={1}
-      >
+      <Box height={12} justifyContent="center" alignItems="center" width={'100%'} marginBottom={1}>
         <Button
           borderRadius={10}
           onPress={props.onFinishPressed}
