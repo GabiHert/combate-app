@@ -19,7 +19,7 @@ import { Applicator } from './types/applicator';
 function ExecutionScreen(props: {
   navigation: any;
   route: {
-    params: { config: AConfig; applicator: any; screen: { width: number; height: number } };
+    params: { applicator: any; screen: { width: number; height: number } };
   };
 }) {
   const applicator: {
@@ -31,18 +31,12 @@ function ExecutionScreen(props: {
   const sheetHeight = props.route.params.screen.height / 2 - 30;
   const blockHeight = sheetHeight / 3;
   const spaceBetweenBlocksHeight = 3;
-  const snapPoints = [
-    40,
-    blockHeight + spaceBetweenBlocksHeight + 30,
-    blockHeight * 2 + spaceBetweenBlocksHeight + 50,
-    props.route.params.screen.height / 2,
-  ];
+  const snapPoints = [40, props.route.params.screen.height / 2];
   let handleSheetChanges: any;
-  const [doseAmount, setDoseAmount] = useState<number>(config.getCache().APPLICATION.MIN_DOSES);
   const [velocity, setVelocity] = useState<number>(0);
   const [doseInProgress, setDoseInProgress] = useState<boolean>(false);
   const [leftApplicator, setLeftApplicator] = useState<Applicator>({
-    active: false,
+    active: true,
     available: true,
     loadKg: applicator.left.loadKg || 0,
   });
@@ -52,14 +46,11 @@ function ExecutionScreen(props: {
     loadKg: applicator.center.loadKg || 0,
   });
   const [rightApplicator, setRightApplicator] = useState<Applicator>({
-    active: false,
+    active: true,
     available: true,
     loadKg: applicator.right.loadKg || 0,
   });
-  const [location, setLocation] = useState<ILocation>({
-    latitude: '00.00000',
-    longitude: '00.00000',
-  });
+
   const [applicatorsLoadPercentage, setApplicatorsLoadPercentage] =
     useState<IApplicatorsPercentage>({
       center: calculateApplicatorsLoadPercentage(
@@ -184,6 +175,12 @@ function ExecutionScreen(props: {
           available: leftApplicator.available,
           loadKg: load,
         });
+      } else if (leftApplicator.available) {
+        setLeftApplicator({
+          active: true,
+          available: leftApplicator.available,
+          loadKg: leftApplicator.loadKg,
+        });
       }
 
       if (rightApplicator.active) {
@@ -210,6 +207,12 @@ function ExecutionScreen(props: {
           available: rightApplicator.available,
           loadKg: load,
         });
+      } else if (rightApplicator.available) {
+        setRightApplicator({
+          active: true,
+          available: rightApplicator.available,
+          loadKg: rightApplicator.loadKg,
+        });
       }
 
       if (centerApplicator.active) {
@@ -235,6 +238,12 @@ function ExecutionScreen(props: {
           active: true,
           available: centerApplicator.available,
           loadKg: load,
+        });
+      } else if (centerApplicator.available) {
+        setCenterApplicator({
+          active: true,
+          available: centerApplicator.available,
+          loadKg: centerApplicator.loadKg,
         });
       }
 

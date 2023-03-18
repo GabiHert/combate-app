@@ -1,4 +1,17 @@
-import { Box, Button, Center, HStack, Spacer, Stack, Text, VStack } from 'native-base';
+import {
+  Box,
+  Button,
+  Center,
+  HStack,
+  IconButton,
+  Spacer,
+  Stack,
+  Text,
+  VStack,
+  WarningIcon,
+  WarningOutlineIcon,
+  WarningTwoIcon,
+} from 'native-base';
 import React, { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { Severity } from '../../../../api/core/enum/severity';
 import { config } from '../../../../api/core/port/config-port';
@@ -63,6 +76,7 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
+            _text={{ fontSize: 20 }}
           >
             Tempo em execução
             <Text fontSize={35} fontWeight="bold">
@@ -76,6 +90,7 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
+            _text={{ fontSize: 20 }}
           >
             TALVEZ COLOCAR BOTAO DE EVENTO
           </Box>
@@ -97,6 +112,7 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
+            _text={{ fontSize: 20 }}
           >
             Total aplicado
             <Stack direction={'row'} alignItems="baseline" justifyContent="center">
@@ -114,14 +130,23 @@ function Sheet(props: {
               <Text fontSize={10}>g</Text>
             </Stack>
           </Box>
-          <Box
-            background={Theme().color.b200}
+
+          <Button
+            background={Theme().color.sWarning}
             width="50%"
             height={'100%'}
+            _pressed={{ opacity: 0.8 }}
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
-          ></Box>
+          >
+            <Center>
+              <Text mb={2} fontSize={20}>
+                Sinalizar Evento
+              </Text>
+              <WarningOutlineIcon size={50} color={'black'} />
+            </Center>
+          </Button>
         </Stack>
       </Box>
       <Button

@@ -12,7 +12,7 @@ export default StyleSheet.create({
   },
   closeLineContainer: {
     paddingBottom: 2,
-    height: 20,
+    height: 30,
     alignSelf: 'center',
   },
   closeLine: {

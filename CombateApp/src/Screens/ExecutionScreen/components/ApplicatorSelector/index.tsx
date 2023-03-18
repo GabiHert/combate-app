@@ -1,5 +1,6 @@
 import { Box, Button, Stack, Text } from 'native-base';
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { Theme } from '../../../../app/theme/theme';
 import { Applicator } from '../../types/applicator';
 
@@ -20,6 +21,12 @@ function ApplicatorSelector(props: {
   const [rightApplicatorActive, setRightApplicatorActive] = useState<boolean>(
     props.rightApplicator.active
   );
+
+  useEffect(() => {
+    setCenterApplicatorActive(props.centerApplicator.active);
+    setRightApplicatorActive(props.rightApplicator.active);
+    setLeftApplicatorActive(props.leftApplicator.active);
+  }, [props.leftApplicator.active, props.rightApplicator.active, props.centerApplicator.active]);
 
   function onLeftApplicatorPress() {
     if (props.leftApplicator.available) {
@@ -42,6 +49,12 @@ function ApplicatorSelector(props: {
     }
   }
 
+  function getButtonColor(isActive: boolean, isAvailable: boolean): string {
+    if (!isAvailable) {
+      return Theme().color.b200;
+    }
+    return isActive ? Theme().color.sOk : Theme().color.sError;
+  }
   return (
     <>
       <Box width="85%" borderRadius={20} height="95%" bgColor={Theme().color.b400}>
@@ -67,7 +80,7 @@ function ApplicatorSelector(props: {
                 isDisabled={!props.leftApplicator.available}
                 onPress={onLeftApplicatorPress}
                 _disabled={{ opacity: 0.5 }}
-                bgColor={leftApplicatorActive ? Theme().color.sOk : Theme().color.b200}
+                bgColor={getButtonColor(leftApplicatorActive, props.leftApplicator.available)}
                 width="100%"
                 height={'70%'}
                 _text={{ color: 'black' }}
@@ -91,7 +104,7 @@ function ApplicatorSelector(props: {
                 isDisabled={!props.centerApplicator.available}
                 onPress={onCenterApplicatorPress}
                 _disabled={{ opacity: 0.5 }}
-                bgColor={centerApplicatorActive ? Theme().color.sOk : Theme().color.b200}
+                bgColor={getButtonColor(centerApplicatorActive, props.centerApplicator.available)}
                 width="100%"
                 height={'70%'}
                 borderRadius={50}
@@ -115,7 +128,7 @@ function ApplicatorSelector(props: {
                 isDisabled={!props.rightApplicator.available}
                 onPress={onRightApplicatorPress}
                 _disabled={{ opacity: 0.5 }}
-                bgColor={rightApplicatorActive ? Theme().color.sOk : Theme().color.b200}
+                bgColor={getButtonColor(rightApplicatorActive, props.rightApplicator.available)}
                 width="100%"
                 height={'70%'}
                 borderRadius={50}

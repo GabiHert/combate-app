@@ -5,6 +5,7 @@ import { Theme } from '../../app/theme/theme';
 import { ShowToast } from '../../Components/AlertToast';
 import { SeverityEnum } from '../../api/core/enum/severity';
 import { AConfig } from '../../api/core/adapter/config';
+import { config } from '../../api/core/port/config-port';
 
 interface IPreset {
   name: string;
@@ -28,7 +29,6 @@ interface IConfigValidationResult {
 }
 
 function ConfigScreen(props: { navigation: any; route: any }) {
-  const config: AConfig = props.route.params.config;
   console.log(config.getCache());
   const [rightTankMaxLoad, setRightTankMaxLoad] = useState<number>(
     config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD

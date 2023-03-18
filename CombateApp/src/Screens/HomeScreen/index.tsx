@@ -10,7 +10,7 @@ import LoginModal from '../../Components/LoginModal';
 import style from './style';
 const image = require('../../app/assets/homebackground.png');
 
-function HomeScreen(props: { navigation: any; route: { params: { config: AConfig } } }) {
+function HomeScreen(props: { navigation: any; route: any }) {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   function onStartButtonPressed() {
     props.navigation.navigate('PreExecutionScreen');
