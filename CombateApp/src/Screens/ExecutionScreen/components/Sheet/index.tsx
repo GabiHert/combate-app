@@ -16,6 +16,7 @@ import React, { memo, useCallback, useEffect, useReducer, useRef, useState } fro
 import { Severity } from '../../../../api/core/enum/severity';
 import { config } from '../../../../api/core/port/config-port';
 import { Theme } from '../../../../app/theme/theme';
+import EventRegisterModal from '../EventRegisterModal';
 
 export interface IApplicatorsPercentage {
   left: { percentage: number; severity: Severity };
@@ -32,6 +33,7 @@ function Sheet(props: {
 }) {
   const [executionTimeMinutes, setExecutionTimeMinutes] = useState<number>(0);
   const [executionTimeHours, setExecutionTimeHours] = useState<number>(0);
+  const [eventRegisterVisible, setEventRegisterVisible] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -57,8 +59,16 @@ function Sheet(props: {
     [executionTimeHours, executionTimeMinutes]
   );
 
+  const onEventRegisterPress = useCallback(() => {
+    setEventRegisterVisible(true);
+  }, [setEventRegisterVisible]);
+
+  const onEventRegisterClose = useCallback(() => {
+    setEventRegisterVisible(false);
+  }, [setEventRegisterVisible]);
   return (
     <VStack height={props.sheetHeight - 30} alignItems="center" space={4}>
+      <EventRegisterModal isOpen={eventRegisterVisible} onClose={onEventRegisterClose} />
       <Box
         width="100%"
         alignItems="center"
@@ -135,6 +145,7 @@ function Sheet(props: {
             background={Theme().color.sWarning}
             width="50%"
             height={'100%'}
+            onPress={onEventRegisterPress}
             _pressed={{ opacity: 0.8 }}
             borderRadius={20}
             alignItems="center"

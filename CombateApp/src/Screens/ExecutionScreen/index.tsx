@@ -6,7 +6,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AConfig } from '../../api/core/adapter/config';
 import { Severity, SeverityEnum } from '../../api/core/enum/severity';
 import { config } from '../../api/core/port/config-port';
-import { ILocation } from '../../api/interface/location';
 import { Theme } from '../../app/theme/theme';
 import { AlertToast, ShowToast } from '../../Components/AlertToast';
 import ApplicatorSelector from './components/ApplicatorSelector';
