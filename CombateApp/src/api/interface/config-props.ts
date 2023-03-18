@@ -14,5 +14,7 @@ export interface IConfigsProps {
     P2: { NAME: string; DOSE_AMOUNT: number };
     P3: { NAME: string; DOSE_AMOUNT: number };
     P4: { NAME: string; DOSE_AMOUNT: number };
+    P5: { NAME: string; DOSE_AMOUNT: number };
+    P6: { NAME: string; DOSE_AMOUNT: number };
   };
 }

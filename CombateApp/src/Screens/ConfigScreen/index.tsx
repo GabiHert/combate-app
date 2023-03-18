@@ -29,7 +29,6 @@ interface IConfigValidationResult {
 }
 
 function ConfigScreen(props: { navigation: any; route: any }) {
-  console.log(config.getCache());
   const [rightTankMaxLoad, setRightTankMaxLoad] = useState<number>(
     config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD
   );
@@ -58,6 +57,14 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     doseAmount: config.getCache().PRESETS.P4.DOSE_AMOUNT,
     name: config.getCache().PRESETS.P4.NAME,
   });
+  const [preset5, setPreset5] = useState<IPreset>({
+    doseAmount: config.getCache().PRESETS.P5.DOSE_AMOUNT,
+    name: config.getCache().PRESETS.P5.NAME,
+  });
+  const [preset6, setPreset6] = useState<IPreset>({
+    doseAmount: config.getCache().PRESETS.P6.DOSE_AMOUNT,
+    name: config.getCache().PRESETS.P6.NAME,
+  });
 
   const [rightTankMaxLoadError, setRightTankMaxLoadError] = useState<string>();
   const [centerTankMaxLoadError, setCenterTankMaxLoadError] = useState<string>();
@@ -67,10 +74,15 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const [preset2NameError, setPreset2NameError] = useState<string>();
   const [preset3NameError, setPreset3NameError] = useState<string>();
   const [preset4NameError, setPreset4NameError] = useState<string>();
+  const [preset5NameError, setPreset5NameError] = useState<string>();
+  const [preset6NameError, setPreset6NameError] = useState<string>();
+
   const [preset1DoseError, setPreset1DoseError] = useState<string>();
   const [preset2DoseError, setPreset2DoseError] = useState<string>();
   const [preset3DoseError, setPreset3DoseError] = useState<string>();
   const [preset4DoseError, setPreset4DoseError] = useState<string>();
+  const [preset5DoseError, setPreset5DoseError] = useState<string>();
+  const [preset6DoseError, setPreset6DoseError] = useState<string>();
 
   function onRightTankMaxLoadChange(text: string) {
     setRightTankMaxLoad(Number(text));
@@ -119,6 +131,22 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     },
     [preset4]
   );
+  const onPreset5NameChange = useCallback(
+    (text: string) => {
+      const aux = preset5;
+      aux.name = text;
+      setPreset5(aux);
+    },
+    [preset5]
+  );
+  const onPreset6NameChange = useCallback(
+    (text: string) => {
+      const aux = preset6;
+      aux.name = text;
+      setPreset6(aux);
+    },
+    [preset6]
+  );
 
   const onPreset1DoseChange = useCallback(
     (text: string) => {
@@ -156,6 +184,24 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     },
     [preset4]
   );
+  const onPreset5DoseChange = useCallback(
+    (text: string) => {
+      const aux = preset5;
+      const doses = Math.trunc(Number(text));
+      aux.doseAmount = doses;
+      setPreset5(aux);
+    },
+    [preset5]
+  );
+  const onPreset6DoseChange = useCallback(
+    (text: string) => {
+      const aux = preset6;
+      const doses = Math.trunc(Number(text));
+      aux.doseAmount = doses;
+      setPreset6(aux);
+    },
+    [preset6]
+  );
 
   const onSavePressed = useCallback(async () => {
     //todo: call validation
@@ -170,10 +216,15 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         preset2NameError: '',
         preset3NameError: '',
         preset4NameError: '',
+        preset5NameError: '',
+        preset6NameError: '',
+
         preset1DoseError: '',
         preset2DoseError: '',
         preset3DoseError: '',
         preset4DoseError: '',
+        preset5DoseError: '',
+        preset6DoseError: '',
       };
 
       if (!result.isValid) {
@@ -185,14 +236,21 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         setRightTankMaxLoadError(result.rightTankMaxLoadError);
         setLeftTankMaxLoadError(result.leftTankMaxLoadError);
         setCenterTankMaxLoadError(result.centerTankMaxLoadError);
+
         setPreset1NameError(result.preset1NameError);
         setPreset2NameError(result.preset2NameError);
         setPreset3NameError(result.preset3NameError);
         setPreset4NameError(result.preset4NameError);
+        setPreset5NameError(result.preset5NameError);
+        setPreset6NameError(result.preset6NameError);
+
         setPreset1DoseError(result.preset1DoseError);
         setPreset2DoseError(result.preset2DoseError);
         setPreset3DoseError(result.preset3DoseError);
         setPreset4DoseError(result.preset4DoseError);
+        setPreset4DoseError(result.preset4DoseError);
+        setPreset4DoseError(result.preset4DoseError);
+
         setDoseWeightKgError(result.doseWeightKgError);
       } else {
         const data = {
@@ -382,6 +440,50 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             defaultValue={config.getCache().PRESETS.P4.DOSE_AMOUNT.toString()}
             placeholder="10"
             onChangeText={onPreset4DoseChange}
+            keyboardType={'numeric'}
+          />
+
+          <Divider w="80%" />
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+            Preset 5
+          </FormControl.Label>
+          <FormInput
+            title="Nome preset"
+            description="Preencha este campo com o nome do preset 5"
+            errorMessage={preset4NameError}
+            defaultValue={config.getCache().PRESETS.P5.NAME}
+            placeholder="Quadrante"
+            onChangeText={onPreset5NameChange}
+          />
+          <FormInput
+            title="Doses"
+            description="Preencha este campo com a quantidade de doses do Preset 5"
+            errorMessage={preset4DoseError}
+            defaultValue={config.getCache().PRESETS.P5.DOSE_AMOUNT.toString()}
+            placeholder="10"
+            onChangeText={onPreset5DoseChange}
+            keyboardType={'numeric'}
+          />
+
+          <Divider w="80%" />
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+            Preset 6
+          </FormControl.Label>
+          <FormInput
+            title="Nome preset"
+            description="Preencha este campo com o nome do preset 6"
+            errorMessage={preset4NameError}
+            defaultValue={config.getCache().PRESETS.P6.NAME}
+            placeholder="Quadrante"
+            onChangeText={onPreset6NameChange}
+          />
+          <FormInput
+            title="Doses"
+            description="Preencha este campo com a quantidade de doses do Preset 6"
+            errorMessage={preset4DoseError}
+            defaultValue={config.getCache().PRESETS.P6.DOSE_AMOUNT.toString()}
+            placeholder="10"
+            onChangeText={onPreset6DoseChange}
             keyboardType={'numeric'}
           />
         </VStack>

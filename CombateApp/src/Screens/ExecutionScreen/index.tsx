@@ -18,19 +18,20 @@ import { Applicator } from './types/applicator';
 function ExecutionScreen(props: {
   navigation: any;
   route: {
-    params: { applicator: any; screen: { width: number; height: number } };
+    params: { applicator: any };
   };
 }) {
+  const dimensions = useWindowDimensions();
   const applicator: {
     center: { loadKg: number };
     right: { loadKg: number };
     left: { loadKg: number };
   } = props.route.params.applicator;
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
-  const sheetHeight = props.route.params.screen.height / 2 - 30;
+  const sheetHeight = dimensions.height / 2 - 30;
   const blockHeight = sheetHeight / 3;
   const spaceBetweenBlocksHeight = 3;
-  const snapPoints = [40, props.route.params.screen.height / 2];
+  const snapPoints = [40, dimensions.height / 2];
   let handleSheetChanges: any;
   const [velocity, setVelocity] = useState<number>(0);
   const [doseInProgress, setDoseInProgress] = useState<boolean>(false);
