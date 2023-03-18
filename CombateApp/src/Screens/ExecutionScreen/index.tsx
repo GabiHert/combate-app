@@ -1,10 +1,11 @@
 import BottomSheet from '@gorhom/bottom-sheet';
-import { Box, Button, Toast, useToast } from 'native-base';
+import { Box, Button, Center, Toast, useToast } from 'native-base';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { BackHandler, useWindowDimensions } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AConfig } from '../../api/core/adapter/config';
 import { Severity, SeverityEnum } from '../../api/core/enum/severity';
+import { config } from '../../api/core/port/config-port';
 import { ILocation } from '../../api/interface/location';
 import { Theme } from '../../app/theme/theme';
 import { AlertToast, ShowToast } from '../../Components/AlertToast';
@@ -21,18 +22,17 @@ function ExecutionScreen(props: {
     params: { config: AConfig; applicator: any; screen: { width: number; height: number } };
   };
 }) {
-  const config: AConfig = props.route.params.config;
   const applicator: {
     center: { loadKg: number };
     right: { loadKg: number };
     left: { loadKg: number };
   } = props.route.params.applicator;
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
-  const sheetHeight = props.route.params.screen.height / 2 - 25;
+  const sheetHeight = props.route.params.screen.height / 2 - 30;
   const blockHeight = sheetHeight / 3;
   const spaceBetweenBlocksHeight = 3;
   const snapPoints = [
-    30,
+    40,
     blockHeight + spaceBetweenBlocksHeight + 30,
     blockHeight * 2 + spaceBetweenBlocksHeight + 50,
     props.route.params.screen.height / 2,
@@ -40,9 +40,6 @@ function ExecutionScreen(props: {
   let handleSheetChanges: any;
   const [doseAmount, setDoseAmount] = useState<number>(config.getCache().APPLICATION.MIN_DOSES);
   const [velocity, setVelocity] = useState<number>(0);
-  const [bluetoothStatus, setBluetoothStatus] = useState<Severity>(SeverityEnum.WARN);
-  const [gpsStatus, setGpsStatus] = useState<Severity>(SeverityEnum.WARN);
-  const [applicatorsStatus, setApplicatorsStatus] = useState<Severity>(SeverityEnum.WARN);
   const [doseInProgress, setDoseInProgress] = useState<boolean>(false);
   const [leftApplicator, setLeftApplicator] = useState<Applicator>({
     active: false,
@@ -120,9 +117,6 @@ function ExecutionScreen(props: {
           location: { latitude: '', longitude: '' },
         };
 
-        setApplicatorsStatus(response.applicatorsStatus);
-        setBluetoothStatus(response.bluetoothStatus);
-        setGpsStatus(response.gpsStatus);
         setVelocity(response.velocity);
       }
     }, config.getCache().APPLICATION.REQUEST_INTERVAL_MS);
@@ -163,7 +157,6 @@ function ExecutionScreen(props: {
 
   const processDose = useCallback(
     async (amount: number) => {
-      setApplicatorsStatus(SeverityEnum.WARN);
       setDoseInProgress(true);
       //call backend
       let activeApplicators = 0;
@@ -303,7 +296,7 @@ function ExecutionScreen(props: {
         });
       }
       setApplicatorsLoadPercentage({ center, right, left });
-      setApplicatorsStatus(SeverityEnum.OK);
+
       setDoseInProgress(false);
       setAppliedDoses(appliedDoses + amount * activeApplicators);
     },
@@ -319,10 +312,6 @@ function ExecutionScreen(props: {
     ]
   );
 
-  const onDoseButtonPress = useCallback(() => {
-    processDose(doseAmount);
-  }, [doseAmount, processDose]);
-
   const onPresetPressed = useCallback(
     (value: number) => {
       processDose(value);
@@ -330,43 +319,14 @@ function ExecutionScreen(props: {
     [processDose]
   );
 
-  const onApplicatorsStatusChange = useCallback(() => {
-    return applicatorsStatus;
-  }, [applicatorsStatus]);
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Box height={'15%'} alignItems="center" justifyContent="center" width="100%">
-        <StatusBar
-          velocity={velocity}
-          applicatorStatusChange={onApplicatorsStatusChange}
-          gpsStatus={gpsStatus}
-          bluetoothStatus={bluetoothStatus}
-        />
+        <StatusBar velocity={velocity} applicatorsLoadPercentage={applicatorsLoadPercentage} />
       </Box>
 
-      <Box height={'45%'}>
-        <PoisonAmountSelector
-          w={props.route.params.screen.width}
-          config={config}
-          onPresetPressed={onPresetPressed}
-          onDoseAmountChange={setDoseAmount}
-          doseAmount={doseAmount}
-        />
-      </Box>
-
-      <Box alignItems="center" justifyContent="center" width="100%" height="20%">
-        <Button
-          onPress={onDoseButtonPress}
-          width="60%"
-          borderRadius={10}
-          height="80%"
-          bgColor={Theme().color.b200}
-          _pressed={{ opacity: 0.8 }}
-          _text={{ color: 'black' }}
-        >
-          Dosar
-        </Button>
+      <Box height={'60%'} width={'100%'} marginBottom={'5%'}>
+        <PoisonAmountSelector onPresetPressed={onPresetPressed} />
       </Box>
 
       <Box alignItems="center" justifyContent="center" width="100%" height="15%">
@@ -391,16 +351,22 @@ function ExecutionScreen(props: {
           </Box>
         )}
         backgroundStyle={{ backgroundColor: Theme().color.b400 }}
-        style={style.bottomSheet}
+        style={{
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 9,
+          },
+          shadowOpacity: 0.5,
+          shadowRadius: 12.35,
+          elevation: 19,
+        }}
       >
         <Sheet
           blockHeight={blockHeight}
           sheetHeight={sheetHeight}
           spaceBetweenBlocksHeight={spaceBetweenBlocksHeight}
-          config={config}
           onFinishPressed={onFinishButtonPress}
-          location={location}
-          applicatorsLoadPercentage={applicatorsLoadPercentage}
           appliedDoses={appliedDoses}
         />
       </BottomSheet>

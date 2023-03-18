@@ -1,129 +1,64 @@
-import { Box, Stack } from 'native-base';
+import { Box, Center, HStack, Stack } from 'native-base';
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { Severity } from '../../../../api/core/enum/severity';
 import { Theme } from '../../../../app/theme/theme';
+import { IApplicatorsPercentage } from '../Sheet';
 
-function StatusBar(props: {
-  applicatorStatusChange: () => Severity;
-  gpsStatus: Severity;
-  bluetoothStatus: Severity;
-  velocity: number;
-}) {
-  const [applicatorStatus, setApplicatorStatus] = useState(props.applicatorStatusChange());
-  const [gpsStatus, setGpsStatus] = useState(props.gpsStatus);
-  const [bluetoothStatus, setBluetoothStatus] = useState(props.bluetoothStatus);
-
-  useEffect(() => {
-    setApplicatorStatus(props.applicatorStatusChange());
-  }, [props.applicatorStatusChange]);
-
-  useEffect(() => {
-    setGpsStatus(props.gpsStatus);
-  }, [props.gpsStatus]);
-
-  useEffect(() => {
-    setBluetoothStatus(props.bluetoothStatus);
-  }, [props.bluetoothStatus]);
-
+function StatusBar(props: { velocity: number; applicatorsLoadPercentage: IApplicatorsPercentage }) {
   return (
-    <>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="center"
-        bgColor={Theme().color.b400}
-        width="100%"
-        borderRadius={50}
-        height="95%"
-      >
-        <Box width={'22%'} height="95%" alignItems="center" justifyContent="center">
-          <Box
-            width={'90%'}
-            height="100%"
-            alignItems="center"
-            justifyContent="center"
-            _text={{ color: 'white' }}
+    <HStack bgColor={Theme().color.b400} width="98%" borderRadius={50} pl={8} pr={8} height="95%">
+      <HStack w={'80%'} space={3}>
+        <Center width={'28%'} height="100%" _text={{ color: 'white', fontSize: 20 }}>
+          Esquerdo
+          <Center
+            width="100%"
+            borderRadius={50}
+            bgColor={props.applicatorsLoadPercentage.left.severity.color}
+            height={'60%'}
+            _text={{ fontSize: 30, color: 'white', textAlign: 'center' }}
           >
-            Dosadores
-            <Box
-              bgColor={applicatorStatus.color}
-              borderRadius={50}
-              alignItems="center"
-              justifyContent="center"
-              width="100%"
-              height={'70%'}
-            >
-              {applicatorStatus.message}
-            </Box>
-          </Box>
-        </Box>
+            {props.applicatorsLoadPercentage.left.percentage.toString() + '%'}
+          </Center>
+        </Center>
+        <Center width={'28%'} height="100%" _text={{ color: 'white', fontSize: 20 }}>
+          Central
+          <Center
+            width="100%"
+            borderRadius={50}
+            bgColor={props.applicatorsLoadPercentage.center.severity.color}
+            height={'60%'}
+            _text={{ fontSize: 30, color: 'white', textAlign: 'center' }}
+          >
+            {props.applicatorsLoadPercentage.center.percentage.toString() + '%'}
+          </Center>
+        </Center>
+        <Center width={'28%'} height="100%" _text={{ color: 'white', fontSize: 20 }}>
+          Direito
+          <Center
+            width="100%"
+            borderRadius={50}
+            bgColor={props.applicatorsLoadPercentage.right.severity.color}
+            height={'60%'}
+            _text={{ fontSize: 30, color: 'white', textAlign: 'center' }}
+          >
+            {props.applicatorsLoadPercentage.right.percentage.toString() + '%'}
+          </Center>
+        </Center>
+      </HStack>
 
-        <Box width={'22%'} height="95%" alignItems="center" justifyContent="center">
-          <Box
-            width={'90%'}
-            height="100%"
-            alignItems="center"
-            justifyContent="center"
-            _text={{ color: 'white' }}
+      <Box w={'20%'}>
+        <Center width={'100%'} height="100%" _text={{ color: 'white', fontSize: 20 }}>
+          Velocidade
+          <Center
+            width="100%"
+            height={'70%'}
+            _text={{ fontSize: 65, color: 'white', textAlign: 'center' }}
           >
-            GPS
-            <Box
-              bgColor={gpsStatus.color}
-              borderRadius={50}
-              alignItems="center"
-              justifyContent="center"
-              width="100%"
-              height={'70%'}
-            >
-              {gpsStatus.message}
-            </Box>
-          </Box>
-        </Box>
-
-        <Box width={'22%'} height="95%" alignItems="center" justifyContent="center">
-          <Box
-            width={'90%'}
-            height="100%"
-            alignItems="center"
-            justifyContent="center"
-            _text={{ color: 'white' }}
-          >
-            Bluetooth
-            <Box
-              bgColor={bluetoothStatus.color}
-              borderRadius={50}
-              alignItems="center"
-              justifyContent="center"
-              width="100%"
-              height={'70%'}
-            >
-              {bluetoothStatus.message}
-            </Box>
-          </Box>
-        </Box>
-
-        <Box width={'22%'} height="95%" alignItems="center" justifyContent="center">
-          <Box
-            width={'90%'}
-            height="100%"
-            alignItems="center"
-            justifyContent="center"
-            _text={{ color: 'white' }}
-          >
-            Velocidade
-            <Box
-              alignItems="center"
-              justifyContent="center"
-              width="100%"
-              height={'70%'}
-              _text={{ fontSize: 50, color: 'white', textAlign: 'center' }}
-            >
-              {props.velocity}
-            </Box>
-          </Box>
-        </Box>
-      </Stack>
-    </>
+            {props.velocity}
+          </Center>
+        </Center>
+      </Box>
+    </HStack>
   );
 }
 

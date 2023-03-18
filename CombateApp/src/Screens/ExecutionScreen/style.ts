@@ -12,6 +12,7 @@ export default StyleSheet.create({
   },
   closeLineContainer: {
     paddingBottom: 2,
+    height: 20,
     alignSelf: 'center',
   },
   closeLine: {
@@ -21,16 +22,6 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     marginTop: 9,
     marginBottom: 9,
-  },
-  bottomSheet: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 9,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 12.35,
-    elevation: 19,
   },
   statusBarContainer: {
     height: '15%',

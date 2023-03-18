@@ -10,10 +10,7 @@ import {
   Toast,
   VStack,
 } from 'native-base';
-import { getRandomString } from 'native-base/lib/typescript/theme/v33x-theme/tools';
-import { Severity, SeverityEnum } from '../../api/core/enum/severity';
-import { Config } from '../../api/core/adapter/config';
-import { Theme } from '../../app/theme/theme';
+import { Severity } from '../../api/core/enum/severity';
 
 export function AlertToast(props: {
   title: string;
@@ -25,7 +22,7 @@ export function AlertToast(props: {
     <Alert
       variant={'top-accent'}
       p={2}
-      borderRadius={8}
+      borderRadius={5}
       bgColor={props.severity.color}
       status={props.severity.name}
       alignItems="center"
@@ -34,7 +31,7 @@ export function AlertToast(props: {
       <HStack space={10}>
         <HStack space={2} flexShrink={1} alignItems="center" justifyContent={'center'}>
           <Alert.Icon color={'white'} />
-          <Text textAlign={'center'} fontSize={20} fontWeight={'bold'} color={'black'}>
+          <Text textAlign={'center'} fontSize={30} fontWeight={'bold'} color={'black'}>
             {props.title}
           </Text>
         </HStack>
@@ -56,7 +53,7 @@ export function AlertToast(props: {
         )}
       </HStack>
 
-      <Text fontSize={15} color={'black'}>
+      <Text fontSize={20} color={'black'}>
         {props.message}
       </Text>
     </Alert>
@@ -81,6 +78,8 @@ export function ShowToast(props: {
     id: id,
     duration: props.durationMs,
     placement: 'top',
+    minW: '60%',
+    maxW: '80%',
     render: () => {
       return (
         <AlertToast

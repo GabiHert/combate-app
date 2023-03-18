@@ -1,4 +1,5 @@
 import { IcreateIconProps } from 'native-base/lib/typescript/components/primitives/Icon/types';
+import { defaultConfig } from 'native-base/lib/typescript/core/NativeBaseContext';
 import { IConfigsProps } from '../../interface/config-props';
 import { PConfig } from '../port/config-port';
 import { PRepository } from '../port/repository-port';
