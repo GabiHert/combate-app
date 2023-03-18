@@ -69,13 +69,7 @@ function ApplicatorSelector(props: {
           paddingTop={'2'}
         >
           <Box width={'30%'} height="95%" alignItems="center" justifyContent="center">
-            <Box
-              width={'90%'}
-              height="100%"
-              alignItems="center"
-              justifyContent="center"
-              _text={{ color: 'white' }}
-            >
+            <Box width={'90%'} height="100%" alignItems="center" justifyContent="center">
               <Button
                 isDisabled={!props.leftApplicator.available}
                 onPress={onLeftApplicatorPress}
@@ -83,7 +77,7 @@ function ApplicatorSelector(props: {
                 bgColor={getButtonColor(leftApplicatorActive, props.leftApplicator.available)}
                 width="100%"
                 height={'70%'}
-                _text={{ color: 'black' }}
+                _text={{ color: 'white', fontSize: 20 }}
                 borderRadius={50}
                 _pressed={{ opacity: 0.8 }}
               >
@@ -93,13 +87,7 @@ function ApplicatorSelector(props: {
           </Box>
 
           <Box width={'30%'} height="95%" alignItems="center" justifyContent="center">
-            <Box
-              width={'90%'}
-              height="100%"
-              alignItems="center"
-              justifyContent="center"
-              _text={{ color: 'white' }}
-            >
+            <Box width={'90%'} height="100%" alignItems="center" justifyContent="center">
               <Button
                 isDisabled={!props.centerApplicator.available}
                 onPress={onCenterApplicatorPress}
@@ -108,7 +96,7 @@ function ApplicatorSelector(props: {
                 width="100%"
                 height={'70%'}
                 borderRadius={50}
-                _text={{ color: 'black' }}
+                _text={{ color: 'white', fontSize: 20 }}
                 _pressed={{ opacity: 0.8 }}
               >
                 Central
@@ -117,13 +105,7 @@ function ApplicatorSelector(props: {
           </Box>
 
           <Box width={'30%'} height="95%" alignItems="center" justifyContent="center">
-            <Box
-              width={'90%'}
-              height="100%"
-              alignItems="center"
-              justifyContent="center"
-              _text={{ color: 'white' }}
-            >
+            <Box width={'90%'} height="100%" alignItems="center" justifyContent="center">
               <Button
                 isDisabled={!props.rightApplicator.available}
                 onPress={onRightApplicatorPress}
@@ -132,7 +114,7 @@ function ApplicatorSelector(props: {
                 width="100%"
                 height={'70%'}
                 borderRadius={50}
-                _text={{ color: 'black' }}
+                _text={{ color: 'white', fontSize: 20 }}
                 _pressed={{ opacity: 0.8 }}
               >
                 Direito
