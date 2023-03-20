@@ -4,7 +4,11 @@ import { Theme } from '../../../../app/theme/theme';
 import FormInput from '../../../../Components/FormInput';
 import SelectInput from '../../../../Components/SelectInput';
 
-function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
+function FinishExecutionModal(props: {
+  isOpen: boolean;
+  onClose: () => void;
+  onFinishExecutionPress: () => void;
+}) {
   const [event, setEvent] = useState<string>();
 
   const onEventChange = useCallback(
@@ -15,26 +19,26 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
     [setEvent]
   );
 
-  const onRegisterPress = useCallback(() => {
+  const onFinishPressed = useCallback(() => {
     //todo:call backend to register event
-    props.onClose();
+    props.onFinishExecutionPress();
   }, [event]);
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <Modal.Content maxWidth="500px" maxH={'500px'}>
         <Modal.CloseButton />
         <Modal.Header _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
-          Sinalizar Evento
+          Finalizar execução
         </Modal.Header>
         <Modal.Body h={'100%'}>
           <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m }}>
-            Tipo de evento
+            Motivo da parada
           </FormControl.Label>
           <SelectInput
             onItemSelected={onEventChange}
             w={'100%'}
             h={20}
-            title="Selecione tipo de evento que foi encontrado"
+            title="Descreva o motivo do fim da execução"
             placeholder="Bloqueio de via"
             items={[
               { value: 'teste', label: 'teste' },
@@ -47,14 +51,14 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
         >
           <Button
             _pressed={{ opacity: 0.8 }}
-            bgColor={Theme().color.b200}
-            _text={{ color: Theme().color.b400, fontSize: Theme().font.size.m }}
+            bgColor={Theme().color.sError}
+            _text={{ color: Theme().color.b500, fontSize: Theme().font.size.m }}
             borderRadius={20}
-            onPress={onRegisterPress}
+            onPress={onFinishPressed}
             h={20}
             w={40}
           >
-            Registrar
+            Finalizar
           </Button>
         </Modal.Footer>
       </Modal.Content>
@@ -62,4 +66,4 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
   );
 }
 
-export default EventRegisterModal;
+export default FinishExecutionModal;

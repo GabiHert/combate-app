@@ -14,7 +14,7 @@ export default StyleSheet.create({
   buttonColorReleased: {
     opacity: 100,
   },
-  buttonText: { fontSize: 25, fontWeight: '500' },
+  buttonText: { fontSize: Theme().font.size.l, fontWeight: '500' },
   container: {
     alignItems: 'center',
     width: '100%',

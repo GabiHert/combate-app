@@ -1,5 +1,6 @@
 import { FormControl, Select, WarningOutlineIcon } from 'native-base';
 import React from 'react';
+import { Theme } from '../../app/theme/theme';
 
 function SelectInput(props: {
   title: string;
@@ -16,7 +17,7 @@ function SelectInput(props: {
       isRequired
       isInvalid={props.errorMessage != undefined && props.errorMessage != ''}
     >
-      <FormControl.Label _text={{ fontWeight: 'bold', fontSize: 15 }}>
+      <FormControl.Label _text={{ fontWeight: 'bold', fontSize: Theme().font.size.s }}>
         {props.title}
       </FormControl.Label>
       <Select

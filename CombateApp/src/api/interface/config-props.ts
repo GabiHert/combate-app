@@ -17,4 +17,8 @@ export interface IConfigsProps {
     P5: { NAME: string; DOSE_AMOUNT: number };
     P6: { NAME: string; DOSE_AMOUNT: number };
   };
+  SYSTEMATIC_DOSE: {
+    METERS_BETWEEN_DOSE: number;
+    DOSE_AMOUNT: number;
+  };
 }

@@ -3,11 +3,10 @@ import { Box, Button, Center, Toast, useToast } from 'native-base';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { BackHandler, useWindowDimensions } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { AConfig } from '../../api/core/adapter/config';
 import { Severity, SeverityEnum } from '../../api/core/enum/severity';
 import { config } from '../../api/core/port/config-port';
 import { Theme } from '../../app/theme/theme';
-import { AlertToast, ShowToast } from '../../Components/AlertToast';
+import { ShowToast } from '../../Components/AlertToast';
 import ApplicatorSelector from './components/ApplicatorSelector';
 import PoisonAmountSelector from './components/PoisonAmountSelector';
 import Sheet, { IApplicatorsPercentage } from './components/Sheet';
@@ -116,6 +115,7 @@ function ExecutionScreen(props: {
   }, [doseInProgress]);
 
   function onFinishButtonPress() {
+    console.log('finished');
     props.navigation.navigate('HomeScreen');
   }
 

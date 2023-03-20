@@ -4,8 +4,10 @@ import FormInput from '../../Components/FormInput';
 import { Theme } from '../../app/theme/theme';
 import { ShowToast } from '../../Components/AlertToast';
 import { SeverityEnum } from '../../api/core/enum/severity';
-import { AConfig } from '../../api/core/adapter/config';
 import { config } from '../../api/core/port/config-port';
+import SlideInput from '../../Components/SlideInput';
+import { CONSTANTS } from '../../api/config/config';
+import ScrollItems from '../../Components/ScrollItems';
 
 interface IPreset {
   name: string;
@@ -149,54 +151,48 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
 
   const onPreset1DoseChange = useCallback(
-    (text: string) => {
+    (doses: number) => {
       const aux = preset1;
-      const doses = Math.trunc(Number(text));
       aux.doseAmount = doses;
       setPreset1(aux);
     },
     [preset1]
   );
   const onPreset2DoseChange = useCallback(
-    (text: string) => {
+    (doses: number) => {
       const aux = preset2;
-      const doses = Math.trunc(Number(text));
       aux.doseAmount = doses;
       setPreset2(aux);
     },
     [preset2]
   );
   const onPreset3DoseChange = useCallback(
-    (text: string) => {
+    (doses: number) => {
       const aux = preset3;
-      const doses = Math.trunc(Number(text));
       aux.doseAmount = doses;
       setPreset3(aux);
     },
     [preset3]
   );
   const onPreset4DoseChange = useCallback(
-    (text: string) => {
+    (doses: number) => {
       const aux = preset4;
-      const doses = Math.trunc(Number(text));
       aux.doseAmount = doses;
       setPreset4(aux);
     },
     [preset4]
   );
   const onPreset5DoseChange = useCallback(
-    (text: string) => {
+    (doses: number) => {
       const aux = preset5;
-      const doses = Math.trunc(Number(text));
       aux.doseAmount = doses;
       setPreset5(aux);
     },
     [preset5]
   );
   const onPreset6DoseChange = useCallback(
-    (text: string) => {
+    (doses: number) => {
       const aux = preset6;
-      const doses = Math.trunc(Number(text));
       aux.doseAmount = doses;
       setPreset6(aux);
     },
@@ -304,15 +300,11 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     }
   }, []);
 
-  const onBackPressed = useCallback(() => {
-    props.navigation.navigate('HomeScreen');
-  }, []);
-
   return (
     <Box justifyContent={'center'} alignItems={'center'} h="100%">
       <ScrollView w="100%">
         <VStack space={4} justifyContent={'center'} alignItems={'center'} overflow={'hidden'}>
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
             Capacidade Reservatórios
           </FormControl.Label>
           <FormInput
@@ -343,7 +335,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             keyboardType={'numeric'}
           />
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
             Informações Dosagem
           </FormControl.Label>
           <FormInput
@@ -356,7 +348,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             keyboardType={'numeric'}
           />
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
             Preset 1
           </FormControl.Label>
           <FormInput
@@ -367,18 +359,18 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             placeholder="Quadrante"
             onChangeText={onPreset1NameChange}
           />
-          <FormInput
-            title="Doses"
-            description="Preencha este campo com a quantidade de doses do Preset 1"
-            errorMessage={preset1DoseError}
-            placeholder="10"
-            defaultValue={config.getCache().PRESETS.P1.DOSE_AMOUNT.toString()}
-            onChangeText={onPreset1DoseChange}
-            keyboardType={'numeric'}
+          <SlideInput
+            onChangeEnd={onPreset1DoseChange}
+            step={0.5}
+            title={'Doses'}
+            defaultValue={config.getCache().PRESETS.P1.DOSE_AMOUNT}
+            disabled={false}
+            maxValue={config.getCache().APPLICATION.MAX_DOSES}
+            minValue={config.getCache().APPLICATION.MIN_DOSES}
           />
 
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
             Preset 2
           </FormControl.Label>
           <FormInput
@@ -389,18 +381,17 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             placeholder="Quadrante"
             onChangeText={onPreset2NameChange}
           />
-          <FormInput
-            title="Doses"
-            description="Preencha este campo com a quantidade de doses do Preset 2"
-            errorMessage={preset2DoseError}
-            defaultValue={config.getCache().PRESETS.P2.DOSE_AMOUNT.toString()}
-            placeholder="10"
-            onChangeText={onPreset2DoseChange}
-            keyboardType={'numeric'}
+          <SlideInput
+            onChangeEnd={onPreset2DoseChange}
+            step={0.5}
+            title={'Doses'}
+            defaultValue={config.getCache().PRESETS.P2.DOSE_AMOUNT}
+            disabled={false}
+            maxValue={config.getCache().APPLICATION.MAX_DOSES}
+            minValue={config.getCache().APPLICATION.MIN_DOSES}
           />
-
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
             Preset 3
           </FormControl.Label>
           <FormInput
@@ -411,18 +402,18 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             placeholder="Quadrante"
             onChangeText={onPreset3NameChange}
           />
-          <FormInput
-            title="Doses"
-            description="Preencha este campo com a quantidade de doses do Preset 3"
-            errorMessage={preset3DoseError}
-            defaultValue={config.getCache().PRESETS.P3.DOSE_AMOUNT.toString()}
-            placeholder="10"
-            onChangeText={onPreset3DoseChange}
-            keyboardType={'numeric'}
+          <SlideInput
+            onChangeEnd={onPreset3DoseChange}
+            step={0.5}
+            title={'Doses'}
+            defaultValue={config.getCache().PRESETS.P3.DOSE_AMOUNT}
+            disabled={false}
+            maxValue={config.getCache().APPLICATION.MAX_DOSES}
+            minValue={config.getCache().APPLICATION.MIN_DOSES}
           />
 
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
             Preset 4
           </FormControl.Label>
           <FormInput
@@ -433,18 +424,18 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             placeholder="Quadrante"
             onChangeText={onPreset4NameChange}
           />
-          <FormInput
-            title="Doses"
-            description="Preencha este campo com a quantidade de doses do Preset 4"
-            errorMessage={preset4DoseError}
-            defaultValue={config.getCache().PRESETS.P4.DOSE_AMOUNT.toString()}
-            placeholder="10"
-            onChangeText={onPreset4DoseChange}
-            keyboardType={'numeric'}
+          <SlideInput
+            onChangeEnd={onPreset4DoseChange}
+            step={0.5}
+            title={'Doses'}
+            defaultValue={config.getCache().PRESETS.P4.DOSE_AMOUNT}
+            disabled={false}
+            maxValue={config.getCache().APPLICATION.MAX_DOSES}
+            minValue={config.getCache().APPLICATION.MIN_DOSES}
           />
 
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
             Preset 5
           </FormControl.Label>
           <FormInput
@@ -455,18 +446,19 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             placeholder="Quadrante"
             onChangeText={onPreset5NameChange}
           />
-          <FormInput
-            title="Doses"
-            description="Preencha este campo com a quantidade de doses do Preset 5"
-            errorMessage={preset4DoseError}
-            defaultValue={config.getCache().PRESETS.P5.DOSE_AMOUNT.toString()}
-            placeholder="10"
-            onChangeText={onPreset5DoseChange}
-            keyboardType={'numeric'}
+
+          <SlideInput
+            onChangeEnd={onPreset5DoseChange}
+            step={0.5}
+            title={'Doses'}
+            defaultValue={config.getCache().PRESETS.P5.DOSE_AMOUNT}
+            disabled={false}
+            maxValue={config.getCache().APPLICATION.MAX_DOSES}
+            minValue={config.getCache().APPLICATION.MIN_DOSES}
           />
 
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
             Preset 6
           </FormControl.Label>
           <FormInput
@@ -477,14 +469,57 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             placeholder="Quadrante"
             onChangeText={onPreset6NameChange}
           />
-          <FormInput
-            title="Doses"
-            description="Preencha este campo com a quantidade de doses do Preset 6"
-            errorMessage={preset4DoseError}
-            defaultValue={config.getCache().PRESETS.P6.DOSE_AMOUNT.toString()}
-            placeholder="10"
-            onChangeText={onPreset6DoseChange}
-            keyboardType={'numeric'}
+          <SlideInput
+            onChangeEnd={onPreset6DoseChange}
+            step={0.5}
+            title={'Doses'}
+            defaultValue={config.getCache().PRESETS.P6.DOSE_AMOUNT}
+            disabled={false}
+            maxValue={config.getCache().APPLICATION.MAX_DOSES}
+            minValue={config.getCache().APPLICATION.MIN_DOSES}
+          />
+
+          <Divider w="80%" />
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+            Dose Sistemática
+          </FormControl.Label>
+          <SlideInput
+            onChangeEnd={() => {}}
+            step={0.5}
+            title={'Metros entre cada dose'}
+            unit={'metros'}
+            defaultValue={config.getCache().SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE}
+            disabled={false}
+            maxValue={10}
+            minValue={0}
+          />
+          <SlideInput
+            onChangeEnd={() => {}}
+            step={0.5}
+            title={'Quantidade de doses'}
+            unit={'doses'}
+            defaultValue={config.getCache().SYSTEMATIC_DOSE.DOSE_AMOUNT}
+            disabled={false}
+            maxValue={10}
+            minValue={0}
+          />
+          <Divider w="80%" />
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+            Motivos de Parada
+          </FormControl.Label>
+
+          <ScrollItems
+            maxH={'80'}
+            items={[
+              { label: 'TESTE', value: {} },
+              { label: 'TESTE', value: {} },
+              { label: 'TESTE', value: {} },
+              { label: 'TESTE', value: {} },
+              { label: 'TESTE', value: {} },
+              { label: 'TESTE', value: {} },
+              { label: 'TESTE', value: {} },
+            ]}
+            w={'80%'}
           />
         </VStack>
 

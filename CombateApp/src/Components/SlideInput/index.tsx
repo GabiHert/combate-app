@@ -1,5 +1,5 @@
 import { FormControl, Slider } from 'native-base';
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import { Theme } from '../../app/theme/theme';
 
 function SlideInput(props: {
@@ -12,21 +12,31 @@ function SlideInput(props: {
   title: string;
   unit?: string;
 }) {
-  const [value, setValue] = useState<number>(0);
+  const [value, setValue] = useState<number>(props.defaultValue);
+  const onChangeEnd = useCallback(
+    (value: number) => {
+      setValue(value);
+      props.onChangeEnd(value);
+    },
+    [setValue]
+  );
 
   return (
     <FormControl isDisabled={props.disabled} justifyContent={'center'} alignItems={'center'}>
-      <FormControl.Label _text={{ fontWeight: 'bold', fontSize: 15 }}>
+      <FormControl.Label _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m }}>
         {props.title}
       </FormControl.Label>
-      <FormControl.Label textAlign={'center'} _text={{ fontWeight: 'normal', fontSize: 12 }}>
+      <FormControl.Label
+        textAlign={'center'}
+        _text={{ fontWeight: 'normal', fontSize: Theme().font.size.m }}
+      >
         {value}
         {props.unit ? ' ' + props.unit.toString() : ''}
       </FormControl.Label>
       <Slider
+        size={'lg'}
         w="60%"
-        onChange={setValue}
-        onChangeEnd={props.onChangeEnd}
+        onChangeEnd={onChangeEnd}
         defaultValue={props.defaultValue}
         minValue={props.minValue}
         maxValue={props.maxValue}

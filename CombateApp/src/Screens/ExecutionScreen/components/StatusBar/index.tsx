@@ -1,6 +1,5 @@
 import { Box, Center, HStack, Stack } from 'native-base';
-import React, { memo, useCallback, useEffect, useState } from 'react';
-import { Severity } from '../../../../api/core/enum/severity';
+import React, { memo } from 'react';
 import { Theme } from '../../../../app/theme/theme';
 import { IApplicatorsPercentage } from '../Sheet';
 
@@ -8,7 +7,11 @@ function StatusBar(props: { velocity: number; applicatorsLoadPercentage: IApplic
   return (
     <HStack bgColor={Theme().color.b400} width="98%" borderRadius={50} pl={8} pr={8} height="95%">
       <HStack w={'80%'} space={3}>
-        <Center width={'28%'} height="100%" _text={{ color: 'white', fontSize: 20 }}>
+        <Center
+          width={'28%'}
+          height="100%"
+          _text={{ color: 'white', fontSize: Theme().font.size.m }}
+        >
           Esquerdo
           <Center
             width="100%"
@@ -20,7 +23,11 @@ function StatusBar(props: { velocity: number; applicatorsLoadPercentage: IApplic
             {props.applicatorsLoadPercentage.left.percentage.toString() + '%'}
           </Center>
         </Center>
-        <Center width={'28%'} height="100%" _text={{ color: 'white', fontSize: 20 }}>
+        <Center
+          width={'28%'}
+          height="100%"
+          _text={{ color: 'white', fontSize: Theme().font.size.m }}
+        >
           Central
           <Center
             width="100%"
@@ -32,7 +39,11 @@ function StatusBar(props: { velocity: number; applicatorsLoadPercentage: IApplic
             {props.applicatorsLoadPercentage.center.percentage.toString() + '%'}
           </Center>
         </Center>
-        <Center width={'28%'} height="100%" _text={{ color: 'white', fontSize: 20 }}>
+        <Center
+          width={'28%'}
+          height="100%"
+          _text={{ color: 'white', fontSize: Theme().font.size.m }}
+        >
           Direito
           <Center
             width="100%"
@@ -47,7 +58,11 @@ function StatusBar(props: { velocity: number; applicatorsLoadPercentage: IApplic
       </HStack>
 
       <Box w={'20%'}>
-        <Center width={'100%'} height="100%" _text={{ color: 'white', fontSize: 20 }}>
+        <Center
+          width={'100%'}
+          height="100%"
+          _text={{ color: 'white', fontSize: Theme().font.size.m }}
+        >
           Velocidade
           <Center
             width="100%"

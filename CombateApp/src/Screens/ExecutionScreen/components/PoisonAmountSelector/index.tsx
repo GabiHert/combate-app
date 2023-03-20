@@ -19,6 +19,12 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
   function onPreset4Pressed() {
     props.onPresetPressed(config.getCache().PRESETS.P4.DOSE_AMOUNT);
   }
+  function onPreset5Pressed() {
+    props.onPresetPressed(config.getCache().PRESETS.P5.DOSE_AMOUNT);
+  }
+  function onPreset6Pressed() {
+    props.onPresetPressed(config.getCache().PRESETS.P6.DOSE_AMOUNT);
+  }
 
   return (
     <Center>
@@ -32,8 +38,8 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
       >
         <Text
           style={{
-            color: 'black',
-            fontSize: 20,
+            color: Theme().color.b500,
+            fontSize: Theme().font.size.m,
             textAlign: 'center',
           }}
           position={'absolute'}
@@ -49,28 +55,28 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
           width="50%"
         >
           <Button
-            onPress={onPreset3Pressed}
+            onPress={onPreset1Pressed}
             marginBottom={5}
             borderRadius={20}
             bgColor={Theme().color.b200}
             width="90%"
             height={'30%'}
-            _text={{ color: 'black', fontSize: 20 }}
+            _text={{ color: 'black', fontSize: Theme().font.size.m }}
             _pressed={{ opacity: 0.8 }}
           >
-            {config.getCache().PRESETS.P3.NAME}
+            {config.getCache().PRESETS.P1.NAME}
           </Button>
           <Button
-            onPress={onPreset3Pressed}
+            onPress={onPreset2Pressed}
             marginBottom={5}
             borderRadius={20}
             bgColor={Theme().color.b200}
             width="90%"
             height={'30%'}
-            _text={{ color: 'black', fontSize: 20 }}
+            _text={{ color: 'black', fontSize: Theme().font.size.m }}
             _pressed={{ opacity: 0.8 }}
           >
-            {config.getCache().PRESETS.P3.NAME}
+            {config.getCache().PRESETS.P2.NAME}
           </Button>
           <Button
             onPress={onPreset3Pressed}
@@ -78,7 +84,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
             bgColor={Theme().color.b200}
             width="90%"
             height={'30%'}
-            _text={{ color: 'black', fontSize: 20 }}
+            _text={{ color: 'black', fontSize: Theme().font.size.m }}
             _pressed={{ opacity: 0.8 }}
           >
             {config.getCache().PRESETS.P3.NAME}
@@ -93,39 +99,39 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
           width="50%"
         >
           <Button
-            onPress={onPreset3Pressed}
+            onPress={onPreset4Pressed}
             marginBottom={5}
             borderRadius={20}
             bgColor={Theme().color.b200}
             width="90%"
             height={'30%'}
-            _text={{ color: 'black', fontSize: 20 }}
+            _text={{ color: 'black', fontSize: Theme().font.size.m }}
             _pressed={{ opacity: 0.8 }}
           >
-            {config.getCache().PRESETS.P3.NAME}
+            {config.getCache().PRESETS.P4.NAME}
           </Button>
           <Button
-            onPress={onPreset3Pressed}
+            onPress={onPreset5Pressed}
             marginBottom={5}
             borderRadius={20}
             bgColor={Theme().color.b200}
             width="90%"
             height={'30%'}
-            _text={{ color: 'black', fontSize: 20 }}
+            _text={{ color: 'black', fontSize: Theme().font.size.m }}
             _pressed={{ opacity: 0.8 }}
           >
-            {config.getCache().PRESETS.P3.NAME}
+            {config.getCache().PRESETS.P5.NAME}
           </Button>
           <Button
-            onPress={onPreset3Pressed}
+            onPress={onPreset6Pressed}
             borderRadius={20}
             bgColor={Theme().color.b200}
             width="90%"
             height={'30%'}
-            _text={{ color: 'black', fontSize: 20 }}
+            _text={{ color: 'black', fontSize: Theme().font.size.m }}
             _pressed={{ opacity: 0.8 }}
           >
-            {config.getCache().PRESETS.P3.NAME}
+            {config.getCache().PRESETS.P6.NAME}
           </Button>
         </Stack>
       </HStack>

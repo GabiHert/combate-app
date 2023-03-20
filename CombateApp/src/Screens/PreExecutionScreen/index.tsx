@@ -11,9 +11,11 @@ import {
 import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { Weather, WeatherEnum } from '../../api/core/enum/weather';
+import { config } from '../../api/core/port/config-port';
 import { Theme } from '../../app/theme/theme';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
+import SlideInput from '../../Components/SlideInput';
 
 interface IValidationResult {
   clientName: { errorMessage: string };
@@ -92,33 +94,6 @@ function PreExecutionScreen(props: { navigation: any }) {
     }
   }
 
-  const setLeftApplicatorLoadCallback = useCallback(
-    (value: string) => {
-      //todo: throw error when NAN
-      const valueNumber = Number(value);
-      setLeftApplicatorLoad(valueNumber);
-    },
-    [setLeftApplicatorLoad]
-  );
-
-  const setCenterApplicatorLoadCallback = useCallback(
-    (value: string) => {
-      //todo: throw error when NAN
-      const valueNumber = Number(value);
-      setCenterApplicatorLoad(valueNumber);
-    },
-    [setCenterApplicatorLoad]
-  );
-
-  const setRightApplicatorLoadCallback = useCallback(
-    (value: string) => {
-      //todo: throw error when NAN
-      const valueNumber = Number(value);
-      setRightApplicatorLoad(valueNumber);
-    },
-    [setRightApplicatorLoad]
-  );
-
   const setPlotNumberCallback = useCallback(
     (value: string) => {
       //todo: throw error when NAN
@@ -126,24 +101,6 @@ function PreExecutionScreen(props: { navigation: any }) {
       setPlotNumber(valueNumber);
     },
     [setPlotNumber]
-  );
-
-  const setSpaceBetweenLinesCallback = useCallback(
-    (value: string) => {
-      //todo: throw error when NAN
-      const valueNumber = Number(value);
-      setSpaceBetweenLines(valueNumber);
-    },
-    [setSpaceBetweenLines]
-  );
-
-  const setStreetsAmountCallback = useCallback(
-    (value: string) => {
-      //todo: throw error when NAN
-      const valueNumber = Number(value);
-      setStreetsAmount(valueNumber);
-    },
-    [setStreetsAmount]
   );
 
   const setWeatherCallback = useCallback(
@@ -157,7 +114,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     <Box justifyContent={'center'} alignItems={'center'} h="100%">
       <ScrollView w="100%">
         <VStack space={4} justifyContent={'center'} alignItems={'center'} overflow={'hidden'}>
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
             Informações cliente
           </FormControl.Label>
 
@@ -186,7 +143,7 @@ function PreExecutionScreen(props: { navigation: any }) {
 
           <Divider w="80%" />
 
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
             Informações equipamento
           </FormControl.Label>
 
@@ -200,27 +157,33 @@ function PreExecutionScreen(props: { navigation: any }) {
 
           <Divider w="80%" />
 
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
             Informações do local
           </FormControl.Label>
 
-          <FormInput
-            title="Espaçamento entre linhas (m)"
-            description="Preencha este campo com o espaçamento entre linhas em metros"
-            errorMessage={validationResult.spaceBetweenLines.errorMessage}
-            placeholder="1"
-            keyboardType="numeric"
-            onChangeText={setSpaceBetweenLinesCallback}
+          <SlideInput
+            onChangeEnd={setSpaceBetweenLines}
+            step={0.5}
+            title={'Espaçamento entre linhas'}
+            defaultValue={1}
+            unit={'metros'}
+            disabled={false}
+            maxValue={20}
+            minValue={1}
           />
-          <FormInput
+          <SlideInput
+            onChangeEnd={setStreetsAmount}
+            step={0.5}
             title="Numero de ruas"
-            description="Preencha este campo com o numero de ruas a serem percorridas"
-            errorMessage={validationResult.streetsAmount.errorMessage}
-            placeholder="1"
-            keyboardType="numeric"
-            onChangeText={setStreetsAmountCallback}
+            defaultValue={1}
+            disabled={false}
+            maxValue={50}
+            minValue={1}
           />
-
+          <Divider w="80%" />
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+            Clima
+          </FormControl.Label>
           <Radio.Group
             onChange={setWeatherCallback}
             name="exampleGroup"
@@ -252,10 +215,11 @@ function PreExecutionScreen(props: { navigation: any }) {
 
           <Divider w="80%" />
 
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
             Conexão CB
           </FormControl.Label>
           <SelectInput
+            onItemSelected={() => {}}
             title="Selecione o dipositivo Bluetooth"
             placeholder="CB5"
             items={[
@@ -266,35 +230,40 @@ function PreExecutionScreen(props: { navigation: any }) {
 
           <Divider w="80%" />
 
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: 20 }}>
+          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
             Carga nos reservatórios
           </FormControl.Label>
-
-          <FormInput
-            title="Reservatório direito (Kg)"
-            description="Preencha este campo com a carga no reservatório direito em kilos"
-            errorMessage={validationResult.rightLoad.errorMessage}
-            placeholder="1.5"
-            keyboardType="numeric"
-            onChangeText={setRightApplicatorLoadCallback}
+          <SlideInput
+            onChangeEnd={setRightApplicatorLoad}
+            step={0.5}
+            title="Reservatório direito"
+            unit="Kg"
+            defaultValue={1}
+            disabled={false}
+            maxValue={config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD}
+            minValue={1}
           />
 
-          <FormInput
-            title="Reservatório central (Kg)"
-            description="Preencha este campo com a carga no reservatório central em kilos"
-            errorMessage={validationResult.centerLoad.errorMessage}
-            placeholder="1.5"
-            keyboardType="numeric"
-            onChangeText={setCenterApplicatorLoadCallback}
+          <SlideInput
+            onChangeEnd={setCenterApplicatorLoad}
+            step={0.5}
+            title="Reservatório central"
+            unit="Kg"
+            defaultValue={1}
+            disabled={false}
+            maxValue={config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD}
+            minValue={1}
           />
 
-          <FormInput
-            title="Reservatório esquerdo (Kg)"
-            description="Preencha este campo com a carga no reservatório esquerdo em kilos"
-            errorMessage={validationResult.leftLoad.errorMessage}
-            placeholder="1.5"
-            keyboardType="numeric"
-            onChangeText={setLeftApplicatorLoadCallback}
+          <SlideInput
+            onChangeEnd={setLeftApplicatorLoad}
+            step={0.5}
+            title="Reservatório esquerdo"
+            unit="Kg"
+            defaultValue={1}
+            disabled={false}
+            maxValue={config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD}
+            minValue={1}
           />
         </VStack>
         <Box w="20%" h="60px" />

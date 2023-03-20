@@ -1,22 +1,10 @@
-import {
-  Box,
-  Button,
-  Center,
-  HStack,
-  IconButton,
-  Spacer,
-  Stack,
-  Text,
-  VStack,
-  WarningIcon,
-  WarningOutlineIcon,
-  WarningTwoIcon,
-} from 'native-base';
+import { Box, Button, Center, Stack, Text, VStack, WarningOutlineIcon } from 'native-base';
 import React, { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { Severity } from '../../../../api/core/enum/severity';
 import { config } from '../../../../api/core/port/config-port';
 import { Theme } from '../../../../app/theme/theme';
 import EventRegisterModal from '../EventRegisterModal';
+import FinishExecutionModal from '../FinishExecutionModal';
 
 export interface IApplicatorsPercentage {
   left: { percentage: number; severity: Severity };
@@ -34,6 +22,7 @@ function Sheet(props: {
   const [executionTimeMinutes, setExecutionTimeMinutes] = useState<number>(0);
   const [executionTimeHours, setExecutionTimeHours] = useState<number>(0);
   const [eventRegisterVisible, setEventRegisterVisible] = useState(false);
+  const [finishExecutionModalVisible, setFinishExecutionModalVisible] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -59,6 +48,10 @@ function Sheet(props: {
     [executionTimeHours, executionTimeMinutes]
   );
 
+  const onFinishExecutionModalClose = useCallback(() => {
+    setFinishExecutionModalVisible(false);
+  }, [setEventRegisterVisible]);
+
   const onEventRegisterPress = useCallback(() => {
     setEventRegisterVisible(true);
   }, [setEventRegisterVisible]);
@@ -66,9 +59,23 @@ function Sheet(props: {
   const onEventRegisterClose = useCallback(() => {
     setEventRegisterVisible(false);
   }, [setEventRegisterVisible]);
+
+  const onSheetFinishPressed = useCallback(() => {
+    setFinishExecutionModalVisible(true);
+  }, []);
+
+  const onModalFinishPressed = useCallback(() => {
+    onFinishExecutionModalClose();
+    props.onFinishPressed();
+  }, []);
   return (
     <VStack height={props.sheetHeight - 30} alignItems="center" space={4}>
       <EventRegisterModal isOpen={eventRegisterVisible} onClose={onEventRegisterClose} />
+      <FinishExecutionModal
+        isOpen={finishExecutionModalVisible}
+        onClose={onFinishExecutionModalClose}
+        onFinishExecutionPress={onModalFinishPressed}
+      />
       <Box
         width="100%"
         alignItems="center"
@@ -86,7 +93,7 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
-            _text={{ fontSize: 20 }}
+            _text={{ fontSize: Theme().font.size.m }}
           >
             Tempo em execução
             <Text fontSize={35} fontWeight="bold">
@@ -100,7 +107,7 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
-            _text={{ fontSize: 20 }}
+            _text={{ fontSize: Theme().font.size.m }}
           >
             TALVEZ COLOCAR BOTAO DE EVENTO
           </Box>
@@ -122,7 +129,7 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
-            _text={{ fontSize: 20 }}
+            _text={{ fontSize: Theme().font.size.m }}
           >
             Total aplicado
             <Stack direction={'row'} alignItems="baseline" justifyContent="center">
@@ -164,11 +171,11 @@ function Sheet(props: {
         alignItems={'center'}
         justifyContent={'center'}
         borderRadius={10}
-        onPress={props.onFinishPressed}
+        onPress={onSheetFinishPressed}
         width="50%"
         height={props.blockHeight / 2}
         _pressed={{ opacity: 0.8 }}
-        _text={{ fontSize: 20 }}
+        _text={{ fontSize: Theme().font.size.m }}
         backgroundColor={Theme().color.sError}
       >
         Finalizar

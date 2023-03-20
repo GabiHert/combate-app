@@ -51,7 +51,7 @@ function HomeScreen(props: { navigation: any; route: any }) {
           <Button
             _pressed={{ opacity: 0.8 }}
             bgColor={Theme().color.b200}
-            _text={{ color: 'black', fontSize: 25 }}
+            _text={{ color: 'black', fontSize: Theme().font.size.l }}
             onPress={() => {
               onStartButtonPressed();
             }}

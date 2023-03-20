@@ -30,7 +30,9 @@ function FormInput(props: {
       width={props.w ? props.w : '60%'}
       isInvalid={props.isInvalid || (props.errorMessage != undefined && props.errorMessage != '')}
     >
-      <FormControl.Label _text={{ bold: true, fontSize: 15 }}>{props.title}</FormControl.Label>
+      <FormControl.Label _text={{ bold: true, fontSize: Theme().font.size.m }}>
+        {props.title}
+      </FormControl.Label>
       <Input
         type={props.isPassword ? 'password' : 'text'}
         onChangeText={onChangeText}
@@ -46,7 +48,7 @@ function FormInput(props: {
           {props.errorMessage}
         </FormControl.ErrorMessage>
       ) : (
-        <FormControl.HelperText _text={{ fontSize: 'xs' }}>
+        <FormControl.HelperText _text={{ fontSize: Theme().font.size.s }}>
           {props.description}
         </FormControl.HelperText>
       )}
