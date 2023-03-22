@@ -1,10 +1,8 @@
-import { Center, Divider, HStack, ScrollView } from 'native-base';
+import { Box, Center, Divider, HStack, ScrollView, Text } from 'native-base';
 import { FlatList, SafeAreaView } from 'react-native';
-import { Text } from 'react-native-svg';
-import { Theme } from '../../app/theme/theme';
 
 function Item(props: { label: string }) {
-  return <HStack></HStack>;
+  return <Text>{props.label}</Text>;
 }
 
 function ScrollItems(props: {
@@ -13,17 +11,12 @@ function ScrollItems(props: {
   maxH: string | number;
 }) {
   return (
-    <SafeAreaView
-      style={{
-        width: props.w,
-        maxHeight: props.maxH,
-      }}
-    >
-      <FlatList
-        data={props.items}
-        renderItem={({ item }) => <Item label={item.label} />}
-        keyExtractor={(item) => ''}
-      />
+    <SafeAreaView style={{ height: 100, width: 100 }}>
+      <ScrollView>
+        {props.items.map((item) => {
+          return <Item key={Math.random().toString()} label={item.label} />;
+        })}
+      </ScrollView>
     </SafeAreaView>
   );
 }

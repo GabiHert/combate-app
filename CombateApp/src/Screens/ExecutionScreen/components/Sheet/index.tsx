@@ -2,6 +2,7 @@ import { Box, Button, Center, Stack, Text, VStack, WarningOutlineIcon } from 'na
 import React, { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { Severity } from '../../../../api/core/enum/severity';
 import { config } from '../../../../api/core/port/config-port';
+import { AppConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import EventRegisterModal from '../EventRegisterModal';
 import FinishExecutionModal from '../FinishExecutionModal';
@@ -80,7 +81,7 @@ function Sheet(props: {
         width="100%"
         alignItems="center"
         justifyContent="center"
-        mt={30}
+        mt={props.spaceBetweenBlocksHeight}
         paddingLeft={2}
         paddingRight={2}
       >
@@ -93,10 +94,10 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
-            _text={{ fontSize: Theme().font.size.m }}
+            _text={{ fontSize: Theme().font.size.m(AppConfig.screen.width) }}
           >
             Tempo em execução
-            <Text fontSize={35} fontWeight="bold">
+            <Text fontSize={Theme().font.size.xxxl(AppConfig.screen.width)} fontWeight="bold">
               {formatExecutionTime(executionTimeHours, executionTimeMinutes)}
             </Text>
           </Box>
@@ -107,7 +108,7 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
-            _text={{ fontSize: Theme().font.size.m }}
+            _text={{ fontSize: Theme().font.size.m(AppConfig.screen.width) }}
           >
             TALVEZ COLOCAR BOTAO DE EVENTO
           </Box>
@@ -129,22 +130,22 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
-            _text={{ fontSize: Theme().font.size.m }}
+            _text={{ fontSize: Theme().font.size.m(AppConfig.screen.width) }}
           >
             Total aplicado
             <Stack direction={'row'} alignItems="baseline" justifyContent="center">
-              <Text fontSize={35} fontWeight="bold">
+              <Text fontSize={Theme().font.size.xxxl(AppConfig.screen.width)} fontWeight="bold">
                 {props.appliedDoses}
               </Text>
-              <Text fontSize={10}>Doses</Text>
+              <Text fontSize={Theme().font.size.s(AppConfig.screen.width)}>Doses</Text>
             </Stack>
             <Stack direction={'row'} alignItems="baseline" justifyContent="center">
-              <Text fontSize={35} fontWeight="bold">
+              <Text fontSize={Theme().font.size.xxxl(AppConfig.screen.width)} fontWeight="bold">
                 {Math.trunc(
                   props.appliedDoses * config.getCache().APPLICATION.DOSE_WEIGHT_KG * 1000
                 )}
               </Text>
-              <Text fontSize={10}>g</Text>
+              <Text fontSize={Theme().font.size.s(AppConfig.screen.width)}>g</Text>
             </Stack>
           </Box>
 
@@ -159,10 +160,13 @@ function Sheet(props: {
             justifyContent="center"
           >
             <Center>
-              <Text mb={2} fontSize={20}>
+              <Text mb={2} fontSize={Theme().font.size.l(AppConfig.screen.width)}>
                 Sinalizar Evento
               </Text>
-              <WarningOutlineIcon size={50} color={'black'} />
+              <WarningOutlineIcon
+                size={Theme().font.size.xxxxl(AppConfig.screen.width)}
+                color={'black'}
+              />
             </Center>
           </Button>
         </Stack>
@@ -175,7 +179,7 @@ function Sheet(props: {
         width="50%"
         height={props.blockHeight / 2}
         _pressed={{ opacity: 0.8 }}
-        _text={{ fontSize: Theme().font.size.m }}
+        _text={{ fontSize: Theme().font.size.m(AppConfig.screen.width) }}
         backgroundColor={Theme().color.sError}
       >
         Finalizar

@@ -12,6 +12,7 @@ import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { Weather, WeatherEnum } from '../../api/core/enum/weather';
 import { config } from '../../api/core/port/config-port';
+import { AppConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
@@ -114,7 +115,13 @@ function PreExecutionScreen(props: { navigation: any }) {
     <Box justifyContent={'center'} alignItems={'center'} h="100%">
       <ScrollView w="100%">
         <VStack space={4} justifyContent={'center'} alignItems={'center'} overflow={'hidden'}>
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{
+              fontWeight: 'bold',
+              fontSize: Theme().font.size.s(AppConfig.screen.width),
+            }}
+          >
             Informações cliente
           </FormControl.Label>
 
@@ -143,7 +150,13 @@ function PreExecutionScreen(props: { navigation: any }) {
 
           <Divider w="80%" />
 
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{
+              fontWeight: 'bold',
+              fontSize: Theme().font.size.s(AppConfig.screen.width),
+            }}
+          >
             Informações equipamento
           </FormControl.Label>
 
@@ -157,7 +170,13 @@ function PreExecutionScreen(props: { navigation: any }) {
 
           <Divider w="80%" />
 
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{
+              fontWeight: 'bold',
+              fontSize: Theme().font.size.s(AppConfig.screen.width),
+            }}
+          >
             Informações do local
           </FormControl.Label>
 
@@ -181,7 +200,13 @@ function PreExecutionScreen(props: { navigation: any }) {
             minValue={1}
           />
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{
+              fontWeight: 'bold',
+              fontSize: Theme().font.size.s(AppConfig.screen.width),
+            }}
+          >
             Clima
           </FormControl.Label>
           <Radio.Group
@@ -215,7 +240,13 @@ function PreExecutionScreen(props: { navigation: any }) {
 
           <Divider w="80%" />
 
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{
+              fontWeight: 'bold',
+              fontSize: Theme().font.size.s(AppConfig.screen.width),
+            }}
+          >
             Conexão CB
           </FormControl.Label>
           <SelectInput
@@ -230,7 +261,13 @@ function PreExecutionScreen(props: { navigation: any }) {
 
           <Divider w="80%" />
 
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{
+              fontWeight: 'bold',
+              fontSize: Theme().font.size.s(AppConfig.screen.width),
+            }}
+          >
             Carga nos reservatórios
           </FormControl.Label>
           <SlideInput

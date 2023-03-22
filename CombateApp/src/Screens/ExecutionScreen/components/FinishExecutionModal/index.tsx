@@ -1,5 +1,6 @@
 import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
 import { useCallback, useState } from 'react';
+import { AppConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import FormInput from '../../../../Components/FormInput';
 import SelectInput from '../../../../Components/SelectInput';
@@ -27,11 +28,19 @@ function FinishExecutionModal(props: {
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <Modal.Content maxWidth="500px" maxH={'500px'}>
         <Modal.CloseButton />
-        <Modal.Header _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+        <Modal.Header
+          _text={{
+            fontWeight: 'bold',
+            fontSize: Theme().font.size.l(AppConfig.screen.width),
+          }}
+        >
           Finalizar execução
         </Modal.Header>
         <Modal.Body h={'100%'}>
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen.width) }}
+          >
             Motivo da parada
           </FormControl.Label>
           <SelectInput
@@ -52,7 +61,10 @@ function FinishExecutionModal(props: {
           <Button
             _pressed={{ opacity: 0.8 }}
             bgColor={Theme().color.sError}
-            _text={{ color: Theme().color.b500, fontSize: Theme().font.size.m }}
+            _text={{
+              color: Theme().color.b500,
+              fontSize: Theme().font.size.m(AppConfig.screen.width),
+            }}
             borderRadius={20}
             onPress={onFinishPressed}
             h={20}

@@ -1,5 +1,6 @@
 import { FormControl, Slider } from 'native-base';
 import React, { memo, useCallback, useMemo, useState } from 'react';
+import { AppConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 
 function SlideInput(props: {
@@ -23,12 +24,14 @@ function SlideInput(props: {
 
   return (
     <FormControl isDisabled={props.disabled} justifyContent={'center'} alignItems={'center'}>
-      <FormControl.Label _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m }}>
+      <FormControl.Label
+        _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen.width) }}
+      >
         {props.title}
       </FormControl.Label>
       <FormControl.Label
         textAlign={'center'}
-        _text={{ fontWeight: 'normal', fontSize: Theme().font.size.m }}
+        _text={{ fontWeight: 'normal', fontSize: Theme().font.size.m(AppConfig.screen.width) }}
       >
         {value}
         {props.unit ? ' ' + props.unit.toString() : ''}

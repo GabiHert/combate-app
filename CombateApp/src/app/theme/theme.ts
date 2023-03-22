@@ -13,9 +13,28 @@ export function Theme() {
     },
     font: {
       size: {
-        s: 15,
-        m: 20,
-        l: 25,
+        s: (width: number) => {
+          return (width * 15) / 600;
+        },
+        m: (width: number) => {
+          return (width * 20) / 600;
+        },
+        l: (width: number) => {
+          console.log(width);
+          return (width * 25) / 600;
+        },
+        xl: (width: number) => {
+          console.log(width);
+          return (width * 30) / 600;
+        },
+        xxxl: (width: number) => {
+          console.log(width);
+          return (width * 50) / 600;
+        },
+        xxxxl: (width: number) => {
+          console.log(width);
+          return (width * 70) / 600;
+        },
       },
     },
   };

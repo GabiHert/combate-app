@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { CONSTANTS } from '../../api/config/config';
 import { AConfig } from '../../api/core/adapter/config';
+import { AppConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 import LoginModal from '../../Components/LoginModal';
 import style from './style';
@@ -51,7 +52,10 @@ function HomeScreen(props: { navigation: any; route: any }) {
           <Button
             _pressed={{ opacity: 0.8 }}
             bgColor={Theme().color.b200}
-            _text={{ color: 'black', fontSize: Theme().font.size.l }}
+            _text={{
+              color: 'black',
+              fontSize: Theme().font.size.xl(AppConfig.screen.width),
+            }}
             onPress={() => {
               onStartButtonPressed();
             }}

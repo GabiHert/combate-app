@@ -1,6 +1,7 @@
 import { FormControl, Input, WarningOutlineIcon } from 'native-base';
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import { KeyboardTypeOptions } from 'react-native';
+import { KeyboardTypeOptions, useWindowDimensions } from 'react-native';
+import { AppConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 
 function FormInput(props: {
@@ -30,7 +31,9 @@ function FormInput(props: {
       width={props.w ? props.w : '60%'}
       isInvalid={props.isInvalid || (props.errorMessage != undefined && props.errorMessage != '')}
     >
-      <FormControl.Label _text={{ bold: true, fontSize: Theme().font.size.m }}>
+      <FormControl.Label
+        _text={{ bold: true, fontSize: Theme().font.size.m(AppConfig.screen.width) }}
+      >
         {props.title}
       </FormControl.Label>
       <Input
@@ -48,7 +51,7 @@ function FormInput(props: {
           {props.errorMessage}
         </FormControl.ErrorMessage>
       ) : (
-        <FormControl.HelperText _text={{ fontSize: Theme().font.size.s }}>
+        <FormControl.HelperText _text={{ fontSize: Theme().font.size.s(AppConfig.screen.width) }}>
           {props.description}
         </FormControl.HelperText>
       )}

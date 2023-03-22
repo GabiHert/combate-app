@@ -1,5 +1,6 @@
 import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
 import { useCallback, useState } from 'react';
+import { AppConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import FormInput from '../../../../Components/FormInput';
 import SelectInput from '../../../../Components/SelectInput';
@@ -23,11 +24,19 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <Modal.Content maxWidth="500px" maxH={'500px'}>
         <Modal.CloseButton />
-        <Modal.Header _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+        <Modal.Header
+          _text={{
+            fontWeight: 'bold',
+            fontSize: Theme().font.size.s(AppConfig.screen.width),
+          }}
+        >
           Sinalizar Evento
         </Modal.Header>
         <Modal.Body h={'100%'}>
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen.width) }}
+          >
             Tipo de evento
           </FormControl.Label>
           <SelectInput
@@ -48,7 +57,10 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
           <Button
             _pressed={{ opacity: 0.8 }}
             bgColor={Theme().color.b200}
-            _text={{ color: Theme().color.b400, fontSize: Theme().font.size.m }}
+            _text={{
+              color: Theme().color.b400,
+              fontSize: Theme().font.size.m(AppConfig.screen.width),
+            }}
             borderRadius={20}
             onPress={onRegisterPress}
             h={20}

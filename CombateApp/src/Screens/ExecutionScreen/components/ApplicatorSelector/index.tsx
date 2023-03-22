@@ -1,6 +1,7 @@
 import { Box, Button, Stack, Text } from 'native-base';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
+import { AppConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import { Applicator } from '../../types/applicator';
 
@@ -77,7 +78,7 @@ function ApplicatorSelector(props: {
                 bgColor={getButtonColor(leftApplicatorActive, props.leftApplicator.available)}
                 width="100%"
                 height={'70%'}
-                _text={{ color: 'white', fontSize: Theme().font.size.m }}
+                _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen.width) }}
                 borderRadius={50}
                 _pressed={{ opacity: 0.8 }}
               >
@@ -96,7 +97,7 @@ function ApplicatorSelector(props: {
                 width="100%"
                 height={'70%'}
                 borderRadius={50}
-                _text={{ color: 'white', fontSize: Theme().font.size.m }}
+                _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen.width) }}
                 _pressed={{ opacity: 0.8 }}
               >
                 Central
@@ -114,7 +115,7 @@ function ApplicatorSelector(props: {
                 width="100%"
                 height={'70%'}
                 borderRadius={50}
-                _text={{ color: 'white', fontSize: Theme().font.size.m }}
+                _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen.width) }}
                 _pressed={{ opacity: 0.8 }}
               >
                 Direito

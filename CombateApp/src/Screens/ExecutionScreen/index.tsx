@@ -1,10 +1,12 @@
 import BottomSheet from '@gorhom/bottom-sheet';
-import { Box, Button, Center, Toast, useToast } from 'native-base';
+import { Box } from 'native-base';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { BackHandler, useWindowDimensions } from 'react-native';
+import { BackHandler } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import App from '../../../App';
 import { Severity, SeverityEnum } from '../../api/core/enum/severity';
 import { config } from '../../api/core/port/config-port';
+import { AppConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 import { ShowToast } from '../../Components/AlertToast';
 import ApplicatorSelector from './components/ApplicatorSelector';
@@ -20,17 +22,16 @@ function ExecutionScreen(props: {
     params: { applicator: any };
   };
 }) {
-  const dimensions = useWindowDimensions();
   const applicator: {
     center: { loadKg: number };
     right: { loadKg: number };
     left: { loadKg: number };
   } = props.route.params.applicator;
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
-  const sheetHeight = dimensions.height / 2 - 30;
+  const sheetHeight = AppConfig.screen.height / 2 - 30;
   const blockHeight = sheetHeight / 3;
   const spaceBetweenBlocksHeight = 3;
-  const snapPoints = [40, dimensions.height / 2];
+  const snapPoints = [40, AppConfig.screen.height / 2];
   let handleSheetChanges: any;
   const [velocity, setVelocity] = useState<number>(0);
   const [doseInProgress, setDoseInProgress] = useState<boolean>(false);
@@ -355,8 +356,22 @@ function ExecutionScreen(props: {
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
         handleComponent={() => (
-          <Box style={style.closeLineContainer}>
-            <Box style={style.closeLine} />
+          <Box
+            style={{
+              paddingBottom: 0,
+              height: 0,
+              alignSelf: 'center',
+            }}
+          >
+            <Box
+              style={{
+                width: 70,
+                height: 5,
+                borderRadius: 3,
+                backgroundColor: 'white',
+                marginTop: 9,
+              }}
+            />
           </Box>
         )}
         backgroundStyle={{ backgroundColor: Theme().color.b400 }}

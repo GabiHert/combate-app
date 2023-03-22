@@ -1,4 +1,19 @@
-import { Box, Button, Divider, FormControl, Input, ScrollView, VStack } from 'native-base';
+import {
+  AddIcon,
+  Box,
+  Button,
+  ChevronRightIcon,
+  DeleteIcon,
+  Divider,
+  FormControl,
+  HStack,
+  Icon,
+  IconButton,
+  Input,
+  ScrollView,
+  Text,
+  VStack,
+} from 'native-base';
 import React, { useCallback, useState } from 'react';
 import FormInput from '../../Components/FormInput';
 import { Theme } from '../../app/theme/theme';
@@ -8,6 +23,7 @@ import { config } from '../../api/core/port/config-port';
 import SlideInput from '../../Components/SlideInput';
 import { CONSTANTS } from '../../api/config/config';
 import ScrollItems from '../../Components/ScrollItems';
+import { AppConfig } from '../../app/config/app-config';
 
 interface IPreset {
   name: string;
@@ -29,6 +45,14 @@ interface IConfigValidationResult {
   preset3DoseError: string;
   preset4DoseError: string;
 }
+
+const items = [
+  { label: 'Obstáculo na via', value: {} },
+  { label: 'TESTE', value: {} },
+  { label: 'TESTE', value: {} },
+  { label: 'TESTE', value: {} },
+  { label: 'TESTE', value: {} },
+];
 
 function ConfigScreen(props: { navigation: any; route: any }) {
   const [rightTankMaxLoad, setRightTankMaxLoad] = useState<number>(
@@ -304,7 +328,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     <Box justifyContent={'center'} alignItems={'center'} h="100%">
       <ScrollView w="100%">
         <VStack space={4} justifyContent={'center'} alignItems={'center'} overflow={'hidden'}>
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+          >
             Capacidade Reservatórios
           </FormControl.Label>
           <FormInput
@@ -335,7 +362,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             keyboardType={'numeric'}
           />
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+          >
             Informações Dosagem
           </FormControl.Label>
           <FormInput
@@ -348,7 +378,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             keyboardType={'numeric'}
           />
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+          >
             Preset 1
           </FormControl.Label>
           <FormInput
@@ -370,7 +403,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           />
 
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+          >
             Preset 2
           </FormControl.Label>
           <FormInput
@@ -391,7 +427,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             minValue={config.getCache().APPLICATION.MIN_DOSES}
           />
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+          >
             Preset 3
           </FormControl.Label>
           <FormInput
@@ -413,7 +452,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           />
 
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+          >
             Preset 4
           </FormControl.Label>
           <FormInput
@@ -435,7 +477,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           />
 
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+          >
             Preset 5
           </FormControl.Label>
           <FormInput
@@ -458,7 +503,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           />
 
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+          >
             Preset 6
           </FormControl.Label>
           <FormInput
@@ -480,7 +528,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           />
 
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+          >
             Dose Sistemática
           </FormControl.Label>
           <SlideInput
@@ -504,23 +555,46 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             minValue={0}
           />
           <Divider w="80%" />
-          <FormControl.Label mt={5} _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l }}>
-            Motivos de Parada
-          </FormControl.Label>
+          <HStack space={2} alignItems={'center'} justifyContent={'center'}>
+            <FormControl.Label
+              _text={{
+                fontWeight: 'bold',
+                fontSize: Theme().font.size.l(AppConfig.screen.width),
+              }}
+            >
+              Motivos de Parada
+            </FormControl.Label>
 
-          <ScrollItems
-            maxH={'80'}
-            items={[
-              { label: 'TESTE', value: {} },
-              { label: 'TESTE', value: {} },
-              { label: 'TESTE', value: {} },
-              { label: 'TESTE', value: {} },
-              { label: 'TESTE', value: {} },
-              { label: 'TESTE', value: {} },
-              { label: 'TESTE', value: {} },
-            ]}
-            w={'80%'}
-          />
+            <IconButton
+              icon={<AddIcon />}
+              size={Theme().font.size.l(AppConfig.screen.width)}
+              _icon={{ color: Theme().color.b500 }}
+              m={2}
+              background={Theme().color.sOk}
+              h={Theme().font.size.l(AppConfig.screen.width) * 1.5}
+              w={Theme().font.size.l(AppConfig.screen.width) * 1.5}
+              _pressed={{ opacity: 0.8 }}
+            />
+          </HStack>
+
+          {items.map((item) => {
+            return (
+              <>
+                <Divider w="50%" />
+                <HStack space={2} alignItems={'center'} justifyContent={'center'}>
+                  <Text maxW={'50%'}>{item.label}</Text>
+                  <IconButton
+                    icon={<DeleteIcon />}
+                    size={Theme().font.size.l(AppConfig.screen.width)}
+                    _icon={{ color: Theme().color.sError }}
+                    background="transparent"
+                    _pressed={{ opacity: 0.8 }}
+                  />
+                </HStack>
+              </>
+            );
+          })}
+          <Divider w="50%" />
         </VStack>
 
         <Box w="20%" h="70px" />
