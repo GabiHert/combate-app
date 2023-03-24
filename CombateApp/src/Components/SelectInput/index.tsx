@@ -7,11 +7,12 @@ function SelectInput(props: {
   title: string;
   errorMessage?: string;
   placeholder: string;
-  items: Array<{ value: string; label: string }>;
+  items?: Array<{ name: string; id: string }>;
   onItemSelected: (value: string) => void;
   w?: string | number;
   h?: string | number;
 }) {
+  console.log(props.items);
   return (
     <FormControl
       w={props.w ? props.w : '60%'}
@@ -30,9 +31,11 @@ function SelectInput(props: {
         placeholder={props.placeholder}
         mt="1"
       >
-        {props.items.map((item) => {
-          return <Select.Item key={item.label} label={item.label} value={item.value} />;
-        })}
+        {props.items
+          ? props.items.map((item) => {
+              return <Select.Item key={item.id} label={item.name} value={item.name} />;
+            })
+          : ''}
       </Select>
       {props.errorMessage != undefined && props.errorMessage != '' ? (
         <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>

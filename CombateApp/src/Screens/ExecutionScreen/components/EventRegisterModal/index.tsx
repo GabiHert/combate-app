@@ -10,7 +10,6 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
 
   const onEventChange = useCallback(
     (event: string) => {
-      console.log(event);
       setEvent(event);
     },
     [setEvent]
@@ -45,10 +44,7 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
             h={20}
             title="Selecione tipo de evento que foi encontrado"
             placeholder="Bloqueio de via"
-            items={[
-              { value: 'teste', label: 'teste' },
-              { value: 'teste', label: 'teste' },
-            ]}
+            items={[]}
           />
         </Modal.Body>
         <Modal.Footer

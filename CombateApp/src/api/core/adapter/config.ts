@@ -11,6 +11,7 @@ export class AConfig implements PConfig {
     this.updateCache();
   }
   async update(config: IConfigsProps) {
+    console.log(config);
     this.cache = config;
     const str = JSON.stringify(config);
     await this.repository.persist('CONFIG', str);

@@ -1,8 +1,10 @@
 import { Box, Button, Stack, Text } from 'native-base';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
+import { Severity, SeverityEnum } from '../../../../api/core/enum/severity';
 import { AppConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
+import { ShowToast as showToast } from '../../../../Components/AlertToast';
 import { Applicator } from '../../types/applicator';
 
 function ApplicatorSelector(props: {
@@ -31,22 +33,49 @@ function ApplicatorSelector(props: {
 
   function onLeftApplicatorPress() {
     if (props.leftApplicator.available) {
-      setLeftApplicatorActive(!leftApplicatorActive);
-      props.onLeftApplicatorSelected(!leftApplicatorActive);
+      showToast({
+        durationMs: 1500,
+        title: 'Somente dosador esquerdo selecionado',
+        severity: SeverityEnum.WARN,
+      });
+      setLeftApplicatorActive(true);
+      setRightApplicatorActive(false);
+      setCenterApplicatorActive(false);
+      props.onLeftApplicatorSelected(true);
+      props.onRightApplicatorSelected(false);
+      props.onCenterApplicatorSelected(false);
     }
   }
 
   function onRightApplicatorPress() {
     if (props.rightApplicator.available) {
-      setRightApplicatorActive(!rightApplicatorActive);
-      props.onRightApplicatorSelected(!rightApplicatorActive);
+      showToast({
+        durationMs: 1500,
+        title: 'Somente dosador direito selecionado',
+        severity: SeverityEnum.WARN,
+      });
+      setLeftApplicatorActive(false);
+      setRightApplicatorActive(true);
+      setCenterApplicatorActive(false);
+      props.onLeftApplicatorSelected(false);
+      props.onRightApplicatorSelected(true);
+      props.onCenterApplicatorSelected(false);
     }
   }
 
   function onCenterApplicatorPress() {
     if (props.centerApplicator.available) {
-      setCenterApplicatorActive(!centerApplicatorActive);
-      props.onCenterApplicatorSelected(!centerApplicatorActive);
+      showToast({
+        durationMs: 1500,
+        title: 'Somente dosador central selecionado',
+        severity: SeverityEnum.WARN,
+      });
+      setLeftApplicatorActive(false);
+      setRightApplicatorActive(false);
+      setCenterApplicatorActive(true);
+      props.onLeftApplicatorSelected(false);
+      props.onRightApplicatorSelected(false);
+      props.onCenterApplicatorSelected(true);
     }
   }
 

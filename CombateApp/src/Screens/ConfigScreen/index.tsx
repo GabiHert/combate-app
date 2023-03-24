@@ -21,9 +21,11 @@ import { ShowToast } from '../../Components/AlertToast';
 import { SeverityEnum } from '../../api/core/enum/severity';
 import { config } from '../../api/core/port/config-port';
 import SlideInput from '../../Components/SlideInput';
-import { CONSTANTS } from '../../api/config/config';
-import ScrollItems from '../../Components/ScrollItems';
+
 import { AppConfig } from '../../app/config/app-config';
+import ItemRegisterModal from './components/ItemRegisterModal';
+import { stopReasonToItemArray as mapStringToItemArray } from '../../app/parser/stop-reason-to-item-array';
+import { v1, v4 } from 'uuid';
 
 interface IPreset {
   name: string;
@@ -45,14 +47,6 @@ interface IConfigValidationResult {
   preset3DoseError: string;
   preset4DoseError: string;
 }
-
-const items = [
-  { label: 'Obstáculo na via', value: {} },
-  { label: 'TESTE', value: {} },
-  { label: 'TESTE', value: {} },
-  { label: 'TESTE', value: {} },
-  { label: 'TESTE', value: {} },
-];
 
 function ConfigScreen(props: { navigation: any; route: any }) {
   const [rightTankMaxLoad, setRightTankMaxLoad] = useState<number>(
@@ -109,6 +103,15 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const [preset4DoseError, setPreset4DoseError] = useState<string>();
   const [preset5DoseError, setPreset5DoseError] = useState<string>();
   const [preset6DoseError, setPreset6DoseError] = useState<string>();
+
+  const [items, setItems] = useState<Array<{ id: string; name: string }>>(
+    mapStringToItemArray(config.getCache().STOP_REASONS_EVENTS)
+  );
+  const [events, setEvents] = useState<Array<{ id: string; name: string }>>(
+    mapStringToItemArray(config.getCache().EVENTS)
+  );
+  const [addReasonModalVisible, setAddReasonModalVisible] = useState(false);
+  const [addEventModalVisible, setAddEventModalVisible] = useState(false);
 
   function onRightTankMaxLoadChange(text: string) {
     setRightTankMaxLoad(Number(text));
@@ -222,6 +225,62 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     },
     [preset6]
   );
+  const onAddEventPress = useCallback(() => {
+    setAddEventModalVisible(true);
+  }, [setAddEventModalVisible]);
+
+  const onAddEventModalClose = useCallback(() => {
+    setAddEventModalVisible(false);
+  }, [setAddEventModalVisible]);
+
+  const onAddEventRequested = useCallback(
+    (name: string) => {
+      let cache = config.getCache();
+      const id = v1();
+      cache.EVENTS[id] = name;
+      config.update(cache);
+      setEvents(mapStringToItemArray(cache.EVENTS));
+    },
+    [setEvents]
+  );
+
+  const onDeleteEventRequested = useCallback(
+    (id: string) => {
+      console.log(id);
+      let cache = config.getCache();
+      delete cache.EVENTS[id];
+      config.update(cache);
+      setEvents(mapStringToItemArray(cache.EVENTS));
+    },
+    [setEvents]
+  );
+
+  const onAddReasonPress = useCallback(() => {
+    setAddReasonModalVisible(true);
+  }, [setAddReasonModalVisible]);
+
+  const onAddReasonModalClose = useCallback(() => {
+    setAddReasonModalVisible(false);
+  }, [setAddReasonModalVisible]);
+
+  const onAddStopReasonRequested = useCallback((name: string) => {
+    let cache = config.getCache();
+    const id = v1();
+    cache.STOP_REASONS_EVENTS[id] = name;
+    config.update(cache);
+    setItems(mapStringToItemArray(cache.STOP_REASONS_EVENTS));
+  }, []);
+
+  const onDeleteStopReasonRequested = useCallback(
+    (id: string) => {
+      console.log(id);
+      let cache = config.getCache();
+      delete cache.STOP_REASONS_EVENTS[id];
+      config.update(cache);
+      setItems(mapStringToItemArray(cache.STOP_REASONS_EVENTS));
+    },
+    [setItems]
+  );
 
   const onSavePressed = useCallback(async () => {
     //todo: call validation
@@ -326,6 +385,28 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
   return (
     <Box justifyContent={'center'} alignItems={'center'} h="100%">
+      <ItemRegisterModal
+        title="Adicionar motivo de parada"
+        formTitle="Motivo de parada"
+        formDescription="Digite o motivo de parada a ser adicionado"
+        onAddPressed={onAddStopReasonRequested}
+        isOpen={addReasonModalVisible}
+        onClose={onAddReasonModalClose}
+        validator={() => {
+          return undefined;
+        }}
+      />
+      <ItemRegisterModal
+        title="Adicionar evento"
+        formTitle="Evento"
+        formDescription="Digite o evento a ser adicionado"
+        onAddPressed={onAddEventRequested}
+        isOpen={addEventModalVisible}
+        onClose={onAddEventModalClose}
+        validator={() => {
+          return undefined;
+        }}
+      />
       <ScrollView w="100%">
         <VStack space={4} justifyContent={'center'} alignItems={'center'} overflow={'hidden'}>
           <FormControl.Label
@@ -544,16 +625,6 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             maxValue={10}
             minValue={0}
           />
-          <SlideInput
-            onChangeEnd={() => {}}
-            step={0.5}
-            title={'Quantidade de doses'}
-            unit={'doses'}
-            defaultValue={config.getCache().SYSTEMATIC_DOSE.DOSE_AMOUNT}
-            disabled={false}
-            maxValue={10}
-            minValue={0}
-          />
           <Divider w="80%" />
           <HStack space={2} alignItems={'center'} justifyContent={'center'}>
             <FormControl.Label
@@ -566,6 +637,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             </FormControl.Label>
 
             <IconButton
+              onPress={onAddReasonPress}
               icon={<AddIcon />}
               size={Theme().font.size.l(AppConfig.screen.width)}
               _icon={{ color: Theme().color.b500 }}
@@ -580,15 +652,64 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           {items.map((item) => {
             return (
               <>
-                <Divider w="50%" />
+                <Divider key={item.id} w="50%" />
                 <HStack space={2} alignItems={'center'} justifyContent={'center'}>
-                  <Text maxW={'50%'}>{item.label}</Text>
+                  <Text maxW={'50%'}>{item.name}</Text>
                   <IconButton
                     icon={<DeleteIcon />}
                     size={Theme().font.size.l(AppConfig.screen.width)}
                     _icon={{ color: Theme().color.sError }}
                     background="transparent"
                     _pressed={{ opacity: 0.8 }}
+                    onPress={() => {
+                      onDeleteStopReasonRequested(item.id);
+                    }}
+                  />
+                </HStack>
+              </>
+            );
+          })}
+          <Divider w="50%" />
+
+          <Divider w="80%" />
+          <HStack space={2} alignItems={'center'} justifyContent={'center'}>
+            <FormControl.Label
+              _text={{
+                fontWeight: 'bold',
+                fontSize: Theme().font.size.l(AppConfig.screen.width),
+              }}
+            >
+              Tipos de evento
+            </FormControl.Label>
+
+            <IconButton
+              onPress={onAddEventPress}
+              icon={<AddIcon />}
+              size={Theme().font.size.l(AppConfig.screen.width)}
+              _icon={{ color: Theme().color.b500 }}
+              m={2}
+              background={Theme().color.sOk}
+              h={Theme().font.size.l(AppConfig.screen.width) * 1.5}
+              w={Theme().font.size.l(AppConfig.screen.width) * 1.5}
+              _pressed={{ opacity: 0.8 }}
+            />
+          </HStack>
+
+          {events.map((item) => {
+            return (
+              <>
+                <Divider key={item.id} w="50%" />
+                <HStack space={2} alignItems={'center'} justifyContent={'center'}>
+                  <Text maxW={'50%'}>{item.name}</Text>
+                  <IconButton
+                    icon={<DeleteIcon />}
+                    size={Theme().font.size.l(AppConfig.screen.width)}
+                    _icon={{ color: Theme().color.sError }}
+                    background="transparent"
+                    _pressed={{ opacity: 0.8 }}
+                    onPress={() => {
+                      onDeleteEventRequested(item.id);
+                    }}
                   />
                 </HStack>
               </>

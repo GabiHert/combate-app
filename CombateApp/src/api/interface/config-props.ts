@@ -1,3 +1,6 @@
+export type TMapString = {
+  [key: string]: string;
+};
 export interface IConfigsProps {
   APPLICATION: {
     RIGHT_TANK_MAX_LOAD: number;
@@ -19,6 +22,7 @@ export interface IConfigsProps {
   };
   SYSTEMATIC_DOSE: {
     METERS_BETWEEN_DOSE: number;
-    DOSE_AMOUNT: number;
   };
+  STOP_REASONS_EVENTS: TMapString;
+  EVENTS: TMapString;
 }

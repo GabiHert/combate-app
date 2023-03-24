@@ -20,8 +20,11 @@ export const DEFAULT_CONFIG: IConfigsProps = {
   },
   SYSTEMATIC_DOSE: {
     METERS_BETWEEN_DOSE: 1,
-    DOSE_AMOUNT: 1,
   },
+  STOP_REASONS_EVENTS: {
+    S: 'Obstáculo na via',
+  },
+  EVENTS: { def: 'Bloqueio de via' },
 };
 
 export const CONSTANTS = {

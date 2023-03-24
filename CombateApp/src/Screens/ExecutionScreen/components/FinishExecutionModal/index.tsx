@@ -1,9 +1,11 @@
 import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
 import { useCallback, useState } from 'react';
+import { config } from '../../../../api/core/port/config-port';
 import { AppConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import FormInput from '../../../../Components/FormInput';
 import SelectInput from '../../../../Components/SelectInput';
+import { stopReasonToItemArray } from '../../../../app/parser/stop-reason-to-item-array';
 
 function FinishExecutionModal(props: {
   isOpen: boolean;
@@ -14,7 +16,6 @@ function FinishExecutionModal(props: {
 
   const onEventChange = useCallback(
     (event: string) => {
-      console.log(event);
       setEvent(event);
     },
     [setEvent]
@@ -49,10 +50,7 @@ function FinishExecutionModal(props: {
             h={20}
             title="Descreva o motivo do fim da execução"
             placeholder="Bloqueio de via"
-            items={[
-              { value: 'teste', label: 'teste' },
-              { value: 'teste', label: 'teste' },
-            ]}
+            items={stopReasonToItemArray(config.getCache().STOP_REASONS_EVENTS)}
           />
         </Modal.Body>
         <Modal.Footer

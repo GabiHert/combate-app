@@ -116,7 +116,6 @@ function ExecutionScreen(props: {
   }, [doseInProgress]);
 
   function onFinishButtonPress() {
-    console.log('finished');
     props.navigation.navigate('HomeScreen');
   }
 
