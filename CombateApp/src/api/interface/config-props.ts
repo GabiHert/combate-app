@@ -25,4 +25,9 @@ export interface IConfigsProps {
   };
   STOP_REASONS_EVENTS: TMapString;
   EVENTS: TMapString;
+  FARMS: TMapString;
+  PLOTS: TMapString;
+  POISON_TYPE: string;
+  SPACE_BETWEEN_LINES: number;
+  FILE_PATH: string;
 }

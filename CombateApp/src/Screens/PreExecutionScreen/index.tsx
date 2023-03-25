@@ -10,9 +10,10 @@ import {
 } from 'native-base';
 import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { Weather, WeatherEnum } from '../../api/core/enum/weather';
+import { Weather, WeatherEnum, weatherItems } from '../../api/core/enum/weather';
 import { config } from '../../api/core/port/config-port';
 import { AppConfig } from '../../app/config/app-config';
+import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
 import { Theme } from '../../app/theme/theme';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
@@ -21,6 +22,7 @@ import SlideInput from '../../Components/SlideInput';
 interface IValidationResult {
   clientName: { errorMessage: string };
   projectName: { errorMessage: string };
+  farm: { errorMessage: string };
   plotNumber: { errorMessage: undefined };
   spaceBetweenLines: { errorMessage: string };
   streetsAmount: { errorMessage: string };
@@ -38,10 +40,11 @@ function PreExecutionScreen(props: { navigation: any }) {
   const [rightApplicatorLoad, setRightApplicatorLoad] = useState<number>(0);
   const [clientName, setClientName] = useState<string>('');
   const [projectName, setProjectName] = useState<string>('');
-  const [plotNumber, setPlotNumber] = useState<number>(0);
+  const [farm, setFarm] = useState<string>('');
+  const [plot, setPlot] = useState<string>('');
   const [vehicleName, setVehicleName] = useState<string>('');
-  const [spaceBetweenLines, setSpaceBetweenLines] = useState<number>(0);
   const [streetsAmount, setStreetsAmount] = useState<number>(0);
+
   const [weather, setWeather] = useState<Weather>();
   const [validationResult, setValidationResult] = useState<IValidationResult>({
     clientName: { errorMessage: undefined },
@@ -51,6 +54,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     streetsAmount: { errorMessage: undefined },
     weather: { errorMessage: undefined },
     vehicleName: { errorMessage: undefined },
+    farm: { errorMessage: undefined },
     rightLoad: { errorMessage: undefined },
     leftLoad: { errorMessage: undefined },
     centerLoad: { errorMessage: undefined },
@@ -78,6 +82,7 @@ function PreExecutionScreen(props: { navigation: any }) {
       vehicleName: { errorMessage: undefined },
       rightLoad: { errorMessage: undefined },
       leftLoad: { errorMessage: undefined },
+      farm: { errorMessage: undefined },
       centerLoad: { errorMessage: undefined },
       valid: true,
     };
@@ -95,18 +100,28 @@ function PreExecutionScreen(props: { navigation: any }) {
     }
   }
 
-  const setPlotNumberCallback = useCallback(
-    (value: string) => {
-      //todo: throw error when NAN
-      const valueNumber = Number(value);
-      setPlotNumber(valueNumber);
-    },
-    [setPlotNumber]
-  );
-
   const setWeatherCallback = useCallback(
     (value: string) => {
-      setWeather(new Weather(value));
+      let valueEn = value;
+      switch (value) {
+        case 'Orvalho': //todo: create constants
+          valueEn = WeatherEnum.DEW.name;
+          break;
+        case 'Pós chuva':
+          valueEn = WeatherEnum.AFTER_RAIN.name;
+          break;
+        case 'Chance de chuva':
+          valueEn = WeatherEnum.CHANCE_OF_RAIN.name;
+          break;
+        case 'Seco':
+          valueEn = WeatherEnum.DRY.name;
+          break;
+        case 'Humido':
+          valueEn = WeatherEnum.HUMID.name;
+          break;
+      }
+
+      setWeather(new Weather(valueEn));
     },
     [setWeather]
   );
@@ -119,7 +134,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.s(AppConfig.screen.width),
+              fontSize: Theme().font.size.xl(AppConfig.screen.width),
             }}
           >
             Informações cliente
@@ -139,13 +154,19 @@ function PreExecutionScreen(props: { navigation: any }) {
             placeholder="Projeto x"
             onChangeText={setProjectName}
           />
-          <FormInput
-            title="Numero do talhão"
-            description="Preencha este campo com o numero do talhão da aplicação"
+          <SelectInput
+            title="Fazenda"
+            onItemSelected={setFarm}
+            items={mapStringToItemArray(config.getCache().FARMS)}
+            errorMessage={validationResult.farm.errorMessage}
+            placeholder={''}
+          />
+          <SelectInput
+            title="Talhão"
+            onItemSelected={setPlot}
+            items={mapStringToItemArray(config.getCache().PLOTS)}
             errorMessage={validationResult.plotNumber.errorMessage}
-            placeholder="22"
-            keyboardType="numeric"
-            onChangeText={setPlotNumberCallback}
+            placeholder={''}
           />
 
           <Divider w="80%" />
@@ -154,7 +175,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.s(AppConfig.screen.width),
+              fontSize: Theme().font.size.l(AppConfig.screen.width),
             }}
           >
             Informações equipamento
@@ -174,22 +195,12 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.s(AppConfig.screen.width),
+              fontSize: Theme().font.size.l(AppConfig.screen.width),
             }}
           >
             Informações do local
           </FormControl.Label>
 
-          <SlideInput
-            onChangeEnd={setSpaceBetweenLines}
-            step={0.5}
-            title={'Espaçamento entre linhas'}
-            defaultValue={1}
-            unit={'metros'}
-            disabled={false}
-            maxValue={20}
-            minValue={1}
-          />
           <SlideInput
             onChangeEnd={setStreetsAmount}
             step={0.5}
@@ -204,59 +215,17 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.s(AppConfig.screen.width),
+              fontSize: Theme().font.size.l(AppConfig.screen.width),
             }}
           >
             Clima
           </FormControl.Label>
-          <Radio.Group
-            onChange={setWeatherCallback}
-            name="exampleGroup"
-            defaultValue={WeatherEnum.DRY.name}
-          >
-            <Stack
-              direction={{
-                base: 'row',
-                md: 'row',
-              }}
-              alignItems={{
-                base: 'flex-start',
-                md: 'center',
-              }}
-              space={4}
-              w="60%"
-            >
-              <Radio value={WeatherEnum.DRY.name} colorScheme="green" size="md" my={1}>
-                Seco
-              </Radio>
-              <Radio value={WeatherEnum.HUMID.name} colorScheme="green" size="md" my={1}>
-                Ùmido
-              </Radio>
-              <Radio value={WeatherEnum.MUGGY.name} colorScheme="green" size="md" my={1}>
-                Abafado
-              </Radio>
-            </Stack>
-          </Radio.Group>
 
-          <Divider w="80%" />
-
-          <FormControl.Label
-            mt={5}
-            _text={{
-              fontWeight: 'bold',
-              fontSize: Theme().font.size.s(AppConfig.screen.width),
-            }}
-          >
-            Conexão CB
-          </FormControl.Label>
           <SelectInput
-            onItemSelected={() => {}}
-            title="Selecione o dipositivo Bluetooth"
-            placeholder="CB5"
-            items={[
-              { value: 'teste', label: 'teste' },
-              { value: 'teste', label: 'teste' },
-            ]}
+            onItemSelected={setWeatherCallback}
+            placeholder={''}
+            title={'Clima'}
+            items={weatherItems}
           />
 
           <Divider w="80%" />
@@ -265,7 +234,25 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.s(AppConfig.screen.width),
+              fontSize: Theme().font.size.xl(AppConfig.screen.width),
+            }}
+          >
+            Conexão CB
+          </FormControl.Label>
+          <SelectInput
+            onItemSelected={() => {}}
+            title="Selecione o dipositivo Bluetooth"
+            placeholder="CB5"
+            items={[]}
+          />
+
+          <Divider w="80%" />
+
+          <FormControl.Label
+            mt={5}
+            _text={{
+              fontWeight: 'bold',
+              fontSize: Theme().font.size.xl(AppConfig.screen.width),
             }}
           >
             Carga nos reservatórios

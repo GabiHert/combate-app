@@ -1,6 +1,8 @@
 import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
 import { useCallback, useState } from 'react';
+import { config } from '../../../../api/core/port/config-port';
 import { AppConfig } from '../../../../app/config/app-config';
+import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
 import { Theme } from '../../../../app/theme/theme';
 import FormInput from '../../../../Components/FormInput';
 import SelectInput from '../../../../Components/SelectInput';
@@ -26,7 +28,7 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
         <Modal.Header
           _text={{
             fontWeight: 'bold',
-            fontSize: Theme().font.size.s(AppConfig.screen.width),
+            fontSize: Theme().font.size.xl(AppConfig.screen.width),
           }}
         >
           Sinalizar Evento
@@ -43,8 +45,8 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
             w={'100%'}
             h={20}
             title="Selecione tipo de evento que foi encontrado"
-            placeholder="Bloqueio de via"
-            items={[]}
+            placeholder=""
+            items={mapStringToItemArray(config.getCache().EVENTS)}
           />
         </Modal.Body>
         <Modal.Footer
@@ -52,7 +54,7 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
         >
           <Button
             _pressed={{ opacity: 0.8 }}
-            bgColor={Theme().color.b200}
+            bgColor={Theme().color.sWarning}
             _text={{
               color: Theme().color.b400,
               fontSize: Theme().font.size.m(AppConfig.screen.width),

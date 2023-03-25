@@ -11,21 +11,22 @@ function SelectInput(props: {
   onItemSelected: (value: string) => void;
   w?: string | number;
   h?: string | number;
+  isRequired?: boolean;
 }) {
-  console.log(props.items);
   return (
     <FormControl
       w={props.w ? props.w : '60%'}
-      isRequired
+      isRequired={props.isRequired}
       isInvalid={props.errorMessage != undefined && props.errorMessage != ''}
     >
       <FormControl.Label
-        _text={{ fontWeight: 'bold', fontSize: Theme().font.size.s(AppConfig.screen.width) }}
+        _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen.width) }}
       >
         {props.title}
       </FormControl.Label>
       <Select
         borderRadius={20}
+        borderWidth={2}
         h={props.h}
         onValueChange={props.onItemSelected}
         placeholder={props.placeholder}

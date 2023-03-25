@@ -2,6 +2,9 @@ enum Weathers {
   DRY = 'DRY',
   HUMID = 'HUMID',
   MUGGY = 'MUGGY',
+  AFTER_RAIN = 'AFTER_RAIN',
+  CHANCE_OF_RAIN = 'CHANCE_OF_RAIN',
+  DEW = 'DEW',
 }
 
 class WeatherEnum_ {
@@ -11,8 +14,14 @@ class WeatherEnum_ {
   readonly HUMID: { name: string } = {
     name: Weathers.HUMID,
   };
-  readonly MUGGY: { name: string } = {
-    name: Weathers.MUGGY,
+  readonly AFTER_RAIN: { name: string } = {
+    name: Weathers.AFTER_RAIN,
+  };
+  readonly CHANCE_OF_RAIN: { name: string } = {
+    name: Weathers.CHANCE_OF_RAIN,
+  };
+  readonly DEW: { name: string } = {
+    name: Weathers.DEW,
   };
 }
 
@@ -30,11 +39,27 @@ export class Weather {
         this.name = Weathers.HUMID;
         break;
 
-      case WeatherEnum.MUGGY.name:
-        this.name = Weathers.MUGGY;
+      case WeatherEnum.AFTER_RAIN.name:
+        this.name = Weathers.AFTER_RAIN;
+        break;
+
+      case WeatherEnum.CHANCE_OF_RAIN.name:
+        this.name = Weathers.CHANCE_OF_RAIN;
+        break;
+
+      case WeatherEnum.DEW.name:
+        this.name = Weathers.DEW;
         break;
       default:
         throw new Error(`Unknown weather ${weather}`);
     }
   }
 }
+
+export const weatherItems: Array<{ id: string; name: string }> = [
+  { id: WeatherEnum.AFTER_RAIN.name, name: 'Pós chuva' },
+  { id: WeatherEnum.CHANCE_OF_RAIN.name, name: 'Chance de chuva' },
+  { id: WeatherEnum.DEW.name, name: 'Orvalho' },
+  { id: WeatherEnum.DRY.name, name: 'Seco' },
+  { id: WeatherEnum.HUMID.name, name: 'Humido' },
+];

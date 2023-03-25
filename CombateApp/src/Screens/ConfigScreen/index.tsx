@@ -24,8 +24,12 @@ import SlideInput from '../../Components/SlideInput';
 
 import { AppConfig } from '../../app/config/app-config';
 import ItemRegisterModal from './components/ItemRegisterModal';
-import { stopReasonToItemArray as mapStringToItemArray } from '../../app/parser/stop-reason-to-item-array';
+import { mapStringToItemArray as mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
 import { v1, v4 } from 'uuid';
+import ItemListInput from './components/ItemListInput';
+import SelectInput from '../../Components/SelectInput';
+import { poisonItems } from '../../api/core/enum/poison';
+import { setPath } from 'react-native-reanimated/lib/types/lib/reanimated2/animation/styleAnimation';
 
 interface IPreset {
   name: string;
@@ -61,6 +65,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const [doseWeightKg, setDoseWeightKg] = useState<number>(
     config.getCache().APPLICATION.DOSE_WEIGHT_KG
   );
+  const [filePath, setFilePath] = useState(config.getCache().FILE_PATH);
   const [preset1, setPreset1] = useState<IPreset>({
     doseAmount: config.getCache().PRESETS.P1.DOSE_AMOUNT,
     name: config.getCache().PRESETS.P1.NAME,
@@ -104,14 +109,25 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const [preset5DoseError, setPreset5DoseError] = useState<string>();
   const [preset6DoseError, setPreset6DoseError] = useState<string>();
 
-  const [items, setItems] = useState<Array<{ id: string; name: string }>>(
+  const [spaceBetweenLines, setSpaceBetweenLines] = useState<number>(0);
+  const [stopReasons, setStopReasons] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(config.getCache().STOP_REASONS_EVENTS)
   );
   const [events, setEvents] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(config.getCache().EVENTS)
   );
+  const [farms, setFarms] = useState<Array<{ id: string; name: string }>>(
+    mapStringToItemArray(config.getCache().FARMS)
+  );
+  const [plots, setPlots] = useState<Array<{ id: string; name: string }>>(
+    mapStringToItemArray(config.getCache().PLOTS)
+  );
+  const [poison, setPoison] = useState('');
+
   const [addReasonModalVisible, setAddReasonModalVisible] = useState(false);
   const [addEventModalVisible, setAddEventModalVisible] = useState(false);
+  const [addFarmModalVisible, setAddFarmModalVisible] = useState(false);
+  const [addPlotModalVisible, setAddPlotModalVisible] = useState(false);
 
   function onRightTankMaxLoadChange(text: string) {
     setRightTankMaxLoad(Number(text));
@@ -121,11 +137,6 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   }
   function onCenterTankMaxLoadChange(text: string) {
     setCenterTankMaxLoad(Number(text));
-  }
-  function onDoseWeightChange(text: string) {
-    const g = Number(text);
-    const kg = Math.trunc(g * 1000);
-    setDoseWeightKg(kg);
   }
 
   const onPreset1NameChange = useCallback(
@@ -225,14 +236,13 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     },
     [preset6]
   );
+
   const onAddEventPress = useCallback(() => {
     setAddEventModalVisible(true);
   }, [setAddEventModalVisible]);
-
   const onAddEventModalClose = useCallback(() => {
     setAddEventModalVisible(false);
   }, [setAddEventModalVisible]);
-
   const onAddEventRequested = useCallback(
     (name: string) => {
       let cache = config.getCache();
@@ -243,10 +253,8 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     },
     [setEvents]
   );
-
   const onDeleteEventRequested = useCallback(
     (id: string) => {
-      console.log(id);
       let cache = config.getCache();
       delete cache.EVENTS[id];
       config.update(cache);
@@ -255,31 +263,79 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     [setEvents]
   );
 
-  const onAddReasonPress = useCallback(() => {
+  const onAddFarmPress = useCallback(() => {
+    setAddFarmModalVisible(true);
+  }, [setAddFarmModalVisible]);
+  const onAddFarmModalClose = useCallback(() => {
+    setAddFarmModalVisible(false);
+  }, [setAddFarmModalVisible]);
+  const onAddFarmRequested = useCallback(
+    (name: string) => {
+      let cache = config.getCache();
+      const id = v1();
+      cache.FARMS[id] = name;
+      config.update(cache);
+      setFarms(mapStringToItemArray(cache.FARMS));
+    },
+    [setFarms]
+  );
+  const onDeleteFarmRequested = useCallback(
+    (id: string) => {
+      let cache = config.getCache();
+      delete cache.FARMS[id];
+      config.update(cache);
+      setFarms(mapStringToItemArray(cache.FARMS));
+    },
+    [setFarms]
+  );
+
+  const onAddPlotPress = useCallback(() => {
+    setAddPlotModalVisible(true);
+  }, [setAddPlotModalVisible]);
+  const onAddPlotModalClose = useCallback(() => {
+    setAddPlotModalVisible(false);
+  }, [setAddPlotModalVisible]);
+  const onAddPlotRequested = useCallback(
+    (name: string) => {
+      let cache = config.getCache();
+      const id = v1();
+      cache.PLOTS[id] = name;
+      config.update(cache);
+      setPlots(mapStringToItemArray(cache.PLOTS));
+    },
+    [setFarms]
+  );
+  const onDeletePlotRequested = useCallback(
+    (id: string) => {
+      let cache = config.getCache();
+      delete cache.PLOTS[id];
+      config.update(cache);
+      setPlots(mapStringToItemArray(cache.PLOTS));
+    },
+    [setPlots]
+  );
+
+  const onAddStopReasonPress = useCallback(() => {
     setAddReasonModalVisible(true);
   }, [setAddReasonModalVisible]);
-
   const onAddReasonModalClose = useCallback(() => {
     setAddReasonModalVisible(false);
   }, [setAddReasonModalVisible]);
-
   const onAddStopReasonRequested = useCallback((name: string) => {
     let cache = config.getCache();
     const id = v1();
     cache.STOP_REASONS_EVENTS[id] = name;
     config.update(cache);
-    setItems(mapStringToItemArray(cache.STOP_REASONS_EVENTS));
+    setStopReasons(mapStringToItemArray(cache.STOP_REASONS_EVENTS));
   }, []);
-
   const onDeleteStopReasonRequested = useCallback(
     (id: string) => {
-      console.log(id);
       let cache = config.getCache();
       delete cache.STOP_REASONS_EVENTS[id];
       config.update(cache);
-      setItems(mapStringToItemArray(cache.STOP_REASONS_EVENTS));
+      setStopReasons(mapStringToItemArray(cache.STOP_REASONS_EVENTS));
     },
-    [setItems]
+    [setStopReasons]
   );
 
   const onSavePressed = useCallback(async () => {
@@ -297,7 +353,6 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         preset4NameError: '',
         preset5NameError: '',
         preset6NameError: '',
-
         preset1DoseError: '',
         preset2DoseError: '',
         preset3DoseError: '',
@@ -332,24 +387,12 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
         setDoseWeightKgError(result.doseWeightKgError);
       } else {
-        const data = {
-          rightTankMaxLoad,
-          centerTankMaxLoad,
-          leftTankMaxLoad,
-          doseWeightKg,
-          preset1,
-          preset2,
-          preset3,
-          preset4,
-        };
-
         const cache = config.getCache();
 
-        cache.APPLICATION.DOSE_WEIGHT_KG = data.doseWeightKg;
-        cache.APPLICATION.RIGHT_TANK_MAX_LOAD = data.rightTankMaxLoad;
-        cache.APPLICATION.CENTER_TANK_MAX_LOAD = data.centerTankMaxLoad;
-        cache.APPLICATION.LEFT_TANK_MAX_LOAD = data.leftTankMaxLoad;
-        cache.APPLICATION.DOSE_WEIGHT_KG = data.doseWeightKg;
+        cache.APPLICATION.DOSE_WEIGHT_KG = doseWeightKg;
+        cache.APPLICATION.RIGHT_TANK_MAX_LOAD = rightTankMaxLoad;
+        cache.APPLICATION.CENTER_TANK_MAX_LOAD = centerTankMaxLoad;
+        cache.APPLICATION.LEFT_TANK_MAX_LOAD = leftTankMaxLoad;
         cache.PRESETS.P1.DOSE_AMOUNT = preset1.doseAmount;
         cache.PRESETS.P1.NAME = preset1.name;
         cache.PRESETS.P2.DOSE_AMOUNT = preset2.doseAmount;
@@ -358,12 +401,13 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         cache.PRESETS.P3.NAME = preset3.name;
         cache.PRESETS.P4.DOSE_AMOUNT = preset4.doseAmount;
         cache.PRESETS.P4.NAME = preset4.name;
-
-        ShowToast({
-          title: 'Aguarde, alterações sendo salvas...',
-          severity: SeverityEnum.WARN,
-          durationMs: 2000,
-        });
+        cache.PRESETS.P4.DOSE_AMOUNT = preset5.doseAmount;
+        cache.PRESETS.P4.NAME = preset5.name;
+        cache.PRESETS.P4.DOSE_AMOUNT = preset6.doseAmount;
+        cache.PRESETS.P4.NAME = preset6.name;
+        cache.POISON_TYPE = poison;
+        cache.SPACE_BETWEEN_LINES = spaceBetweenLines;
+        cache.FILE_PATH = filePath;
 
         await config.update(cache);
 
@@ -381,7 +425,21 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         durationMs: 2000,
       });
     }
-  }, []);
+  }, [
+    doseWeightKg,
+    rightTankMaxLoad,
+    centerTankMaxLoad,
+    leftTankMaxLoad,
+    preset1,
+    preset2,
+    preset3,
+    preset4,
+    preset5,
+    preset6,
+    poison,
+    filePath,
+    spaceBetweenLines,
+  ]);
 
   return (
     <Box justifyContent={'center'} alignItems={'center'} h="100%">
@@ -407,11 +465,52 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           return undefined;
         }}
       />
+      <ItemRegisterModal
+        title="Adicionar fazenda"
+        formTitle="Nome fazenda"
+        formDescription="Digite nome da fazenda a ser adicionada"
+        onAddPressed={onAddFarmRequested}
+        isOpen={addFarmModalVisible}
+        onClose={onAddFarmModalClose}
+        validator={() => {
+          return undefined;
+        }}
+      />
+      <ItemRegisterModal
+        title="Adicionar talhão"
+        formTitle="Nome talão"
+        formDescription="Digite nome do talhão a ser adicionado"
+        onAddPressed={onAddPlotRequested}
+        isOpen={addPlotModalVisible}
+        onClose={onAddPlotModalClose}
+        validator={() => {
+          return undefined;
+        }}
+      />
+
       <ScrollView w="100%">
         <VStack space={4} justifyContent={'center'} alignItems={'center'} overflow={'hidden'}>
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
+          >
+            Informações local
+          </FormControl.Label>
+          <SlideInput
+            onChangeEnd={setSpaceBetweenLines}
+            step={0.5}
+            title={'Espaçamento entre linhas'}
+            defaultValue={1}
+            unit={'metros'}
+            disabled={false}
+            maxValue={20}
+            minValue={1}
+          />
+          <Divider w="80%" />
+
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
           >
             Capacidade Reservatórios
           </FormControl.Label>
@@ -445,23 +544,30 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
           >
             Informações Dosagem
           </FormControl.Label>
-          <FormInput
-            title="Peso dose"
-            description="Preencha este campo com o peso de cada dose (g)"
-            errorMessage={doseWeightKgError}
-            defaultValue={(config.getCache().APPLICATION.DOSE_WEIGHT_KG * 1000).toString()}
-            placeholder="25"
-            onChangeText={onDoseWeightChange}
-            keyboardType={'numeric'}
+          <SlideInput
+            defaultValue={5}
+            maxValue={30}
+            minValue={1}
+            onChangeEnd={setDoseWeightKg}
+            step={1}
+            title={'Peso dose'}
+            unit={'g'}
+            disabled={false}
+          />
+          <SelectInput
+            onItemSelected={setPoison}
+            items={[...poisonItems, { id: 'another', name: 'Outro' }]}
+            title="Tipo de veneno"
+            placeholder=""
           />
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
           >
             Preset 1
           </FormControl.Label>
@@ -486,7 +592,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
           >
             Preset 2
           </FormControl.Label>
@@ -510,7 +616,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
           >
             Preset 3
           </FormControl.Label>
@@ -535,7 +641,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
           >
             Preset 4
           </FormControl.Label>
@@ -560,7 +666,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
           >
             Preset 5
           </FormControl.Label>
@@ -586,7 +692,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
           >
             Preset 6
           </FormControl.Label>
@@ -611,7 +717,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.l(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
           >
             Dose Sistemática
           </FormControl.Label>
@@ -626,96 +732,57 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             minValue={0}
           />
           <Divider w="80%" />
-          <HStack space={2} alignItems={'center'} justifyContent={'center'}>
-            <FormControl.Label
-              _text={{
-                fontWeight: 'bold',
-                fontSize: Theme().font.size.l(AppConfig.screen.width),
-              }}
-            >
-              Motivos de Parada
-            </FormControl.Label>
 
-            <IconButton
-              onPress={onAddReasonPress}
-              icon={<AddIcon />}
-              size={Theme().font.size.l(AppConfig.screen.width)}
-              _icon={{ color: Theme().color.b500 }}
-              m={2}
-              background={Theme().color.sOk}
-              h={Theme().font.size.l(AppConfig.screen.width) * 1.5}
-              w={Theme().font.size.l(AppConfig.screen.width) * 1.5}
-              _pressed={{ opacity: 0.8 }}
-            />
-          </HStack>
-
-          {items.map((item) => {
-            return (
-              <>
-                <Divider key={item.id} w="50%" />
-                <HStack space={2} alignItems={'center'} justifyContent={'center'}>
-                  <Text maxW={'50%'}>{item.name}</Text>
-                  <IconButton
-                    icon={<DeleteIcon />}
-                    size={Theme().font.size.l(AppConfig.screen.width)}
-                    _icon={{ color: Theme().color.sError }}
-                    background="transparent"
-                    _pressed={{ opacity: 0.8 }}
-                    onPress={() => {
-                      onDeleteStopReasonRequested(item.id);
-                    }}
-                  />
-                </HStack>
-              </>
-            );
-          })}
-          <Divider w="50%" />
+          <ItemListInput
+            items={stopReasons}
+            onAddItemPress={onAddStopReasonPress}
+            onDeleteItemRequested={onDeleteStopReasonRequested}
+            title={'Motivos de parada'}
+          />
 
           <Divider w="80%" />
-          <HStack space={2} alignItems={'center'} justifyContent={'center'}>
-            <FormControl.Label
-              _text={{
-                fontWeight: 'bold',
-                fontSize: Theme().font.size.l(AppConfig.screen.width),
-              }}
-            >
-              Tipos de evento
-            </FormControl.Label>
 
-            <IconButton
-              onPress={onAddEventPress}
-              icon={<AddIcon />}
-              size={Theme().font.size.l(AppConfig.screen.width)}
-              _icon={{ color: Theme().color.b500 }}
-              m={2}
-              background={Theme().color.sOk}
-              h={Theme().font.size.l(AppConfig.screen.width) * 1.5}
-              w={Theme().font.size.l(AppConfig.screen.width) * 1.5}
-              _pressed={{ opacity: 0.8 }}
-            />
-          </HStack>
+          <ItemListInput
+            items={events}
+            onAddItemPress={onAddEventPress}
+            onDeleteItemRequested={onDeleteEventRequested}
+            title={'Tipos de eventos'}
+          />
 
-          {events.map((item) => {
-            return (
-              <>
-                <Divider key={item.id} w="50%" />
-                <HStack space={2} alignItems={'center'} justifyContent={'center'}>
-                  <Text maxW={'50%'}>{item.name}</Text>
-                  <IconButton
-                    icon={<DeleteIcon />}
-                    size={Theme().font.size.l(AppConfig.screen.width)}
-                    _icon={{ color: Theme().color.sError }}
-                    background="transparent"
-                    _pressed={{ opacity: 0.8 }}
-                    onPress={() => {
-                      onDeleteEventRequested(item.id);
-                    }}
-                  />
-                </HStack>
-              </>
-            );
-          })}
-          <Divider w="50%" />
+          <Divider w="80%" />
+
+          <ItemListInput
+            items={farms}
+            onAddItemPress={onAddFarmPress}
+            onDeleteItemRequested={onDeleteFarmRequested}
+            title={'Fazendas'}
+          />
+
+          <Divider w="80%" />
+
+          <ItemListInput
+            items={plots}
+            onAddItemPress={onAddPlotPress}
+            onDeleteItemRequested={onDeletePlotRequested}
+            title={'Talhões'}
+          />
+
+          <Divider w="80%" />
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
+          >
+            Arquivo
+          </FormControl.Label>
+          <FormInput
+            title="Local para salvar o aruivo"
+            description="Preencha este campo com o caminho de pastas para salvar o arquivo .csv"
+            defaultValue={config.getCache().FILE_PATH}
+            onChangeText={(s) => {
+              console.log(s);
+              setFilePath(s);
+            }}
+          />
         </VStack>
 
         <Box w="20%" h="70px" />
@@ -730,7 +797,6 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         w="25%"
         h="60px"
       />
-
       <Button
         onPress={onSavePressed}
         position={'absolute'}

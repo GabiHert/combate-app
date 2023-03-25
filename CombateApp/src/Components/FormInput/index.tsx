@@ -32,7 +32,11 @@ function FormInput(props: {
       isInvalid={props.isInvalid || (props.errorMessage != undefined && props.errorMessage != '')}
     >
       <FormControl.Label
-        _text={{ bold: true, fontSize: Theme().font.size.m(AppConfig.screen.width) }}
+        _text={{
+          bold: true,
+          fontSize: Theme().font.size.m(AppConfig.screen.width),
+          paddingLeft: 1,
+        }}
       >
         {props.title}
       </FormControl.Label>

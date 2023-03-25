@@ -5,7 +5,7 @@ import { AppConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import FormInput from '../../../../Components/FormInput';
 import SelectInput from '../../../../Components/SelectInput';
-import { stopReasonToItemArray } from '../../../../app/parser/stop-reason-to-item-array';
+import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
 
 function FinishExecutionModal(props: {
   isOpen: boolean;
@@ -32,7 +32,7 @@ function FinishExecutionModal(props: {
         <Modal.Header
           _text={{
             fontWeight: 'bold',
-            fontSize: Theme().font.size.l(AppConfig.screen.width),
+            fontSize: Theme().font.size.xl(AppConfig.screen.width),
           }}
         >
           Finalizar execução
@@ -49,8 +49,8 @@ function FinishExecutionModal(props: {
             w={'100%'}
             h={20}
             title="Descreva o motivo do fim da execução"
-            placeholder="Bloqueio de via"
-            items={stopReasonToItemArray(config.getCache().STOP_REASONS_EVENTS)}
+            placeholder=""
+            items={mapStringToItemArray(config.getCache().STOP_REASONS_EVENTS)}
           />
         </Modal.Body>
         <Modal.Footer

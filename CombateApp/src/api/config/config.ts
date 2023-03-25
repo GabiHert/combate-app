@@ -22,9 +22,27 @@ export const DEFAULT_CONFIG: IConfigsProps = {
     METERS_BETWEEN_DOSE: 1,
   },
   STOP_REASONS_EVENTS: {
-    S: 'Obstáculo na via',
+    a: 'Insumos.',
+    b: 'Reabastecimento.',
+    c: 'Máquina.',
+    d: 'Sistema Combate.',
+    e: 'Pessoal.',
+    f: 'Clima.',
+    g: 'Troca Talhão.',
+    h: 'Troca Projeto.',
+    i: 'Intervalo.',
+    j: 'Outro.',
   },
-  EVENTS: { def: 'Bloqueio de via' },
+  EVENTS: {
+    a: 'Necessário desvio.',
+    b: 'Possível seguir.',
+    c: 'Intransponível, retorno.',
+  },
+  FARMS: {},
+  PLOTS: {},
+  FILE_PATH: 'CombateApp/Resultados',
+  POISON_TYPE: '',
+  SPACE_BETWEEN_LINES: 1,
 };
 
 export const CONSTANTS = {
