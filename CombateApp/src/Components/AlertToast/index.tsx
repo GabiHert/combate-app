@@ -83,7 +83,7 @@ export function ShowToast(props: {
   }
   Toast.show({
     id: id,
-    duration: props.durationMs,
+    duration: props.durationMs ? props.durationMs + 1000 : undefined,
     placement: 'top',
     minW: '60%',
     maxW: '80%',

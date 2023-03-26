@@ -134,13 +134,13 @@ function Sheet(props: {
           >
             Total aplicado
             <Stack direction={'row'} alignItems="baseline" justifyContent="center">
-              <Text fontSize={Theme().font.size.xxxl(AppConfig.screen.width)} fontWeight="bold">
+              <Text fontSize={Theme().font.size.xl(AppConfig.screen.width)} fontWeight="bold">
                 {props.appliedDoses}
               </Text>
               <Text fontSize={Theme().font.size.s(AppConfig.screen.width)}>Doses</Text>
             </Stack>
             <Stack direction={'row'} alignItems="baseline" justifyContent="center">
-              <Text fontSize={Theme().font.size.xxxl(AppConfig.screen.width)} fontWeight="bold">
+              <Text fontSize={Theme().font.size.xl(AppConfig.screen.width)} fontWeight="bold">
                 {Math.trunc(
                   props.appliedDoses * config.getCache().APPLICATION.DOSE_WEIGHT_KG * 1000
                 )}

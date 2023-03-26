@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Text } from 'native-base';
+import { Box, Button, IconButton, Image, Text } from 'native-base';
 import React, { useState } from 'react';
 import { ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,7 +9,9 @@ import { AppConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 import LoginModal from '../../Components/LoginModal';
 import style from './style';
-const image = require('../../app/assets/homebackground.png');
+const backgroundImage = require('../../app/assets/homebackground.png');
+const combate = require('../../app/assets/COMBATE.png');
+const af = require('../../app/assets/AF.jpeg');
 
 function HomeScreen(props: { navigation: any; route: any }) {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -30,7 +32,11 @@ function HomeScreen(props: { navigation: any; route: any }) {
   }
   return (
     <SafeAreaView>
-      <ImageBackground resizeMode="cover" source={image} style={style.container}>
+      <ImageBackground
+        resizeMode="cover"
+        source={backgroundImage}
+        style={{ alignItems: 'center', width: '100%', height: '100%', justifyContent: 'center' }}
+      >
         <LoginModal
           onClose={() => {
             setIsLoginOpen(false);
@@ -49,6 +55,19 @@ function HomeScreen(props: { navigation: any; route: any }) {
         ></IconButton>
 
         <Box width={'100%'} height={'90%'} justifyContent="center" alignItems="center">
+          <Image
+            resizeMode="contain"
+            alt="AF logo"
+            source={af}
+            style={{ width: 150, height: 42, position: 'absolute', top: -20, left: 10 }}
+          />
+          <Image
+            resizeMode="contain"
+            alt="Combate logo"
+            source={combate}
+            style={{ width: 150, height: 42, position: 'absolute', top: -20, right: 50 }}
+          />
+
           <Button
             _pressed={{ opacity: 0.8 }}
             bgColor={Theme().color.b200}

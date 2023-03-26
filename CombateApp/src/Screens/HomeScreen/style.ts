@@ -20,11 +20,6 @@ export default StyleSheet.create({
     fontSize: Theme().font.size.s(AppConfig.screen.width),
     fontWeight: '500',
   },
-  container: {
-    alignItems: 'center',
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-  },
+  container: {},
   versionText: { color: 'white' },
 });
