@@ -66,7 +66,7 @@ function HomeScreen(props: { navigation: any; route: any }) {
             bgColor={Theme().color.b200}
             _text={{
               color: 'black',
-              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
+              fontSize: Theme().font.size.xl(AppConfig.screen),
             }}
             onPress={() => {
               onStartButtonPressed();

@@ -114,10 +114,10 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
-            _text={{ fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+            _text={{ fontSize: Theme().font.size.m(AppConfig.screen) }}
           >
             Tempo em execução
-            <Text fontSize={Theme().font.size.xxxl(AppConfig.screen.scale)} fontWeight="bold">
+            <Text fontSize={Theme().font.size.xxxl(AppConfig.screen)} fontWeight="bold">
               {formatExecutionTime(executionTimeHours, executionTimeMinutes)}
             </Text>
           </Box>
@@ -128,10 +128,10 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
-            _text={{ fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+            _text={{ fontSize: Theme().font.size.m(AppConfig.screen) }}
           >
             Data
-            <Text fontSize={Theme().font.size.l(AppConfig.screen.scale)} fontWeight="bold">
+            <Text fontSize={Theme().font.size.l(AppConfig.screen)} fontWeight="bold">
               {formatDate(date)}
             </Text>
           </Box>
@@ -153,22 +153,22 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
-            _text={{ fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+            _text={{ fontSize: Theme().font.size.m(AppConfig.screen) }}
           >
             Total aplicado
             <Stack direction={'row'} alignItems="baseline" justifyContent="center">
-              <Text fontSize={Theme().font.size.xl(AppConfig.screen.scale)} fontWeight="bold">
+              <Text fontSize={Theme().font.size.xl(AppConfig.screen)} fontWeight="bold">
                 {props.appliedDoses}
               </Text>
-              <Text fontSize={Theme().font.size.s(AppConfig.screen.scale)}>Doses</Text>
+              <Text fontSize={Theme().font.size.s(AppConfig.screen)}>Doses</Text>
             </Stack>
             <Stack direction={'row'} alignItems="baseline" justifyContent="center">
-              <Text fontSize={Theme().font.size.xl(AppConfig.screen.scale)} fontWeight="bold">
+              <Text fontSize={Theme().font.size.xl(AppConfig.screen)} fontWeight="bold">
                 {Math.trunc(
                   props.appliedDoses * config.getCache().APPLICATION.DOSE_WEIGHT_KG * 1000
                 )}
               </Text>
-              <Text fontSize={Theme().font.size.s(AppConfig.screen.scale)}>g</Text>
+              <Text fontSize={Theme().font.size.s(AppConfig.screen)}>g</Text>
             </Stack>
           </Box>
 
@@ -183,13 +183,10 @@ function Sheet(props: {
             justifyContent="center"
           >
             <Center>
-              <Text mb={2} fontSize={Theme().font.size.l(AppConfig.screen.scale)}>
+              <Text mb={2} fontSize={Theme().font.size.l(AppConfig.screen)}>
                 Sinalizar Evento
               </Text>
-              <WarningOutlineIcon
-                size={Theme().font.size.xxxl(AppConfig.screen.scale)}
-                color={'black'}
-              />
+              <WarningOutlineIcon size={Theme().font.size.xxxl(AppConfig.screen)} color={'black'} />
             </Center>
           </Button>
         </Stack>
@@ -202,7 +199,7 @@ function Sheet(props: {
         width="50%"
         height={props.blockHeight / 2}
         _pressed={{ opacity: 0.8 }}
-        _text={{ fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+        _text={{ fontSize: Theme().font.size.m(AppConfig.screen) }}
         backgroundColor={Theme().color.sError}
       >
         Finalizar

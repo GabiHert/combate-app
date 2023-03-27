@@ -40,7 +40,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
         <Text
           style={{
             color: Theme().color.b500,
-            fontSize: Theme().font.size.m(AppConfig.screen.scale),
+            fontSize: Theme().font.size.m(AppConfig.screen),
             textAlign: 'center',
           }}
           position={'absolute'}
@@ -62,7 +62,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
             bgColor={Theme().color.b200}
             width="90%"
             height={'30%'}
-            _text={{ color: 'black', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+            _text={{ color: 'black', fontSize: Theme().font.size.m(AppConfig.screen) }}
             _pressed={{ opacity: 0.8 }}
           >
             {config.getCache().PRESETS.P1.NAME}
@@ -74,7 +74,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
             bgColor={Theme().color.b200}
             width="90%"
             height={'30%'}
-            _text={{ color: 'black', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+            _text={{ color: 'black', fontSize: Theme().font.size.m(AppConfig.screen) }}
             _pressed={{ opacity: 0.8 }}
           >
             {config.getCache().PRESETS.P2.NAME}
@@ -85,7 +85,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
             bgColor={Theme().color.b200}
             width="90%"
             height={'30%'}
-            _text={{ color: 'black', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+            _text={{ color: 'black', fontSize: Theme().font.size.m(AppConfig.screen) }}
             _pressed={{ opacity: 0.8 }}
           >
             {config.getCache().PRESETS.P3.NAME}
@@ -106,7 +106,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
             bgColor={Theme().color.b200}
             width="90%"
             height={'30%'}
-            _text={{ color: 'black', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+            _text={{ color: 'black', fontSize: Theme().font.size.m(AppConfig.screen) }}
             _pressed={{ opacity: 0.8 }}
           >
             {config.getCache().PRESETS.P4.NAME}
@@ -118,7 +118,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
             bgColor={Theme().color.b200}
             width="90%"
             height={'30%'}
-            _text={{ color: 'black', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+            _text={{ color: 'black', fontSize: Theme().font.size.m(AppConfig.screen) }}
             _pressed={{ opacity: 0.8 }}
           >
             {config.getCache().PRESETS.P5.NAME}
@@ -129,7 +129,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
             bgColor={Theme().color.b200}
             width="90%"
             height={'30%'}
-            _text={{ color: 'black', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+            _text={{ color: 'black', fontSize: Theme().font.size.m(AppConfig.screen) }}
             _pressed={{ opacity: 0.8 }}
           >
             {config.getCache().PRESETS.P6.NAME}

@@ -36,7 +36,7 @@ export function AlertToast(props: {
           <Alert.Icon color={'white'} />
           <Text
             textAlign={'center'}
-            fontSize={Theme().font.size.l(AppConfig.screen.scale)}
+            fontSize={Theme().font.size.l(AppConfig.screen)}
             fontWeight={'bold'}
             color={'black'}
           >
@@ -61,7 +61,7 @@ export function AlertToast(props: {
         )}
       </HStack>
 
-      <Text fontSize={Theme().font.size.s(AppConfig.screen.scale)} color={'black'}>
+      <Text fontSize={Theme().font.size.s(AppConfig.screen)} color={'black'}>
         {props.message}
       </Text>
     </Alert>

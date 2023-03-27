@@ -126,6 +126,13 @@ function PreExecutionScreen(props: { navigation: any }) {
     [setWeather]
   );
 
+  const setStreetsAmountCallback = useCallback(
+    (value: string) => {
+      setStreetsAmount(Number(value));
+    },
+    [setStreetsAmount]
+  );
+
   return (
     <Box justifyContent={'center'} alignItems={'center'} h="100%">
       <ScrollView w="100%">
@@ -134,7 +141,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
+              fontSize: Theme().font.size.xl(AppConfig.screen),
             }}
           >
             Informações cliente
@@ -175,7 +182,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
+              fontSize: Theme().font.size.xl(AppConfig.screen),
             }}
           >
             Informações equipamento
@@ -195,27 +202,30 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
+              fontSize: Theme().font.size.xl(AppConfig.screen),
             }}
           >
             Informações do local
           </FormControl.Label>
 
-          <SlideInput
-            onChangeEnd={setStreetsAmount}
-            step={0.5}
+          <SelectInput
+            placeholder=""
+            onItemSelected={setStreetsAmountCallback}
             title="Numero de ruas"
-            defaultValue={1}
-            disabled={false}
-            maxValue={50}
-            minValue={1}
+            items={[
+              { id: '0', name: '1' },
+              { id: '1', name: '2' },
+              { id: '2', name: '3' },
+              { id: '3', name: '5' },
+            ]}
           />
+
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
+              fontSize: Theme().font.size.xl(AppConfig.screen),
             }}
           >
             Clima
@@ -234,7 +244,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
+              fontSize: Theme().font.size.xl(AppConfig.screen),
             }}
           >
             Conexão CB
@@ -252,7 +262,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
+              fontSize: Theme().font.size.xl(AppConfig.screen),
             }}
           >
             Carga nos reservatórios

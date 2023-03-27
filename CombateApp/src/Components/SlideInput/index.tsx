@@ -25,13 +25,13 @@ function SlideInput(props: {
   return (
     <FormControl isDisabled={props.disabled} justifyContent={'center'} alignItems={'center'}>
       <FormControl.Label
-        _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+        _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen) }}
       >
         {props.title}
       </FormControl.Label>
       <FormControl.Label
         textAlign={'center'}
-        _text={{ fontWeight: 'normal', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+        _text={{ fontWeight: 'normal', fontSize: Theme().font.size.m(AppConfig.screen) }}
       >
         {value}
         {props.unit ? ' ' + props.unit.toString() : ''}
@@ -39,6 +39,7 @@ function SlideInput(props: {
       <Slider
         size={'lg'}
         w="60%"
+        onChange={setValue}
         onChangeEnd={onChangeEnd}
         defaultValue={props.defaultValue}
         minValue={props.minValue}

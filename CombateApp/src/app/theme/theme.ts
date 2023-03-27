@@ -13,20 +13,24 @@ export function Theme() {
     },
     font: {
       size: {
-        s: (scale: number) => {
-          return scale * 3.5;
+        s: (size: { width: number; height: number; scale: number }) => {
+          return 10 - size.scale;
         },
-        m: (scale: number) => {
-          return scale * 5;
+        m: (size: { width: number; height: number; scale: number }) => {
+          console.log(size);
+
+          return 15 - size.scale;
         },
-        l: (scale: number) => {
-          return scale * 6.5;
+        l: (size: { width: number; height: number; scale: number }) => {
+          console.log(size);
+
+          return 20 - size.scale;
         },
-        xl: (scale: number) => {
-          return scale * 8;
+        xl: (size: { width: number; height: number; scale: number }) => {
+          return 25 - size.scale;
         },
-        xxxl: (scale: number) => {
-          return scale * 15;
+        xxxl: (size: { width: number; height: number; scale: number }) => {
+          return 30 - size.scale;
         },
       },
     },

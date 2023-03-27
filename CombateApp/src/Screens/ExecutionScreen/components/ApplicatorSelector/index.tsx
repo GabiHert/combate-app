@@ -107,7 +107,7 @@ function ApplicatorSelector(props: {
                 bgColor={getButtonColor(leftApplicatorActive, props.leftApplicator.available)}
                 width="100%"
                 height={'70%'}
-                _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+                _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen) }}
                 borderRadius={50}
                 _pressed={{ opacity: 0.8 }}
               >
@@ -126,7 +126,7 @@ function ApplicatorSelector(props: {
                 width="100%"
                 height={'70%'}
                 borderRadius={50}
-                _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+                _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen) }}
                 _pressed={{ opacity: 0.8 }}
               >
                 Central
@@ -144,7 +144,7 @@ function ApplicatorSelector(props: {
                 width="100%"
                 height={'70%'}
                 borderRadius={50}
-                _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+                _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen) }}
                 _pressed={{ opacity: 0.8 }}
               >
                 Direito

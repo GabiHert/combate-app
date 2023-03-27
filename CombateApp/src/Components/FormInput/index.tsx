@@ -34,7 +34,7 @@ function FormInput(props: {
       <FormControl.Label
         _text={{
           bold: true,
-          fontSize: Theme().font.size.m(AppConfig.screen.scale),
+          fontSize: Theme().font.size.m(AppConfig.screen),
           paddingLeft: 1,
         }}
       >
@@ -55,7 +55,7 @@ function FormInput(props: {
           {props.errorMessage}
         </FormControl.ErrorMessage>
       ) : (
-        <FormControl.HelperText _text={{ fontSize: Theme().font.size.s(AppConfig.screen.scale) }}>
+        <FormControl.HelperText _text={{ fontSize: Theme().font.size.s(AppConfig.screen) }}>
           {props.description}
         </FormControl.HelperText>
       )}

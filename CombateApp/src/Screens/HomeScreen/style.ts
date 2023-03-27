@@ -17,7 +17,7 @@ export default StyleSheet.create({
     opacity: 100,
   },
   buttonText: {
-    fontSize: Theme().font.size.s(AppConfig.screen.scale),
+    fontSize: Theme().font.size.s(AppConfig.screen),
     fontWeight: '500',
   },
   container: {},

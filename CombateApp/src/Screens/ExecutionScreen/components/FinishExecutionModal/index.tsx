@@ -32,7 +32,7 @@ function FinishExecutionModal(props: {
         <Modal.Header
           _text={{
             fontWeight: 'bold',
-            fontSize: Theme().font.size.xl(AppConfig.screen.scale),
+            fontSize: Theme().font.size.xl(AppConfig.screen),
           }}
         >
           Finalizar execução
@@ -40,7 +40,7 @@ function FinishExecutionModal(props: {
         <Modal.Body h={'100%'}>
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen) }}
           >
             Motivo da parada
           </FormControl.Label>
@@ -61,7 +61,7 @@ function FinishExecutionModal(props: {
             bgColor={Theme().color.sError}
             _text={{
               color: Theme().color.b500,
-              fontSize: Theme().font.size.m(AppConfig.screen.scale),
+              fontSize: Theme().font.size.m(AppConfig.screen),
             }}
             borderRadius={20}
             onPress={onFinishPressed}
