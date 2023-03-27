@@ -24,7 +24,7 @@ function ItemListInput(props: {
         <FormControl.Label
           _text={{
             fontWeight: 'bold',
-            fontSize: Theme().font.size.l(AppConfig.screen.width),
+            fontSize: Theme().font.size.l(AppConfig.screen.scale),
           }}
         >
           {props.title}
@@ -35,12 +35,12 @@ function ItemListInput(props: {
           right={-20}
           onPress={props.onAddItemPress}
           icon={<AddIcon />}
-          size={Theme().font.size.l(AppConfig.screen.width)}
+          size={Theme().font.size.l(AppConfig.screen.scale)}
           _icon={{ color: Theme().color.b500 }}
           m={2}
           background={Theme().color.sOk}
-          h={Theme().font.size.l(AppConfig.screen.width) * 1.5}
-          w={Theme().font.size.l(AppConfig.screen.width) * 1.5}
+          h={Theme().font.size.l(AppConfig.screen.scale) * 1.5}
+          w={Theme().font.size.l(AppConfig.screen.scale) * 1.5}
           _pressed={{ opacity: 0.8 }}
         />
       </HStack>
@@ -55,7 +55,7 @@ function ItemListInput(props: {
               </Text>
               <IconButton
                 icon={<DeleteIcon />}
-                size={Theme().font.size.l(AppConfig.screen.width)}
+                size={Theme().font.size.l(AppConfig.screen.scale)}
                 _icon={{ color: Theme().color.sError }}
                 background="transparent"
                 _pressed={{ opacity: 0.8 }}

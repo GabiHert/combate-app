@@ -134,7 +134,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen.width),
+              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
             }}
           >
             Informações cliente
@@ -175,7 +175,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.l(AppConfig.screen.width),
+              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
             }}
           >
             Informações equipamento
@@ -195,7 +195,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.l(AppConfig.screen.width),
+              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
             }}
           >
             Informações do local
@@ -215,7 +215,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.l(AppConfig.screen.width),
+              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
             }}
           >
             Clima
@@ -234,7 +234,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen.width),
+              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
             }}
           >
             Conexão CB
@@ -252,7 +252,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen.width),
+              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
             }}
           >
             Carga nos reservatórios

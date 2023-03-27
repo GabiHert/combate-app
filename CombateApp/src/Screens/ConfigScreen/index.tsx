@@ -492,7 +492,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         <VStack space={4} justifyContent={'center'} alignItems={'center'} overflow={'hidden'}>
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.scale) }}
           >
             Informações local
           </FormControl.Label>
@@ -510,7 +510,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.scale) }}
           >
             Capacidade Reservatórios
           </FormControl.Label>
@@ -544,7 +544,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.scale) }}
           >
             Informações Dosagem
           </FormControl.Label>
@@ -567,7 +567,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.scale) }}
           >
             Preset 1
           </FormControl.Label>
@@ -592,7 +592,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.scale) }}
           >
             Preset 2
           </FormControl.Label>
@@ -616,7 +616,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.scale) }}
           >
             Preset 3
           </FormControl.Label>
@@ -641,7 +641,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.scale) }}
           >
             Preset 4
           </FormControl.Label>
@@ -666,7 +666,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.scale) }}
           >
             Preset 5
           </FormControl.Label>
@@ -692,7 +692,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.scale) }}
           >
             Preset 6
           </FormControl.Label>
@@ -717,7 +717,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.scale) }}
           >
             Dose Sistemática
           </FormControl.Label>
@@ -770,7 +770,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(AppConfig.screen.scale) }}
           >
             Arquivo
           </FormControl.Label>

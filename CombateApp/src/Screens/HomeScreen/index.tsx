@@ -11,7 +11,6 @@ import LoginModal from '../../Components/LoginModal';
 import style from './style';
 const backgroundImage = require('../../app/assets/homebackground.png');
 const combate = require('../../app/assets/COMBATE.png');
-const af = require('../../app/assets/AF.jpeg');
 
 function HomeScreen(props: { navigation: any; route: any }) {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -57,15 +56,9 @@ function HomeScreen(props: { navigation: any; route: any }) {
         <Box width={'100%'} height={'90%'} justifyContent="center" alignItems="center">
           <Image
             resizeMode="contain"
-            alt="AF logo"
-            source={af}
-            style={{ width: 150, height: 42, position: 'absolute', top: -20, left: 10 }}
-          />
-          <Image
-            resizeMode="contain"
             alt="Combate logo"
             source={combate}
-            style={{ width: 150, height: 42, position: 'absolute', top: -20, right: 50 }}
+            style={{ width: 150, height: 42, position: 'absolute', top: -20, left: 10 }}
           />
 
           <Button
@@ -73,7 +66,7 @@ function HomeScreen(props: { navigation: any; route: any }) {
             bgColor={Theme().color.b200}
             _text={{
               color: 'black',
-              fontSize: Theme().font.size.xl(AppConfig.screen.width),
+              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
             }}
             onPress={() => {
               onStartButtonPressed();

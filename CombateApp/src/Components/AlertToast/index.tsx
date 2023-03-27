@@ -7,6 +7,7 @@ import {
   IconButton,
   Stack,
   Text,
+  theme,
   Toast,
   VStack,
 } from 'native-base';
@@ -23,19 +24,19 @@ export function AlertToast(props: {
   return (
     <Alert
       variant={'top-accent'}
-      p={2}
       borderRadius={5}
       bgColor={props.severity.color}
       status={props.severity.name}
       alignItems="center"
       justifyContent={'center'}
+      w={AppConfig.screen.width - AppConfig.screen.width / 5}
     >
       <HStack space={2}>
         <HStack space={2} flexShrink={1} alignItems="center" justifyContent={'center'}>
           <Alert.Icon color={'white'} />
           <Text
             textAlign={'center'}
-            fontSize={Theme().font.size.l(AppConfig.screen.width)}
+            fontSize={Theme().font.size.l(AppConfig.screen.scale)}
             fontWeight={'bold'}
             color={'black'}
           >
@@ -60,7 +61,7 @@ export function AlertToast(props: {
         )}
       </HStack>
 
-      <Text fontSize={Theme().font.size.s(AppConfig.screen.width)} color={'black'}>
+      <Text fontSize={Theme().font.size.s(AppConfig.screen.scale)} color={'black'}>
         {props.message}
       </Text>
     </Alert>
@@ -85,8 +86,6 @@ export function ShowToast(props: {
     id: id,
     duration: props.durationMs ? props.durationMs + 1000 : undefined,
     placement: 'top',
-    minW: '60%',
-    maxW: '80%',
     render: () => {
       return (
         <AlertToast

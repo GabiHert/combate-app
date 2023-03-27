@@ -28,7 +28,7 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
         <Modal.Header
           _text={{
             fontWeight: 'bold',
-            fontSize: Theme().font.size.xl(AppConfig.screen.width),
+            fontSize: Theme().font.size.xl(AppConfig.screen.scale),
           }}
         >
           Sinalizar Evento
@@ -36,7 +36,7 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
         <Modal.Body h={'100%'}>
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen.width) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
           >
             Tipo de evento
           </FormControl.Label>
@@ -57,7 +57,7 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
             bgColor={Theme().color.sWarning}
             _text={{
               color: Theme().color.b400,
-              fontSize: Theme().font.size.m(AppConfig.screen.width),
+              fontSize: Theme().font.size.m(AppConfig.screen.scale),
             }}
             borderRadius={20}
             onPress={onRegisterPress}

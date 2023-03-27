@@ -11,7 +11,7 @@ function StatusBar(props: { velocity: number; applicatorsLoadPercentage: IApplic
         <Center
           width={'28%'}
           height="100%"
-          _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen.width) }}
+          _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
         >
           Esquerdo
           <Center
@@ -20,7 +20,7 @@ function StatusBar(props: { velocity: number; applicatorsLoadPercentage: IApplic
             bgColor={props.applicatorsLoadPercentage.left.severity.color}
             height={'60%'}
             _text={{
-              fontSize: Theme().font.size.xl(AppConfig.screen.width),
+              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
               color: 'white',
               textAlign: 'center',
             }}
@@ -31,7 +31,7 @@ function StatusBar(props: { velocity: number; applicatorsLoadPercentage: IApplic
         <Center
           width={'28%'}
           height="100%"
-          _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen.width) }}
+          _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
         >
           Central
           <Center
@@ -40,7 +40,7 @@ function StatusBar(props: { velocity: number; applicatorsLoadPercentage: IApplic
             bgColor={props.applicatorsLoadPercentage.center.severity.color}
             height={'60%'}
             _text={{
-              fontSize: Theme().font.size.xl(AppConfig.screen.width),
+              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
               color: 'white',
               textAlign: 'center',
             }}
@@ -51,7 +51,7 @@ function StatusBar(props: { velocity: number; applicatorsLoadPercentage: IApplic
         <Center
           width={'28%'}
           height="100%"
-          _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen.width) }}
+          _text={{ color: 'white', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
         >
           Direito
           <Center
@@ -60,7 +60,7 @@ function StatusBar(props: { velocity: number; applicatorsLoadPercentage: IApplic
             bgColor={props.applicatorsLoadPercentage.right.severity.color}
             height={'60%'}
             _text={{
-              fontSize: Theme().font.size.xl(AppConfig.screen.width),
+              fontSize: Theme().font.size.xl(AppConfig.screen.scale),
               color: 'white',
               textAlign: 'center',
             }}
@@ -74,14 +74,14 @@ function StatusBar(props: { velocity: number; applicatorsLoadPercentage: IApplic
         <Center
           width={'100%'}
           height="100%"
-          _text={{ color: 'white', fontSize: Theme().font.size.s(AppConfig.screen.width) }}
+          _text={{ color: 'white', fontSize: Theme().font.size.s(AppConfig.screen.scale) }}
         >
           Velocidade
           <Center
             width="100%"
             height={'70%'}
             _text={{
-              fontSize: Theme().font.size.xxxl(AppConfig.screen.width),
+              fontSize: Theme().font.size.xxxl(AppConfig.screen.scale),
               color: 'white',
               textAlign: 'center',
             }}

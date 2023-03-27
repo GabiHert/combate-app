@@ -20,7 +20,7 @@ function SelectInput(props: {
       isInvalid={props.errorMessage != undefined && props.errorMessage != ''}
     >
       <FormControl.Label
-        _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen.width) }}
+        _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen.scale) }}
       >
         {props.title}
       </FormControl.Label>
