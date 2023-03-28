@@ -9,7 +9,7 @@ import {
   Text,
   TextArea,
 } from 'native-base';
-import { AppConfig } from '../../../../app/config/app-config';
+import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 
 function ItemListInput(props: {
@@ -24,7 +24,7 @@ function ItemListInput(props: {
         <FormControl.Label
           _text={{
             fontWeight: 'bold',
-            fontSize: Theme().font.size.l(AppConfig.screen),
+            fontSize: Theme().font.size.l(appConfig.screen),
           }}
         >
           {props.title}
@@ -35,12 +35,12 @@ function ItemListInput(props: {
           right={-20}
           onPress={props.onAddItemPress}
           icon={<AddIcon />}
-          size={Theme().font.size.l(AppConfig.screen)}
+          size={Theme().font.size.l(appConfig.screen)}
           _icon={{ color: Theme().color.b500 }}
           m={2}
           background={Theme().color.sOk}
-          h={Theme().font.size.l(AppConfig.screen) * 1.5}
-          w={Theme().font.size.l(AppConfig.screen) * 1.5}
+          h={Theme().font.size.l(appConfig.screen) * 1.5}
+          w={Theme().font.size.l(appConfig.screen) * 1.5}
           _pressed={{ opacity: 0.8 }}
         />
       </HStack>
@@ -56,7 +56,7 @@ function ItemListInput(props: {
                   </Text>
                   <IconButton
                     icon={<DeleteIcon />}
-                    size={Theme().font.size.l(AppConfig.screen)}
+                    size={Theme().font.size.l(appConfig.screen)}
                     _icon={{ color: Theme().color.sError }}
                     background="transparent"
                     _pressed={{ opacity: 0.8 }}

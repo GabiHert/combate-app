@@ -2,10 +2,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NativeBaseProvider } from 'native-base';
 import * as React from 'react';
-import { PixelRatio, useWindowDimensions } from 'react-native';
-import { DEFAULT_CONFIG } from './src/api/config/config';
-import { config } from './src/api/core/port/config-port';
-import { AppConfig } from './src/app/config/app-config';
+import { useWindowDimensions } from 'react-native';
+import { appConfig } from './src/app/config/app-config';
 import 'react-native-get-random-values';
 import ConfigScreen from './src/Screens/ConfigScreen';
 import ExecutionScreen from './src/Screens/ExecutionScreen';
@@ -16,7 +14,7 @@ const Stack = createNativeStackNavigator();
 
 //config.update(DEFAULT_CONFIG);
 export default function App() {
-  AppConfig.screen = {
+  appConfig.screen = {
     ...useWindowDimensions(),
   };
   return (

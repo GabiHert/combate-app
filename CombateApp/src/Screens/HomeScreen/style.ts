@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { AppConfig } from '../../app/config/app-config';
+import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 
 export default StyleSheet.create({
@@ -17,7 +17,7 @@ export default StyleSheet.create({
     opacity: 100,
   },
   buttonText: {
-    fontSize: Theme().font.size.s(AppConfig.screen),
+    fontSize: Theme().font.size.s(appConfig.screen),
     fontWeight: '500',
   },
   container: {},

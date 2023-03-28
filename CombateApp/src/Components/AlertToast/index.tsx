@@ -12,7 +12,7 @@ import {
   VStack,
 } from 'native-base';
 import { Severity } from '../../api/core/enum/severity';
-import { AppConfig } from '../../app/config/app-config';
+import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 
 export function AlertToast(props: {
@@ -29,14 +29,14 @@ export function AlertToast(props: {
       status={props.severity.name}
       alignItems="center"
       justifyContent={'center'}
-      w={AppConfig.screen.width - AppConfig.screen.width / 5}
+      w={appConfig.screen.width - appConfig.screen.width / 5}
     >
       <HStack space={2}>
         <HStack space={2} flexShrink={1} alignItems="center" justifyContent={'center'}>
           <Alert.Icon color={'white'} />
           <Text
             textAlign={'center'}
-            fontSize={Theme().font.size.l(AppConfig.screen)}
+            fontSize={Theme().font.size.l(appConfig.screen)}
             fontWeight={'bold'}
             color={'black'}
           >
@@ -61,7 +61,7 @@ export function AlertToast(props: {
         )}
       </HStack>
 
-      <Text fontSize={Theme().font.size.s(AppConfig.screen)} color={'black'}>
+      <Text fontSize={Theme().font.size.s(appConfig.screen)} color={'black'}>
         {props.message}
       </Text>
     </Alert>

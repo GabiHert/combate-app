@@ -1,7 +1,7 @@
 import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
 import { useCallback, useState } from 'react';
 import { config } from '../../../../api/core/port/config-port';
-import { AppConfig } from '../../../../app/config/app-config';
+import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import FormInput from '../../../../Components/FormInput';
 import SelectInput from '../../../../Components/SelectInput';
@@ -32,7 +32,7 @@ function FinishExecutionModal(props: {
         <Modal.Header
           _text={{
             fontWeight: 'bold',
-            fontSize: Theme().font.size.xl(AppConfig.screen),
+            fontSize: Theme().font.size.xl(appConfig.screen),
           }}
         >
           Finalizar execução
@@ -40,7 +40,7 @@ function FinishExecutionModal(props: {
         <Modal.Body h={'100%'}>
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(appConfig.screen) }}
           >
             Motivo da parada
           </FormControl.Label>
@@ -61,7 +61,7 @@ function FinishExecutionModal(props: {
             bgColor={Theme().color.sError}
             _text={{
               color: Theme().color.b500,
-              fontSize: Theme().font.size.m(AppConfig.screen),
+              fontSize: Theme().font.size.m(appConfig.screen),
             }}
             borderRadius={20}
             onPress={onFinishPressed}

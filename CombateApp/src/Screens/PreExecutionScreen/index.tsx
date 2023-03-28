@@ -12,7 +12,7 @@ import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { Weather, WeatherEnum, weatherItems } from '../../api/core/enum/weather';
 import { config } from '../../api/core/port/config-port';
-import { AppConfig } from '../../app/config/app-config';
+import { appConfig } from '../../app/config/app-config';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
 import { Theme } from '../../app/theme/theme';
 import FormInput from '../../Components/FormInput';
@@ -141,7 +141,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen),
+              fontSize: Theme().font.size.xl(appConfig.screen),
             }}
           >
             Informações cliente
@@ -182,7 +182,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen),
+              fontSize: Theme().font.size.xl(appConfig.screen),
             }}
           >
             Informações equipamento
@@ -202,7 +202,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen),
+              fontSize: Theme().font.size.xl(appConfig.screen),
             }}
           >
             Informações do local
@@ -225,7 +225,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen),
+              fontSize: Theme().font.size.xl(appConfig.screen),
             }}
           >
             Clima
@@ -244,7 +244,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen),
+              fontSize: Theme().font.size.xl(appConfig.screen),
             }}
           >
             Conexão CB
@@ -262,7 +262,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             mt={5}
             _text={{
               fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(AppConfig.screen),
+              fontSize: Theme().font.size.xl(appConfig.screen),
             }}
           >
             Carga nos reservatórios

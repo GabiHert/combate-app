@@ -14,16 +14,12 @@ export function Theme() {
     font: {
       size: {
         s: (size: { width: number; height: number; scale: number }) => {
-          return 10 - size.scale;
+          return 12 - size.scale;
         },
         m: (size: { width: number; height: number; scale: number }) => {
-          console.log(size);
-
           return 15 - size.scale;
         },
         l: (size: { width: number; height: number; scale: number }) => {
-          console.log(size);
-
           return 20 - size.scale;
         },
         xl: (size: { width: number; height: number; scale: number }) => {

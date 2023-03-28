@@ -3,7 +3,7 @@ import React, { memo, useCallback, useEffect, useReducer, useRef, useState } fro
 import { min } from 'react-native-reanimated';
 import { Severity } from '../../../../api/core/enum/severity';
 import { config } from '../../../../api/core/port/config-port';
-import { AppConfig } from '../../../../app/config/app-config';
+import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import EventRegisterModal from '../EventRegisterModal';
 import FinishExecutionModal from '../FinishExecutionModal';
@@ -114,10 +114,10 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
-            _text={{ fontSize: Theme().font.size.m(AppConfig.screen) }}
+            _text={{ fontSize: Theme().font.size.m(appConfig.screen) }}
           >
             Tempo em execução
-            <Text fontSize={Theme().font.size.xxxl(AppConfig.screen)} fontWeight="bold">
+            <Text fontSize={Theme().font.size.xxxl(appConfig.screen)} fontWeight="bold">
               {formatExecutionTime(executionTimeHours, executionTimeMinutes)}
             </Text>
           </Box>
@@ -128,10 +128,10 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
-            _text={{ fontSize: Theme().font.size.m(AppConfig.screen) }}
+            _text={{ fontSize: Theme().font.size.m(appConfig.screen) }}
           >
             Data
-            <Text fontSize={Theme().font.size.l(AppConfig.screen)} fontWeight="bold">
+            <Text fontSize={Theme().font.size.l(appConfig.screen)} fontWeight="bold">
               {formatDate(date)}
             </Text>
           </Box>
@@ -153,22 +153,22 @@ function Sheet(props: {
             borderRadius={20}
             alignItems="center"
             justifyContent="center"
-            _text={{ fontSize: Theme().font.size.m(AppConfig.screen) }}
+            _text={{ fontSize: Theme().font.size.m(appConfig.screen) }}
           >
             Total aplicado
             <Stack direction={'row'} alignItems="baseline" justifyContent="center">
-              <Text fontSize={Theme().font.size.xl(AppConfig.screen)} fontWeight="bold">
+              <Text fontSize={Theme().font.size.xl(appConfig.screen)} fontWeight="bold">
                 {props.appliedDoses}
               </Text>
-              <Text fontSize={Theme().font.size.s(AppConfig.screen)}>Doses</Text>
+              <Text fontSize={Theme().font.size.s(appConfig.screen)}>Doses</Text>
             </Stack>
             <Stack direction={'row'} alignItems="baseline" justifyContent="center">
-              <Text fontSize={Theme().font.size.xl(AppConfig.screen)} fontWeight="bold">
+              <Text fontSize={Theme().font.size.xl(appConfig.screen)} fontWeight="bold">
                 {Math.trunc(
                   props.appliedDoses * config.getCache().APPLICATION.DOSE_WEIGHT_KG * 1000
                 )}
               </Text>
-              <Text fontSize={Theme().font.size.s(AppConfig.screen)}>g</Text>
+              <Text fontSize={Theme().font.size.s(appConfig.screen)}>g</Text>
             </Stack>
           </Box>
 
@@ -183,10 +183,10 @@ function Sheet(props: {
             justifyContent="center"
           >
             <Center>
-              <Text mb={2} fontSize={Theme().font.size.l(AppConfig.screen)}>
+              <Text mb={2} fontSize={Theme().font.size.l(appConfig.screen)}>
                 Sinalizar Evento
               </Text>
-              <WarningOutlineIcon size={Theme().font.size.xxxl(AppConfig.screen)} color={'black'} />
+              <WarningOutlineIcon size={Theme().font.size.xxxl(appConfig.screen)} color={'black'} />
             </Center>
           </Button>
         </Stack>
@@ -199,7 +199,7 @@ function Sheet(props: {
         width="50%"
         height={props.blockHeight / 2}
         _pressed={{ opacity: 0.8 }}
-        _text={{ fontSize: Theme().font.size.m(AppConfig.screen) }}
+        _text={{ fontSize: Theme().font.size.m(appConfig.screen) }}
         backgroundColor={Theme().color.sError}
       >
         Finalizar

@@ -1,7 +1,7 @@
 import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
 import { useCallback, useState } from 'react';
 import { config } from '../../../../api/core/port/config-port';
-import { AppConfig } from '../../../../app/config/app-config';
+import { appConfig } from '../../../../app/config/app-config';
 import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
 import { Theme } from '../../../../app/theme/theme';
 import FormInput from '../../../../Components/FormInput';
@@ -28,7 +28,7 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
         <Modal.Header
           _text={{
             fontWeight: 'bold',
-            fontSize: Theme().font.size.xl(AppConfig.screen),
+            fontSize: Theme().font.size.xl(appConfig.screen),
           }}
         >
           Sinalizar Evento
@@ -36,7 +36,7 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
         <Modal.Body h={'100%'}>
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(AppConfig.screen) }}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(appConfig.screen) }}
           >
             Tipo de evento
           </FormControl.Label>
@@ -57,7 +57,7 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
             bgColor={Theme().color.sWarning}
             _text={{
               color: Theme().color.b400,
-              fontSize: Theme().font.size.m(AppConfig.screen),
+              fontSize: Theme().font.size.m(appConfig.screen),
             }}
             borderRadius={20}
             onPress={onRegisterPress}
