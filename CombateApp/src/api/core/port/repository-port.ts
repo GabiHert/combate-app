@@ -1,4 +1,4 @@
-import { AAsyncStorage } from '../adapter/async-storage-adapter';
+import { AAsyncStorage } from '../../adapter/repository/async-storage-adapter';
 
 export interface PRepository {
   get(key: string): Promise<any>;

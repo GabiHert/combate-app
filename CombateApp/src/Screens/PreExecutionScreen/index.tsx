@@ -1,20 +1,18 @@
-import {
-  Box,
-  Divider,
-  FormControl,
-  IconButton,
-  Radio,
-  ScrollView,
-  Stack,
-  VStack,
-} from 'native-base';
+import { Box, Divider, FormControl, IconButton, ScrollView, VStack } from 'native-base';
 import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import { SeverityEnum } from '../../api/core/enum/severity';
 import { Weather, WeatherEnum, weatherItems } from '../../api/core/enum/weather';
 import { config } from '../../api/core/port/config-port';
+import { preExecutionConfig } from '../../api/core/port/pre-execution-config-port';
+import { IPreExecutionConfigProps } from '../../api/interface/config-props';
 import { appConfig } from '../../app/config/app-config';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
+import { ptWeatherToWeather } from '../../app/parser/pt-weather-to-weather';
+import { weatherToPtWeather } from '../../app/parser/weather-to-pt-weather';
+
 import { Theme } from '../../app/theme/theme';
+import { ShowToast } from '../../Components/AlertToast';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
 import SlideInput from '../../Components/SlideInput';
@@ -27,7 +25,7 @@ interface IValidationResult {
   spaceBetweenLines: { errorMessage: string };
   streetsAmount: { errorMessage: string };
   weather: { errorMessage: string };
-  vehicleName: { errorMessage: string };
+  tractorName: { errorMessage: string };
   rightLoad: { errorMessage: string };
   leftLoad: { errorMessage: string };
   centerLoad: { errorMessage: string };
@@ -35,17 +33,27 @@ interface IValidationResult {
 }
 
 function PreExecutionScreen(props: { navigation: any }) {
-  const [leftApplicatorLoad, setLeftApplicatorLoad] = useState<number>(0);
-  const [centerApplicatorLoad, setCenterApplicatorLoad] = useState<number>(0);
-  const [rightApplicatorLoad, setRightApplicatorLoad] = useState<number>(0);
-  const [clientName, setClientName] = useState<string>('');
-  const [projectName, setProjectName] = useState<string>('');
-  const [farm, setFarm] = useState<string>('');
-  const [plot, setPlot] = useState<string>('');
-  const [vehicleName, setVehicleName] = useState<string>('');
-  const [streetsAmount, setStreetsAmount] = useState<number>(0);
+  const [leftApplicatorLoad, setLeftApplicatorLoad] = useState<number>(
+    preExecutionConfig.getCache().leftApplicatorLoad
+  );
+  const [centerApplicatorLoad, setCenterApplicatorLoad] = useState<number>(
+    preExecutionConfig.getCache().centerApplicatorLoad
+  );
+  const [rightApplicatorLoad, setRightApplicatorLoad] = useState<number>(
+    preExecutionConfig.getCache().rightApplicatorLoad
+  );
+  const [clientName, setClientName] = useState<string>(preExecutionConfig.getCache().clientName);
+  const [projectName, setProjectName] = useState<string>(preExecutionConfig.getCache().projectName);
+  const [farm, setFarm] = useState<string>(preExecutionConfig.getCache().farm);
+  const [plot, setPlot] = useState<string>(preExecutionConfig.getCache().plot);
+  const [tractorName, setTractorName] = useState<string>(preExecutionConfig.getCache().tractorName);
+  const [streetsAmount, setStreetsAmount] = useState<number>(
+    preExecutionConfig.getCache().streetsAmount
+  );
 
-  const [weather, setWeather] = useState<Weather>();
+  const [weather, setWeather] = useState<Weather>(
+    new Weather(preExecutionConfig.getCache().weather)
+  );
   const [validationResult, setValidationResult] = useState<IValidationResult>({
     clientName: { errorMessage: undefined },
     projectName: { errorMessage: undefined },
@@ -53,7 +61,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     spaceBetweenLines: { errorMessage: undefined },
     streetsAmount: { errorMessage: undefined },
     weather: { errorMessage: undefined },
-    vehicleName: { errorMessage: undefined },
+    tractorName: { errorMessage: undefined },
     farm: { errorMessage: undefined },
     rightLoad: { errorMessage: undefined },
     leftLoad: { errorMessage: undefined },
@@ -61,25 +69,28 @@ function PreExecutionScreen(props: { navigation: any }) {
     valid: true,
   });
 
-  function onNextPressed() {
-    // const data = {
-    //   clientName,
-    //   projectName,
-    //   plotNumber,
-    //   spaceBetweenLines,
-    //   streetsAmount,
-    //   weather,
-    //   vehicleName,
-    // };
+  const onNextPressed = useCallback(async () => {
+    const data: IPreExecutionConfigProps = {
+      clientName,
+      projectName,
+      plot,
+      farm,
+      weather: weather.name,
+      tractorName,
+      leftApplicatorLoad,
+      streetsAmount,
+      rightApplicatorLoad,
+      centerApplicatorLoad,
+    };
 
-    const validation = {
+    const validation: IValidationResult = {
       clientName: { errorMessage: undefined },
       projectName: { errorMessage: undefined },
       plotNumber: { errorMessage: undefined },
       spaceBetweenLines: { errorMessage: undefined },
       streetsAmount: { errorMessage: undefined },
       weather: { errorMessage: undefined },
-      vehicleName: { errorMessage: undefined },
+      tractorName: { errorMessage: undefined },
       rightLoad: { errorMessage: undefined },
       leftLoad: { errorMessage: undefined },
       farm: { errorMessage: undefined },
@@ -90,38 +101,29 @@ function PreExecutionScreen(props: { navigation: any }) {
     setValidationResult(validation);
 
     if (validation.valid) {
-      props.navigation.navigate('ExecutionScreen', {
-        applicator: {
-          center: { loadKg: centerApplicatorLoad },
-          right: { loadKg: rightApplicatorLoad },
-          left: { loadKg: leftApplicatorLoad },
-        },
-      });
+      if (data != preExecutionConfig.getCache()) {
+        console.log(data);
+        await preExecutionConfig.update(data);
+      }
+
+      props.navigation.navigate('ExecutionScreen');
     }
-  }
+  }, [
+    clientName,
+    projectName,
+    plot,
+    farm,
+    weather,
+    tractorName,
+    leftApplicatorLoad,
+    rightApplicatorLoad,
+    centerApplicatorLoad,
+  ]);
 
   const setWeatherCallback = useCallback(
     (value: string) => {
-      let valueEn = value;
-      switch (value) {
-        case 'Orvalho': //todo: create constants
-          valueEn = WeatherEnum.DEW.name;
-          break;
-        case 'Pós chuva':
-          valueEn = WeatherEnum.AFTER_RAIN.name;
-          break;
-        case 'Chance de chuva':
-          valueEn = WeatherEnum.CHANCE_OF_RAIN.name;
-          break;
-        case 'Seco':
-          valueEn = WeatherEnum.DRY.name;
-          break;
-        case 'Humido':
-          valueEn = WeatherEnum.HUMID.name;
-          break;
-      }
-
-      setWeather(new Weather(valueEn));
+      const weather = ptWeatherToWeather(value);
+      setWeather(weather);
     },
     [setWeather]
   );
@@ -152,6 +154,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             description="Preencha este campo com o nome do cliente"
             errorMessage={validationResult.clientName.errorMessage}
             placeholder="Cliente X"
+            defaultValue={preExecutionConfig.getCache().clientName}
             onChangeText={setClientName}
           />
           <FormInput
@@ -159,12 +162,14 @@ function PreExecutionScreen(props: { navigation: any }) {
             description="Preencha este campo com o nome do projeto"
             errorMessage={validationResult.projectName.errorMessage}
             placeholder="Projeto x"
+            defaultValue={preExecutionConfig.getCache().projectName}
             onChangeText={setProjectName}
           />
           <SelectInput
             title="Fazenda"
             onItemSelected={setFarm}
             items={mapStringToItemArray(config.getCache().FARMS)}
+            defaultValue={preExecutionConfig.getCache().farm}
             errorMessage={validationResult.farm.errorMessage}
             placeholder={''}
           />
@@ -172,6 +177,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             title="Talhão"
             onItemSelected={setPlot}
             items={mapStringToItemArray(config.getCache().PLOTS)}
+            defaultValue={preExecutionConfig.getCache().plot}
             errorMessage={validationResult.plotNumber.errorMessage}
             placeholder={''}
           />
@@ -189,11 +195,11 @@ function PreExecutionScreen(props: { navigation: any }) {
           </FormControl.Label>
 
           <FormInput
-            title="Nome do veículo"
-            description="Preencha este campo com o nome do veículo que está sendo utilizado"
-            errorMessage={validationResult.vehicleName.errorMessage}
-            placeholder="A25"
-            onChangeText={setVehicleName}
+            title="Nome do trator"
+            description="Preencha este campo com o nome do trator que está sendo utilizado"
+            errorMessage={validationResult.tractorName.errorMessage}
+            defaultValue={preExecutionConfig.getCache().tractorName}
+            onChangeText={setTractorName}
           />
 
           <Divider w="80%" />
@@ -218,6 +224,7 @@ function PreExecutionScreen(props: { navigation: any }) {
               { id: '2', name: '3' },
               { id: '3', name: '5' },
             ]}
+            defaultValue={preExecutionConfig.getCache().streetsAmount.toString()}
           />
 
           <Divider w="80%" />
@@ -236,6 +243,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             placeholder={''}
             title={'Clima'}
             items={weatherItems}
+            defaultValue={weatherToPtWeather(preExecutionConfig.getCache().weather)}
           />
 
           <Divider w="80%" />
@@ -272,7 +280,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             step={0.5}
             title="Reservatório direito"
             unit="Kg"
-            defaultValue={1}
+            defaultValue={preExecutionConfig.getCache().rightApplicatorLoad}
             disabled={false}
             maxValue={config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD}
             minValue={1}
@@ -283,7 +291,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             step={0.5}
             title="Reservatório central"
             unit="Kg"
-            defaultValue={1}
+            defaultValue={preExecutionConfig.getCache().centerApplicatorLoad}
             disabled={false}
             maxValue={config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD}
             minValue={1}
@@ -294,7 +302,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             step={0.5}
             title="Reservatório esquerdo"
             unit="Kg"
-            defaultValue={1}
+            defaultValue={preExecutionConfig.getCache().leftApplicatorLoad}
             disabled={false}
             maxValue={config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD}
             minValue={1}

@@ -1,4 +1,4 @@
-import { PRepository } from '../port/repository-port';
+import { PRepository } from '../../core/port/repository-port';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export class AAsyncStorage implements PRepository {

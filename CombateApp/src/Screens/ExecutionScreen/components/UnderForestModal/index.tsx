@@ -2,12 +2,13 @@ import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } fr
 import { memo, useCallback, useState } from 'react';
 import { config } from '../../../../api/core/port/config-port';
 import { appConfig } from '../../../../app/config/app-config';
-import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
 import { Theme } from '../../../../app/theme/theme';
 import FormInput from '../../../../Components/FormInput';
 import SelectInput from '../../../../Components/SelectInput';
+import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
+import { CONSTANTS } from '../../../../api/config/config';
 
-function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
+function UnderForestModal(props: { isOpen: boolean; onClose: () => void; onOkPress: () => void }) {
   const [event, setEvent] = useState<string>();
 
   const onEventChange = useCallback(
@@ -17,9 +18,10 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
     [setEvent]
   );
 
-  const onRegisterPress = useCallback(() => {
+  const onFinishPressed = useCallback(() => {
     //todo:call backend to register event
-    props.onClose();
+
+    props.onOkPress();
   }, [event]);
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -31,22 +33,22 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
             fontSize: Theme().font.size.xl(appConfig.screen),
           }}
         >
-          Sinalizar Evento
+          Finalizar execução
         </Modal.Header>
         <Modal.Body h={'100%'}>
           <FormControl.Label
             mt={5}
             _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(appConfig.screen) }}
           >
-            Tipo de evento
+            Sub-bosque
           </FormControl.Label>
           <SelectInput
             onItemSelected={onEventChange}
             w={'100%'}
             h={20}
-            title="Selecione tipo de evento que foi encontrado"
+            title="Selecione o sub-bosque"
             placeholder=""
-            items={mapStringToItemArray(config.getCache().EVENTS)}
+            items={CONSTANTS.UNDER_FOREST_ITEMS}
           />
         </Modal.Body>
         <Modal.Footer
@@ -54,17 +56,17 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
         >
           <Button
             _pressed={{ opacity: 0.8 }}
-            bgColor={Theme().color.sWarning}
+            bgColor={Theme().color.sError}
             _text={{
-              color: Theme().color.b400,
+              color: Theme().color.b500,
               fontSize: Theme().font.size.m(appConfig.screen),
             }}
             borderRadius={20}
-            onPress={onRegisterPress}
+            onPress={onFinishPressed}
             h={20}
             w={40}
           >
-            Registrar
+            Ok
           </Button>
         </Modal.Footer>
       </Modal.Content>
@@ -72,4 +74,4 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
   );
 }
 
-export default memo(EventRegisterModal);
+export default memo(UnderForestModal);

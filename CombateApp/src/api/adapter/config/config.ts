@@ -1,25 +1,26 @@
-import { IcreateIconProps } from 'native-base/lib/typescript/components/primitives/Icon/types';
 import { defaultConfig } from 'native-base/lib/typescript/core/NativeBaseContext';
 import { IConfigsProps } from '../../interface/config-props';
-import { PConfig } from '../port/config-port';
-import { PRepository } from '../port/repository-port';
+import { PConfig } from '../../core/port/config-port';
+import { PRepository } from '../../core/port/repository-port';
 
 export class AConfig implements PConfig {
-  private cache: IConfigsProps;
-  constructor(private repository: PRepository, def?: IConfigsProps) {
-    this.cache = def;
+  constructor(
+    private repository: PRepository,
+    private cache?: IConfigsProps,
+    private prefix = 'CONFIG'
+  ) {
     this.updateCache();
   }
   async update(config: IConfigsProps) {
     this.cache = config;
     const str = JSON.stringify(config);
-    await this.repository.persist('CONFIG', str);
+    await this.repository.persist(this.prefix, str);
   }
   getCache(): IConfigsProps {
     return this.cache;
   }
   async updateCache(): Promise<void> {
-    let str = await this.repository.get('CONFIG');
+    let str = await this.repository.get(this.prefix);
     if (!str) {
       this.update(this.cache);
       return;

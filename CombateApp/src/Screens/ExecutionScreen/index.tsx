@@ -3,9 +3,9 @@ import { Box } from 'native-base';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { BackHandler } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import App from '../../../App';
 import { Severity, SeverityEnum } from '../../api/core/enum/severity';
 import { config } from '../../api/core/port/config-port';
+import { preExecutionConfig } from '../../api/core/port/pre-execution-config-port';
 import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 import { ShowToast } from '../../Components/AlertToast';
@@ -13,7 +13,6 @@ import ApplicatorSelector from './components/ApplicatorSelector';
 import PoisonAmountSelector from './components/PoisonAmountSelector';
 import Sheet, { IApplicatorsPercentage } from './components/Sheet';
 import StatusBar from './components/StatusBar';
-import style from './style';
 import { Applicator } from './types/applicator';
 
 function ExecutionScreen(props: {
@@ -22,11 +21,6 @@ function ExecutionScreen(props: {
     params: { applicator: any };
   };
 }) {
-  const applicator: {
-    center: { loadKg: number };
-    right: { loadKg: number };
-    left: { loadKg: number };
-  } = props.route.params.applicator;
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
   const sheetHeight = appConfig.screen.height / 2 - 30;
   const blockHeight = sheetHeight / 3;
@@ -38,17 +32,17 @@ function ExecutionScreen(props: {
   const [leftApplicator, setLeftApplicator] = useState<Applicator>({
     active: true,
     available: true,
-    loadKg: applicator.left.loadKg || 0,
+    loadKg: preExecutionConfig.getCache().leftApplicatorLoad,
   });
   const [centerApplicator, setCenterApplicator] = useState<Applicator>({
     active: false,
     available: false,
-    loadKg: applicator.center.loadKg || 0,
+    loadKg: preExecutionConfig.getCache().centerApplicatorLoad,
   });
   const [rightApplicator, setRightApplicator] = useState<Applicator>({
     active: true,
     available: true,
-    loadKg: applicator.right.loadKg || 0,
+    loadKg: preExecutionConfig.getCache().rightApplicatorLoad,
   });
 
   const [applicatorsLoadPercentage, setApplicatorsLoadPercentage] =
@@ -115,9 +109,14 @@ function ExecutionScreen(props: {
     return () => clearInterval(interval);
   }, [doseInProgress]);
 
-  function onFinishButtonPress() {
+  const onFinishButtonPress = useCallback(async () => {
+    const cache = preExecutionConfig.getCache();
+    cache.leftApplicatorLoad = leftApplicator.loadKg;
+    cache.rightApplicatorLoad = rightApplicator.loadKg;
+    cache.centerApplicatorLoad = centerApplicator.loadKg;
+    await preExecutionConfig.update(cache);
     props.navigation.navigate('HomeScreen');
-  }
+  }, [leftApplicator, rightApplicator, centerApplicator]);
 
   const onLeftApplicatorSelectedCallback = useCallback(
     (state: boolean) => {
@@ -391,9 +390,14 @@ function ExecutionScreen(props: {
           spaceBetweenBlocksHeight={spaceBetweenBlocksHeight}
           onFinishPressed={onFinishButtonPress}
           appliedDoses={appliedDoses}
+          applicatorsLoad={{
+            centerApplicatorLoad: centerApplicator.loadKg,
+            leftApplicatorLoad: leftApplicator.loadKg,
+            rightApplicatorLoad: rightApplicator.loadKg,
+          }}
         />
       </BottomSheet>
     </GestureHandlerRootView>
   );
 }
-export default memo(ExecutionScreen);
+export default ExecutionScreen;

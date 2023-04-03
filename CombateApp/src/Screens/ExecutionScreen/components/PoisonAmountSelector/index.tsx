@@ -1,5 +1,5 @@
 import { Box, Button, Center, HStack, IconButton, Stack, Text } from 'native-base';
-import React from 'react';
+import React, { memo } from 'react';
 import { config } from '../../../../api/core/port/config-port';
 import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
@@ -140,4 +140,4 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
   );
 }
 
-export default PoisonAmountSelector;
+export default memo(PoisonAmountSelector);

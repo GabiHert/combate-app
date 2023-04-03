@@ -1,11 +1,13 @@
 import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
-import { useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { config } from '../../../../api/core/port/config-port';
 import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import FormInput from '../../../../Components/FormInput';
 import SelectInput from '../../../../Components/SelectInput';
 import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
+import { CONSTANTS } from '../../../../api/config/config';
+import UnderForestModal from '../UnderForestModal';
 
 function FinishExecutionModal(props: {
   isOpen: boolean;
@@ -13,6 +15,11 @@ function FinishExecutionModal(props: {
   onFinishExecutionPress: () => void;
 }) {
   const [event, setEvent] = useState<string>();
+  const [underForestModalVisible, setUnderForestModalVisible] = useState(false);
+
+  const onUnderForestModalClose = useCallback(() => {
+    setUnderForestModalVisible(false);
+  }, [setUnderForestModalVisible]);
 
   const onEventChange = useCallback(
     (event: string) => {
@@ -21,12 +28,24 @@ function FinishExecutionModal(props: {
     [setEvent]
   );
 
+  const onUnderForestModalOkPress = useCallback(() => {
+    props.onFinishExecutionPress();
+  }, []);
+
   const onFinishPressed = useCallback(() => {
     //todo:call backend to register event
-    props.onFinishExecutionPress();
+    if (event == CONSTANTS.FINISHED_WORK_REASON_NAME) {
+    } else {
+      props.onFinishExecutionPress();
+    }
   }, [event]);
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
+      <UnderForestModal
+        isOpen={underForestModalVisible}
+        onClose={onUnderForestModalClose}
+        onOkPress={onUnderForestModalOkPress}
+      />
       <Modal.Content maxWidth="500px" maxH={'500px'}>
         <Modal.CloseButton />
         <Modal.Header
@@ -76,4 +95,4 @@ function FinishExecutionModal(props: {
   );
 }
 
-export default FinishExecutionModal;
+export default memo(FinishExecutionModal);

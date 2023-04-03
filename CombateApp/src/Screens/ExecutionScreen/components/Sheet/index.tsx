@@ -26,6 +26,11 @@ function formatDate(date: Date): string {
   }:${minutes < 10 ? '0' + minutes : minutes}`;
 }
 function Sheet(props: {
+  applicatorsLoad: {
+    leftApplicatorLoad: number;
+    rightApplicatorLoad: number;
+    centerApplicatorLoad: number;
+  };
   onFinishPressed: () => void;
   appliedDoses: number;
   sheetHeight: number;
@@ -87,6 +92,7 @@ function Sheet(props: {
 
   const onModalFinishPressed = useCallback(() => {
     onFinishExecutionModalClose();
+    //todo: show another modal asking about subBosque
     props.onFinishPressed();
   }, []);
   return (

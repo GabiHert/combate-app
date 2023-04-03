@@ -1,4 +1,17 @@
-import { IConfigsProps } from '../interface/config-props';
+import { WeatherEnum } from '../core/enum/weather';
+import { IConfigsProps, IPreExecutionConfigProps } from '../interface/config-props';
+
+export const CONSTANTS = {
+  APPLICATION: {
+    VERSION: '0.0.0',
+  },
+  FINISHED_WORK_REASON_NAME: 'Fim Operação',
+  UNDER_FOREST_ITEMS: [
+    { name: 'Sub-bosque 1', id: '1' },
+    { name: 'Sub-bosque 2', id: '2' },
+    { name: 'Sub-bosque 3', id: '3' },
+  ],
+};
 
 export const DEFAULT_CONFIG: IConfigsProps = {
   APPLICATION: {
@@ -22,21 +35,22 @@ export const DEFAULT_CONFIG: IConfigsProps = {
     METERS_BETWEEN_DOSE: 1,
   },
   STOP_REASONS_EVENTS: {
-    a: 'Insumos.',
-    b: 'Reabastecimento.',
-    c: 'Máquina.',
-    d: 'Sistema Combate.',
-    e: 'Pessoal.',
-    f: 'Clima.',
-    g: 'Troca Talhão.',
-    h: 'Troca Projeto.',
-    i: 'Intervalo.',
-    j: 'Outro.',
+    a: 'Insumos',
+    b: 'Reabastecimento',
+    c: 'Máquina',
+    d: 'Sistema Combate',
+    e: 'Pessoal',
+    f: 'Clima',
+    g: 'Troca Talhão',
+    h: 'Troca Projeto',
+    i: 'Intervalo',
+    j: CONSTANTS.FINISHED_WORK_REASON_NAME,
+    k: 'Outro',
   },
   EVENTS: {
-    a: 'Necessário desvio.',
-    b: 'Possível seguir.',
-    c: 'Intransponível, retorno.',
+    a: 'Necessário desvio',
+    b: 'Possível seguir',
+    c: 'Intransponível, retorno',
   },
   FARMS: {},
   PLOTS: {},
@@ -45,8 +59,15 @@ export const DEFAULT_CONFIG: IConfigsProps = {
   SPACE_BETWEEN_LINES: 1,
 };
 
-export const CONSTANTS = {
-  APPLICATION: {
-    VERSION: '0.0.0',
-  },
+export const DEFAULT_PRE_EXECUTION_CONFIG: IPreExecutionConfigProps = {
+  farm: '',
+  clientName: '',
+  plot: '',
+  projectName: '',
+  tractorName: '',
+  weather: WeatherEnum.DRY.name,
+  centerApplicatorLoad: 0,
+  leftApplicatorLoad: 0,
+  streetsAmount: 1,
+  rightApplicatorLoad: 0,
 };

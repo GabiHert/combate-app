@@ -1,5 +1,5 @@
 import { Button, FormControl, Modal } from 'native-base';
-import { useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Theme } from '../../../../app/theme/theme';
 import FormInput from '../../../../Components/FormInput';
 
@@ -66,4 +66,4 @@ function ItemRegisterModal(props: {
   );
 }
 
-export default ItemRegisterModal;
+export default memo(ItemRegisterModal);

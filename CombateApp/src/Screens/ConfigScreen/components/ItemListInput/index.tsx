@@ -9,6 +9,7 @@ import {
   Text,
   TextArea,
 } from 'native-base';
+import { memo } from 'react';
 import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 
@@ -74,4 +75,4 @@ function ItemListInput(props: {
   );
 }
 
-export default ItemListInput;
+export default memo(ItemListInput);

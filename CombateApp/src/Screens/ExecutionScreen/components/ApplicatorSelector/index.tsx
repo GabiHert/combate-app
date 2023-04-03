@@ -1,5 +1,5 @@
 import { Box, Button, Stack, Text } from 'native-base';
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { useEffect } from 'react';
 import { Severity, SeverityEnum } from '../../../../api/core/enum/severity';
 import { appConfig } from '../../../../app/config/app-config';
@@ -157,4 +157,4 @@ function ApplicatorSelector(props: {
   );
 }
 
-export default ApplicatorSelector;
+export default memo(ApplicatorSelector);

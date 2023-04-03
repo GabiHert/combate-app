@@ -1,5 +1,5 @@
 import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
-import { useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Text } from 'react-native-svg';
 import { Theme } from '../../app/theme/theme';
 import FormInput from '../FormInput';
@@ -70,4 +70,4 @@ function LoginModal(props: {
   );
 }
 
-export default LoginModal;
+export default memo(LoginModal);

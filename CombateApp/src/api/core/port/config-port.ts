@@ -1,7 +1,6 @@
-import { defaultConfig } from 'native-base/lib/typescript/core/NativeBaseContext';
 import { DEFAULT_CONFIG } from '../../config/config';
 import { IConfigsProps } from '../../interface/config-props';
-import { AConfig } from '../adapter/config';
+import { AConfig } from '../../adapter/config/config';
 import { repository } from './repository-port';
 
 export interface PConfig {

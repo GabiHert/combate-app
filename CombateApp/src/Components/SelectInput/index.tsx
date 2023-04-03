@@ -1,5 +1,5 @@
 import { FormControl, Select, WarningOutlineIcon } from 'native-base';
-import React from 'react';
+import React, { memo } from 'react';
 import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 
@@ -12,6 +12,7 @@ function SelectInput(props: {
   w?: string | number;
   h?: string | number;
   isRequired?: boolean;
+  defaultValue?: string;
 }) {
   return (
     <FormControl
@@ -29,6 +30,7 @@ function SelectInput(props: {
         borderWidth={2}
         h={props.h}
         onValueChange={props.onItemSelected}
+        defaultValue={props.defaultValue}
         placeholder={props.placeholder}
         mt="1"
       >
@@ -49,4 +51,4 @@ function SelectInput(props: {
   );
 }
 
-export default SelectInput;
+export default memo(SelectInput);

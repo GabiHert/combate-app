@@ -31,3 +31,16 @@ export interface IConfigsProps {
   SPACE_BETWEEN_LINES: number;
   FILE_PATH: string;
 }
+
+export interface IPreExecutionConfigProps {
+  clientName: string;
+  projectName: string;
+  farm: string;
+  plot: string;
+  tractorName: string;
+  weather: string;
+  leftApplicatorLoad: number;
+  centerApplicatorLoad: number;
+  rightApplicatorLoad: number;
+  streetsAmount: number;
+}
