@@ -35,10 +35,11 @@ function FinishExecutionModal(props: {
   const onFinishPressed = useCallback(() => {
     //todo:call backend to register event
     if (event == CONSTANTS.FINISHED_WORK_REASON_NAME) {
+      setUnderForestModalVisible(true);
     } else {
       props.onFinishExecutionPress();
     }
-  }, [event]);
+  }, [event, setUnderForestModalVisible]);
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <UnderForestModal

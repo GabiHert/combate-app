@@ -56,7 +56,7 @@ function UnderForestModal(props: { isOpen: boolean; onClose: () => void; onOkPre
         >
           <Button
             _pressed={{ opacity: 0.8 }}
-            bgColor={Theme().color.sError}
+            bgColor={Theme().color.b200}
             _text={{
               color: Theme().color.b500,
               fontSize: Theme().font.size.m(appConfig.screen),

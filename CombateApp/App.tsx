@@ -15,7 +15,7 @@ import { DEFAULT_PRE_EXECUTION_CONFIG } from './src/api/config/config';
 const Stack = createNativeStackNavigator();
 
 //config.update(DEFAULT_CONFIG);
-preExecutionConfig.update(DEFAULT_PRE_EXECUTION_CONFIG);
+//preExecutionConfig.update(DEFAULT_PRE_EXECUTION_CONFIG);
 export default function App() {
   appConfig.screen = {
     ...useWindowDimensions(),
