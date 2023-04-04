@@ -1,4 +1,4 @@
-import { Box, Divider, FormControl, IconButton, ScrollView, VStack } from 'native-base';
+import { Box, Button, Divider, FormControl, IconButton, ScrollView, VStack } from 'native-base';
 import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { SeverityEnum } from '../../api/core/enum/severity';
@@ -6,6 +6,7 @@ import { Weather, WeatherEnum, weatherItems } from '../../api/core/enum/weather'
 import { config } from '../../api/core/port/config-port';
 import { preExecutionConfig } from '../../api/core/port/pre-execution-config-port';
 import { IPreExecutionConfigProps } from '../../api/interface/config-props';
+import { IPreExecutionFormResult } from '../../api/interface/pre-execution-form-result';
 import { appConfig } from '../../app/config/app-config';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
 import { ptWeatherToWeather } from '../../app/parser/pt-weather-to-weather';
@@ -16,21 +17,6 @@ import { ShowToast } from '../../Components/AlertToast';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
 import SlideInput from '../../Components/SlideInput';
-
-interface IValidationResult {
-  clientName: { errorMessage: string };
-  projectName: { errorMessage: string };
-  farm: { errorMessage: string };
-  plotNumber: { errorMessage: undefined };
-  spaceBetweenLines: { errorMessage: string };
-  streetsAmount: { errorMessage: string };
-  weather: { errorMessage: string };
-  tractorName: { errorMessage: string };
-  rightLoad: { errorMessage: string };
-  leftLoad: { errorMessage: string };
-  centerLoad: { errorMessage: string };
-  valid: boolean;
-}
 
 function PreExecutionScreen(props: { navigation: any }) {
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState<number>(
@@ -50,11 +36,13 @@ function PreExecutionScreen(props: { navigation: any }) {
   const [streetsAmount, setStreetsAmount] = useState<number>(
     preExecutionConfig.getCache().streetsAmount
   );
+  const [isConnecting, setIsConnecting] = useState<boolean>(false);
+  const [deviceToConnect, setDeviceToConnect] = useState('');
 
   const [weather, setWeather] = useState<Weather>(
     new Weather(preExecutionConfig.getCache().weather)
   );
-  const [validationResult, setValidationResult] = useState<IValidationResult>({
+  const [validationResult, setValidationResult] = useState<IPreExecutionFormResult>({
     clientName: { errorMessage: undefined },
     projectName: { errorMessage: undefined },
     plotNumber: { errorMessage: undefined },
@@ -83,7 +71,7 @@ function PreExecutionScreen(props: { navigation: any }) {
       centerApplicatorLoad,
     };
 
-    const validation: IValidationResult = {
+    const validation: IPreExecutionFormResult = {
       clientName: { errorMessage: undefined },
       projectName: { errorMessage: undefined },
       plotNumber: { errorMessage: undefined },
@@ -133,6 +121,12 @@ function PreExecutionScreen(props: { navigation: any }) {
     },
     [setStreetsAmount]
   );
+
+  const connectToBluetoothCallback = useCallback(async () => {
+    setIsConnecting(true);
+
+    setIsConnecting(false);
+  }, [deviceToConnect]);
 
   return (
     <Box justifyContent={'center'} alignItems={'center'} h="100%">
@@ -257,11 +251,21 @@ function PreExecutionScreen(props: { navigation: any }) {
             Conexão CB
           </FormControl.Label>
           <SelectInput
-            onItemSelected={() => {}}
+            onItemSelected={setDeviceToConnect}
             title="Selecione o dipositivo Bluetooth"
             placeholder="CB5"
-            items={[]}
+            items={[{ id: 'teste', name: 'CB5 DEV' }]}
           />
+
+          <Button
+            isLoading={isConnecting}
+            isLoadingText="Conectando"
+            _pressed={{ opacity: 0.8 }}
+            background={Theme().color.b300}
+            onPress={connectToBluetoothCallback}
+          >
+            Conectar
+          </Button>
 
           <Divider w="80%" />
 
