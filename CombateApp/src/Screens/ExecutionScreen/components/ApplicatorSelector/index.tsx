@@ -8,31 +8,34 @@ import { ShowToast as showToast } from '../../../../Components/AlertToast';
 import { Applicator } from '../../types/applicator';
 
 function ApplicatorSelector(props: {
-  leftApplicator: Applicator;
-  centerApplicator: Applicator;
-  rightApplicator: Applicator;
+  leftApplicatorActive: boolean;
+  centerApplicatorActive: boolean;
+  rightApplicatorActive: boolean;
+  leftApplicatorAvailable: boolean;
+  centerApplicatorAvailable: boolean;
+  rightApplicatorAvailable: boolean;
   onLeftApplicatorSelected: (state: boolean) => void;
   onRightApplicatorSelected: (state: boolean) => void;
   onCenterApplicatorSelected: (state: boolean) => void;
 }) {
   const [leftApplicatorActive, setLeftApplicatorActive] = useState<boolean>(
-    props.leftApplicator.active
+    props.leftApplicatorActive
   );
   const [centerApplicatorActive, setCenterApplicatorActive] = useState<boolean>(
-    props.centerApplicator.active
+    props.centerApplicatorActive
   );
   const [rightApplicatorActive, setRightApplicatorActive] = useState<boolean>(
-    props.rightApplicator.active
+    props.rightApplicatorActive
   );
 
   useEffect(() => {
-    setCenterApplicatorActive(props.centerApplicator.active);
-    setRightApplicatorActive(props.rightApplicator.active);
-    setLeftApplicatorActive(props.leftApplicator.active);
-  }, [props.leftApplicator.active, props.rightApplicator.active, props.centerApplicator.active]);
+    setCenterApplicatorActive(props.centerApplicatorActive);
+    setRightApplicatorActive(props.rightApplicatorActive);
+    setLeftApplicatorActive(props.leftApplicatorActive);
+  }, [props.leftApplicatorActive, props.rightApplicatorActive, props.centerApplicatorActive]);
 
   function onLeftApplicatorPress() {
-    if (props.leftApplicator.available) {
+    if (props.leftApplicatorAvailable) {
       showToast({
         durationMs: 1500,
         title: 'Somente dosador esquerdo selecionado',
@@ -48,7 +51,7 @@ function ApplicatorSelector(props: {
   }
 
   function onRightApplicatorPress() {
-    if (props.rightApplicator.available) {
+    if (props.rightApplicatorAvailable) {
       showToast({
         durationMs: 1500,
         title: 'Somente dosador direito selecionado',
@@ -64,7 +67,7 @@ function ApplicatorSelector(props: {
   }
 
   function onCenterApplicatorPress() {
-    if (props.centerApplicator.available) {
+    if (props.centerApplicatorAvailable) {
       showToast({
         durationMs: 1500,
         title: 'Somente dosador central selecionado',
@@ -101,10 +104,10 @@ function ApplicatorSelector(props: {
           <Box width={'30%'} height="95%" alignItems="center" justifyContent="center">
             <Box width={'92%'} height="100%" alignItems="center" justifyContent="center">
               <Button
-                isDisabled={!props.leftApplicator.available}
+                isDisabled={!props.leftApplicatorAvailable}
                 onPress={onLeftApplicatorPress}
                 _disabled={{ opacity: 0.5 }}
-                bgColor={getButtonColor(leftApplicatorActive, props.leftApplicator.available)}
+                bgColor={getButtonColor(leftApplicatorActive, props.leftApplicatorAvailable)}
                 width="100%"
                 height={'70%'}
                 _text={{ color: 'white', fontSize: Theme().font.size.m(appConfig.screen) }}
@@ -119,10 +122,10 @@ function ApplicatorSelector(props: {
           <Box width={'30%'} height="95%" alignItems="center" justifyContent="center">
             <Box width={'92%'} height="100%" alignItems="center" justifyContent="center">
               <Button
-                isDisabled={!props.centerApplicator.available}
+                isDisabled={!props.centerApplicatorAvailable}
                 onPress={onCenterApplicatorPress}
                 _disabled={{ opacity: 0.5 }}
-                bgColor={getButtonColor(centerApplicatorActive, props.centerApplicator.available)}
+                bgColor={getButtonColor(centerApplicatorActive, props.centerApplicatorAvailable)}
                 width="100%"
                 height={'70%'}
                 borderRadius={50}
@@ -137,10 +140,10 @@ function ApplicatorSelector(props: {
           <Box width={'30%'} height="95%" alignItems="center" justifyContent="center">
             <Box width={'92%'} height="100%" alignItems="center" justifyContent="center">
               <Button
-                isDisabled={!props.rightApplicator.available}
+                isDisabled={!props.rightApplicatorAvailable}
                 onPress={onRightApplicatorPress}
                 _disabled={{ opacity: 0.5 }}
-                bgColor={getButtonColor(rightApplicatorActive, props.rightApplicator.available)}
+                bgColor={getButtonColor(rightApplicatorActive, props.rightApplicatorAvailable)}
                 width="100%"
                 height={'70%'}
                 borderRadius={50}

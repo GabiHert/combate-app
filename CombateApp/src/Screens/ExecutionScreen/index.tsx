@@ -15,12 +15,7 @@ import Sheet, { IApplicatorsPercentage } from './components/Sheet';
 import StatusBar from './components/StatusBar';
 import { Applicator } from './types/applicator';
 
-function ExecutionScreen(props: {
-  navigation: any;
-  route: {
-    params: { applicator: any };
-  };
-}) {
+function ExecutionScreen(props: { navigation: any }) {
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
   const sheetHeight = appConfig.screen.height / 2 - 30;
   const blockHeight = sheetHeight / 3;
@@ -29,37 +24,41 @@ function ExecutionScreen(props: {
   let handleSheetChanges: any;
   const [velocity, setVelocity] = useState<number>(0);
   const [doseInProgress, setDoseInProgress] = useState<boolean>(false);
-  const [leftApplicator, setLeftApplicator] = useState<Applicator>({
-    active: true,
-    available: true,
-    loadKg: preExecutionConfig.getCache().leftApplicatorLoad,
-  });
-  const [centerApplicator, setCenterApplicator] = useState<Applicator>({
-    active: false,
-    available: false,
-    loadKg: preExecutionConfig.getCache().centerApplicatorLoad,
-  });
-  const [rightApplicator, setRightApplicator] = useState<Applicator>({
-    active: true,
-    available: true,
-    loadKg: preExecutionConfig.getCache().rightApplicatorLoad,
-  });
+
+  const [leftApplicatorLoad, setLeftApplicatorLoad] = useState(
+    preExecutionConfig.getCache().leftApplicatorLoad
+  );
+  const [leftApplicatorActive, setLeftApplicatorActive] = useState(true);
+  const [leftApplicatorAvailable, setLeftApplicatorAvailable] = useState(true);
+
+  const [rightApplicatorLoad, setRightApplicatorLoad] = useState(
+    preExecutionConfig.getCache().rightApplicatorLoad
+  );
+  const [rightApplicatorActive, setRightApplicatorActive] = useState(true);
+  const [rightApplicatorAvailable, setRightApplicatorAvailable] = useState(true);
+
+  const [centerApplicatorLoad, setCenterApplicatorLoad] = useState(
+    preExecutionConfig.getCache().centerApplicatorLoad
+  );
+  const [centerApplicatorActive, setCenterApplicatorActive] = useState(true);
+  const [centerApplicatorAvailable, setCenterApplicatorAvailable] = useState(true);
 
   const [applicatorsLoadPercentage, setApplicatorsLoadPercentage] =
     useState<IApplicatorsPercentage>({
       center: calculateApplicatorsLoadPercentage(
         config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD,
-        centerApplicator.loadKg
+        centerApplicatorLoad
       ),
       left: calculateApplicatorsLoadPercentage(
         config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD,
-        leftApplicator.loadKg
+        leftApplicatorLoad
       ),
       right: calculateApplicatorsLoadPercentage(
         config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD,
-        rightApplicator.loadKg
+        rightApplicatorLoad
       ),
     });
+
   const [appliedDoses, setAppliedDoses] = useState<number>(0);
   const [showRightNoLoadWarnOnce, setShowRightNoLoadWarnOnce] = useState(false);
   const [showLeftNoLoadWarnOnce, setShowLeftNoLoadWarnOnce] = useState(false);
@@ -101,48 +100,41 @@ function ExecutionScreen(props: {
           velocity: 10,
           location: { latitude: '', longitude: '' },
         };
-
         setVelocity(response.velocity);
       }
+      const cache = preExecutionConfig.getCache();
+      cache.leftApplicatorLoad = leftApplicatorLoad;
+      cache.rightApplicatorLoad = rightApplicatorLoad;
+      cache.centerApplicatorLoad = centerApplicatorLoad;
+      preExecutionConfig.update(cache);
     }, config.getCache().APPLICATION.REQUEST_INTERVAL_MS);
 
     return () => clearInterval(interval);
-  }, [doseInProgress]);
+  }, [doseInProgress, leftApplicatorLoad]);
 
-  const onFinishButtonPress = useCallback(async () => {
-    const cache = preExecutionConfig.getCache();
-    cache.leftApplicatorLoad = leftApplicator.loadKg;
-    cache.rightApplicatorLoad = rightApplicator.loadKg;
-    cache.centerApplicatorLoad = centerApplicator.loadKg;
-    await preExecutionConfig.update(cache);
+  const onFinishButtonPress = useCallback(() => {
     props.navigation.navigate('HomeScreen');
-  }, [leftApplicator, rightApplicator, centerApplicator]);
+  }, []);
 
   const onLeftApplicatorSelectedCallback = useCallback(
     (state: boolean) => {
-      const aux = { ...leftApplicator };
-      aux.active = state;
-      setLeftApplicator(aux);
+      setLeftApplicatorActive(state);
     },
-    [leftApplicator, setLeftApplicator]
+    [setLeftApplicatorActive]
   );
 
   const onRightApplicatorSelectedCallback = useCallback(
     (state: boolean) => {
-      const aux = { ...rightApplicator };
-      aux.active = state;
-      setRightApplicator(aux);
+      setRightApplicatorActive(state);
     },
-    [rightApplicator, setRightApplicator]
+    [setRightApplicatorActive]
   );
 
   const onCenterApplicatorSelectedCallback = useCallback(
     (state: boolean) => {
-      const aux = { ...centerApplicator };
-      aux.active = state;
-      setCenterApplicator(aux);
+      setCenterApplicatorActive(state);
     },
-    [rightApplicator, setRightApplicator]
+    [setCenterApplicatorActive]
   );
 
   const processDose = useCallback(
@@ -150,9 +142,9 @@ function ExecutionScreen(props: {
       setDoseInProgress(true);
       //call backend
       let activeApplicators = 0;
-      if (leftApplicator.active) {
+      if (leftApplicatorActive) {
         activeApplicators++;
-        let load = leftApplicator.loadKg;
+        let load = leftApplicatorLoad;
         if (load <= 1) {
           load = 0;
           if (!showLeftNoLoadWarnOnce) {
@@ -169,22 +161,14 @@ function ExecutionScreen(props: {
         } else {
           load -= amount * config.getCache().APPLICATION.DOSE_WEIGHT_KG;
         }
-        setLeftApplicator({
-          active: true,
-          available: leftApplicator.available,
-          loadKg: load,
-        });
-      } else if (leftApplicator.available) {
-        setLeftApplicator({
-          active: true,
-          available: leftApplicator.available,
-          loadKg: leftApplicator.loadKg,
-        });
+        setLeftApplicatorLoad(load);
+      } else if (leftApplicatorAvailable) {
+        setLeftApplicatorActive(true);
       }
 
-      if (rightApplicator.active) {
+      if (rightApplicatorActive) {
         activeApplicators++;
-        let load = rightApplicator.loadKg;
+        let load = rightApplicatorLoad;
         if (load <= 1) {
           load = 0;
           if (!showRightNoLoadWarnOnce) {
@@ -201,22 +185,14 @@ function ExecutionScreen(props: {
         } else {
           load -= amount * config.getCache().APPLICATION.DOSE_WEIGHT_KG;
         }
-        setRightApplicator({
-          active: true,
-          available: rightApplicator.available,
-          loadKg: load,
-        });
-      } else if (rightApplicator.available) {
-        setRightApplicator({
-          active: true,
-          available: rightApplicator.available,
-          loadKg: rightApplicator.loadKg,
-        });
+        setRightApplicatorLoad(load);
+      } else if (rightApplicatorAvailable) {
+        setRightApplicatorActive(true);
       }
 
-      if (centerApplicator.active) {
+      if (centerApplicatorActive) {
         activeApplicators++;
-        let load = centerApplicator.loadKg;
+        let load = centerApplicatorLoad;
         if (load <= 1) {
           load = 0;
           if (!showCenterNoLoadWarnOnce) {
@@ -233,30 +209,21 @@ function ExecutionScreen(props: {
         } else {
           load -= amount * config.getCache().APPLICATION.DOSE_WEIGHT_KG;
         }
-        setCenterApplicator({
-          active: true,
-          available: centerApplicator.available,
-          loadKg: load,
-        });
-      } else if (centerApplicator.available) {
-        setCenterApplicator({
-          active: true,
-          available: centerApplicator.available,
-          loadKg: centerApplicator.loadKg,
-        });
+        setCenterApplicatorLoad(load);
+      } else if (centerApplicatorAvailable) {
+        setCenterApplicatorActive(true);
       }
-
       const center = calculateApplicatorsLoadPercentage(
         config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD,
-        centerApplicator.loadKg
+        centerApplicatorLoad
       );
       const right = calculateApplicatorsLoadPercentage(
         config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD,
-        rightApplicator.loadKg
+        rightApplicatorLoad
       );
       const left = calculateApplicatorsLoadPercentage(
         config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD,
-        leftApplicator.loadKg
+        leftApplicatorLoad
       );
       if (left.severity.name != applicatorsLoadPercentage.left.severity.name) {
         let durationMs = 5000;
@@ -309,9 +276,15 @@ function ExecutionScreen(props: {
       setAppliedDoses(appliedDoses + amount * activeApplicators);
     },
     [
-      centerApplicator,
-      leftApplicator,
-      rightApplicator,
+      centerApplicatorLoad,
+      leftApplicatorLoad,
+      rightApplicatorLoad,
+      centerApplicatorActive,
+      leftApplicatorActive,
+      rightApplicatorActive,
+      centerApplicatorAvailable,
+      leftApplicatorAvailable,
+      rightApplicatorAvailable,
       doseInProgress,
       setAppliedDoses,
       setApplicatorsLoadPercentage,
@@ -339,9 +312,12 @@ function ExecutionScreen(props: {
 
       <Box alignItems="center" justifyContent="center" width="100%" height="15%">
         <ApplicatorSelector
-          leftApplicator={leftApplicator}
-          centerApplicator={centerApplicator}
-          rightApplicator={rightApplicator}
+          leftApplicatorActive={leftApplicatorActive}
+          leftApplicatorAvailable={leftApplicatorAvailable}
+          rightApplicatorActive={rightApplicatorActive}
+          rightApplicatorAvailable={rightApplicatorAvailable}
+          centerApplicatorActive={centerApplicatorActive}
+          centerApplicatorAvailable={centerApplicatorAvailable}
           onLeftApplicatorSelected={onLeftApplicatorSelectedCallback}
           onCenterApplicatorSelected={onCenterApplicatorSelectedCallback}
           onRightApplicatorSelected={onRightApplicatorSelectedCallback}
@@ -388,12 +364,14 @@ function ExecutionScreen(props: {
           blockHeight={blockHeight}
           sheetHeight={sheetHeight}
           spaceBetweenBlocksHeight={spaceBetweenBlocksHeight}
-          onFinishPressed={onFinishButtonPress}
+          onFinishPressed={() => {
+            onFinishButtonPress();
+          }}
           appliedDoses={appliedDoses}
           applicatorsLoad={{
-            centerApplicatorLoad: centerApplicator.loadKg,
-            leftApplicatorLoad: leftApplicator.loadKg,
-            rightApplicatorLoad: rightApplicator.loadKg,
+            centerApplicatorLoad: centerApplicatorLoad,
+            leftApplicatorLoad: leftApplicatorLoad,
+            rightApplicatorLoad: rightApplicatorLoad,
           }}
         />
       </BottomSheet>

@@ -33,7 +33,7 @@ function SlideInput(props: {
         textAlign={'center'}
         _text={{ fontWeight: 'normal', fontSize: Theme().font.size.m(appConfig.screen) }}
       >
-        {value}
+        {Math.max(value).toFixed(2)}
         {props.unit ? ' ' + props.unit.toString() : ''}
       </FormControl.Label>
       <Slider

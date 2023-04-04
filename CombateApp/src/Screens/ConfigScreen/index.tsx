@@ -778,10 +778,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title="Local para salvar o aruivo"
             description="Preencha este campo com o caminho de pastas para salvar o arquivo .csv"
             defaultValue={config.getCache().FILE_PATH}
-            onChangeText={(s) => {
-              console.log(s);
-              setFilePath(s);
-            }}
+            onChangeText={setFilePath}
           />
         </VStack>
 

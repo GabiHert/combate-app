@@ -102,7 +102,6 @@ function PreExecutionScreen(props: { navigation: any }) {
 
     if (validation.valid) {
       if (data != preExecutionConfig.getCache()) {
-        console.log(data);
         await preExecutionConfig.update(data);
       }
 

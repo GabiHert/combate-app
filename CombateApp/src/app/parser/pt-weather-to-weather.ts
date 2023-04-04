@@ -8,7 +8,6 @@ export function ptWeatherToWeather(weather: string): Weather {
       break;
     case 'Pós chuva':
       valueEn = WeatherEnum.AFTER_RAIN.name;
-      console.log(valueEn);
       break;
     case 'Chance de chuva':
       valueEn = WeatherEnum.CHANCE_OF_RAIN.name;
