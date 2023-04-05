@@ -2,7 +2,7 @@ export interface IPreExecutionFormResult {
   clientName: { errorMessage: string };
   projectName: { errorMessage: string };
   farm: { errorMessage: string };
-  plotNumber: { errorMessage: undefined };
+  plotNumber: { errorMessage: string };
   spaceBetweenLines: { errorMessage: string };
   streetsAmount: { errorMessage: string };
   weather: { errorMessage: string };

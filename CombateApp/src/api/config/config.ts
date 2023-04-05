@@ -11,6 +11,21 @@ export const CONSTANTS = {
     { name: 'Sub-bosque 2', id: '2' },
     { name: 'Sub-bosque 3', id: '3' },
   ],
+
+  ERRORS: {
+    PRE_EXECUTION_FORM_VALIDATOR: {
+      UNDEFINED_CLIENT_NAME: '',
+      UNDEFINED_PROJECT_NAME: '',
+      UNDEFINED_FARM: '',
+      UNDEFINED_PLOT: '',
+      UNDEFINED_TRACTOR_NAME: '',
+      UNDEFINED_WEATHER: '',
+      UNDEFINED_LEFT_APPLICATOR_LOAD: '',
+      UNDEFINED_CENTER_APPLICATOR_LOAD: '',
+      UNDEFINED_RIGHT_APPLICATOR_LOAD: '',
+      UNDEFINED_STREETS_AMOUNT: '',
+    },
+  },
 };
 
 export const DEFAULT_CONFIG: IConfigsProps = {
