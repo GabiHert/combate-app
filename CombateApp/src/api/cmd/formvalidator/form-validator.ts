@@ -89,7 +89,83 @@ export class FormValidator implements PFormValidator {
     return result;
   }
   validateConfigForm(data: IConfigsProps): IConfigFormResult {
-    throw new Error('Method not implemented.');
+    let result: IConfigFormResult;
+    if (!data.APPLICATION) {
+      result.isValid = false;
+    } else {
+      if (!data.APPLICATION.LEFT_TANK_MAX_LOAD || data.APPLICATION.LEFT_TANK_MAX_LOAD < 1) {
+        result.isValid = false;
+      }
+      if (!data.APPLICATION.CENTER_TANK_MAX_LOAD || data.APPLICATION.CENTER_TANK_MAX_LOAD < 1) {
+        result.isValid = false;
+      }
+      if (!data.APPLICATION.RIGHT_TANK_MAX_LOAD || data.APPLICATION.RIGHT_TANK_MAX_LOAD < 1) {
+        result.isValid = false;
+      }
+      if (
+        !data.APPLICATION.MAX_DOSES ||
+        data.APPLICATION.MAX_DOSES < 1 ||
+        data.APPLICATION.MAX_DOSES < data.APPLICATION.MIN_DOSES
+      ) {
+        result.isValid = false;
+      }
+      if (
+        !data.APPLICATION.MIN_DOSES ||
+        data.APPLICATION.MIN_DOSES < 1 ||
+        data.APPLICATION.MAX_DOSES > data.APPLICATION.MIN_DOSES
+      ) {
+        result.isValid = false;
+      }
+      if (!data.APPLICATION.DOSE_WEIGHT_KG || data.APPLICATION.DOSE_WEIGHT_KG < 1) {
+        result.isValid = false;
+      }
+      if (!data.APPLICATION.REQUEST_INTERVAL_MS || data.APPLICATION.REQUEST_INTERVAL_MS < 1000) {
+        result.isValid = false;
+      }
+    }
+
+    if (!data.PRESETS) {
+      result.isValid = false;
+    } else {
+      for (const key in data.PRESETS) {
+        if (!data.PRESETS[key].NAME || data.PRESETS[key].NAME.length === 0) {
+          result.isValid = false;
+        }
+        if (!data.PRESETS[key].DOSE_AMOUNT || data.PRESETS[key].DOSE_AMOUNT < 1) {
+          result.isValid = false;
+        }
+      }
+    }
+
+    if (!data.STOP_REASONS_EVENTS) {
+      result.isValid = false;
+    } else {
+      for (const key in data.STOP_REASONS_EVENTS) {
+        if (!data.STOP_REASONS_EVENTS[key]) {
+          result.isValid = false;
+        }
+      }
+    }
+
+    if (!data.PLOTS) {
+      result.isValid = false;
+    } else {
+      for (const key in data.PLOTS) {
+        if (!data.PLOTS[key] || data.PLOTS[key].length === 0) {
+          result.isValid = false;
+        }
+      }
+    }
+
+    if (!data.FILE_PATH || data.FILE_PATH.length < 3) {
+      result.isValid = false;
+    }
+
+    if (!data.POISON_TYPE || data.POISON_TYPE.length < 3) {
+      result.isValid = false;
+    }
+
+    return result;
   }
   validateFinishExecutionForm(reason: string): string {
     throw new Error('Method not implemented.');
