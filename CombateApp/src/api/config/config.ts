@@ -5,6 +5,8 @@ export const CONSTANTS = {
   APPLICATION: {
     VERSION: '0.0.0',
   },
+  MAX_DOSES: 20,
+  MIN_DOSES: 1,
   FINISHED_WORK_REASON_NAME: 'Fim Operação',
   UNDER_FOREST_ITEMS: [
     { name: 'Sub-bosque 1', id: '1' },
@@ -29,8 +31,6 @@ export const CONSTANTS = {
       INVALID_LEFT_TANK_MAX_LOAD: '',
       INVALID_CENTER_TANK_MAX_LOAD: '',
       INVALID_RIGHT_TANK_MAX_LOAD: '',
-      INVALID_MAX_DOSES: '',
-      INVALID_MIN_DOSES: '',
       INVALID_DOSE_WEIGHT_KG: '',
       INVALID_REQUEST_INTERVAL_MS: '',
       INVALID_PRESET: '',
@@ -49,10 +49,7 @@ export const DEFAULT_CONFIG: IConfigsProps = {
     LEFT_TANK_MAX_LOAD: 30,
     CENTER_TANK_MAX_LOAD: 30,
     RIGHT_TANK_MAX_LOAD: 30,
-    MAX_DOSES: 20,
-    MIN_DOSES: 1,
     DOSE_WEIGHT_KG: 0.025,
-    REQUEST_INTERVAL_MS: 2000,
   },
   PRESETS: {
     P1: { NAME: 'Preset 1', DOSE_AMOUNT: 2 },

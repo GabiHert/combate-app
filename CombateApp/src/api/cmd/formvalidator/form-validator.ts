@@ -95,32 +95,19 @@ export class FormValidator implements PFormValidator {
     } else {
       if (!data.APPLICATION.LEFT_TANK_MAX_LOAD || data.APPLICATION.LEFT_TANK_MAX_LOAD < 1) {
         result.isValid = false;
+        result.leftTankMaxLoadError = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_LEFT_TANK_MAX_LOAD;
       }
       if (!data.APPLICATION.CENTER_TANK_MAX_LOAD || data.APPLICATION.CENTER_TANK_MAX_LOAD < 1) {
         result.isValid = false;
+        result.centerTankMaxLoadError = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_CENTER_TANK_MAX_LOAD;
       }
       if (!data.APPLICATION.RIGHT_TANK_MAX_LOAD || data.APPLICATION.RIGHT_TANK_MAX_LOAD < 1) {
         result.isValid = false;
-      }
-      if (
-        !data.APPLICATION.MAX_DOSES ||
-        data.APPLICATION.MAX_DOSES < 1 ||
-        data.APPLICATION.MAX_DOSES < data.APPLICATION.MIN_DOSES
-      ) {
-        result.isValid = false;
-      }
-      if (
-        !data.APPLICATION.MIN_DOSES ||
-        data.APPLICATION.MIN_DOSES < 1 ||
-        data.APPLICATION.MAX_DOSES > data.APPLICATION.MIN_DOSES
-      ) {
-        result.isValid = false;
+        result.rightTankMaxLoadError = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_RIGHT_TANK_MAX_LOAD;
       }
       if (!data.APPLICATION.DOSE_WEIGHT_KG || data.APPLICATION.DOSE_WEIGHT_KG < 1) {
         result.isValid = false;
-      }
-      if (!data.APPLICATION.REQUEST_INTERVAL_MS || data.APPLICATION.REQUEST_INTERVAL_MS < 1000) {
-        result.isValid = false;
+        result.doseWeightKgError = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_DOSE_WEIGHT_KG;
       }
     }
 

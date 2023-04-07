@@ -6,10 +6,7 @@ export interface IConfigsProps {
     RIGHT_TANK_MAX_LOAD: number;
     LEFT_TANK_MAX_LOAD: number;
     CENTER_TANK_MAX_LOAD: number;
-    MAX_DOSES: number;
-    MIN_DOSES: number;
     DOSE_WEIGHT_KG: number;
-    REQUEST_INTERVAL_MS: number;
   };
 
   PRESETS: {

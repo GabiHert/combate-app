@@ -30,6 +30,7 @@ import ItemListInput from './components/ItemListInput';
 import SelectInput from '../../Components/SelectInput';
 import { poisonItems } from '../../api/core/enum/poison';
 import { setPath } from 'react-native-reanimated/lib/types/lib/reanimated2/animation/styleAnimation';
+import { CONSTANTS } from '../../api/config/config';
 
 interface IPreset {
   name: string;
@@ -585,8 +586,8 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title={'Doses'}
             defaultValue={config.getCache().PRESETS.P1.DOSE_AMOUNT}
             disabled={false}
-            maxValue={config.getCache().APPLICATION.MAX_DOSES}
-            minValue={config.getCache().APPLICATION.MIN_DOSES}
+            maxValue={CONSTANTS.MAX_DOSES}
+            minValue={CONSTANTS.MIN_DOSES}
           />
 
           <Divider w="80%" />
@@ -610,8 +611,8 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title={'Doses'}
             defaultValue={config.getCache().PRESETS.P2.DOSE_AMOUNT}
             disabled={false}
-            maxValue={config.getCache().APPLICATION.MAX_DOSES}
-            minValue={config.getCache().APPLICATION.MIN_DOSES}
+            maxValue={CONSTANTS.MAX_DOSES}
+            minValue={CONSTANTS.MIN_DOSES}
           />
           <Divider w="80%" />
           <FormControl.Label
@@ -634,8 +635,8 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title={'Doses'}
             defaultValue={config.getCache().PRESETS.P3.DOSE_AMOUNT}
             disabled={false}
-            maxValue={config.getCache().APPLICATION.MAX_DOSES}
-            minValue={config.getCache().APPLICATION.MIN_DOSES}
+            maxValue={CONSTANTS.MAX_DOSES}
+            minValue={CONSTANTS.MIN_DOSES}
           />
 
           <Divider w="80%" />
@@ -659,8 +660,8 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title={'Doses'}
             defaultValue={config.getCache().PRESETS.P4.DOSE_AMOUNT}
             disabled={false}
-            maxValue={config.getCache().APPLICATION.MAX_DOSES}
-            minValue={config.getCache().APPLICATION.MIN_DOSES}
+            maxValue={CONSTANTS.MAX_DOSES}
+            minValue={CONSTANTS.MIN_DOSES}
           />
 
           <Divider w="80%" />
@@ -685,8 +686,8 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title={'Doses'}
             defaultValue={config.getCache().PRESETS.P5.DOSE_AMOUNT}
             disabled={false}
-            maxValue={config.getCache().APPLICATION.MAX_DOSES}
-            minValue={config.getCache().APPLICATION.MIN_DOSES}
+            maxValue={CONSTANTS.MAX_DOSES}
+            minValue={CONSTANTS.MIN_DOSES}
           />
 
           <Divider w="80%" />
@@ -710,8 +711,8 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title={'Doses'}
             defaultValue={config.getCache().PRESETS.P6.DOSE_AMOUNT}
             disabled={false}
-            maxValue={config.getCache().APPLICATION.MAX_DOSES}
-            minValue={config.getCache().APPLICATION.MIN_DOSES}
+            maxValue={CONSTANTS.MAX_DOSES}
+            minValue={CONSTANTS.MIN_DOSES}
           />
 
           <Divider w="80%" />
