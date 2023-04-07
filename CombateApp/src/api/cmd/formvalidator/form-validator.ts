@@ -124,7 +124,7 @@ export class FormValidator implements PFormValidator {
       }
     }
 
-    if (!data.PRESETS) {
+    if (!data.PRESETS || Object.keys(data.PRESETS).length < 6) {
       result.isValid = false;
     } else {
       for (const key in data.PRESETS) {
