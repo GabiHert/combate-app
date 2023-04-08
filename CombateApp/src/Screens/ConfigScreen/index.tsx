@@ -18,8 +18,8 @@ import React, { useCallback, useState } from 'react';
 import FormInput from '../../Components/FormInput';
 import { Theme } from '../../app/theme/theme';
 import { ShowToast } from '../../Components/AlertToast';
-import { SeverityEnum } from '../../api/core/enum/severity';
-import { config } from '../../api/core/port/config-port';
+import { SeverityEnum } from '../../internal/core/enum/severity';
+import { config } from '../../internal/core/port/config-port';
 import SlideInput from '../../Components/SlideInput';
 
 import { appConfig } from '../../app/config/app-config';
@@ -28,9 +28,9 @@ import { mapStringToItemArray as mapStringToItemArray } from '../../app/parser/m
 import { v1, v4 } from 'uuid';
 import ItemListInput from './components/ItemListInput';
 import SelectInput from '../../Components/SelectInput';
-import { poisonItems } from '../../api/core/enum/poison';
+import { poisonItems } from '../../internal/core/enum/poison';
 import { setPath } from 'react-native-reanimated/lib/types/lib/reanimated2/animation/styleAnimation';
-import { CONSTANTS } from '../../api/config/config';
+import { CONSTANTS } from '../../internal/config/config';
 
 interface IPreset {
   name: string;

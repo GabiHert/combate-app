@@ -11,7 +11,7 @@ import {
   Toast,
   VStack,
 } from 'native-base';
-import { Severity } from '../../api/core/enum/severity';
+import { Severity } from '../../internal/core/enum/severity';
 import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 

@@ -1,12 +1,12 @@
 import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
 import { memo, useCallback, useState } from 'react';
-import { config } from '../../../../api/core/port/config-port';
+import { config } from '../../../../internal/core/port/config-port';
 import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import FormInput from '../../../../Components/FormInput';
 import SelectInput from '../../../../Components/SelectInput';
 import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
-import { CONSTANTS } from '../../../../api/config/config';
+import { CONSTANTS } from '../../../../internal/config/config';
 
 function UnderForestModal(props: { isOpen: boolean; onClose: () => void; onOkPress: () => void }) {
   const [event, setEvent] = useState<string>();

@@ -3,9 +3,9 @@ import { Box } from 'native-base';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { BackHandler } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Severity, SeverityEnum } from '../../api/core/enum/severity';
-import { config } from '../../api/core/port/config-port';
-import { preExecutionConfig } from '../../api/core/port/pre-execution-config-port';
+import { Severity, SeverityEnum } from '../../internal/core/enum/severity';
+import { config } from '../../internal/core/port/config-port';
+import { preExecutionConfig } from '../../internal/core/port/pre-execution-config-port';
 import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 import { ShowToast } from '../../Components/AlertToast';
@@ -14,6 +14,7 @@ import PoisonAmountSelector from './components/PoisonAmountSelector';
 import Sheet, { IApplicatorsPercentage } from './components/Sheet';
 import StatusBar from './components/StatusBar';
 import { Applicator } from './types/applicator';
+import { CONSTANTS } from '../../internal/config/config';
 
 function ExecutionScreen(props: { navigation: any }) {
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
@@ -107,7 +108,7 @@ function ExecutionScreen(props: { navigation: any }) {
       cache.rightApplicatorLoad = rightApplicatorLoad;
       cache.centerApplicatorLoad = centerApplicatorLoad;
       preExecutionConfig.update(cache);
-    }, config.getCache().APPLICATION.REQUEST_INTERVAL_MS);
+    }, CONSTANTS.REQUEST_INTERVAL_MS);
 
     return () => clearInterval(interval);
   }, [doseInProgress, leftApplicatorLoad]);

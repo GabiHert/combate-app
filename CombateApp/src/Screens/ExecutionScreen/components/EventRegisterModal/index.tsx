@@ -1,6 +1,6 @@
 import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
 import { memo, useCallback, useState } from 'react';
-import { config } from '../../../../api/core/port/config-port';
+import { config } from '../../../../internal/core/port/config-port';
 import { appConfig } from '../../../../app/config/app-config';
 import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
 import { Theme } from '../../../../app/theme/theme';

@@ -1,12 +1,12 @@
 import { Box, Button, Divider, FormControl, IconButton, ScrollView, VStack } from 'native-base';
 import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { SeverityEnum } from '../../api/core/enum/severity';
-import { Weather, WeatherEnum, weatherItems } from '../../api/core/enum/weather';
-import { config } from '../../api/core/port/config-port';
-import { preExecutionConfig } from '../../api/core/port/pre-execution-config-port';
-import { IPreExecutionConfigProps } from '../../api/interface/config-props';
-import { IPreExecutionFormResult } from '../../api/interface/pre-execution-form-result';
+import { SeverityEnum } from '../../internal/core/enum/severity';
+import { Weather, WeatherEnum, weatherItems } from '../../internal/core/enum/weather';
+import { config } from '../../internal/core/port/config-port';
+import { preExecutionConfig } from '../../internal/core/port/pre-execution-config-port';
+import { IPreExecutionConfigProps } from '../../internal/interface/config-props';
+import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-form-result';
 import { appConfig } from '../../app/config/app-config';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
 import { ptWeatherToWeather } from '../../app/parser/pt-weather-to-weather';
@@ -45,15 +45,15 @@ function PreExecutionScreen(props: { navigation: any }) {
   const [validationResult, setValidationResult] = useState<IPreExecutionFormResult>({
     clientName: { errorMessage: undefined },
     projectName: { errorMessage: undefined },
-    plotNumber: { errorMessage: undefined },
+    plot: { errorMessage: undefined },
     spaceBetweenLines: { errorMessage: undefined },
     streetsAmount: { errorMessage: undefined },
     weather: { errorMessage: undefined },
     tractorName: { errorMessage: undefined },
     farm: { errorMessage: undefined },
-    rightLoad: { errorMessage: undefined },
-    leftLoad: { errorMessage: undefined },
-    centerLoad: { errorMessage: undefined },
+    rightApplicatorLoad: { errorMessage: undefined },
+    leftApplicatorLoad: { errorMessage: undefined },
+    centerApplicatorLoad: { errorMessage: undefined },
     valid: true,
   });
 
@@ -74,15 +74,15 @@ function PreExecutionScreen(props: { navigation: any }) {
     const validation: IPreExecutionFormResult = {
       clientName: { errorMessage: undefined },
       projectName: { errorMessage: undefined },
-      plotNumber: { errorMessage: undefined },
+      plot: { errorMessage: undefined },
       spaceBetweenLines: { errorMessage: undefined },
       streetsAmount: { errorMessage: undefined },
       weather: { errorMessage: undefined },
       tractorName: { errorMessage: undefined },
-      rightLoad: { errorMessage: undefined },
-      leftLoad: { errorMessage: undefined },
+      rightApplicatorLoad: { errorMessage: undefined },
+      leftApplicatorLoad: { errorMessage: undefined },
       farm: { errorMessage: undefined },
-      centerLoad: { errorMessage: undefined },
+      centerApplicatorLoad: { errorMessage: undefined },
       valid: true,
     };
 
@@ -171,7 +171,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             onItemSelected={setPlot}
             items={mapStringToItemArray(config.getCache().PLOTS)}
             defaultValue={preExecutionConfig.getCache().plot}
-            errorMessage={validationResult.plotNumber.errorMessage}
+            errorMessage={validationResult.plot.errorMessage}
             placeholder={''}
           />
 

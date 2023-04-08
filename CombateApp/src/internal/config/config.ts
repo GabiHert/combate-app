@@ -8,6 +8,7 @@ export const CONSTANTS = {
   MAX_DOSES: 20,
   MIN_DOSES: 1,
   FINISHED_WORK_REASON_NAME: 'Fim Operação',
+  REQUEST_INTERVAL_MS: 2000,
   UNDER_FOREST_ITEMS: [
     { name: 'Sub-bosque 1', id: '1' },
     { name: 'Sub-bosque 2', id: '2' },

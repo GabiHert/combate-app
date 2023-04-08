@@ -1,8 +1,8 @@
 import { Box, Button, Center, Stack, Text, VStack, WarningOutlineIcon } from 'native-base';
 import React, { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { min } from 'react-native-reanimated';
-import { Severity } from '../../../../api/core/enum/severity';
-import { config } from '../../../../api/core/port/config-port';
+import { Severity } from '../../../../internal/core/enum/severity';
+import { config } from '../../../../internal/core/port/config-port';
 import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import EventRegisterModal from '../EventRegisterModal';

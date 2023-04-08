@@ -1,6 +1,6 @@
 import { Box, Button, Center, HStack, IconButton, Stack, Text } from 'native-base';
 import React, { memo } from 'react';
-import { config } from '../../../../api/core/port/config-port';
+import { config } from '../../../../internal/core/port/config-port';
 import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 

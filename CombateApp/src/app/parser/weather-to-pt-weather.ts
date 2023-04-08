@@ -1,4 +1,4 @@
-import { Weather, WeatherEnum } from '../../api/core/enum/weather';
+import { Weather, WeatherEnum } from '../../internal/core/enum/weather';
 
 export function weatherToPtWeather(weather: string): string {
   switch (weather) {
