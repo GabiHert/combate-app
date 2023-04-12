@@ -164,65 +164,65 @@ export class FormValidator implements PFormValidator {
   validateConfigForm(data: IConfigsProps): IConfigFormResult {
     let result: IConfigFormResult;
     if (!data.APPLICATION) {
-      result.isValid = false;
+      result.valid = false;
     } else {
       if (!data.APPLICATION.LEFT_TANK_MAX_LOAD || data.APPLICATION.LEFT_TANK_MAX_LOAD < 1) {
-        result.isValid = false;
-        result.leftTankMaxLoadError = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_LEFT_TANK_MAX_LOAD;
+        result.valid = false;
+        result.leftTankMaxLoad.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_LEFT_TANK_MAX_LOAD;
       }
       if (!data.APPLICATION.CENTER_TANK_MAX_LOAD || data.APPLICATION.CENTER_TANK_MAX_LOAD < 1) {
-        result.isValid = false;
-        result.centerTankMaxLoadError = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_CENTER_TANK_MAX_LOAD;
+        result.valid = false;
+        result.centerTankMaxLoad.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_CENTER_TANK_MAX_LOAD;
       }
       if (!data.APPLICATION.RIGHT_TANK_MAX_LOAD || data.APPLICATION.RIGHT_TANK_MAX_LOAD < 1) {
-        result.isValid = false;
-        result.rightTankMaxLoadError = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_RIGHT_TANK_MAX_LOAD;
+        result.valid = false;
+        result.rightTankMaxLoad.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_RIGHT_TANK_MAX_LOAD;
       }
       if (!data.APPLICATION.DOSE_WEIGHT_KG || data.APPLICATION.DOSE_WEIGHT_KG < 1) {
-        result.isValid = false;
-        result.doseWeightKgError = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_DOSE_WEIGHT_KG;
+        result.valid = false;
+        result.doseWeightKg.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_DOSE_WEIGHT_KG;
       }
     }
 
     if (!data.PRESETS || Object.keys(data.PRESETS).length < 6) {
-      result.isValid = false;
+      result.valid = false;
     } else {
       for (const key in data.PRESETS) {
         if (!data.PRESETS[key].NAME || data.PRESETS[key].NAME.length === 0) {
-          result.isValid = false;
+          result.valid = false;
         }
         if (!data.PRESETS[key].DOSE_AMOUNT || data.PRESETS[key].DOSE_AMOUNT < 1) {
-          result.isValid = false;
+          result.valid = false;
         }
       }
     }
 
     if (!data.STOP_REASONS_EVENTS) {
-      result.isValid = false;
+      result.valid = false;
     } else {
       for (const key in data.STOP_REASONS_EVENTS) {
         if (!data.STOP_REASONS_EVENTS[key]) {
-          result.isValid = false;
+          result.valid = false;
         }
       }
     }
 
     if (!data.PLOTS) {
-      result.isValid = false;
+      result.valid = false;
     } else {
       for (const key in data.PLOTS) {
         if (!data.PLOTS[key] || data.PLOTS[key].length === 0) {
-          result.isValid = false;
+          result.valid = false;
         }
       }
     }
 
     if (!data.FILE_PATH || data.FILE_PATH.length < 3) {
-      result.isValid = false;
+      result.valid = false;
     }
 
     if (!data.POISON_TYPE || data.POISON_TYPE.length < 3) {
-      result.isValid = false;
+      result.valid = false;
     }
 
     return result;

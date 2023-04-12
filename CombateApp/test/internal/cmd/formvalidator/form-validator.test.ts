@@ -2,9 +2,14 @@ import { v4 } from 'uuid';
 import { FormValidator } from '../../../../src/internal/cmd/formvalidator/form-validator';
 import { CONSTANTS } from '../../../../src/internal/config/config';
 import { WeatherEnum } from '../../../../src/internal/core/enum/weather';
-import { IPreExecutionConfigProps } from '../../../../src/internal/interface/config-props';
+import {
+  IConfigsProps,
+  IPreExecutionConfigProps,
+} from '../../../../src/internal/interface/config-props';
 import { IPreExecutionFormResult } from '../../../../src/internal/interface/pre-execution-form-result';
 import { LoggerMock } from '../../../mock/logger-mock';
+import { IConfigFormResult } from '../../../../src/internal/interface/config-form-result';
+import { PoisonEnum } from '../../../../src/internal/core/enum/poison';
 
 describe('FormValidator unit tests', () => {
   const loggerMocked = new LoggerMock();
@@ -12,6 +17,8 @@ describe('FormValidator unit tests', () => {
 
   let preExecutionFormData: IPreExecutionConfigProps;
   let preExecutionFormResult: IPreExecutionFormResult;
+  let configFormData: IConfigsProps;
+  let configFormResult: IConfigFormResult;
 
   beforeEach(() => {
     loggerMocked.clear();
@@ -40,6 +47,47 @@ describe('FormValidator unit tests', () => {
       centerApplicatorLoad: { errorMessage: undefined },
       rightApplicatorLoad: { errorMessage: undefined },
       streetsAmount: { errorMessage: undefined },
+    };
+
+    configFormData = {
+      APPLICATION: {
+        CENTER_TANK_MAX_LOAD: 30,
+        DOSE_WEIGHT_KG: 0.025,
+        LEFT_TANK_MAX_LOAD: 0,
+        RIGHT_TANK_MAX_LOAD: 0,
+      },
+      EVENTS: { 1: v4() },
+      FARMS: { 1: v4() },
+      FILE_PATH: 'teste/teste',
+      PLOTS: { 1: v4() },
+      POISON_TYPE: PoisonEnum.FP.name,
+      PRESETS: {
+        P1: { DOSE_AMOUNT: 10, NAME: 'teste' },
+        P2: { DOSE_AMOUNT: 2, NAME: 'teste' },
+        P3: { DOSE_AMOUNT: 4, NAME: 'teste' },
+        P4: { DOSE_AMOUNT: 5, NAME: 'teste' },
+        P5: { DOSE_AMOUNT: 6, NAME: 'teste' },
+        P6: { DOSE_AMOUNT: 7, NAME: 'teste' },
+      },
+      SPACE_BETWEEN_LINES: 1,
+      STOP_REASONS_EVENTS: { 1: v4() },
+      SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: 10 },
+    };
+
+    configFormResult = {
+      valid: true,
+      centerTankMaxLoad: { errorMessage: undefined },
+      doseWeightKg: { errorMessage: undefined },
+      leftTankMaxLoad: { errorMessage: undefined },
+      preset1Dose: { errorMessage: undefined },
+      preset1Name: { errorMessage: undefined },
+      preset2Dose: { errorMessage: undefined },
+      preset2Name: { errorMessage: undefined },
+      preset3Dose: { errorMessage: undefined },
+      preset3Name: { errorMessage: undefined },
+      preset4Dose: { errorMessage: undefined },
+      preset4Name: { errorMessage: undefined },
+      rightTankMaxLoad: { errorMessage: undefined },
     };
   });
 
@@ -345,6 +393,7 @@ describe('FormValidator unit tests', () => {
   });
 
   // END validatePreExecutionForm UNIT TEST
+  // START validateConfigForm UNIT TEST
 });
 
 export {};
