@@ -8,8 +8,19 @@ export interface IConfigFormResult {
   preset2Name: { errorMessage: string };
   preset3Name: { errorMessage: string };
   preset4Name: { errorMessage: string };
+  preset5Name: { errorMessage: string };
+  preset6Name: { errorMessage: string };
   preset1Dose: { errorMessage: string };
   preset2Dose: { errorMessage: string };
   preset3Dose: { errorMessage: string };
   preset4Dose: { errorMessage: string };
+  preset5Dose: { errorMessage: string };
+  preset6Dose: { errorMessage: string };
+  stopReasonEvent: { errorMessage: string };
+  events: { errorMessage: string };
+  farms: { errorMessage: string };
+  plots: { errorMessage: string };
+  poisonType: { errorMessage: string };
+  spaceBetweenLines: { errorMessage: string };
+  filePath: { errorMessage: string };
 }

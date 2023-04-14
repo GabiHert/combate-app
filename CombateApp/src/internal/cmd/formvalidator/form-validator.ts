@@ -1,5 +1,7 @@
 import { CONSTANTS } from '../../config/config';
+import { PoisonEnum } from '../../core/enum/poison';
 import { WeatherEnum } from '../../core/enum/weather';
+import { config } from '../../core/port/config-port';
 import { PLogger } from '../../core/port/logger-port';
 import { IConfigFormResult } from '../../interface/config-form-result';
 import { IConfigsProps, IPreExecutionConfigProps } from '../../interface/config-props';
@@ -162,69 +164,182 @@ export class FormValidator implements PFormValidator {
     return result;
   }
   validateConfigForm(data: IConfigsProps): IConfigFormResult {
-    let result: IConfigFormResult;
+    this.logger.info({
+      event: 'FormValidator.validateConfigForm',
+      details: 'Process started',
+      data,
+    });
+
+    let result: IConfigFormResult = {
+      valid: true,
+      centerTankMaxLoad: { errorMessage: undefined },
+      doseWeightKg: { errorMessage: undefined },
+      leftTankMaxLoad: { errorMessage: undefined },
+      preset1Dose: { errorMessage: undefined },
+      preset1Name: { errorMessage: undefined },
+      preset2Dose: { errorMessage: undefined },
+      preset2Name: { errorMessage: undefined },
+      preset3Dose: { errorMessage: undefined },
+      preset3Name: { errorMessage: undefined },
+      preset4Dose: { errorMessage: undefined },
+      preset4Name: { errorMessage: undefined },
+      events: { errorMessage: undefined },
+      farms: { errorMessage: undefined },
+      filePath: { errorMessage: undefined },
+      plots: { errorMessage: undefined },
+      poisonType: { errorMessage: undefined },
+      preset5Dose: { errorMessage: undefined },
+      preset5Name: { errorMessage: undefined },
+      preset6Dose: { errorMessage: undefined },
+      preset6Name: { errorMessage: undefined },
+      spaceBetweenLines: { errorMessage: undefined },
+      stopReasonEvent: { errorMessage: undefined },
+      rightTankMaxLoad: { errorMessage: undefined },
+    };
+
     if (!data.APPLICATION) {
       result.valid = false;
     } else {
       if (!data.APPLICATION.LEFT_TANK_MAX_LOAD || data.APPLICATION.LEFT_TANK_MAX_LOAD < 1) {
         result.valid = false;
-        result.leftTankMaxLoad.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_LEFT_TANK_MAX_LOAD;
+        result.leftTankMaxLoad.errorMessage =
+          CONSTANTS.ERRORS.CONFIG_FORM.INVALID_LEFT_TANK_MAX_LOAD;
+        this.logger.warn({
+          event: 'FormValidator.validateConfigForm',
+          details: 'Process warn - Invalid LEFT_TANK_MAX_LOAD',
+        });
       }
       if (!data.APPLICATION.CENTER_TANK_MAX_LOAD || data.APPLICATION.CENTER_TANK_MAX_LOAD < 1) {
         result.valid = false;
-        result.centerTankMaxLoad.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_CENTER_TANK_MAX_LOAD;
+        result.centerTankMaxLoad.errorMessage =
+          CONSTANTS.ERRORS.CONFIG_FORM.INVALID_CENTER_TANK_MAX_LOAD;
+        this.logger.warn({
+          event: 'FormValidator.validateConfigForm',
+          details: 'Process warn - Invalid CENTER_TANK_MAX_LOAD',
+        });
       }
       if (!data.APPLICATION.RIGHT_TANK_MAX_LOAD || data.APPLICATION.RIGHT_TANK_MAX_LOAD < 1) {
         result.valid = false;
-        result.rightTankMaxLoad.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_RIGHT_TANK_MAX_LOAD;
+        result.rightTankMaxLoad.errorMessage =
+          CONSTANTS.ERRORS.CONFIG_FORM.INVALID_RIGHT_TANK_MAX_LOAD;
+        this.logger.warn({
+          event: 'FormValidator.validateConfigForm',
+          details: 'Process warn - Invalid RIGHT_TANK_MAX_LOAD',
+        });
       }
-      if (!data.APPLICATION.DOSE_WEIGHT_KG || data.APPLICATION.DOSE_WEIGHT_KG < 1) {
+      if (!data.APPLICATION.DOSE_WEIGHT_KG || data.APPLICATION.DOSE_WEIGHT_KG < 0.005) {
         result.valid = false;
         result.doseWeightKg.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_DOSE_WEIGHT_KG;
+        this.logger.warn({
+          event: 'FormValidator.validateConfigForm',
+          details: 'Process warn - Invalid DOSE_WEIGHT_KG',
+        });
       }
     }
 
     if (!data.PRESETS || Object.keys(data.PRESETS).length < 6) {
       result.valid = false;
+      for (let i = 0; i < 6; i++) {
+        result['preset' + (i + 1) + 'Name'].errorMessage =
+          CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET;
+        result['preset' + (i + 1) + 'Dose'].errorMessage =
+          CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET;
+      }
     } else {
       for (const key in data.PRESETS) {
         if (!data.PRESETS[key].NAME || data.PRESETS[key].NAME.length === 0) {
           result.valid = false;
+          result['preset' + key[1] + 'Name'].errorMessage =
+            CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_NAME;
+          this.logger.warn({
+            event: 'FormValidator.validateConfigForm',
+            details: 'Process warn - Invalid PRESET.NAME',
+          });
         }
         if (!data.PRESETS[key].DOSE_AMOUNT || data.PRESETS[key].DOSE_AMOUNT < 1) {
           result.valid = false;
+          console.log(result['preset' + key[1] + 'Value']);
+          result['preset' + key[1] + 'Value'].errorMessage =
+            CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_VALUE;
+
+          this.logger.warn({
+            event: 'FormValidator.validateConfigForm',
+            details: 'Process warn - Invalid PRESET.DOSE_AMOUNT',
+          });
         }
       }
     }
 
     if (!data.STOP_REASONS_EVENTS) {
       result.valid = false;
+      result.stopReasonEvent.errorMessage =
+        CONSTANTS.ERRORS.CONFIG_FORM.INVALID_STOP_REASONS_EVENTS;
+      this.logger.warn({
+        event: 'FormValidator.validateConfigForm',
+        details: 'Process warn - Invalid STOP_REASON_EVENTS',
+      });
     } else {
       for (const key in data.STOP_REASONS_EVENTS) {
-        if (!data.STOP_REASONS_EVENTS[key]) {
+        if (!data.STOP_REASONS_EVENTS[key].length) {
           result.valid = false;
+          result.stopReasonEvent.errorMessage =
+            CONSTANTS.ERRORS.CONFIG_FORM.INVALID_STOP_REASONS_EVENTS;
+          this.logger.warn({
+            event: 'FormValidator.validateConfigForm',
+            details: 'Process warn - Invalid STOP_REASON_EVENTS attribute',
+          });
         }
       }
     }
 
     if (!data.PLOTS) {
       result.valid = false;
+      result.plots.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
+      this.logger.warn({
+        event: 'FormValidator.validateConfigForm',
+        details: 'Process warn - Invalid PLOTS',
+      });
     } else {
       for (const key in data.PLOTS) {
         if (!data.PLOTS[key] || data.PLOTS[key].length === 0) {
           result.valid = false;
+          result.plots.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
+          this.logger.warn({
+            event: 'FormValidator.validateConfigForm',
+            details: 'Process warn - Invalid PLOTS attribute',
+          });
         }
       }
     }
 
     if (!data.FILE_PATH || data.FILE_PATH.length < 3) {
       result.valid = false;
+      result.filePath.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_FILE_PATH;
+      this.logger.warn({
+        event: 'FormValidator.validateConfigForm',
+        details: 'Process warn - Invalid FILE_PATH',
+      });
     }
 
-    if (!data.POISON_TYPE || data.POISON_TYPE.length < 3) {
+    const poisonTypes = [];
+    Object.keys(PoisonEnum).forEach((key) => {
+      poisonTypes.push(PoisonEnum[key].name);
+    });
+
+    if (!data.POISON_TYPE || !poisonTypes.includes(data.POISON_TYPE)) {
       result.valid = false;
+      result.poisonType.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_POISON_TYPE;
+      this.logger.warn({
+        event: 'FormValidator.validateConfigForm',
+        details: 'Process warn - Invalid POISON_TYPE',
+      });
     }
 
+    this.logger.info({
+      event: 'FormValidator.validateConfigForm',
+      details: 'Process started',
+      result,
+    });
     return result;
   }
   validateFinishExecutionForm(reason: string): string {

@@ -53,8 +53,8 @@ describe('FormValidator unit tests', () => {
       APPLICATION: {
         CENTER_TANK_MAX_LOAD: 30,
         DOSE_WEIGHT_KG: 0.025,
-        LEFT_TANK_MAX_LOAD: 0,
-        RIGHT_TANK_MAX_LOAD: 0,
+        LEFT_TANK_MAX_LOAD: 30,
+        RIGHT_TANK_MAX_LOAD: 30,
       },
       EVENTS: { 1: v4() },
       FARMS: { 1: v4() },
@@ -87,6 +87,17 @@ describe('FormValidator unit tests', () => {
       preset3Name: { errorMessage: undefined },
       preset4Dose: { errorMessage: undefined },
       preset4Name: { errorMessage: undefined },
+      events: { errorMessage: undefined },
+      farms: { errorMessage: undefined },
+      filePath: { errorMessage: undefined },
+      plots: { errorMessage: undefined },
+      poisonType: { errorMessage: undefined },
+      preset5Dose: { errorMessage: undefined },
+      preset5Name: { errorMessage: undefined },
+      preset6Dose: { errorMessage: undefined },
+      preset6Name: { errorMessage: undefined },
+      spaceBetweenLines: { errorMessage: undefined },
+      stopReasonEvent: { errorMessage: undefined },
       rightTankMaxLoad: { errorMessage: undefined },
     };
   });
@@ -394,6 +405,213 @@ describe('FormValidator unit tests', () => {
 
   // END validatePreExecutionForm UNIT TEST
   // START validateConfigForm UNIT TEST
+
+  it('should indicate that all configFormData fields are valid', () => {
+    const result = formValidator.validateConfigForm(configFormData);
+
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(0);
+  });
+
+  it('should indicate that input is invalid when RIGHT_TANK_MAX_LOAD is 0', () => {
+    configFormData.APPLICATION.RIGHT_TANK_MAX_LOAD = 0;
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.rightTankMaxLoad.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_RIGHT_TANK_MAX_LOAD;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when CENTER_TANK_MAX_LOAD is 0', () => {
+    configFormData.APPLICATION.CENTER_TANK_MAX_LOAD = 0;
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.centerTankMaxLoad.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_CENTER_TANK_MAX_LOAD;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when LEFT_TANK_MAX_LOAD is 0', () => {
+    configFormData.APPLICATION.LEFT_TANK_MAX_LOAD = 0;
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.leftTankMaxLoad.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_LEFT_TANK_MAX_LOAD;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when RIGHT_TANK_MAX_LOAD is undefined', () => {
+    configFormData.APPLICATION.RIGHT_TANK_MAX_LOAD = undefined;
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.rightTankMaxLoad.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_RIGHT_TANK_MAX_LOAD;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when CENTER_TANK_MAX_LOAD is undefined', () => {
+    configFormData.APPLICATION.CENTER_TANK_MAX_LOAD = undefined;
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.centerTankMaxLoad.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_CENTER_TANK_MAX_LOAD;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when LEFT_TANK_MAX_LOAD is undefined', () => {
+    configFormData.APPLICATION.LEFT_TANK_MAX_LOAD = undefined;
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.leftTankMaxLoad.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_LEFT_TANK_MAX_LOAD;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when PRESETS is undefined', () => {
+    configFormData.PRESETS = undefined;
+    const result = formValidator.validateConfigForm(configFormData);
+    for (let i = 0; i < 6; i++) {
+      configFormResult['preset' + i + 1 + 'Name'].errorMessage =
+        CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET;
+      configFormResult['preset' + i + 1 + 'Dose'].errorMessage =
+        CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET;
+    }
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when PRESETS.NAME is undefined', () => {
+    configFormData.PRESETS.P1.NAME = undefined;
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.preset1Name.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_NAME;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when PRESETS.NAME is empty', () => {
+    configFormData.PRESETS.P1.NAME = '';
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.preset1Name.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_NAME;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when PRESETS.DOSE_AMOUNT is undefined', () => {
+    configFormData.PRESETS.P1.DOSE_AMOUNT = undefined;
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.preset1Name.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_VALUE;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when PRESETS.DOSE_AMOUNT is < 1', () => {
+    configFormData.PRESETS.P1.DOSE_AMOUNT = 0;
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.preset1Name.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_VALUE;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when STOP_REASONS_EVENTS is undefined', () => {
+    configFormData.STOP_REASONS_EVENTS = undefined;
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.stopReasonEvent.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_STOP_REASONS_EVENTS;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+  it('should indicate that input is invalid when STOP_REASONS_EVENTS attribute is empty ', () => {
+    configFormData.STOP_REASONS_EVENTS.T = '';
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.stopReasonEvent.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_STOP_REASONS_EVENTS;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when PLOTS is undefined', () => {
+    configFormData.PLOTS = undefined;
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.plots.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when PLOTS attribute is empty ', () => {
+    configFormData.PLOTS.T = '';
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.plots.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate that input is invalid when POISON_TYPE is undefined', () => {
+    configFormData.POISON_TYPE = undefined;
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.poisonType.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_POISON_TYPE;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+  it('should indicate that input is invalid when POISON_TYPE attribute is not one of PoisonTypeEnum ', () => {
+    configFormData.POISON_TYPE = v4();
+    const result = formValidator.validateConfigForm(configFormData);
+    configFormResult.poisonType.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
+    configFormResult.valid = false;
+    expect(result).toEqual(configFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
 });
 
 export {};
