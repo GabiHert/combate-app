@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { FormValidator } from '../../../../src/internal/cmd/formvalidator/form-validator';
+import { AValidator } from '../../../../src/internal/cmd/formvalidator/form-validator';
 import { CONSTANTS } from '../../../../src/internal/config/config';
 import { PoisonEnum } from '../../../../src/internal/core/enum/poison';
 import { WeatherEnum } from '../../../../src/internal/core/enum/weather';
@@ -15,7 +15,7 @@ import { LoggerMock } from '../../../mock/logger-mock';
 describe('FormValidator unit tests', () => {
   const loggerMocked = new LoggerMock();
   const configMocked = new ConfigMock();
-  const formValidator = new FormValidator(loggerMocked, configMocked);
+  const formValidator = new AValidator(loggerMocked, configMocked);
 
   let preExecutionFormData: IPreExecutionConfigProps;
   let preExecutionFormResult: IPreExecutionFormResult;

@@ -8,7 +8,7 @@ import { IConfigsProps, IPreExecutionConfigProps } from '../../interface/config-
 import { IPreExecutionFormResult } from '../../interface/pre-execution-form-result';
 import { PValidator as PFormValidator } from '../port/validator-port';
 
-export class FormValidator implements PFormValidator {
+export class AValidator implements PFormValidator {
   constructor(private readonly _logger: PLogger, private readonly _config: PConfig) {}
 
   validatePreExecutionForm(data: IPreExecutionConfigProps): IPreExecutionFormResult {

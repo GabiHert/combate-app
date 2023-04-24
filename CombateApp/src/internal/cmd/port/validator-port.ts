@@ -1,6 +1,9 @@
+import { config } from '../../core/port/config-port';
+import { logger } from '../../core/port/logger-port';
 import { IConfigFormResult } from '../../interface/config-form-result';
 import { IConfigsProps, IPreExecutionConfigProps } from '../../interface/config-props';
 import { IPreExecutionFormResult } from '../../interface/pre-execution-form-result';
+import { AValidator } from '../formvalidator/form-validator';
 
 export interface PValidator {
   /**
@@ -30,3 +33,5 @@ export interface PValidator {
    */
   validateUnderForestForm(underForest: string): string;
 }
+
+export const validator: PValidator = new AValidator(logger, config);

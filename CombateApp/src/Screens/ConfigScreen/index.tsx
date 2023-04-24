@@ -11,8 +11,10 @@ import { v1 } from 'uuid';
 import SelectInput from '../../Components/SelectInput';
 import { appConfig } from '../../app/config/app-config';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
+import { validator } from '../../internal/cmd/port/validator-port';
 import { CONSTANTS } from '../../internal/config/config';
 import { poisonItems } from '../../internal/core/enum/poison';
+import { IConfigsProps } from '../../internal/interface/config-props';
 import ItemListInput from './components/ItemListInput';
 import ItemRegisterModal from './components/ItemRegisterModal';
 
@@ -49,6 +51,9 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
   const [doseWeightKg, setDoseWeightKg] = useState<number>(
     config.getCache().APPLICATION.DOSE_WEIGHT_KG
+  );
+  const [metersBetweenDose, setMetersBetweenDose] = useState<number>(
+    config.getCache().SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE
   );
   const [filePath, setFilePath] = useState(config.getCache().FILE_PATH);
   const [preset1, setPreset1] = useState<IPreset>({
@@ -326,51 +331,50 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const onSavePressed = useCallback(async () => {
     //todo: call validation
     try {
-      const result = {
-        isValid: true,
-        rightTankMaxLoadError: '',
-        centerTankMaxLoadError: '',
-        leftTankMaxLoadError: '',
-        doseWeightKgError: '',
-        preset1NameError: '',
-        preset2NameError: '',
-        preset3NameError: '',
-        preset4NameError: '',
-        preset5NameError: '',
-        preset6NameError: '',
-        preset1DoseError: '',
-        preset2DoseError: '',
-        preset3DoseError: '',
-        preset4DoseError: '',
-        preset5DoseError: '',
-        preset6DoseError: '',
+      const data: IConfigsProps = {
+        APPLICATION: {
+          CENTER_TANK_MAX_LOAD: centerTankMaxLoad,
+          DOSE_WEIGHT_KG: doseWeightKg,
+          LEFT_TANK_MAX_LOAD: leftTankMaxLoad,
+          RIGHT_TANK_MAX_LOAD: rightTankMaxLoad,
+        },
+        PRESETS: {
+          P1: { NAME: preset1.name, DOSE_AMOUNT: preset1.doseAmount },
+          P2: { NAME: preset2.name, DOSE_AMOUNT: preset2.doseAmount },
+          P3: { NAME: preset3.name, DOSE_AMOUNT: preset3.doseAmount },
+          P4: { NAME: preset4.name, DOSE_AMOUNT: preset4.doseAmount },
+          P5: { NAME: preset5.name, DOSE_AMOUNT: preset5.doseAmount },
+          P6: { NAME: preset6.name, DOSE_AMOUNT: preset6.doseAmount },
+        },
+        FILE_PATH: filePath,
+        POISON_TYPE: poison,
+        SPACE_BETWEEN_LINES: spaceBetweenLines,
+        SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: metersBetweenDose },
       };
+      const result = validator.validateConfigForm(data);
 
-      if (!result.isValid) {
+      if (!result.valid) {
         ShowToast({
           title: 'Erro ao salvar alterações',
           severity: SeverityEnum.ERROR,
           durationMs: 2000,
         });
-        setRightTankMaxLoadError(result.rightTankMaxLoadError);
-        setLeftTankMaxLoadError(result.leftTankMaxLoadError);
-        setCenterTankMaxLoadError(result.centerTankMaxLoadError);
-
-        setPreset1NameError(result.preset1NameError);
-        setPreset2NameError(result.preset2NameError);
-        setPreset3NameError(result.preset3NameError);
-        setPreset4NameError(result.preset4NameError);
-        setPreset5NameError(result.preset5NameError);
-        setPreset6NameError(result.preset6NameError);
-
-        setPreset1DoseError(result.preset1DoseError);
-        setPreset2DoseError(result.preset2DoseError);
-        setPreset3DoseError(result.preset3DoseError);
-        setPreset4DoseError(result.preset4DoseError);
-        setPreset4DoseError(result.preset4DoseError);
-        setPreset4DoseError(result.preset4DoseError);
-
-        setDoseWeightKgError(result.doseWeightKgError);
+        setRightTankMaxLoadError(result.rightTankMaxLoad.errorMessage);
+        setLeftTankMaxLoadError(result.leftTankMaxLoad.errorMessage);
+        setCenterTankMaxLoadError(result.centerTankMaxLoad.errorMessage);
+        setPreset1NameError(result.preset1Name.errorMessage);
+        setPreset2NameError(result.preset2Name.errorMessage);
+        setPreset3NameError(result.preset3Name.errorMessage);
+        setPreset4NameError(result.preset4Name.errorMessage);
+        setPreset5NameError(result.preset5Name.errorMessage);
+        setPreset6NameError(result.preset6Name.errorMessage);
+        setPreset1DoseError(result.preset1Dose.errorMessage);
+        setPreset2DoseError(result.preset2Dose.errorMessage);
+        setPreset3DoseError(result.preset3Dose.errorMessage);
+        setPreset4DoseError(result.preset4Dose.errorMessage);
+        setPreset4DoseError(result.preset4Dose.errorMessage);
+        setPreset4DoseError(result.preset4Dose.errorMessage);
+        setDoseWeightKgError(result.doseWeightKg.errorMessage);
       } else {
         const cache = config.getCache();
 
@@ -707,7 +711,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             Dose Sistemática
           </FormControl.Label>
           <SlideInput
-            onChangeEnd={() => {}}
+            onChangeEnd={setMetersBetweenDose}
             step={0.5}
             title={'Metros entre cada dose'}
             unit={'metros'}

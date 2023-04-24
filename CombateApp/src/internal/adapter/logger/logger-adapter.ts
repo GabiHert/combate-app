@@ -1,20 +1,20 @@
 import { PLogger } from '../../core/port/logger-port';
 
 export class ALogger implements PLogger {
-  constructor(private readonly active: boolean, private readonly id?: string) {}
+  constructor(private readonly active: boolean) {}
   info(...args: any): void {
     if (this.active) {
-      console.log({ id: this.id, severity: 'INFO', ...args });
+      console.log({ severity: 'INFO', ...args });
     }
   }
   warn(...args: any): void {
     if (this.active) {
-      console.log({ id: this.id, severity: 'WARN', ...args });
+      console.log({ severity: 'WARN', ...args });
     }
   }
   error(...args: any): void {
     if (this.active) {
-      console.log({ id: this.id, severity: 'ERROR', ...args });
+      console.log({ severity: 'ERROR', ...args });
     }
   }
 }
