@@ -3,7 +3,7 @@ import { memo, useCallback, useState } from 'react';
 import SelectInput from '../../../../Components/SelectInput';
 import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
-import { validator } from '../../../../internal/cmd/port/validator-port';
+import { validator } from '../../../../cmd/port/validator-port';
 import { CONSTANTS } from '../../../../internal/config/config';
 
 function UnderForestModal(props: { isOpen: boolean; onClose: () => void; onOkPress: () => void }) {

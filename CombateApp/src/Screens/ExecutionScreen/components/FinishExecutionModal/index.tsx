@@ -4,7 +4,7 @@ import SelectInput from '../../../../Components/SelectInput';
 import { appConfig } from '../../../../app/config/app-config';
 import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
 import { Theme } from '../../../../app/theme/theme';
-import { validator } from '../../../../internal/cmd/port/validator-port';
+import { validator } from '../../../../cmd/port/validator-port';
 import { CONSTANTS } from '../../../../internal/config/config';
 import { config } from '../../../../internal/core/port/config-cache-port';
 import UnderForestModal from '../UnderForestModal';

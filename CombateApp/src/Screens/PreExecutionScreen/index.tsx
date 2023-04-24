@@ -15,7 +15,7 @@ import SelectInput from '../../Components/SelectInput';
 import SlideInput from '../../Components/SlideInput';
 import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 import { Theme } from '../../app/theme/theme';
-import { validator } from '../../internal/cmd/port/validator-port';
+import { validator } from '../../cmd/port/validator-port';
 
 function PreExecutionScreen(props: { navigation: any }) {
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState<number>(

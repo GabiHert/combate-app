@@ -13,7 +13,7 @@ import { appConfig } from '../../app/config/app-config';
 import { itemArrayToMapString } from '../../app/parser/item-array-to-map-string';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
 import { ptToDefaults } from '../../app/parser/pt-to-defaults';
-import { validator } from '../../internal/cmd/port/validator-port';
+import { validator } from '../../cmd/port/validator-port';
 import { CONSTANTS } from '../../internal/config/config';
 import { poisonItems } from '../../internal/core/enum/poison';
 import { IConfigsProps } from '../../internal/interface/config-props';
