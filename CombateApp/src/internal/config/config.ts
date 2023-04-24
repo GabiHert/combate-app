@@ -4,6 +4,7 @@ import { IConfigsProps, IPreExecutionConfigProps } from '../interface/config-pro
 export const CONSTANTS = {
   APPLICATION: {
     VERSION: '0.0.0',
+    BLUETOOTH_WRITE_RETRIES: 5,
   },
   MAX_DOSES: 20,
   MIN_DOSES: 1,
@@ -16,7 +17,13 @@ export const CONSTANTS = {
   ],
 
   ERRORS: {
-    A_BLUETOOTH: { NOT_ENABLED: '', NOT_AVAILABLE: '', DEVICE_NOT_SELECTED: '' },
+    A_BLUETOOTH: {
+      NOT_ENABLED: '',
+      NOT_AVAILABLE: '',
+      DEVICE_NOT_SELECTED: '',
+      WRITE_5_ATTEMPTS_FAILED: '',
+      SELECTED_DEVICE_NOT_CONNECTED: '',
+    },
     PRE_EXECUTION_FORM_VALIDATOR: {
       INVALID_CLIENT_NAME: '',
       INVALID_PROJECT_NAME: '',
