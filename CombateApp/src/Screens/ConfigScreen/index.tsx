@@ -10,15 +10,15 @@ import { config } from '../../internal/core/port/config-cache-port';
 import { v1 } from 'uuid';
 import SelectInput from '../../Components/SelectInput';
 import { appConfig } from '../../app/config/app-config';
+import { itemArrayToMapString } from '../../app/parser/item-array-to-map-string';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
+import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 import { validator } from '../../internal/cmd/port/validator-port';
 import { CONSTANTS } from '../../internal/config/config';
 import { poisonItems } from '../../internal/core/enum/poison';
 import { IConfigsProps } from '../../internal/interface/config-props';
 import ItemListInput from './components/ItemListInput';
 import ItemRegisterModal from './components/ItemRegisterModal';
-import { itemArrayToMapString } from '../../app/parser/item-array-to-map-string';
-import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 
 interface IPreset {
   name: string;
@@ -395,6 +395,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       setEventsError(result.events.errorMessage);
       setFilePathError(result.filePath.errorMessage);
       setStopReasonsError(result.stopReasonEvent.errorMessage);
+
       if (!result.valid) {
         ShowToast({
           title: 'Erro ao salvar alterações',
@@ -402,35 +403,43 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           durationMs: 2000,
         });
       } else {
-        const cache = config.getCache();
+        if (data != config.getCache()) {
+          const cache = config.getCache();
 
-        cache.APPLICATION.DOSE_WEIGHT_KG = doseWeightKg;
-        cache.APPLICATION.RIGHT_TANK_MAX_LOAD = rightTankMaxLoad;
-        cache.APPLICATION.CENTER_TANK_MAX_LOAD = centerTankMaxLoad;
-        cache.APPLICATION.LEFT_TANK_MAX_LOAD = leftTankMaxLoad;
-        cache.PRESETS.P1.DOSE_AMOUNT = preset1.doseAmount;
-        cache.PRESETS.P1.NAME = preset1.name;
-        cache.PRESETS.P2.DOSE_AMOUNT = preset2.doseAmount;
-        cache.PRESETS.P2.NAME = preset2.name;
-        cache.PRESETS.P3.DOSE_AMOUNT = preset3.doseAmount;
-        cache.PRESETS.P3.NAME = preset3.name;
-        cache.PRESETS.P4.DOSE_AMOUNT = preset4.doseAmount;
-        cache.PRESETS.P4.NAME = preset4.name;
-        cache.PRESETS.P4.DOSE_AMOUNT = preset5.doseAmount;
-        cache.PRESETS.P4.NAME = preset5.name;
-        cache.PRESETS.P4.DOSE_AMOUNT = preset6.doseAmount;
-        cache.PRESETS.P4.NAME = preset6.name;
-        cache.POISON_TYPE = poison;
-        cache.SPACE_BETWEEN_LINES = spaceBetweenLines;
-        cache.FILE_PATH = filePath;
+          cache.APPLICATION.DOSE_WEIGHT_KG = doseWeightKg;
+          cache.APPLICATION.RIGHT_TANK_MAX_LOAD = rightTankMaxLoad;
+          cache.APPLICATION.CENTER_TANK_MAX_LOAD = centerTankMaxLoad;
+          cache.APPLICATION.LEFT_TANK_MAX_LOAD = leftTankMaxLoad;
+          cache.PRESETS.P1.DOSE_AMOUNT = preset1.doseAmount;
+          cache.PRESETS.P1.NAME = preset1.name;
+          cache.PRESETS.P2.DOSE_AMOUNT = preset2.doseAmount;
+          cache.PRESETS.P2.NAME = preset2.name;
+          cache.PRESETS.P3.DOSE_AMOUNT = preset3.doseAmount;
+          cache.PRESETS.P3.NAME = preset3.name;
+          cache.PRESETS.P4.DOSE_AMOUNT = preset4.doseAmount;
+          cache.PRESETS.P4.NAME = preset4.name;
+          cache.PRESETS.P4.DOSE_AMOUNT = preset5.doseAmount;
+          cache.PRESETS.P4.NAME = preset5.name;
+          cache.PRESETS.P4.DOSE_AMOUNT = preset6.doseAmount;
+          cache.PRESETS.P4.NAME = preset6.name;
+          cache.POISON_TYPE = poison;
+          cache.SPACE_BETWEEN_LINES = spaceBetweenLines;
+          cache.FILE_PATH = filePath;
 
-        await config.update(cache);
+          await config.update(cache);
 
-        ShowToast({
-          title: 'Alterações salvas com sucesso',
-          severity: SeverityEnum.OK,
-          durationMs: 2000,
-        });
+          ShowToast({
+            title: 'Alterações salvas com sucesso',
+            severity: SeverityEnum.OK,
+            durationMs: 2000,
+          });
+        } else {
+          ShowToast({
+            title: 'Nenhuma alteração foi detectada',
+            severity: SeverityEnum.OK,
+            durationMs: 2000,
+          });
+        }
       }
     } catch (err) {
       ShowToast({
@@ -454,7 +463,29 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     poison,
     filePath,
     spaceBetweenLines,
+    rightTankMaxLoadError,
+    leftTankMaxLoadError,
+    centerTankMaxLoadError,
+    preset1NameError,
+    preset2NameError,
+    preset3NameError,
+    preset4NameError,
+    preset5NameError,
+    preset6NameError,
+    preset1DoseError,
+    preset2DoseError,
+    preset3DoseError,
+    preset4DoseError,
+    preset5DoseError,
+    preset6DoseError,
+    doseWeightKgError,
     poisonError,
+    farmsError,
+    plotsError,
+    spaceBetweenLinesError,
+    eventsError,
+    filePathError,
+    stopReasonsError,
   ]);
 
   return (

@@ -1,22 +1,21 @@
 import { Box, Button, Divider, FormControl, IconButton, ScrollView, VStack } from 'native-base';
 import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { SeverityEnum } from '../../internal/core/enum/severity';
-import { Weather, WeatherEnum, weatherItems } from '../../internal/core/enum/weather';
+import { appConfig } from '../../app/config/app-config';
+import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
+import { weatherToPtWeather } from '../../app/parser/weather-to-pt-weather';
+import { Weather, weatherItems } from '../../internal/core/enum/weather';
 import { config } from '../../internal/core/port/config-cache-port';
 import { preExecutionConfig } from '../../internal/core/port/pre-execution-config-cache-port';
 import { IPreExecutionConfigProps } from '../../internal/interface/config-props';
 import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-form-result';
-import { appConfig } from '../../app/config/app-config';
-import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
-import { weatherToPtWeather } from '../../app/parser/weather-to-pt-weather';
 
-import { Theme } from '../../app/theme/theme';
-import { ShowToast } from '../../Components/AlertToast';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
 import SlideInput from '../../Components/SlideInput';
 import { ptToDefaults } from '../../app/parser/pt-to-defaults';
+import { Theme } from '../../app/theme/theme';
+import { validator } from '../../internal/cmd/port/validator-port';
 
 function PreExecutionScreen(props: { navigation: any }) {
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState<number>(
@@ -70,23 +69,11 @@ function PreExecutionScreen(props: { navigation: any }) {
       centerApplicatorLoad,
     };
 
-    const validation: IPreExecutionFormResult = {
-      clientName: { errorMessage: undefined },
-      projectName: { errorMessage: undefined },
-      plot: { errorMessage: undefined },
-      streetsAmount: { errorMessage: undefined },
-      weather: { errorMessage: undefined },
-      tractorName: { errorMessage: undefined },
-      rightApplicatorLoad: { errorMessage: undefined },
-      leftApplicatorLoad: { errorMessage: undefined },
-      farm: { errorMessage: undefined },
-      centerApplicatorLoad: { errorMessage: undefined },
-      valid: true,
-    };
+    const result = validator.validatePreExecutionForm(data);
 
-    setValidationResult(validation);
+    setValidationResult(result);
 
-    if (validation.valid) {
+    if (result.valid) {
       if (data != preExecutionConfig.getCache()) {
         await preExecutionConfig.update(data);
       }
@@ -216,6 +203,7 @@ function PreExecutionScreen(props: { navigation: any }) {
               { id: '3', name: '5' },
             ]}
             defaultValue={preExecutionConfig.getCache().streetsAmount.toString()}
+            errorMessage={validationResult.streetsAmount.errorMessage}
           />
 
           <Divider w="80%" />
@@ -234,6 +222,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             placeholder={''}
             title={'Clima'}
             items={weatherItems}
+            errorMessage={validationResult.weather.errorMessage}
             defaultValue={weatherToPtWeather(preExecutionConfig.getCache().weather)}
           />
 
@@ -285,6 +274,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             disabled={false}
             maxValue={config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD}
             minValue={1}
+            errorMessage={validationResult.rightApplicatorLoad.errorMessage}
           />
 
           <SlideInput
@@ -296,6 +286,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             disabled={false}
             maxValue={config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD}
             minValue={1}
+            errorMessage={validationResult.centerApplicatorLoad.errorMessage}
           />
 
           <SlideInput
@@ -307,6 +298,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             disabled={false}
             maxValue={config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD}
             minValue={1}
+            errorMessage={validationResult.leftApplicatorLoad.errorMessage}
           />
         </VStack>
         <Box w="20%" h="60px" />
