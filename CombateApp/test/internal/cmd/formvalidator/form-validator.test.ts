@@ -1,26 +1,54 @@
 import { v4 } from 'uuid';
 import { FormValidator } from '../../../../src/internal/cmd/formvalidator/form-validator';
 import { CONSTANTS } from '../../../../src/internal/config/config';
+import { PoisonEnum } from '../../../../src/internal/core/enum/poison';
 import { WeatherEnum } from '../../../../src/internal/core/enum/weather';
+import { IConfigFormResult } from '../../../../src/internal/interface/config-form-result';
 import {
   IConfigsProps,
   IPreExecutionConfigProps,
 } from '../../../../src/internal/interface/config-props';
 import { IPreExecutionFormResult } from '../../../../src/internal/interface/pre-execution-form-result';
+import { ConfigMock } from '../../../mock/config-mock';
 import { LoggerMock } from '../../../mock/logger-mock';
-import { IConfigFormResult } from '../../../../src/internal/interface/config-form-result';
-import { PoisonEnum } from '../../../../src/internal/core/enum/poison';
 
 describe('FormValidator unit tests', () => {
   const loggerMocked = new LoggerMock();
-  const formValidator = new FormValidator(loggerMocked);
+  const configMocked = new ConfigMock();
+  const formValidator = new FormValidator(loggerMocked, configMocked);
 
   let preExecutionFormData: IPreExecutionConfigProps;
   let preExecutionFormResult: IPreExecutionFormResult;
   let configFormData: IConfigsProps;
   let configFormResult: IConfigFormResult;
+  let stopReasonEvent: string;
 
   beforeEach(() => {
+    stopReasonEvent = v4();
+    configMocked.cache = {
+      SPACE_BETWEEN_LINES: 1,
+      SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: 2 },
+      STOP_REASONS_EVENTS: { stopReasonEvent },
+      APPLICATION: {
+        CENTER_TANK_MAX_LOAD: 0,
+        DOSE_WEIGHT_KG: 0,
+        LEFT_TANK_MAX_LOAD: 0,
+        RIGHT_TANK_MAX_LOAD: 0,
+      },
+      EVENTS: {},
+      FARMS: {},
+      FILE_PATH: '',
+      PLOTS: {},
+      POISON_TYPE: '',
+      PRESETS: {
+        P1: { DOSE_AMOUNT: 0, NAME: '' },
+        P2: { DOSE_AMOUNT: 0, NAME: '' },
+        P3: { DOSE_AMOUNT: 0, NAME: '' },
+        P4: { DOSE_AMOUNT: 0, NAME: '' },
+        P5: { DOSE_AMOUNT: 0, NAME: '' },
+        P6: { DOSE_AMOUNT: 0, NAME: '' },
+      },
+    };
     loggerMocked.clear();
     preExecutionFormData = {
       clientName: v4(),
@@ -118,7 +146,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.clientName.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_CLIENT_NAME;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_CLIENT_NAME;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -132,7 +160,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.clientName.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_CLIENT_NAME;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_CLIENT_NAME;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -146,7 +174,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.projectName.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_PROJECT_NAME;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_PROJECT_NAME;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -160,7 +188,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.projectName.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_PROJECT_NAME;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_PROJECT_NAME;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -174,7 +202,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.farm.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_FARM;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_FARM;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -188,7 +216,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.farm.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_FARM;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_FARM;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -202,7 +230,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.plot.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_PLOT;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_PLOT;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -216,7 +244,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.plot.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_PLOT;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_PLOT;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -230,7 +258,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.streetsAmount.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_STREETS_AMOUNT;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_STREETS_AMOUNT;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -244,7 +272,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.streetsAmount.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_STREETS_AMOUNT;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_STREETS_AMOUNT;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -258,7 +286,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.streetsAmount.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_STREETS_AMOUNT;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_STREETS_AMOUNT;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -272,7 +300,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.streetsAmount.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_STREETS_AMOUNT;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_STREETS_AMOUNT;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -298,7 +326,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.weather.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_WEATHER;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_WEATHER;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -312,7 +340,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.weather.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_WEATHER;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_WEATHER;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -338,7 +366,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.tractorName.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_TRACTOR_NAME;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_TRACTOR_NAME;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -352,7 +380,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.tractorName.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_TRACTOR_NAME;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_TRACTOR_NAME;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -366,7 +394,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.rightApplicatorLoad.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_RIGHT_APPLICATOR_LOAD;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_RIGHT_APPLICATOR_LOAD;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -380,7 +408,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.centerApplicatorLoad.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_CENTER_APPLICATOR_LOAD;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_CENTER_APPLICATOR_LOAD;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -394,7 +422,7 @@ describe('FormValidator unit tests', () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.leftApplicatorLoad.errorMessage =
-      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.UNDEFINED_LEFT_APPLICATOR_LOAD;
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_LEFT_APPLICATOR_LOAD;
     preExecutionFormResult.valid = false;
 
     expect(result).toEqual(preExecutionFormResult);
@@ -491,9 +519,9 @@ describe('FormValidator unit tests', () => {
     configFormData.PRESETS = undefined;
     const result = formValidator.validateConfigForm(configFormData);
     for (let i = 0; i < 6; i++) {
-      configFormResult['preset' + i + 1 + 'Name'].errorMessage =
+      configFormResult['preset' + (i + 1).toString() + 'Name'].errorMessage =
         CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET;
-      configFormResult['preset' + i + 1 + 'Dose'].errorMessage =
+      configFormResult['preset' + (i + 1).toString() + 'Dose'].errorMessage =
         CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET;
     }
     configFormResult.valid = false;
@@ -528,7 +556,7 @@ describe('FormValidator unit tests', () => {
   it('should indicate that input is invalid when PRESETS.DOSE_AMOUNT is undefined', () => {
     configFormData.PRESETS.P1.DOSE_AMOUNT = undefined;
     const result = formValidator.validateConfigForm(configFormData);
-    configFormResult.preset1Name.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_VALUE;
+    configFormResult.preset1Dose.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_VALUE;
     configFormResult.valid = false;
     expect(result).toEqual(configFormResult);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -539,7 +567,7 @@ describe('FormValidator unit tests', () => {
   it('should indicate that input is invalid when PRESETS.DOSE_AMOUNT is < 1', () => {
     configFormData.PRESETS.P1.DOSE_AMOUNT = 0;
     const result = formValidator.validateConfigForm(configFormData);
-    configFormResult.preset1Name.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_VALUE;
+    configFormResult.preset1Dose.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_VALUE;
     configFormResult.valid = false;
     expect(result).toEqual(configFormResult);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -611,6 +639,74 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
     expect(loggerMocked.errorCalled).toBe(0);
     expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  // BEGIN validateFinishExecutionForm UNIT TEST
+
+  it('should return an error message when reason is undefined ', () => {
+    const result = formValidator.validateFinishExecutionForm(undefined);
+    expect(result).toEqual(CONSTANTS.ERRORS.FINISH_EXECUTION_FORM.INVALID_REASON);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should return an error message when reason is an empty string ', () => {
+    const result = formValidator.validateFinishExecutionForm('');
+    expect(result).toEqual(CONSTANTS.ERRORS.FINISH_EXECUTION_FORM.INVALID_REASON);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should return an error message when reason is a string different from the cached possible reasons', () => {
+    const result = formValidator.validateFinishExecutionForm(v4());
+    expect(result).toEqual(CONSTANTS.ERRORS.FINISH_EXECUTION_FORM.INVALID_REASON);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should return undefined when reason is one of the cached possible', () => {
+    const result = formValidator.validateFinishExecutionForm(stopReasonEvent);
+    expect(result).toEqual(undefined);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(0);
+  });
+
+  // BEGIN validateUnderForestForm UNIT TEST
+
+  it('should return an error message when underForest is undefined ', () => {
+    const result = formValidator.validateUnderForestForm(undefined);
+    expect(result).toEqual(CONSTANTS.ERRORS.UNDER_FOREST_FORM.INVALID_UNDER_FOREST);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should return an error message when underForest is an empty string ', () => {
+    const result = formValidator.validateUnderForestForm('');
+    expect(result).toEqual(CONSTANTS.ERRORS.UNDER_FOREST_FORM.INVALID_UNDER_FOREST);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should return an error message when underForest is a string different from the cached possible reasons', () => {
+    const result = formValidator.validateUnderForestForm(v4());
+    expect(result).toEqual(CONSTANTS.ERRORS.UNDER_FOREST_FORM.INVALID_UNDER_FOREST);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should return undefined when underForest is one of the cached', () => {
+    const result = formValidator.validateUnderForestForm(CONSTANTS.UNDER_FOREST_ITEMS[0].name);
+    expect(result).toEqual(undefined);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(0);
   });
 });
 
