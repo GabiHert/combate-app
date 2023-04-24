@@ -4,7 +4,7 @@ import { ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { CONSTANTS } from '../../internal/config/config';
-import { AConfig } from '../../internal/adapter/config/config';
+import { AConfigCache } from '../../internal/adapter/cache/config-cache';
 import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 import LoginModal from '../../Components/LoginModal';

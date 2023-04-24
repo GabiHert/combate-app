@@ -5,7 +5,7 @@ import FormInput from '../../Components/FormInput';
 import SlideInput from '../../Components/SlideInput';
 import { Theme } from '../../app/theme/theme';
 import { SeverityEnum } from '../../internal/core/enum/severity';
-import { config } from '../../internal/core/port/config-port';
+import { config } from '../../internal/core/port/config-cache-port';
 
 import { v1 } from 'uuid';
 import SelectInput from '../../Components/SelectInput';
@@ -17,6 +17,8 @@ import { poisonItems } from '../../internal/core/enum/poison';
 import { IConfigsProps } from '../../internal/interface/config-props';
 import ItemListInput from './components/ItemListInput';
 import ItemRegisterModal from './components/ItemRegisterModal';
+import { itemArrayToMapString } from '../../app/parser/item-array-to-map-string';
+import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 
 interface IPreset {
   name: string;
@@ -100,19 +102,32 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const [preset6DoseError, setPreset6DoseError] = useState<string>();
 
   const [spaceBetweenLines, setSpaceBetweenLines] = useState<number>(0);
+  const [spaceBetweenLinesError, setSpaceBetweenLinesError] = useState<string>();
+
   const [stopReasons, setStopReasons] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(config.getCache().STOP_REASONS_EVENTS)
   );
+  const [stopReasonsError, setStopReasonsError] = useState<string>();
+
+  const [filePathError, setFilePathError] = useState<string>();
+
   const [events, setEvents] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(config.getCache().EVENTS)
   );
+  const [eventsError, setEventsError] = useState<string>();
+
   const [farms, setFarms] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(config.getCache().FARMS)
   );
+  const [farmsError, setFarmsError] = useState<string>();
+
   const [plots, setPlots] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(config.getCache().PLOTS)
   );
+  const [plotsError, setPlotsError] = useState<string>();
+
   const [poison, setPoison] = useState('');
+  const [poisonError, setPoisonError] = useState<string>();
 
   const [addReasonModalVisible, setAddReasonModalVisible] = useState(false);
   const [addEventModalVisible, setAddEventModalVisible] = useState(false);
@@ -329,9 +344,12 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
 
   const onSavePressed = useCallback(async () => {
-    //todo: call validation
     try {
       const data: IConfigsProps = {
+        EVENTS: itemArrayToMapString(events),
+        FARMS: itemArrayToMapString(farms),
+        PLOTS: itemArrayToMapString(plots),
+        STOP_REASONS_EVENTS: itemArrayToMapString(stopReasons),
         APPLICATION: {
           CENTER_TANK_MAX_LOAD: centerTankMaxLoad,
           DOSE_WEIGHT_KG: doseWeightKg,
@@ -347,34 +365,42 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           P6: { NAME: preset6.name, DOSE_AMOUNT: preset6.doseAmount },
         },
         FILE_PATH: filePath,
-        POISON_TYPE: poison,
+        POISON_TYPE: ptToDefaults.poison(poison).name,
         SPACE_BETWEEN_LINES: spaceBetweenLines,
         SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: metersBetweenDose },
       };
+
       const result = validator.validateConfigForm(data);
 
+      setRightTankMaxLoadError(result.rightTankMaxLoad.errorMessage);
+      setLeftTankMaxLoadError(result.leftTankMaxLoad.errorMessage);
+      setCenterTankMaxLoadError(result.centerTankMaxLoad.errorMessage);
+      setPreset1NameError(result.preset1Name.errorMessage);
+      setPreset2NameError(result.preset2Name.errorMessage);
+      setPreset3NameError(result.preset3Name.errorMessage);
+      setPreset4NameError(result.preset4Name.errorMessage);
+      setPreset5NameError(result.preset5Name.errorMessage);
+      setPreset6NameError(result.preset6Name.errorMessage);
+      setPreset1DoseError(result.preset1Dose.errorMessage);
+      setPreset2DoseError(result.preset2Dose.errorMessage);
+      setPreset3DoseError(result.preset3Dose.errorMessage);
+      setPreset4DoseError(result.preset4Dose.errorMessage);
+      setPreset5DoseError(result.preset5Dose.errorMessage);
+      setPreset6DoseError(result.preset6Dose.errorMessage);
+      setDoseWeightKgError(result.doseWeightKg.errorMessage);
+      setPoisonError(result.poisonType.errorMessage);
+      setFarmsError(result.farms.errorMessage);
+      setPlotsError(result.plots.errorMessage);
+      setSpaceBetweenLinesError(result.spaceBetweenLines.errorMessage);
+      setEventsError(result.events.errorMessage);
+      setFilePathError(result.filePath.errorMessage);
+      setStopReasonsError(result.stopReasonEvent.errorMessage);
       if (!result.valid) {
         ShowToast({
           title: 'Erro ao salvar alterações',
           severity: SeverityEnum.ERROR,
           durationMs: 2000,
         });
-        setRightTankMaxLoadError(result.rightTankMaxLoad.errorMessage);
-        setLeftTankMaxLoadError(result.leftTankMaxLoad.errorMessage);
-        setCenterTankMaxLoadError(result.centerTankMaxLoad.errorMessage);
-        setPreset1NameError(result.preset1Name.errorMessage);
-        setPreset2NameError(result.preset2Name.errorMessage);
-        setPreset3NameError(result.preset3Name.errorMessage);
-        setPreset4NameError(result.preset4Name.errorMessage);
-        setPreset5NameError(result.preset5Name.errorMessage);
-        setPreset6NameError(result.preset6Name.errorMessage);
-        setPreset1DoseError(result.preset1Dose.errorMessage);
-        setPreset2DoseError(result.preset2Dose.errorMessage);
-        setPreset3DoseError(result.preset3Dose.errorMessage);
-        setPreset4DoseError(result.preset4Dose.errorMessage);
-        setPreset4DoseError(result.preset4Dose.errorMessage);
-        setPreset4DoseError(result.preset4Dose.errorMessage);
-        setDoseWeightKgError(result.doseWeightKg.errorMessage);
       } else {
         const cache = config.getCache();
 
@@ -428,6 +454,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     poison,
     filePath,
     spaceBetweenLines,
+    poisonError,
   ]);
 
   return (
@@ -494,6 +521,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={20}
             minValue={1}
+            errorMessage={spaceBetweenLinesError}
           />
           <Divider w="80%" />
 
@@ -546,12 +574,14 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title={'Peso dose'}
             unit={'g'}
             disabled={false}
+            errorMessage={doseWeightKgError}
           />
           <SelectInput
             onItemSelected={setPoison}
             items={[...poisonItems, { id: 'another', name: 'Outro' }]}
             title="Tipo de veneno"
             placeholder=""
+            errorMessage={poisonError}
           />
           <Divider w="80%" />
           <FormControl.Label
@@ -576,6 +606,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
+            errorMessage={preset1DoseError}
           />
 
           <Divider w="80%" />
@@ -601,6 +632,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
+            errorMessage={preset2DoseError}
           />
           <Divider w="80%" />
           <FormControl.Label
@@ -625,6 +657,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
+            errorMessage={preset3DoseError}
           />
 
           <Divider w="80%" />
@@ -650,6 +683,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
+            errorMessage={preset4DoseError}
           />
 
           <Divider w="80%" />
@@ -662,7 +696,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 5"
-            errorMessage={preset4NameError}
+            errorMessage={preset5NameError}
             defaultValue={config.getCache().PRESETS.P5.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset5NameChange}
@@ -676,6 +710,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
+            errorMessage={preset5DoseError}
           />
 
           <Divider w="80%" />
@@ -688,7 +723,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 6"
-            errorMessage={preset4NameError}
+            errorMessage={preset6NameError}
             defaultValue={config.getCache().PRESETS.P6.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset6NameChange}
@@ -701,6 +736,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
+            errorMessage={preset6DoseError}
           />
 
           <Divider w="80%" />
@@ -719,6 +755,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={10}
             minValue={0}
+            errorMessage={spaceBetweenLinesError}
           />
           <Divider w="80%" />
 
@@ -727,6 +764,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onAddItemPress={onAddStopReasonPress}
             onDeleteItemRequested={onDeleteStopReasonRequested}
             title={'Motivos de parada'}
+            errorMessage={stopReasonsError}
           />
 
           <Divider w="80%" />
@@ -736,6 +774,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onAddItemPress={onAddEventPress}
             onDeleteItemRequested={onDeleteEventRequested}
             title={'Tipos de eventos'}
+            errorMessage={eventsError}
           />
 
           <Divider w="80%" />
@@ -745,6 +784,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onAddItemPress={onAddFarmPress}
             onDeleteItemRequested={onDeleteFarmRequested}
             title={'Fazendas'}
+            errorMessage={farmsError}
           />
 
           <Divider w="80%" />
@@ -754,6 +794,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onAddItemPress={onAddPlotPress}
             onDeleteItemRequested={onDeletePlotRequested}
             title={'Talhões'}
+            errorMessage={plotsError}
           />
 
           <Divider w="80%" />
@@ -768,6 +809,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             description="Preencha este campo com o caminho de pastas para salvar o arquivo .csv"
             defaultValue={config.getCache().FILE_PATH}
             onChangeText={setFilePath}
+            errorMessage={filePathError}
           />
         </VStack>
 

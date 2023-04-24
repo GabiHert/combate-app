@@ -1,7 +1,7 @@
 import { CONSTANTS } from '../../config/config';
 import { PoisonEnum } from '../../core/enum/poison';
 import { WeatherEnum } from '../../core/enum/weather';
-import { PConfig } from '../../core/port/config-port';
+import { PCache } from '../../core/port/config-cache-port';
 import { PLogger } from '../../core/port/logger-port';
 import { IConfigFormResult } from '../../interface/config-form-result';
 import { IConfigsProps, IPreExecutionConfigProps } from '../../interface/config-props';
@@ -9,7 +9,7 @@ import { IPreExecutionFormResult } from '../../interface/pre-execution-form-resu
 import { PValidator as PFormValidator } from '../port/validator-port';
 
 export class AValidator implements PFormValidator {
-  constructor(private readonly _logger: PLogger, private readonly _config: PConfig) {}
+  constructor(private readonly _logger: PLogger, private readonly _config: PCache) {}
 
   validatePreExecutionForm(data: IPreExecutionConfigProps): IPreExecutionFormResult {
     let result: IPreExecutionFormResult = {
@@ -336,6 +336,7 @@ export class AValidator implements PFormValidator {
       this._logger.warn({
         event: 'FormValidator.validateConfigForm',
         details: 'Process warn - Invalid POISON_TYPE',
+        poisonType: data.POISON_TYPE,
       });
     }
 

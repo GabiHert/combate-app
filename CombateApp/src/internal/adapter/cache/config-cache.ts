@@ -1,21 +1,22 @@
-import { IPreExecutionConfigProps } from '../../interface/config-props';
+import { defaultConfig } from 'native-base/lib/typescript/core/NativeBaseContext';
+import { IConfigsProps } from '../../interface/config-props';
+import { PCache as PConfigCache } from '../../core/port/config-cache-port';
 import { PRepository } from '../../core/port/repository-port';
-import { PPreExecutionConfig } from '../../core/port/pre-execution-config-port';
 
-export class APreExecutionConfig implements PPreExecutionConfig {
+export class AConfigCache implements PConfigCache {
   constructor(
     private repository: PRepository,
-    private cache?: IPreExecutionConfigProps,
-    private prefix = 'PRE_EXECUTION_CONFIG'
+    private cache?: IConfigsProps,
+    private prefix = 'CONFIG'
   ) {
     this.updateCache();
   }
-  async update(config: IPreExecutionConfigProps) {
+  async update(config: IConfigsProps) {
     this.cache = config;
     const str = JSON.stringify(config);
     await this.repository.persist(this.prefix, str);
   }
-  getCache(): IPreExecutionConfigProps {
+  getCache(): IConfigsProps {
     return this.cache;
   }
   async updateCache(): Promise<void> {

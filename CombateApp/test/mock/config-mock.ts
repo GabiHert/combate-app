@@ -1,7 +1,7 @@
-import { PConfig } from '../../src/internal/core/port/config-port';
+import { PCache } from '../../src/internal/core/port/config-cache-port';
 import { IConfigsProps } from '../../src/internal/interface/config-props';
 
-export class ConfigMock implements PConfig {
+export class ConfigMock implements PCache {
   [x: string]: {};
   cache: IConfigsProps;
   getCache(): IConfigsProps {

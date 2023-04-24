@@ -8,6 +8,7 @@ import {
   IconButton,
   Text,
   TextArea,
+  WarningOutlineIcon,
 } from 'native-base';
 import { memo } from 'react';
 import { appConfig } from '../../../../app/config/app-config';
@@ -18,18 +19,24 @@ function ItemListInput(props: {
   onAddItemPress: () => void;
   onDeleteItemRequested: (id: string) => void;
   title: string;
+  errorMessage?: string;
 }) {
   return (
     <>
       <HStack w={'50%'} space={2} alignItems={'center'} justifyContent={'center'}>
-        <FormControl.Label
-          _text={{
-            fontWeight: 'bold',
-            fontSize: Theme().font.size.l(appConfig.screen),
-          }}
-        >
-          {props.title}
-        </FormControl.Label>
+        <FormControl isInvalid={props.errorMessage && props.errorMessage != ''}>
+          <FormControl.Label
+            _text={{
+              fontWeight: 'bold',
+              fontSize: Theme().font.size.l(appConfig.screen),
+            }}
+          >
+            {props.title}
+          </FormControl.Label>
+          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon />}>
+            {props.errorMessage}
+          </FormControl.ErrorMessage>
+        </FormControl>
 
         <IconButton
           position={'absolute'}
@@ -70,6 +77,7 @@ function ItemListInput(props: {
             );
           })
         : ''}
+
       <Divider w="50%" />
     </>
   );

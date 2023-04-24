@@ -1,4 +1,4 @@
-import { config } from '../../core/port/config-port';
+import { config } from '../../core/port/config-cache-port';
 import { logger } from '../../core/port/logger-port';
 import { IConfigFormResult } from '../../interface/config-form-result';
 import { IConfigsProps, IPreExecutionConfigProps } from '../../interface/config-props';

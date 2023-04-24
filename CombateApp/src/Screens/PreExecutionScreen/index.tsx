@@ -3,13 +3,12 @@ import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { SeverityEnum } from '../../internal/core/enum/severity';
 import { Weather, WeatherEnum, weatherItems } from '../../internal/core/enum/weather';
-import { config } from '../../internal/core/port/config-port';
-import { preExecutionConfig } from '../../internal/core/port/pre-execution-config-port';
+import { config } from '../../internal/core/port/config-cache-port';
+import { preExecutionConfig } from '../../internal/core/port/pre-execution-config-cache-port';
 import { IPreExecutionConfigProps } from '../../internal/interface/config-props';
 import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-form-result';
 import { appConfig } from '../../app/config/app-config';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
-import { ptWeatherToWeather } from '../../app/parser/pt-weather-to-weather';
 import { weatherToPtWeather } from '../../app/parser/weather-to-pt-weather';
 
 import { Theme } from '../../app/theme/theme';
@@ -17,6 +16,7 @@ import { ShowToast } from '../../Components/AlertToast';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
 import SlideInput from '../../Components/SlideInput';
+import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 
 function PreExecutionScreen(props: { navigation: any }) {
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState<number>(
@@ -46,7 +46,6 @@ function PreExecutionScreen(props: { navigation: any }) {
     clientName: { errorMessage: undefined },
     projectName: { errorMessage: undefined },
     plot: { errorMessage: undefined },
-    spaceBetweenLines: { errorMessage: undefined },
     streetsAmount: { errorMessage: undefined },
     weather: { errorMessage: undefined },
     tractorName: { errorMessage: undefined },
@@ -75,7 +74,6 @@ function PreExecutionScreen(props: { navigation: any }) {
       clientName: { errorMessage: undefined },
       projectName: { errorMessage: undefined },
       plot: { errorMessage: undefined },
-      spaceBetweenLines: { errorMessage: undefined },
       streetsAmount: { errorMessage: undefined },
       weather: { errorMessage: undefined },
       tractorName: { errorMessage: undefined },
@@ -109,7 +107,7 @@ function PreExecutionScreen(props: { navigation: any }) {
 
   const setWeatherCallback = useCallback(
     (value: string) => {
-      const weather = ptWeatherToWeather(value);
+      const weather = ptToDefaults.weather(value);
       setWeather(weather);
     },
     [setWeather]

@@ -9,7 +9,7 @@ import ConfigScreen from './src/Screens/ConfigScreen';
 import ExecutionScreen from './src/Screens/ExecutionScreen';
 import HomeScreen from './src/Screens/HomeScreen';
 import PreExecutionScreen from './src/Screens/PreExecutionScreen';
-import { preExecutionConfig } from './src/internal/core/port/pre-execution-config-port';
+import { preExecutionConfig } from './src/internal/core/port/pre-execution-config-cache-port';
 import { DEFAULT_PRE_EXECUTION_CONFIG } from './src/internal/config/config';
 
 const Stack = createNativeStackNavigator();

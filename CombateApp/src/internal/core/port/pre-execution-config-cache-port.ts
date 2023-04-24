@@ -1,16 +1,16 @@
 import { DEFAULT_CONFIG, DEFAULT_PRE_EXECUTION_CONFIG } from '../../config/config';
 import { IConfigsProps, IPreExecutionConfigProps } from '../../interface/config-props';
-import { AConfig } from '../../adapter/config/config';
+import { AConfigCache } from '../../adapter/cache/config-cache';
 import { repository } from './repository-port';
-import { APreExecutionConfig } from '../../adapter/config/pre-execution-config';
+import { APreExecutionConfigCache } from '../../adapter/cache/pre-execution-config-cache';
 
-export interface PPreExecutionConfig {
+export interface PPreExecutionConfigCache {
   getCache(): IPreExecutionConfigProps;
   update(config: IPreExecutionConfigProps): Promise<void>;
   updateCache(): Promise<void>;
 }
 
-export const preExecutionConfig: PPreExecutionConfig = new APreExecutionConfig(
+export const preExecutionConfig: PPreExecutionConfigCache = new APreExecutionConfigCache(
   repository,
   DEFAULT_PRE_EXECUTION_CONFIG
 );

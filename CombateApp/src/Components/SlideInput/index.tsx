@@ -1,4 +1,4 @@
-import { Box, FormControl, HStack, Slider, View, VStack } from 'native-base';
+import { Box, FormControl, HStack, Slider, View, VStack, WarningOutlineIcon } from 'native-base';
 import React, { memo, useCallback, useMemo, useState } from 'react';
 import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
@@ -12,6 +12,7 @@ function SlideInput(props: {
   onChangeEnd: (value: number) => void;
   title: string;
   unit?: string;
+  errorMessage?: string;
 }) {
   const [value, setValue] = useState<number>(props.defaultValue);
   const onChangeEnd = useCallback(
@@ -23,7 +24,12 @@ function SlideInput(props: {
   );
 
   return (
-    <FormControl isDisabled={props.disabled} justifyContent={'center'} alignItems={'center'}>
+    <FormControl
+      isDisabled={props.disabled}
+      justifyContent={'center'}
+      alignItems={'center'}
+      isInvalid={props.errorMessage && props.errorMessage != ''}
+    >
       <FormControl.Label
         _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(appConfig.screen) }}
       >
@@ -36,6 +42,9 @@ function SlideInput(props: {
         {Math.max(value).toFixed(2)}
         {props.unit ? ' ' + props.unit.toString() : ''}
       </FormControl.Label>
+      <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon />}>
+        {props.errorMessage}
+      </FormControl.ErrorMessage>
       <Slider
         size={'lg'}
         w="60%"
