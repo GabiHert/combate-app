@@ -2,12 +2,13 @@ import { FormControl, Select, WarningOutlineIcon } from 'native-base';
 import React, { memo } from 'react';
 import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
+import { IItem } from '../../internal/interface/item';
 
 function SelectInput(props: {
   title: string;
   errorMessage?: string;
   placeholder: string;
-  items?: Array<{ name: string; id: string }>;
+  items?: Array<IItem>;
   onItemSelected: (value: string) => void;
   w?: string | number;
   h?: string | number;

@@ -1,6 +1,5 @@
-export type TMapString = {
-  [key: string]: string;
-};
+import { TMapString } from '../types/map-string';
+
 export interface IConfigsProps {
   APPLICATION: {
     RIGHT_TANK_MAX_LOAD: number;

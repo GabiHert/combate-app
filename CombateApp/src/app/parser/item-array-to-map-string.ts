@@ -1,6 +1,7 @@
-import { TMapString } from '../../internal/interface/config-props';
+import { IItem } from '../../internal/interface/item';
+import { TMapString } from '../../internal/types/map-string';
 
-export function itemArrayToMapString(itemArray: Array<{ name: string; id: string }>): TMapString {
+export function itemArrayToMapString(itemArray: Array<IItem>): TMapString {
   let map: TMapString;
   itemArray.forEach((item) => {
     map = { ...map, [item.id]: item.name };
