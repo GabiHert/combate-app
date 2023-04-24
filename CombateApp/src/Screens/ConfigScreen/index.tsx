@@ -1,36 +1,20 @@
-import {
-  AddIcon,
-  Box,
-  Button,
-  ChevronRightIcon,
-  DeleteIcon,
-  Divider,
-  FormControl,
-  HStack,
-  Icon,
-  IconButton,
-  Input,
-  ScrollView,
-  Text,
-  VStack,
-} from 'native-base';
-import React, { useCallback, useState } from 'react';
-import FormInput from '../../Components/FormInput';
-import { Theme } from '../../app/theme/theme';
+import { Box, Button, Divider, FormControl, ScrollView, VStack } from 'native-base';
+import { useCallback, useState } from 'react';
 import { ShowToast } from '../../Components/AlertToast';
+import FormInput from '../../Components/FormInput';
+import SlideInput from '../../Components/SlideInput';
+import { Theme } from '../../app/theme/theme';
 import { SeverityEnum } from '../../internal/core/enum/severity';
 import { config } from '../../internal/core/port/config-port';
-import SlideInput from '../../Components/SlideInput';
 
-import { appConfig } from '../../app/config/app-config';
-import ItemRegisterModal from './components/ItemRegisterModal';
-import { mapStringToItemArray as mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
-import { v1, v4 } from 'uuid';
-import ItemListInput from './components/ItemListInput';
+import { v1 } from 'uuid';
 import SelectInput from '../../Components/SelectInput';
-import { poisonItems } from '../../internal/core/enum/poison';
-import { setPath } from 'react-native-reanimated/lib/types/lib/reanimated2/animation/styleAnimation';
+import { appConfig } from '../../app/config/app-config';
+import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
 import { CONSTANTS } from '../../internal/config/config';
+import { poisonItems } from '../../internal/core/enum/poison';
+import ItemListInput from './components/ItemListInput';
+import ItemRegisterModal from './components/ItemRegisterModal';
 
 interface IPreset {
   name: string;
