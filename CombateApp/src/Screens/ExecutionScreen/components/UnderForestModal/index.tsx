@@ -1,28 +1,32 @@
-import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
+import { Button, FormControl, Modal } from 'native-base';
 import { memo, useCallback, useState } from 'react';
-import { config } from '../../../../internal/core/port/config-cache-port';
+import SelectInput from '../../../../Components/SelectInput';
 import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
-import FormInput from '../../../../Components/FormInput';
-import SelectInput from '../../../../Components/SelectInput';
-import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
+import { validator } from '../../../../internal/cmd/port/validator-port';
 import { CONSTANTS } from '../../../../internal/config/config';
 
 function UnderForestModal(props: { isOpen: boolean; onClose: () => void; onOkPress: () => void }) {
-  const [event, setEvent] = useState<string>();
+  const [underForest, setUnderForest] = useState<string>();
+  const [underForestError, setUnderForestError] = useState<string>();
 
   const onEventChange = useCallback(
     (event: string) => {
-      setEvent(event);
+      setUnderForest(event);
     },
-    [setEvent]
+    [setUnderForest]
   );
 
   const onFinishPressed = useCallback(() => {
     //todo:call backend to register event
+    const errorMessage = validator.validateUnderForestForm(underForest);
+    if (!errorMessage) {
+      props.onOkPress();
+    } else {
+      setUnderForestError(errorMessage);
+    }
+  }, [underForest]);
 
-    props.onOkPress();
-  }, [event]);
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <Modal.Content maxWidth="500px" maxH={'500px'}>
@@ -49,6 +53,7 @@ function UnderForestModal(props: { isOpen: boolean; onClose: () => void; onOkPre
             title="Selecione o sub-bosque"
             placeholder=""
             items={CONSTANTS.UNDER_FOREST_ITEMS}
+            errorMessage={underForestError}
           />
         </Modal.Body>
         <Modal.Footer

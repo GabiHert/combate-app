@@ -1,12 +1,12 @@
-import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
+import { Button, FormControl, Modal } from 'native-base';
 import { memo, useCallback, useState } from 'react';
-import { config } from '../../../../internal/core/port/config-cache-port';
-import { appConfig } from '../../../../app/config/app-config';
-import { Theme } from '../../../../app/theme/theme';
-import FormInput from '../../../../Components/FormInput';
 import SelectInput from '../../../../Components/SelectInput';
+import { appConfig } from '../../../../app/config/app-config';
 import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
+import { Theme } from '../../../../app/theme/theme';
+import { validator } from '../../../../internal/cmd/port/validator-port';
 import { CONSTANTS } from '../../../../internal/config/config';
+import { config } from '../../../../internal/core/port/config-cache-port';
 import UnderForestModal from '../UnderForestModal';
 
 function FinishExecutionModal(props: {
@@ -16,6 +16,7 @@ function FinishExecutionModal(props: {
 }) {
   const [event, setEvent] = useState<string>();
   const [underForestModalVisible, setUnderForestModalVisible] = useState(false);
+  const [eventError, setEventError] = useState<string>();
 
   const onUnderForestModalClose = useCallback(() => {
     setUnderForestModalVisible(false);
@@ -33,13 +34,18 @@ function FinishExecutionModal(props: {
   }, []);
 
   const onFinishPressed = useCallback(() => {
-    //todo:call backend to register event
-    if (event == CONSTANTS.FINISHED_WORK_REASON_NAME) {
-      setUnderForestModalVisible(true);
+    const errorMessage = validator.validateFinishExecutionForm(event);
+    if (!errorMessage) {
+      //todo:call backend to register event
+      if (event == CONSTANTS.FINISHED_WORK_REASON_NAME) {
+        setUnderForestModalVisible(true);
+      } else {
+        props.onFinishExecutionPress();
+      }
     } else {
-      props.onFinishExecutionPress();
+      setEventError(errorMessage);
     }
-  }, [event, setUnderForestModalVisible]);
+  }, [event, eventError, setUnderForestModalVisible]);
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <UnderForestModal
@@ -71,6 +77,7 @@ function FinishExecutionModal(props: {
             title="Descreva o motivo do fim da execução"
             placeholder=""
             items={mapStringToItemArray(config.getCache().STOP_REASONS_EVENTS)}
+            errorMessage={eventError}
           />
         </Modal.Body>
         <Modal.Footer
