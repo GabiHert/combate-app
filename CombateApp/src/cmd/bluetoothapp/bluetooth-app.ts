@@ -6,12 +6,12 @@ import { PBluetoothApp } from '../port/bluetooth-app-port';
 
 export class BluetoothApp implements PBluetoothApp {
   private _devices: Array<BluetoothDevice>;
-  constructor(private readonly _logger: PLogger, private readonly _bluetoothService: PBluetooth) {}
+  constructor(private readonly _logger: PLogger, private readonly _bluetooth: PBluetooth) {}
   async init(): Promise<void> {
     try {
       this._logger.info({ event: 'BluetoothApp.init', details: 'Process started' });
-      await this._bluetoothService.isBluetoothAvailable();
-      await this._bluetoothService.isBluetoothEnabled();
+      await this._bluetooth.isBluetoothAvailable();
+      await this._bluetooth.isBluetoothEnabled();
       this._logger.info({ event: 'BluetoothApp.init', details: 'Process finished' });
     } catch (err) {
       this._logger.info({
@@ -26,7 +26,7 @@ export class BluetoothApp implements PBluetoothApp {
   async getConnectedDevices(): Promise<Array<IItem>> {
     try {
       this._logger.info({ event: 'BluetoothApp.getConnectedDevices', details: 'Process started' });
-      const devices = await this._bluetoothService.getConnectedDevices();
+      const devices = await this._bluetooth.getConnectedDevices();
       let items: Array<IItem> = [];
       devices.forEach((device) => {
         items.push({ id: device.id || device.address, name: device.name });
@@ -64,7 +64,7 @@ export class BluetoothApp implements PBluetoothApp {
         }
       });
 
-      await this._bluetoothService.setDevice(selectedDevice);
+      await this._bluetooth.setDevice(selectedDevice);
       this._logger.info({ event: 'BluetoothApp.selectDevice', details: 'Process finished' });
     } catch (err) {
       this._logger.info({

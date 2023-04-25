@@ -10,12 +10,16 @@ import { preExecutionConfig } from '../../internal/core/port/pre-execution-confi
 import { IPreExecutionConfigProps } from '../../internal/interface/config-props';
 import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-form-result';
 
+import { ShowToast as showToast } from '../../Components/AlertToast';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
 import SlideInput from '../../Components/SlideInput';
 import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 import { Theme } from '../../app/theme/theme';
+import { bluetoothApp } from '../../cmd/port/bluetooth-app-port';
 import { validator } from '../../cmd/port/validator-port';
+import { SeverityEnum } from '../../internal/core/enum/severity';
+import { IItem } from '../../internal/interface/item';
 
 function PreExecutionScreen(props: { navigation: any }) {
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState<number>(
@@ -27,6 +31,8 @@ function PreExecutionScreen(props: { navigation: any }) {
   const [rightApplicatorLoad, setRightApplicatorLoad] = useState<number>(
     preExecutionConfig.getCache().rightApplicatorLoad
   );
+  const [devices, setDevices] = useState<Array<IItem>>();
+
   const [clientName, setClientName] = useState<string>(preExecutionConfig.getCache().clientName);
   const [projectName, setProjectName] = useState<string>(preExecutionConfig.getCache().projectName);
   const [farm, setFarm] = useState<string>(preExecutionConfig.getCache().farm);
@@ -36,7 +42,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     preExecutionConfig.getCache().streetsAmount
   );
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
-  const [deviceToConnect, setDeviceToConnect] = useState('');
+  const [deviceId, setDeviceId] = useState<string>();
 
   const [weather, setWeather] = useState<Weather>(
     new Weather(preExecutionConfig.getCache().weather)
@@ -109,9 +115,20 @@ function PreExecutionScreen(props: { navigation: any }) {
 
   const connectToBluetoothCallback = useCallback(async () => {
     setIsConnecting(true);
+    try {
+      await bluetoothApp.init();
+      await bluetoothApp.selectDevice(deviceId);
+    } catch (err) {
+      showToast({
+        durationMs: 2000,
+        message: err.message,
+        title: 'Erro conexão Bluetooth',
+        severity: SeverityEnum.ERROR,
+      });
+    }
 
     setIsConnecting(false);
-  }, [deviceToConnect]);
+  }, [deviceId]);
 
   return (
     <Box justifyContent={'center'} alignItems={'center'} h="100%">
@@ -238,10 +255,10 @@ function PreExecutionScreen(props: { navigation: any }) {
             Conexão CB
           </FormControl.Label>
           <SelectInput
-            onItemSelected={setDeviceToConnect}
+            onItemSelected={setDeviceId}
             title="Selecione o dipositivo Bluetooth"
             placeholder="CB5"
-            items={[{ id: 'teste', name: 'CB5 DEV' }]}
+            items={devices}
           />
 
           <Button

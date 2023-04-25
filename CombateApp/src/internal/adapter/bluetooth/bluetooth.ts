@@ -4,7 +4,7 @@ import { BluetoothErrorType } from '../../core/error/error-type';
 import { PBluetooth } from '../../core/port/bluetooth-port';
 import { PLogger } from '../../core/port/logger-port';
 
-class ABluetooth implements PBluetooth {
+export class ABluetooth implements PBluetooth {
   private _device: BluetoothDevice;
   constructor(private readonly _logger: PLogger) {}
   async isBluetoothAvailable(): Promise<void> {

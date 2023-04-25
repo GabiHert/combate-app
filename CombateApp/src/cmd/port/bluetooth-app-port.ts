@@ -1,9 +1,12 @@
+import { bluetooth } from '../../internal/core/port/bluetooth-port';
+import { logger } from '../../internal/core/port/logger-port';
 import { IItem } from '../../internal/interface/item';
+import { BluetoothApp } from '../bluetoothapp/bluetooth-app';
 
 export interface PBluetoothApp {
   /**
-   * Starts the device`s Bluetooth.
-   * @throws an error if bluetooth cannot be started.
+   * checks if the device can use Bluetooth
+   * @throws an error if bluetooth cannot be used.
    */
   init(): Promise<void>;
 
@@ -20,3 +23,5 @@ export interface PBluetoothApp {
    */
   selectDevice(deviceId: string): Promise<void>;
 }
+
+export const bluetoothApp = new BluetoothApp(logger, bluetooth);

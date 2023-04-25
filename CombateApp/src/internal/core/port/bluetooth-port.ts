@@ -1,4 +1,6 @@
 import { BluetoothDevice } from 'react-native-bluetooth-classic';
+import { ABluetooth } from '../../adapter/bluetooth/bluetooth';
+import { logger } from './logger-port';
 
 export interface PBluetooth {
   /**
@@ -40,3 +42,5 @@ export interface PBluetooth {
    */
   setDevice(device: BluetoothDevice): Promise<void>;
 }
+
+export const bluetooth = new ABluetooth(logger);
