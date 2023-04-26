@@ -1,5 +1,5 @@
 import { Box, Button, Divider, FormControl, IconButton, ScrollView, VStack } from 'native-base';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { appConfig } from '../../app/config/app-config';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
@@ -10,7 +10,7 @@ import { preExecutionConfig } from '../../internal/core/port/pre-execution-confi
 import { IPreExecutionConfigProps } from '../../internal/interface/config-props';
 import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-form-result';
 
-import { ShowToast as showToast } from '../../Components/AlertToast';
+import { ShowToast, ShowToast as showToast } from '../../Components/AlertToast';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
 import SlideInput from '../../Components/SlideInput';
@@ -18,7 +18,7 @@ import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 import { Theme } from '../../app/theme/theme';
 import { bluetoothApp } from '../../cmd/port/bluetooth-app-port';
 import { validator } from '../../cmd/port/validator-port';
-import { SeverityEnum } from '../../internal/core/enum/severity';
+import { Severity, SeverityEnum } from '../../internal/core/enum/severity';
 import { IItem } from '../../internal/interface/item';
 
 function PreExecutionScreen(props: { navigation: any }) {
@@ -31,7 +31,7 @@ function PreExecutionScreen(props: { navigation: any }) {
   const [rightApplicatorLoad, setRightApplicatorLoad] = useState<number>(
     preExecutionConfig.getCache().rightApplicatorLoad
   );
-  const [devices, setDevices] = useState<Array<IItem>>();
+  const [devices, setDevices] = useState<Array<IItem>>([]);
 
   const [clientName, setClientName] = useState<string>(preExecutionConfig.getCache().clientName);
   const [projectName, setProjectName] = useState<string>(preExecutionConfig.getCache().projectName);
@@ -42,7 +42,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     preExecutionConfig.getCache().streetsAmount
   );
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
-  const [deviceId, setDeviceId] = useState<string>();
+  const [deviceName, setDeviceName] = useState<string>();
 
   const [weather, setWeather] = useState<Weather>(
     new Weather(preExecutionConfig.getCache().weather)
@@ -61,6 +61,14 @@ function PreExecutionScreen(props: { navigation: any }) {
     valid: true,
   });
 
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      setDevices(await bluetoothApp.getConnectedDevices());
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [setDevices]);
+
   const onNextPressed = useCallback(async () => {
     const data: IPreExecutionConfigProps = {
       clientName,
@@ -76,15 +84,20 @@ function PreExecutionScreen(props: { navigation: any }) {
     };
 
     const result = validator.validatePreExecutionForm(data);
-
-    setValidationResult(result);
-
+    console.log(JSON.stringify(result, null, 4));
     if (result.valid) {
       if (data != preExecutionConfig.getCache()) {
         await preExecutionConfig.update(data);
       }
-
       props.navigation.navigate('ExecutionScreen');
+    } else {
+      setValidationResult(result);
+      ShowToast({
+        durationMs: 3000,
+        title: 'Informações inválidas',
+        message: 'Revise o formulário',
+        severity: SeverityEnum.ERROR,
+      });
     }
   }, [
     clientName,
@@ -116,19 +129,24 @@ function PreExecutionScreen(props: { navigation: any }) {
   const connectToBluetoothCallback = useCallback(async () => {
     setIsConnecting(true);
     try {
-      await bluetoothApp.init();
+      let deviceId: string;
+      devices.forEach((device) => {
+        if (device.name == deviceName) {
+          deviceId = device.id;
+        }
+      });
       await bluetoothApp.selectDevice(deviceId);
     } catch (err) {
       showToast({
-        durationMs: 2000,
+        durationMs: 3000,
         message: err.message,
-        title: 'Erro conexão Bluetooth',
+        title: 'Erro de conexão Bluetooth',
         severity: SeverityEnum.ERROR,
       });
     }
 
     setIsConnecting(false);
-  }, [deviceId]);
+  }, [deviceName]);
 
   return (
     <Box justifyContent={'center'} alignItems={'center'} h="100%">
@@ -255,7 +273,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             Conexão CB
           </FormControl.Label>
           <SelectInput
-            onItemSelected={setDeviceId}
+            onItemSelected={setDeviceName}
             title="Selecione o dipositivo Bluetooth"
             placeholder="CB5"
             items={devices}

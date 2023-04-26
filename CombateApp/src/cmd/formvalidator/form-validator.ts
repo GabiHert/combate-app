@@ -296,6 +296,26 @@ export class Validator implements PValidator {
       }
     }
 
+    if (!data.FARMS) {
+      result.valid = false;
+      result.farms.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_FARMS;
+      this._logger.warn({
+        event: 'FormValidator.validateConfigForm',
+        details: 'Process warn - Invalid FARMS',
+      });
+    } else {
+      for (const key in data.PLOTS) {
+        if (!data.FARMS[key] || data.FARMS[key].length === 0) {
+          result.valid = false;
+          result.farms.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_FARMS;
+          this._logger.warn({
+            event: 'FormValidator.validateConfigForm',
+            details: 'Process warn - Invalid FARMS attribute',
+          });
+        }
+      }
+    }
+
     if (!data.PLOTS) {
       result.valid = false;
       result.plots.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;

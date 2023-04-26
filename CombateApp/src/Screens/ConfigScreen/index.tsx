@@ -371,7 +371,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       };
 
       const result = validator.validateConfigForm(data);
-
+      console.log(JSON.stringify(result, null, 4));
       setRightTankMaxLoadError(result.rightTankMaxLoad.errorMessage);
       setLeftTankMaxLoadError(result.leftTankMaxLoad.errorMessage);
       setCenterTankMaxLoadError(result.centerTankMaxLoad.errorMessage);

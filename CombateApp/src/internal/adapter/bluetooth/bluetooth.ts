@@ -73,7 +73,7 @@ export class ABluetooth implements PBluetooth {
         event: 'BluetoothApp.getConnectedDevices',
         details: 'Process started',
       });
-      const devices = await RNBluetoothClassic.getConnectedDevices();
+      const devices = await RNBluetoothClassic.getBondedDevices();
       this._logger.info({
         event: 'BluetoothApp.getConnectedDevices',
         details: 'Process finished',
@@ -193,7 +193,13 @@ export class ABluetooth implements PBluetooth {
           event: 'BluetoothApp.selectDevice',
           details: 'device is not connected',
         });
-        const result = await device.connect();
+        const result = await device.connect().catch(() => {
+          this._logger.warn({
+            event: 'BluetoothApp.selectDevice',
+            details: 'device could not be connected',
+          });
+          throw new BluetoothErrorType(CONSTANTS.ERRORS.A_BLUETOOTH.SELECTED_DEVICE_NOT_CONNECTED);
+        });
 
         if (!result) {
           this._logger.warn({

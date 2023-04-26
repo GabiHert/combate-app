@@ -1,4 +1,6 @@
-import { BluetoothDevice } from 'react-native-bluetooth-classic';
+import { BluetoothDevice, BluetoothError } from 'react-native-bluetooth-classic';
+import { CONSTANTS } from '../../internal/config/config';
+import { BluetoothErrorType } from '../../internal/core/error/error-type';
 import { PBluetooth } from '../../internal/core/port/bluetooth-port';
 import { PLogger } from '../../internal/core/port/logger-port';
 import { IItem } from '../../internal/interface/item';
@@ -26,9 +28,9 @@ export class BluetoothApp implements PBluetoothApp {
   async getConnectedDevices(): Promise<Array<IItem>> {
     try {
       this._logger.info({ event: 'BluetoothApp.getConnectedDevices', details: 'Process started' });
-      const devices = await this._bluetooth.getConnectedDevices();
+      this._devices = await this._bluetooth.getConnectedDevices();
       let items: Array<IItem> = [];
-      devices.forEach((device) => {
+      this._devices.forEach((device) => {
         items.push({ id: device.id || device.address, name: device.name });
       });
 
@@ -39,7 +41,7 @@ export class BluetoothApp implements PBluetoothApp {
       });
       return items;
     } catch (err) {
-      this._logger.info({
+      this._logger.error({
         event: 'BluetoothApp.getConnectedDevices',
         details: 'Process error',
         error: err.message,
@@ -57,17 +59,35 @@ export class BluetoothApp implements PBluetoothApp {
         deviceId,
       });
 
-      let selectedDevice: BluetoothDevice;
-      this._devices.forEach((device) => {
-        if (device.id === deviceId || device.address === deviceId) {
-          selectedDevice = device;
-        }
-      });
+      let selectedDevice: BluetoothDevice = undefined;
+      if (this._devices) {
+        this._devices.forEach((device) => {
+          if (device.id === deviceId || device.address === deviceId) {
+            selectedDevice = device;
+          }
+        });
+      } else {
+        this._logger.warn({
+          event: 'BluetoothApp.selectDevice',
+          details: 'Process warn',
+          warn: 'Empty device list',
+        });
+        throw new BluetoothErrorType(CONSTANTS.ERRORS.BLUETOOTH_APP.EMPTY_DEVICE_LIST);
+      }
 
-      await this._bluetooth.setDevice(selectedDevice);
+      if (selectedDevice) {
+        await this._bluetooth.setDevice(selectedDevice);
+      } else {
+        this._logger.warn({
+          event: 'BluetoothApp.selectDevice',
+          details: 'Process warn',
+          warn: 'No selected device',
+        });
+        throw new BluetoothErrorType(CONSTANTS.ERRORS.BLUETOOTH_APP.DEVICE_NOT_AVAILABLE);
+      }
       this._logger.info({ event: 'BluetoothApp.selectDevice', details: 'Process finished' });
     } catch (err) {
-      this._logger.info({
+      this._logger.error({
         event: 'BluetoothApp.selectDevice',
         details: 'Process error',
         error: err.message,

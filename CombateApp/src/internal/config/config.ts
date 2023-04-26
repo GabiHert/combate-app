@@ -17,12 +17,17 @@ export const CONSTANTS = {
   ],
 
   ERRORS: {
+    BLUETOOTH_APP: {
+      DEVICE_NOT_AVAILABLE: 'Dispositivo não disponível',
+      EMPTY_DEVICE_LIST: 'Lista de dispositivos vazia',
+    },
     A_BLUETOOTH: {
-      NOT_ENABLED: '',
-      NOT_AVAILABLE: '',
-      DEVICE_NOT_SELECTED: '',
+      NOT_ENABLED: 'Bluetooth não ativado',
+      NOT_AVAILABLE: 'Bluetooth não disponível',
+      DEVICE_NOT_SELECTED: 'Dispositivo não selecionado',
       WRITE_5_ATTEMPTS_FAILED: '',
-      SELECTED_DEVICE_NOT_CONNECTED: '',
+      SELECTED_DEVICE_NOT_CONNECTED:
+        'Disposotivo selecionado não conectado. Tentativa automática de conexão falhou',
     },
     PRE_EXECUTION_FORM_VALIDATOR: {
       INVALID_CLIENT_NAME: '',
@@ -49,6 +54,7 @@ export const CONSTANTS = {
       INVALID_PLOTS: 'ERRO',
       INVALID_FILE_PATH: 'ERRO',
       INVALID_POISON_TYPE: 'ERRO',
+      INVALID_FARMS: 'ERRO',
     },
     FINISH_EXECUTION_FORM: { INVALID_REASON: '' },
     UNDER_FOREST_FORM: { INVALID_UNDER_FOREST: '' },
