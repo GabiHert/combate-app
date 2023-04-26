@@ -39,4 +39,5 @@ export interface IPreExecutionConfigProps {
   centerApplicatorLoad: number;
   rightApplicatorLoad: number;
   streetsAmount: number;
+  deviceName: string;
 }

@@ -24,6 +24,7 @@ export class Validator implements PValidator {
       centerApplicatorLoad: { errorMessage: undefined },
       rightApplicatorLoad: { errorMessage: undefined },
       streetsAmount: { errorMessage: undefined },
+      deviceName: { errorMessage: undefined },
     };
     this._logger.info({
       event: 'FormValidator.validatePreExecutionForm',
@@ -51,6 +52,18 @@ export class Validator implements PValidator {
         event: 'FormValidator.validatePreExecutionForm',
         details: 'Process warn - projectName is invalid',
         projectName: data.projectName,
+      });
+    }
+
+    if (!data.deviceName || !data.deviceName.length) {
+      // deviceName is invalid
+      result.valid = false;
+      result.deviceName.errorMessage =
+        CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_DEVICE_NAME;
+      this._logger.warn({
+        event: 'FormValidator.validatePreExecutionForm',
+        details: 'Process warn - deviceName is invalid',
+        deviceName: data.deviceName,
       });
     }
 

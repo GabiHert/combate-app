@@ -34,7 +34,6 @@ function PreExecutionScreen(props: { navigation: any }) {
   );
   const [devices, setDevices] = useState<Array<IItem>>([]);
   const [deviceConnected, setDeviceConnected] = useState(false);
-
   const [clientName, setClientName] = useState<string>(preExecutionConfig.getCache().clientName);
   const [projectName, setProjectName] = useState<string>(preExecutionConfig.getCache().projectName);
   const [farm, setFarm] = useState<string>(preExecutionConfig.getCache().farm);
@@ -60,14 +59,15 @@ function PreExecutionScreen(props: { navigation: any }) {
     rightApplicatorLoad: { errorMessage: undefined },
     leftApplicatorLoad: { errorMessage: undefined },
     centerApplicatorLoad: { errorMessage: undefined },
+    deviceName: { errorMessage: undefined },
     valid: true,
   });
 
   useFocusEffect(() => {
     const interval = setInterval(async () => {
       try {
-        await bluetoothApp.init();
-        setDevices(await bluetoothApp.getBondedDevices());
+        //await bluetoothApp.init();
+        //setDevices(await bluetoothApp.getBondedDevices());
       } catch (err) {
         ShowToast({
           durationMs: 3000,
@@ -93,16 +93,17 @@ function PreExecutionScreen(props: { navigation: any }) {
       streetsAmount,
       rightApplicatorLoad,
       centerApplicatorLoad,
+      deviceName,
     };
 
     const result = validator.validatePreExecutionForm(data);
+
     if (result.valid && deviceConnected) {
       if (data != preExecutionConfig.getCache()) {
         await preExecutionConfig.update(data);
       }
       props.navigation.navigate('ExecutionScreen');
     } else {
-      setBluetoothError();
       setValidationResult(result);
       ShowToast({
         durationMs: 3000,
@@ -297,6 +298,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             title="Selecione o dipositivo Bluetooth"
             placeholder="CB5"
             items={devices}
+            errorMessage={validationResult.deviceName.errorMessage}
           />
 
           <Button

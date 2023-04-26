@@ -9,5 +9,6 @@ export interface IPreExecutionFormResult {
   rightApplicatorLoad: { errorMessage: string };
   leftApplicatorLoad: { errorMessage: string };
   centerApplicatorLoad: { errorMessage: string };
+  deviceName: { errorMessage: string };
   valid: boolean;
 }

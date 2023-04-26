@@ -51,6 +51,7 @@ describe('FormValidator unit tests', () => {
     };
     loggerMocked.clear();
     preExecutionFormData = {
+      deviceName: v4(),
       clientName: v4(),
       projectName: v4(),
       farm: v4(),
@@ -75,6 +76,7 @@ describe('FormValidator unit tests', () => {
       centerApplicatorLoad: { errorMessage: undefined },
       rightApplicatorLoad: { errorMessage: undefined },
       streetsAmount: { errorMessage: undefined },
+      deviceName: { errorMessage: undefined },
     };
 
     configFormData = {
@@ -185,6 +187,20 @@ describe('FormValidator unit tests', () => {
 
   it('should indicate an error when preExecutionFormData.projectName is empty', () => {
     preExecutionFormData.projectName = '';
+    const result = formValidator.validatePreExecutionForm(preExecutionFormData);
+
+    preExecutionFormResult.projectName.errorMessage =
+      CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_PROJECT_NAME;
+    preExecutionFormResult.valid = false;
+
+    expect(result).toEqual(preExecutionFormResult);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(1);
+  });
+
+  it('should indicate an error when preExecutionFormData.deviceName is empty', () => {
+    preExecutionFormData.deviceName = '';
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.projectName.errorMessage =

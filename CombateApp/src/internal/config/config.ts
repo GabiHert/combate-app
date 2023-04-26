@@ -31,6 +31,7 @@ export const CONSTANTS = {
         'Disposotivo selecionado não conectado. Tentativa automática de conexão falhou',
     },
     PRE_EXECUTION_FORM_VALIDATOR: {
+      INVALID_DEVICE_NAME: 'ERRO',
       INVALID_CLIENT_NAME: 'ERRO',
       INVALID_PROJECT_NAME: 'ERRO',
       INVALID_FARM: 'ERRO',
@@ -116,4 +117,5 @@ export const DEFAULT_PRE_EXECUTION_CONFIG: IPreExecutionConfigProps = {
   leftApplicatorLoad: 0,
   streetsAmount: 1,
   rightApplicatorLoad: 0,
+  deviceName: '',
 };
