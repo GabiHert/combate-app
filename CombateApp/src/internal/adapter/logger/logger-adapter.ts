@@ -4,13 +4,13 @@ export class ALogger implements PLogger {
   constructor(private readonly active: boolean) {}
   info(...args: any): void {
     if (this.active) {
-      console.log({ severity: 'INFO', ...args });
+      console.log(JSON.stringify({ severity: 'INFO', ...args }));
       console.log('');
     }
   }
   warn(...args: any): void {
     if (this.active) {
-      console.log({ severity: 'WARN', ...args });
+      console.log(JSON.stringify({ severity: 'WARN', ...args }));
       console.log('');
     }
   }

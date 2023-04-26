@@ -47,7 +47,7 @@ function FormInput(props: {
         borderRadius={20}
         value={defaultValue}
         placeholder={props.placeholder}
-        _invalid={{ borderColor: Theme().color.sError, borderWidth: 3 }}
+        _invalid={{ borderColor: Theme().color.sError, borderWidth: 2 }}
         borderWidth={2}
       />
       {props.errorMessage ? (

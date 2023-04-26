@@ -15,6 +15,8 @@ import Sheet, { IApplicatorsPercentage } from './components/Sheet';
 import StatusBar from './components/StatusBar';
 import { Applicator } from './types/applicator';
 import { CONSTANTS } from '../../internal/config/config';
+import { bluetooth } from '../../internal/core/port/bluetooth-port';
+import { useFocusEffect } from '@react-navigation/native';
 
 function ExecutionScreen(props: { navigation: any }) {
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
@@ -85,13 +87,13 @@ function ExecutionScreen(props: { navigation: any }) {
     return { severity, percentage };
   }
 
-  useEffect(() => {
+  useFocusEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
     return () => backHandler.remove();
-  }, []);
+  });
 
-  useEffect(() => {
-    const interval = setInterval(() => {
+  useFocusEffect(() => {
+    const interval = setInterval(async () => {
       if (!doseInProgress) {
         //todo: perform CB request
         let response = {
@@ -111,7 +113,7 @@ function ExecutionScreen(props: { navigation: any }) {
     }, CONSTANTS.REQUEST_INTERVAL_MS);
 
     return () => clearInterval(interval);
-  }, [doseInProgress, leftApplicatorLoad]);
+  });
 
   const onFinishButtonPress = useCallback(() => {
     props.navigation.navigate('HomeScreen');

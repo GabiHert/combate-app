@@ -6,6 +6,7 @@ import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import { ShowToast as showToast } from '../../../../Components/AlertToast';
 import { Applicator } from '../../types/applicator';
+import { useFocusEffect } from '@react-navigation/native';
 
 function ApplicatorSelector(props: {
   leftApplicatorActive: boolean;
@@ -28,12 +29,11 @@ function ApplicatorSelector(props: {
     props.rightApplicatorActive
   );
 
-  useEffect(() => {
+  useFocusEffect(() => {
     setCenterApplicatorActive(props.centerApplicatorActive);
     setRightApplicatorActive(props.rightApplicatorActive);
     setLeftApplicatorActive(props.leftApplicatorActive);
-  }, [props.leftApplicatorActive, props.rightApplicatorActive, props.centerApplicatorActive]);
-
+  });
   function onLeftApplicatorPress() {
     if (props.leftApplicatorAvailable) {
       showToast({

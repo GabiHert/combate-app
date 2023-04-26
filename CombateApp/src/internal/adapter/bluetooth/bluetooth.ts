@@ -7,6 +7,7 @@ import { PLogger } from '../../core/port/logger-port';
 export class ABluetooth implements PBluetooth {
   private _device: BluetoothDevice;
   constructor(private readonly _logger: PLogger) {}
+
   async isBluetoothAvailable(): Promise<void> {
     try {
       this._logger.info({
@@ -67,7 +68,7 @@ export class ABluetooth implements PBluetooth {
     }
   }
 
-  async getConnectedDevices(): Promise<BluetoothDevice[]> {
+  async getBondedDevices(): Promise<BluetoothDevice[]> {
     try {
       this._logger.info({
         event: 'BluetoothApp.getConnectedDevices',
@@ -209,6 +210,8 @@ export class ABluetooth implements PBluetooth {
           throw new BluetoothErrorType(CONSTANTS.ERRORS.A_BLUETOOTH.SELECTED_DEVICE_NOT_CONNECTED);
         }
       }
+
+      this._device = device;
     } catch (err) {
       this._logger.error({
         event: 'BluetoothApp.selectDevice',

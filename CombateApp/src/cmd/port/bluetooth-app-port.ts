@@ -14,7 +14,7 @@ export interface PBluetoothApp {
    * Lists all Bluetooth devices already paired.
    * @return An array of the available devices with their name and id
    */
-  getConnectedDevices(): Promise<Array<IItem>>;
+  getBondedDevices(): Promise<Array<IItem>>;
 
   /**
    * Selects the device to communicate

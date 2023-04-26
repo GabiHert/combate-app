@@ -15,7 +15,7 @@ import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array'
 import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 import { validator } from '../../cmd/port/validator-port';
 import { CONSTANTS } from '../../internal/config/config';
-import { poisonItems } from '../../internal/core/enum/poison';
+import { Poison, PoisonEnum, poisonItems } from '../../internal/core/enum/poison';
 import { IConfigsProps } from '../../internal/interface/config-props';
 import ItemListInput from './components/ItemListInput';
 import ItemRegisterModal from './components/ItemRegisterModal';
@@ -126,7 +126,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
   const [plotsError, setPlotsError] = useState<string>();
 
-  const [poison, setPoison] = useState('');
+  const [poison, setPoison] = useState(config.getCache().POISON_TYPE);
   const [poisonError, setPoisonError] = useState<string>();
 
   const [addReasonModalVisible, setAddReasonModalVisible] = useState(false);
@@ -282,7 +282,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       config.update(cache);
       setFarms(mapStringToItemArray(cache.FARMS));
     },
-    [setFarms]
+    [setFarms, farms]
   );
   const onDeleteFarmRequested = useCallback(
     (id: string) => {
@@ -291,7 +291,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       config.update(cache);
       setFarms(mapStringToItemArray(cache.FARMS));
     },
-    [setFarms]
+    [setFarms, farms]
   );
 
   const onAddPlotPress = useCallback(() => {
@@ -308,7 +308,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       config.update(cache);
       setPlots(mapStringToItemArray(cache.PLOTS));
     },
-    [setFarms]
+    [setPlots, plots]
   );
   const onDeletePlotRequested = useCallback(
     (id: string) => {
@@ -317,7 +317,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       config.update(cache);
       setPlots(mapStringToItemArray(cache.PLOTS));
     },
-    [setPlots]
+    [setPlots, plots]
   );
 
   const onAddStopReasonPress = useCallback(() => {
@@ -612,6 +612,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             items={[...poisonItems, { id: 'another', name: 'Outro' }]}
             title="Tipo de veneno"
             placeholder=""
+            defaultValue={config.getCache().POISON_TYPE}
             errorMessage={poisonError}
           />
           <Divider w="80%" />
@@ -811,7 +812,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
 
           <ItemListInput
-            items={farms}
+            items={mapStringToItemArray(config.getCache().FARMS)}
             onAddItemPress={onAddFarmPress}
             onDeleteItemRequested={onDeleteFarmRequested}
             title={'Fazendas'}
@@ -821,7 +822,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
 
           <ItemListInput
-            items={plots}
+            items={mapStringToItemArray(config.getCache().PLOTS)}
             onAddItemPress={onAddPlotPress}
             onDeleteItemRequested={onDeletePlotRequested}
             title={'Talhões'}

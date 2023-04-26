@@ -25,10 +25,10 @@ export class BluetoothApp implements PBluetoothApp {
       throw err;
     }
   }
-  async getConnectedDevices(): Promise<Array<IItem>> {
+  async getBondedDevices(): Promise<Array<IItem>> {
     try {
       this._logger.info({ event: 'BluetoothApp.getConnectedDevices', details: 'Process started' });
-      this._devices = await this._bluetooth.getConnectedDevices();
+      this._devices = await this._bluetooth.getBondedDevices();
       let items: Array<IItem> = [];
       this._devices.forEach((device) => {
         items.push({ id: device.id || device.address, name: device.name });

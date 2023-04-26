@@ -20,6 +20,7 @@ import { bluetoothApp } from '../../cmd/port/bluetooth-app-port';
 import { validator } from '../../cmd/port/validator-port';
 import { Severity, SeverityEnum } from '../../internal/core/enum/severity';
 import { IItem } from '../../internal/interface/item';
+import { useFocusEffect } from '@react-navigation/native';
 
 function PreExecutionScreen(props: { navigation: any }) {
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState<number>(
@@ -61,13 +62,13 @@ function PreExecutionScreen(props: { navigation: any }) {
     valid: true,
   });
 
-  useEffect(() => {
+  useFocusEffect(() => {
     const interval = setInterval(async () => {
-      setDevices(await bluetoothApp.getConnectedDevices());
+      setDevices(await bluetoothApp.getBondedDevices());
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [setDevices]);
+  });
 
   const onNextPressed = useCallback(async () => {
     const data: IPreExecutionConfigProps = {
@@ -136,6 +137,11 @@ function PreExecutionScreen(props: { navigation: any }) {
         }
       });
       await bluetoothApp.selectDevice(deviceId);
+      ShowToast({
+        durationMs: 3000,
+        title: 'Bluetooth conectado com sucesso',
+        severity: SeverityEnum.OK,
+      });
     } catch (err) {
       showToast({
         durationMs: 3000,

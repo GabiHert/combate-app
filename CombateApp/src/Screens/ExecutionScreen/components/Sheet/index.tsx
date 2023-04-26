@@ -7,6 +7,7 @@ import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import EventRegisterModal from '../EventRegisterModal';
 import FinishExecutionModal from '../FinishExecutionModal';
+import { useFocusEffect } from '@react-navigation/native';
 
 export interface IApplicatorsPercentage {
   left: { percentage: number; severity: Severity };
@@ -43,7 +44,7 @@ function Sheet(props: {
   const [finishExecutionModalVisible, setFinishExecutionModalVisible] = useState(false);
   const [date, setDate] = useState(new Date());
 
-  useEffect(() => {
+  useFocusEffect(() => {
     const interval = setInterval(() => {
       setDate(new Date());
       if (executionTimeMinutes + 1 > 59) {
@@ -55,13 +56,7 @@ function Sheet(props: {
     }, 60000);
 
     return () => clearInterval(interval);
-  }, [
-    executionTimeHours,
-    executionTimeMinutes,
-    setExecutionTimeMinutes,
-    setExecutionTimeHours,
-    setDate,
-  ]);
+  });
 
   const formatExecutionTime = useCallback(
     (hours: number, minutes: number) => {

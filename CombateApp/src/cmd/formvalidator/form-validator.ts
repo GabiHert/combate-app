@@ -302,9 +302,10 @@ export class Validator implements PValidator {
       this._logger.warn({
         event: 'FormValidator.validateConfigForm',
         details: 'Process warn - Invalid FARMS',
+        data: data.FARMS,
       });
     } else {
-      for (const key in data.PLOTS) {
+      for (const key in data.FARMS) {
         if (!data.FARMS[key] || data.FARMS[key].length === 0) {
           result.valid = false;
           result.farms.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_FARMS;

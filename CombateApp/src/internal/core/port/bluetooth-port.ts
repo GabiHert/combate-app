@@ -19,7 +19,7 @@ export interface PBluetooth {
    * Lists all Bluetooth devices already paired.
    * @return An array of the available devices
    */
-  getConnectedDevices(): Promise<Array<BluetoothDevice>>;
+  getBondedDevices(): Promise<Array<BluetoothDevice>>;
 
   /**
    * Reads from the connected device
