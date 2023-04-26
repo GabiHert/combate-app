@@ -33,6 +33,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     preExecutionConfig.getCache().rightApplicatorLoad
   );
   const [devices, setDevices] = useState<Array<IItem>>([]);
+  const [deviceConnected, setDeviceConnected] = useState(false);
 
   const [clientName, setClientName] = useState<string>(preExecutionConfig.getCache().clientName);
   const [projectName, setProjectName] = useState<string>(preExecutionConfig.getCache().projectName);
@@ -64,7 +65,17 @@ function PreExecutionScreen(props: { navigation: any }) {
 
   useFocusEffect(() => {
     const interval = setInterval(async () => {
-      setDevices(await bluetoothApp.getBondedDevices());
+      try {
+        await bluetoothApp.init();
+        setDevices(await bluetoothApp.getBondedDevices());
+      } catch (err) {
+        ShowToast({
+          durationMs: 3000,
+          title: 'Erro Bluetooth',
+          message: err.message,
+          severity: SeverityEnum.ERROR,
+        });
+      }
     }, 5000);
 
     return () => clearInterval(interval);
@@ -85,13 +96,13 @@ function PreExecutionScreen(props: { navigation: any }) {
     };
 
     const result = validator.validatePreExecutionForm(data);
-    console.log(JSON.stringify(result, null, 4));
-    if (result.valid) {
+    if (result.valid && deviceConnected) {
       if (data != preExecutionConfig.getCache()) {
         await preExecutionConfig.update(data);
       }
       props.navigation.navigate('ExecutionScreen');
     } else {
+      setBluetoothError();
       setValidationResult(result);
       ShowToast({
         durationMs: 3000,
@@ -102,6 +113,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     }
   }, [
     clientName,
+    deviceConnected,
     projectName,
     plot,
     farm,
@@ -137,6 +149,7 @@ function PreExecutionScreen(props: { navigation: any }) {
         }
       });
       await bluetoothApp.selectDevice(deviceId);
+      setDeviceConnected(true);
       ShowToast({
         durationMs: 3000,
         title: 'Bluetooth conectado com sucesso',
@@ -149,6 +162,7 @@ function PreExecutionScreen(props: { navigation: any }) {
         title: 'Erro de conexão Bluetooth',
         severity: SeverityEnum.ERROR,
       });
+      setDeviceConnected(false);
     }
 
     setIsConnecting(false);

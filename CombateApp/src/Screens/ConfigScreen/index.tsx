@@ -1,5 +1,5 @@
 import { Box, Button, Divider, FormControl, ScrollView, VStack } from 'native-base';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ShowToast } from '../../Components/AlertToast';
 import FormInput from '../../Components/FormInput';
 import SlideInput from '../../Components/SlideInput';
@@ -15,30 +15,17 @@ import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array'
 import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 import { validator } from '../../cmd/port/validator-port';
 import { CONSTANTS } from '../../internal/config/config';
-import { Poison, PoisonEnum, poisonItems } from '../../internal/core/enum/poison';
+import { poisonItems } from '../../internal/core/enum/poison';
 import { IConfigsProps } from '../../internal/interface/config-props';
 import ItemListInput from './components/ItemListInput';
 import ItemRegisterModal from './components/ItemRegisterModal';
+import { IConfigFormResult } from '../../internal/interface/config-form-result';
+import { bluetooth } from '../../internal/core/port/bluetooth-port';
+import { bluetoothApp } from '../../cmd/port/bluetooth-app-port';
 
 interface IPreset {
   name: string;
   doseAmount: number;
-}
-
-interface IConfigValidationResult {
-  isValid: boolean;
-  rightTankMaxLoadError: string;
-  centerTankMaxLoadError: string;
-  leftTankMaxLoadError: string;
-  doseWeightKgError: string;
-  preset1NameError: string;
-  preset2NameError: string;
-  preset3NameError: string;
-  preset4NameError: string;
-  preset1DoseError: string;
-  preset2DoseError: string;
-  preset3DoseError: string;
-  preset4DoseError: string;
 }
 
 function ConfigScreen(props: { navigation: any; route: any }) {
@@ -82,52 +69,51 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     doseAmount: config.getCache().PRESETS.P6.DOSE_AMOUNT,
     name: config.getCache().PRESETS.P6.NAME,
   });
-
-  const [rightTankMaxLoadError, setRightTankMaxLoadError] = useState<string>();
-  const [centerTankMaxLoadError, setCenterTankMaxLoadError] = useState<string>();
-  const [leftTankMaxLoadError, setLeftTankMaxLoadError] = useState<string>();
-  const [doseWeightKgError, setDoseWeightKgError] = useState<string>();
-  const [preset1NameError, setPreset1NameError] = useState<string>();
-  const [preset2NameError, setPreset2NameError] = useState<string>();
-  const [preset3NameError, setPreset3NameError] = useState<string>();
-  const [preset4NameError, setPreset4NameError] = useState<string>();
-  const [preset5NameError, setPreset5NameError] = useState<string>();
-  const [preset6NameError, setPreset6NameError] = useState<string>();
-
-  const [preset1DoseError, setPreset1DoseError] = useState<string>();
-  const [preset2DoseError, setPreset2DoseError] = useState<string>();
-  const [preset3DoseError, setPreset3DoseError] = useState<string>();
-  const [preset4DoseError, setPreset4DoseError] = useState<string>();
-  const [preset5DoseError, setPreset5DoseError] = useState<string>();
-  const [preset6DoseError, setPreset6DoseError] = useState<string>();
-
   const [spaceBetweenLines, setSpaceBetweenLines] = useState<number>(0);
-  const [spaceBetweenLinesError, setSpaceBetweenLinesError] = useState<string>();
+
+  const [errors, setErrors] = useState<IConfigFormResult>({
+    valid: true,
+    centerTankMaxLoad: { errorMessage: undefined },
+    doseWeightKg: { errorMessage: undefined },
+    leftTankMaxLoad: { errorMessage: undefined },
+    preset1Dose: { errorMessage: undefined },
+    preset1Name: { errorMessage: undefined },
+    preset2Dose: { errorMessage: undefined },
+    preset2Name: { errorMessage: undefined },
+    preset3Dose: { errorMessage: undefined },
+    preset3Name: { errorMessage: undefined },
+    preset4Dose: { errorMessage: undefined },
+    preset4Name: { errorMessage: undefined },
+    events: { errorMessage: undefined },
+    farms: { errorMessage: undefined },
+    filePath: { errorMessage: undefined },
+    plots: { errorMessage: undefined },
+    poisonType: { errorMessage: undefined },
+    preset5Dose: { errorMessage: undefined },
+    preset5Name: { errorMessage: undefined },
+    preset6Dose: { errorMessage: undefined },
+    preset6Name: { errorMessage: undefined },
+    spaceBetweenLines: { errorMessage: undefined },
+    stopReasonEvent: { errorMessage: undefined },
+    rightTankMaxLoad: { errorMessage: undefined },
+  });
 
   const [stopReasons, setStopReasons] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(config.getCache().STOP_REASONS_EVENTS)
   );
-  const [stopReasonsError, setStopReasonsError] = useState<string>();
-
-  const [filePathError, setFilePathError] = useState<string>();
-
   const [events, setEvents] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(config.getCache().EVENTS)
   );
-  const [eventsError, setEventsError] = useState<string>();
 
   const [farms, setFarms] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(config.getCache().FARMS)
   );
-  const [farmsError, setFarmsError] = useState<string>();
 
   const [plots, setPlots] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(config.getCache().PLOTS)
   );
-  const [plotsError, setPlotsError] = useState<string>();
 
   const [poison, setPoison] = useState(config.getCache().POISON_TYPE);
-  const [poisonError, setPoisonError] = useState<string>();
 
   const [addReasonModalVisible, setAddReasonModalVisible] = useState(false);
   const [addEventModalVisible, setAddEventModalVisible] = useState(false);
@@ -285,7 +271,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     [setFarms, farms]
   );
   const onDeleteFarmRequested = useCallback(
-    (id: string) => {
+    async (id: string) => {
       let cache = config.getCache();
       delete cache.FARMS[id];
       config.update(cache);
@@ -297,9 +283,11 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const onAddPlotPress = useCallback(() => {
     setAddPlotModalVisible(true);
   }, [setAddPlotModalVisible]);
+  
   const onAddPlotModalClose = useCallback(() => {
     setAddPlotModalVisible(false);
   }, [setAddPlotModalVisible]);
+
   const onAddPlotRequested = useCallback(
     (name: string) => {
       let cache = config.getCache();
@@ -310,6 +298,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     },
     [setPlots, plots]
   );
+
   const onDeletePlotRequested = useCallback(
     (id: string) => {
       let cache = config.getCache();
@@ -323,9 +312,11 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const onAddStopReasonPress = useCallback(() => {
     setAddReasonModalVisible(true);
   }, [setAddReasonModalVisible]);
+
   const onAddReasonModalClose = useCallback(() => {
     setAddReasonModalVisible(false);
   }, [setAddReasonModalVisible]);
+
   const onAddStopReasonRequested = useCallback((name: string) => {
     let cache = config.getCache();
     const id = v1();
@@ -333,6 +324,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     config.update(cache);
     setStopReasons(mapStringToItemArray(cache.STOP_REASONS_EVENTS));
   }, []);
+
   const onDeleteStopReasonRequested = useCallback(
     (id: string) => {
       let cache = config.getCache();
@@ -371,30 +363,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       };
 
       const result = validator.validateConfigForm(data);
-      console.log(JSON.stringify(result, null, 4));
-      setRightTankMaxLoadError(result.rightTankMaxLoad.errorMessage);
-      setLeftTankMaxLoadError(result.leftTankMaxLoad.errorMessage);
-      setCenterTankMaxLoadError(result.centerTankMaxLoad.errorMessage);
-      setPreset1NameError(result.preset1Name.errorMessage);
-      setPreset2NameError(result.preset2Name.errorMessage);
-      setPreset3NameError(result.preset3Name.errorMessage);
-      setPreset4NameError(result.preset4Name.errorMessage);
-      setPreset5NameError(result.preset5Name.errorMessage);
-      setPreset6NameError(result.preset6Name.errorMessage);
-      setPreset1DoseError(result.preset1Dose.errorMessage);
-      setPreset2DoseError(result.preset2Dose.errorMessage);
-      setPreset3DoseError(result.preset3Dose.errorMessage);
-      setPreset4DoseError(result.preset4Dose.errorMessage);
-      setPreset5DoseError(result.preset5Dose.errorMessage);
-      setPreset6DoseError(result.preset6Dose.errorMessage);
-      setDoseWeightKgError(result.doseWeightKg.errorMessage);
-      setPoisonError(result.poisonType.errorMessage);
-      setFarmsError(result.farms.errorMessage);
-      setPlotsError(result.plots.errorMessage);
-      setSpaceBetweenLinesError(result.spaceBetweenLines.errorMessage);
-      setEventsError(result.events.errorMessage);
-      setFilePathError(result.filePath.errorMessage);
-      setStopReasonsError(result.stopReasonEvent.errorMessage);
+      setErrors(result);
 
       if (!result.valid) {
         ShowToast({
@@ -463,29 +432,9 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     poison,
     filePath,
     spaceBetweenLines,
-    rightTankMaxLoadError,
-    leftTankMaxLoadError,
-    centerTankMaxLoadError,
-    preset1NameError,
-    preset2NameError,
-    preset3NameError,
-    preset4NameError,
-    preset5NameError,
-    preset6NameError,
-    preset1DoseError,
-    preset2DoseError,
-    preset3DoseError,
-    preset4DoseError,
-    preset5DoseError,
-    preset6DoseError,
-    doseWeightKgError,
-    poisonError,
-    farmsError,
-    plotsError,
-    spaceBetweenLinesError,
-    eventsError,
-    filePathError,
-    stopReasonsError,
+    farms,
+    plots,
+    errors,
   ]);
 
   return (
@@ -552,7 +501,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={20}
             minValue={1}
-            errorMessage={spaceBetweenLinesError}
+            errorMessage={errors.spaceBetweenLines.errorMessage}
           />
           <Divider w="80%" />
 
@@ -565,7 +514,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <FormInput
             title="Reservatório direito"
             description="Preencha este campo com a capacidade máxima do reservatório direito (Kg)"
-            errorMessage={rightTankMaxLoadError}
+            errorMessage={errors.rightTankMaxLoad.errorMessage}
             placeholder="25"
             defaultValue={config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD.toString()}
             onChangeText={onRightTankMaxLoadChange}
@@ -574,7 +523,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <FormInput
             title="Reservatório central"
             description="Preencha este campo com a capacidade máxima do reservatório central (Kg)"
-            errorMessage={centerTankMaxLoadError}
+            errorMessage={errors.centerTankMaxLoad.errorMessage}
             placeholder="25"
             defaultValue={config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD.toString()}
             onChangeText={onCenterTankMaxLoadChange}
@@ -583,7 +532,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <FormInput
             title="Reservatório esquerdo"
             description="Preencha este campo com a capacidade máxima do reservatório esquerdo (Kg)"
-            errorMessage={leftTankMaxLoadError}
+            errorMessage={errors.leftTankMaxLoad.errorMessage}
             placeholder="25"
             defaultValue={config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD.toString()}
             onChangeText={onLeftTankMaxLoadChange}
@@ -605,7 +554,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title={'Peso dose'}
             unit={'g'}
             disabled={false}
-            errorMessage={doseWeightKgError}
+            errorMessage={errors.doseWeightKg.errorMessage}
           />
           <SelectInput
             onItemSelected={setPoison}
@@ -613,7 +562,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title="Tipo de veneno"
             placeholder=""
             defaultValue={config.getCache().POISON_TYPE}
-            errorMessage={poisonError}
+            errorMessage={errors.poisonType.errorMessage}
           />
           <Divider w="80%" />
           <FormControl.Label
@@ -625,7 +574,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 1"
-            errorMessage={preset1NameError}
+            errorMessage={errors.preset1Name.errorMessage}
             defaultValue={config.getCache().PRESETS.P1.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset1NameChange}
@@ -638,7 +587,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
-            errorMessage={preset1DoseError}
+            errorMessage={errors.preset1Dose.errorMessage}
           />
 
           <Divider w="80%" />
@@ -651,7 +600,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 2"
-            errorMessage={preset2NameError}
+            errorMessage={errors.preset2Name.errorMessage}
             defaultValue={config.getCache().PRESETS.P2.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset2NameChange}
@@ -664,7 +613,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
-            errorMessage={preset2DoseError}
+            errorMessage={errors.preset2Dose.errorMessage}
           />
           <Divider w="80%" />
           <FormControl.Label
@@ -676,7 +625,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 3"
-            errorMessage={preset3NameError}
+            errorMessage={errors.preset3Name.errorMessage}
             defaultValue={config.getCache().PRESETS.P3.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset3NameChange}
@@ -689,7 +638,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
-            errorMessage={preset3DoseError}
+            errorMessage={errors.preset3Dose.errorMessage}
           />
 
           <Divider w="80%" />
@@ -702,7 +651,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 4"
-            errorMessage={preset4NameError}
+            errorMessage={errors.preset4Name.errorMessage}
             defaultValue={config.getCache().PRESETS.P4.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset4NameChange}
@@ -715,7 +664,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
-            errorMessage={preset4DoseError}
+            errorMessage={errors.preset4Dose.errorMessage}
           />
 
           <Divider w="80%" />
@@ -728,7 +677,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 5"
-            errorMessage={preset5NameError}
+            errorMessage={errors.preset5Name.errorMessage}
             defaultValue={config.getCache().PRESETS.P5.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset5NameChange}
@@ -742,7 +691,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
-            errorMessage={preset5DoseError}
+            errorMessage={errors.preset5Dose.errorMessage}
           />
 
           <Divider w="80%" />
@@ -755,7 +704,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <FormInput
             title="Nome preset"
             description="Preencha este campo com o nome do preset 6"
-            errorMessage={preset6NameError}
+            errorMessage={errors.preset6Name.errorMessage}
             defaultValue={config.getCache().PRESETS.P6.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset6NameChange}
@@ -768,7 +717,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
-            errorMessage={preset6DoseError}
+            errorMessage={errors.preset6Dose.errorMessage}
           />
 
           <Divider w="80%" />
@@ -787,7 +736,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={10}
             minValue={0}
-            errorMessage={spaceBetweenLinesError}
+            errorMessage={errors.spaceBetweenLines.errorMessage}
           />
           <Divider w="80%" />
 
@@ -796,7 +745,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onAddItemPress={onAddStopReasonPress}
             onDeleteItemRequested={onDeleteStopReasonRequested}
             title={'Motivos de parada'}
-            errorMessage={stopReasonsError}
+            errorMessage={errors.stopReasonEvent.errorMessage}
           />
 
           <Divider w="80%" />
@@ -806,7 +755,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onAddItemPress={onAddEventPress}
             onDeleteItemRequested={onDeleteEventRequested}
             title={'Tipos de eventos'}
-            errorMessage={eventsError}
+            errorMessage={errors.events.errorMessage}
           />
 
           <Divider w="80%" />
@@ -816,7 +765,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onAddItemPress={onAddFarmPress}
             onDeleteItemRequested={onDeleteFarmRequested}
             title={'Fazendas'}
-            errorMessage={farmsError}
+            errorMessage={errors.farms.errorMessage}
           />
 
           <Divider w="80%" />
@@ -826,7 +775,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onAddItemPress={onAddPlotPress}
             onDeleteItemRequested={onDeletePlotRequested}
             title={'Talhões'}
-            errorMessage={plotsError}
+            errorMessage={errors.plots.errorMessage}
           />
 
           <Divider w="80%" />
@@ -841,7 +790,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             description="Preencha este campo com o caminho de pastas para salvar o arquivo .csv"
             defaultValue={config.getCache().FILE_PATH}
             onChangeText={setFilePath}
-            errorMessage={filePathError}
+            errorMessage={errors.filePath.errorMessage}
           />
         </VStack>
 

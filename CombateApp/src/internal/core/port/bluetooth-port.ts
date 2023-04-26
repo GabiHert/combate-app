@@ -41,6 +41,7 @@ export interface PBluetooth {
    * @throws an error if bluetooth cannot be selected.
    */
   setDevice(device: BluetoothDevice): Promise<void>;
+
 }
 
 export const bluetooth = new ABluetooth(logger);

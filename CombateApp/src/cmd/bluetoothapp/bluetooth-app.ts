@@ -1,3 +1,4 @@
+import { PermissionsAndroid } from 'react-native';
 import { BluetoothDevice, BluetoothError } from 'react-native-bluetooth-classic';
 import { CONSTANTS } from '../../internal/config/config';
 import { BluetoothErrorType } from '../../internal/core/error/error-type';
@@ -9,11 +10,14 @@ import { PBluetoothApp } from '../port/bluetooth-app-port';
 export class BluetoothApp implements PBluetoothApp {
   private _devices: Array<BluetoothDevice>;
   constructor(private readonly _logger: PLogger, private readonly _bluetooth: PBluetooth) {}
+
   async init(): Promise<void> {
     try {
       this._logger.info({ event: 'BluetoothApp.init', details: 'Process started' });
+
       await this._bluetooth.isBluetoothAvailable();
       await this._bluetooth.isBluetoothEnabled();
+
       this._logger.info({ event: 'BluetoothApp.init', details: 'Process finished' });
     } catch (err) {
       this._logger.info({

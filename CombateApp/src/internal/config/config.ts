@@ -22,6 +22,7 @@ export const CONSTANTS = {
       EMPTY_DEVICE_LIST: 'Lista de dispositivos vazia',
     },
     A_BLUETOOTH: {
+      PERMISSIONS_DENIED: 'Permissão para acesso bluetooth negada',
       NOT_ENABLED: 'Bluetooth não ativado',
       NOT_AVAILABLE: 'Bluetooth não disponível',
       DEVICE_NOT_SELECTED: 'Dispositivo não selecionado',

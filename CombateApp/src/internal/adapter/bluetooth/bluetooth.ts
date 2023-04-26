@@ -1,3 +1,4 @@
+import { PermissionsAndroid } from 'react-native';
 import RNBluetoothClassic, { BluetoothDevice } from 'react-native-bluetooth-classic';
 import { CONSTANTS } from '../../config/config';
 import { BluetoothErrorType } from '../../core/error/error-type';
@@ -8,6 +9,34 @@ export class ABluetooth implements PBluetooth {
   private _device: BluetoothDevice;
   constructor(private readonly _logger: PLogger) {}
 
+  private async _checkPermissions(): Promise<void> {
+    this._logger.info({ event: 'ABluetooth.checkPermissions', details: 'Process started' });
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT
+    );
+    if (!hasPermission) {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+        {
+          title: 'Permissão acesso bluetooth',
+          message: 'é necessario acesso ao bluetooth para conexão ao CB.',
+          buttonNeutral: 's',
+          buttonNegative: 'Cancelar',
+          buttonPositive: 'OK',
+        }
+      );
+      if (granted != PermissionsAndroid.RESULTS.GRANTED) {
+        this._logger.warn({
+          event: 'ABluetooth.checkPermissions',
+          details: 'Process warn - permission not granted',
+        });
+
+        //throw new BluetoothErrorType(CONSTANTS.ERRORS.A_BLUETOOTH.PERMISSIONS_DENIED);
+      }
+    }
+    this._logger.info({ event: 'ABluetooth.checkPermissions', details: 'Process finished' });
+  }
+
   async isBluetoothAvailable(): Promise<void> {
     try {
       this._logger.info({
@@ -15,6 +44,7 @@ export class ABluetooth implements PBluetooth {
         details: 'Process started',
       });
 
+      await this._checkPermissions();
       const result = await RNBluetoothClassic.isBluetoothAvailable();
       if (!result) {
         this._logger.warn({
@@ -44,7 +74,9 @@ export class ABluetooth implements PBluetooth {
         details: 'Process started',
       });
 
+      await this._checkPermissions();
       const result = await RNBluetoothClassic.isBluetoothAvailable();
+
       if (!result) {
         this._logger.warn({
           event: 'BluetoothApp.isBluetoothEnabled',
@@ -74,6 +106,7 @@ export class ABluetooth implements PBluetooth {
         event: 'BluetoothApp.getConnectedDevices',
         details: 'Process started',
       });
+      await this._checkPermissions();
       const devices = await RNBluetoothClassic.getBondedDevices();
       this._logger.info({
         event: 'BluetoothApp.getConnectedDevices',
@@ -97,6 +130,9 @@ export class ABluetooth implements PBluetooth {
         event: 'BluetoothApp.read',
         details: 'Process started',
       });
+
+      await this._checkPermissions();
+
       if (!this._device) {
         this._logger.warn({
           event: 'BluetoothApp.read',
@@ -143,6 +179,8 @@ export class ABluetooth implements PBluetooth {
         details: 'Process started',
       });
 
+      await this._checkPermissions();
+
       const isConnected = await this._device.isConnected();
 
       if (isConnected) {
@@ -187,6 +225,7 @@ export class ABluetooth implements PBluetooth {
         event: 'BluetoothApp.selectDevice',
         details: 'Process started',
       });
+      await this._checkPermissions();
 
       const isConnected = await device.isConnected();
       if (!isConnected) {
