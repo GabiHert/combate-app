@@ -19,6 +19,7 @@ class CombateApp implements PCombateApp {
   ) {}
 
   async syncProtocolVersion(): Promise<void> {
+
     const requestDto = new DRequest();
     const request = this._requestFactory.factory(requestDto, ProtocolVersionEnum.V4);
     const cbV4Service = this._cbServiceFactory.factory(ProtocolVersionEnum.V4);

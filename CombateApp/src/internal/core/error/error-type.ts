@@ -1,9 +1,7 @@
 import { PError } from './error-port';
 
-export class BluetoothErrorType implements PError {
+export class BluetoothErrorType extends PError {
   constructor(message: string) {
-    this.message = message;
+    super(message, 1);
   }
-  message: string;
-  readonly errorCode: number = 1;
 }

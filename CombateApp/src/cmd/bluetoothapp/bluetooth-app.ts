@@ -20,7 +20,7 @@ export class BluetoothApp implements PBluetoothApp {
 
       this._logger.info({ event: 'BluetoothApp.init', details: 'Process finished' });
     } catch (err) {
-      this._logger.info({
+      this._logger.error({
         event: 'BluetoothApp.init',
         details: 'Process error',
         error: err.message,
