@@ -1,6 +1,5 @@
 import { responseBuilder, ResponseBuilder } from '../builder/response-builder';
 import { DResponse } from '../dto/response-dto';
-import { ProtocolVersion } from '../enum/protocol-version';
 import { bluetooth, PBluetooth } from '../port/bluetooth-port';
 import { PCbService } from '../port/cb-service-port';
 import { logger, PLogger } from '../port/logger-port';
@@ -8,7 +7,7 @@ import { PRequest } from '../port/request-port';
 
 export class CbV4Service implements PCbService {
   constructor(
-    private _logger: PLogger,
+    private readonly _logger: PLogger,
     private _bluetooth: PBluetooth,
     private _responseBuilder: ResponseBuilder
   ) {}

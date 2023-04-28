@@ -1,10 +1,10 @@
 import { DRequest } from '../../internal/core/dto/request-dto';
 import { ProtocolVersion, ProtocolVersionEnum } from '../../internal/core/enum/protocol-version';
-import { cbServiceFactory, CbServiceFactory } from '../../internal/core/factory/cb-service-factory';
-import { requestFactory, RequestFactory } from '../../internal/core/factory/request-factory';
+import { CbServiceFactory, cbServiceFactory } from '../../internal/core/factory/cb-service-factory';
+import { RequestFactory, requestFactory } from '../../internal/core/factory/request-factory';
 import { PCbService } from '../../internal/core/port/cb-service-port';
-import { logger, PLogger } from '../../internal/core/port/logger-port';
-import { protocolRules, ProtocolRules } from '../../internal/core/rules/protocol-rules';
+import { PLogger, logger } from '../../internal/core/port/logger-port';
+import { ProtocolRules, protocolRules } from '../../internal/core/rules/protocol-rules';
 import { PCombateApp } from '../port/combate-app-port';
 
 class CombateApp implements PCombateApp {
@@ -12,14 +12,13 @@ class CombateApp implements PCombateApp {
   private _protocolVersion: ProtocolVersion;
   private _cbService: PCbService;
   constructor(
-    private _logger: PLogger,
+    private readonly _logger: PLogger,
     private _cbServiceFactory: CbServiceFactory,
     private _requestFactory: RequestFactory,
     private _protocolRules: ProtocolRules
   ) {}
 
   async syncProtocolVersion(): Promise<void> {
-
     const requestDto = new DRequest();
     const request = this._requestFactory.factory(requestDto, ProtocolVersionEnum.V4);
     const cbV4Service = this._cbServiceFactory.factory(ProtocolVersionEnum.V4);
