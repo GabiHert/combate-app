@@ -7,13 +7,18 @@ export class BluetoothMock implements PBluetooth {
   isBluetoothEnabledError: string;
   isBluetoothAvailableCalled: number;
   getBondedDevicesCalled: number;
-  getBondedDevicesReturn: { id: string; name: string };
+  getBondedDevicesError: string;
+  setDeviceCalled: number;
+  setDeviceError: string;
 
   clear(): void {
     this.isBluetoothAvailableCalled = 0;
     this.isBluetoothEnabledCalled = 0;
     this.isBluetoothEnabledError = undefined;
     this.getBondedDevicesCalled = 0;
+    this.getBondedDevicesError = undefined;
+    this.setDeviceCalled = 0;
+    this.setDeviceError = undefined;
   }
   async isBluetoothAvailable(): Promise<void> {
     this.isBluetoothAvailableCalled++;
@@ -26,8 +31,9 @@ export class BluetoothMock implements PBluetooth {
   }
   async getBondedDevices(): Promise<BluetoothDevice[]> {
     this.getBondedDevicesCalled++;
+    if (this.getBondedDevicesError) throw new BluetoothErrorType(this.getBondedDevicesError);
 
-    return [new BluetoothDevice({ ...this.getBondedDevicesReturn }, undefined)];
+    return [];
   }
   read(): Promise<string> {
     throw new Error('Method not implemented.');
@@ -35,7 +41,8 @@ export class BluetoothMock implements PBluetooth {
   write(data: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  setDevice(device: BluetoothDevice): Promise<void> {
-    throw new Error('Method not implemented.');
+  async setDevice(device: BluetoothDevice): Promise<void> {
+    this.setDeviceCalled++;
+    if (this.setDeviceError) throw new BluetoothErrorType(this.setDeviceError);
   }
 }

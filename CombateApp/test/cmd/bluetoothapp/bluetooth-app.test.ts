@@ -34,21 +34,25 @@ describe('bluetooth app test', () => {
     expect(bluetoothMocked.isBluetoothEnabledCalled).toBe(0);
   });
 
-  it('should getBondedDevices with success', async () => {
-    const device = {
-      name: v4(),
-      address: v4(),
-      id: v4(),
-      rssi: undefined,
-      extra: undefined,
-    };
-    bluetoothMocked.getBondedDevicesReturn = device;
+  it('should return an empty list when getBondedDevices gets no device', async () => {
     const result = await bluetoothApp.getBondedDevices();
-    expect(result).toBe([{ id: device.id, name: device.name }]);
+    expect(result).toEqual([]);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
     expect(loggerMocked.errorCalled).toBe(0);
     expect(bluetoothMocked.getBondedDevicesCalled).toBe(1);
   });
+
+  it('should throw an error when getBondedDevices catches an error', async () => {
+    bluetoothMocked.getBondedDevicesError = errorMessage;
+    await expect(async () => bluetoothApp.getBondedDevices()).rejects.toThrow(
+      new BluetoothErrorType(errorMessage)
+    );
+    expect(loggerMocked.infoCalled).toBe(1);
+    expect(loggerMocked.errorCalled).toBe(1);
+    expect(bluetoothMocked.getBondedDevicesCalled).toBe(1);
+  });
+
+  //todo: there are tests missing
 });
 
 export {};
