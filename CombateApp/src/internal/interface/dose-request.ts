@@ -1,5 +1,5 @@
 export interface IDoseRequest {
-  amount?: number;
+  amount: number;
   rightApplicator?: boolean;
   centerApplicator?: boolean;
   leftApplicator?: boolean;

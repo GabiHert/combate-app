@@ -1,4 +1,3 @@
-import { BluetoothDevice } from 'react-native-bluetooth-classic';
 import { BluetoothErrorType } from '../../src/internal/core/error/error-type';
 import { PBluetooth } from '../../src/internal/core/port/bluetooth-port';
 
@@ -29,7 +28,7 @@ export class BluetoothMock implements PBluetooth {
   async isBluetoothEnabled(): Promise<void> {
     this.isBluetoothEnabledCalled++;
   }
-  async getBondedDevices(): Promise<BluetoothDevice[]> {
+  async getBondedDevices() {
     this.getBondedDevicesCalled++;
     if (this.getBondedDevicesError) throw new BluetoothErrorType(this.getBondedDevicesError);
 
@@ -41,7 +40,7 @@ export class BluetoothMock implements PBluetooth {
   write(data: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  async setDevice(device: BluetoothDevice): Promise<void> {
+  async setDevice(device): Promise<void> {
     this.setDeviceCalled++;
     if (this.setDeviceError) throw new BluetoothErrorType(this.setDeviceError);
   }

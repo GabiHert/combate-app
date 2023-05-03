@@ -1,4 +1,4 @@
-import { v4 } from 'uuid';
+import { CONSTANTS } from '../../../../src/internal/config/config';
 import { checkSumBuilder } from '../../../../src/internal/core/builder/check-sum-builder';
 import { DRequest } from '../../../../src/internal/core/dto/request-dto';
 import { ProtocolVersionEnum } from '../../../../src/internal/core/enum/protocol-version';
@@ -7,25 +7,14 @@ import { RequestFactory } from '../../../../src/internal/core/factory/request-fa
 import { RequestV4 } from '../../../../src/internal/core/request/request-v4';
 import { LoggerMock } from '../../../mock/logger-mock';
 
-jest.mock('../../../../src/internal/core/request/request-v4', () => {
-  //Mock the default export and named export 'foo'
-  return {
-    __esModule: true,
-    RequestV4: {
-      setRequestDto: jest.fn(() => {}),
-      validate: jest.fn(() => {}),
-      toProtocol: jest.fn(() => ''),
-    },
-  };
-});
 describe('request-factory unit test', () => {
   let loggerMocked = new LoggerMock();
   let requestFactory = new RequestFactory(loggerMocked);
   let requestDto = new DRequest();
-  let errorMessage: string;
+
   beforeEach(() => {
     loggerMocked.clear();
-    errorMessage = v4();
+    requestDto = new DRequest({ amount: 0 });
   });
 
   it('should factory an V4 Request when protocol version is V4 and validations pass', () => {
@@ -39,8 +28,9 @@ describe('request-factory unit test', () => {
   });
 
   it('should throw an error when an error is caught', () => {
+    requestDto = new DRequest();
     expect(() => requestFactory.factory(requestDto, ProtocolVersionEnum.V4)).toThrow(
-      new ValidationErrorType('ERROR')
+      new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.DOSE_NOT_DEFINED)
     );
     expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(1);
     expect(loggerMocked.errorCalled).toBe(1);
