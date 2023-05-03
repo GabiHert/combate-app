@@ -62,11 +62,58 @@ describe('request-v4 unit test', () => {
     expect(loggerMocked.warnCalled).toBeGreaterThanOrEqual(1);
   });
 
+  it('should throw an error when dose.amount is > 10', () => {
+    requestDto.dose.amount = -1;
+    expect(() => requestV4.setRequestDto(requestDto)).toThrow(
+      new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.DOSE_AMOUNT_GREATER_THAN_10)
+    );
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBeGreaterThanOrEqual(1);
+    expect(loggerMocked.warnCalled).toBeGreaterThanOrEqual(1);
+  });
   it('should not throw an error when applicators are undefined', () => {
     requestDto.dose = {
       amount: 0,
     };
     requestV4.setRequestDto(requestDto);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(0);
+  });
+
+  it('should parse request to protocol with success when dose amount is 0', () => {
+    requestV4.setRequestDto(requestDto);
+    loggerMocked.clear();
+    const result = requestV4.toProtocol();
+    let protocol = CONSTANTS.REQUEST.HEADER + 'NNNxxxxxxx';
+    protocol += checkSumBuilder.build(protocol) + '\r\n';
+    expect(result).toBe(protocol);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(0);
+  });
+
+  it('should parse request to protocol with success when dose amount is 10', () => {
+    requestDto.dose.amount = 10;
+    requestV4.setRequestDto(requestDto);
+    loggerMocked.clear();
+    const result = requestV4.toProtocol();
+    let protocol = CONSTANTS.REQUEST.HEADER + 'N0Nxxxxxxx';
+    protocol += checkSumBuilder.build(protocol) + '\r\n';
+    expect(result).toBe(protocol);
+    expect(loggerMocked.infoCalled).toBeGreaterThan(1);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(0);
+  });
+
+  it('should parse request to protocol with success when dose amount is > 0 and < 10', () => {
+    requestDto.dose.amount = 5;
+    requestV4.setRequestDto(requestDto);
+    loggerMocked.clear();
+    const result = requestV4.toProtocol();
+    let protocol = CONSTANTS.REQUEST.HEADER + 'N5Nxxxxxxx';
+    protocol += checkSumBuilder.build(protocol) + '\r\n';
+    expect(result).toBe(protocol);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
     expect(loggerMocked.errorCalled).toBe(0);
     expect(loggerMocked.warnCalled).toBe(0);

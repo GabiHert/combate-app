@@ -7,7 +7,7 @@ import { PRequest } from '../port/request-port';
 
 export class RequestV4 implements PRequest {
   private _requestDto: DRequest;
-  constructor(private readonly _logger: PLogger, private checkSumBuilder: CheckSumBuilder) {}
+  constructor(private readonly _logger: PLogger, private _checkSumBuilder: CheckSumBuilder) {}
 
   setRequestDto(requestDto: DRequest): void {
     try {
@@ -70,9 +70,18 @@ export class RequestV4 implements PRequest {
         this._logger.warn({
           event: 'RequestV4.validate',
           details: 'Process warn',
-          warn: 'dose amount is undefined',
+          warn: 'dose amount is < 0',
         });
         throw new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.DOSE_AMOUNT_BELLOW_ZERO);
+      }
+
+      if (this._requestDto.dose.amount > 10) {
+        this._logger.warn({
+          event: 'RequestV4.validate',
+          details: 'Process warn',
+          warn: 'dose amount is > 10',
+        });
+        throw new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.DOSE_AMOUNT_GREATER_THAN_10);
       }
 
       this._logger.info({
@@ -89,7 +98,42 @@ export class RequestV4 implements PRequest {
     }
   }
   toProtocol(): string {
-    //todo: implement
-    return '';
+    this._logger.info({
+      event: 'RequestV4.toProtocol',
+      details: 'Process started',
+      request: this._requestDto,
+    });
+    let doseAmount: string;
+    if (this._requestDto.dose.amount) {
+      if (this._requestDto.dose.amount == 10) {
+        doseAmount = '0';
+      } else {
+        doseAmount = this._requestDto.dose.amount.toString();
+      }
+    } else {
+      doseAmount = 'N';
+    }
+    let protocol = [
+      CONSTANTS.REQUEST.HEADER,
+      'N',
+      doseAmount,
+      'N',
+      'x',
+      'x',
+      'x',
+      'x',
+      'x',
+      'x',
+      'x',
+    ].join('');
+
+    protocol += this._checkSumBuilder.build(protocol) + '\r\n';
+
+    this._logger.info({
+      event: 'RequestV4.toProtocol',
+      details: 'Process finished',
+      protocol,
+    });
+    return protocol;
   }
 }

@@ -15,13 +15,14 @@ export const CONSTANTS = {
     { name: 'Sub-bosque 2', id: '2' },
     { name: 'Sub-bosque 3', id: '3' },
   ],
-
+  REQUEST: { HEADER: 'INF' },
   ERRORS: {
     REQUEST_V4: {
       DOSE_AMOUNT_BELLOW_ZERO: '',
       DOSE_NOT_DEFINED: 'ERR',
       NOT_DEFINED: '',
       DOSE_AMOUNT_NOT_DEFINED: '',
+      DOSE_AMOUNT_GREATER_THAN_10: '',
     },
     BLUETOOTH_APP: {
       DEVICE_NOT_AVAILABLE: 'Dispositivo não disponível',
