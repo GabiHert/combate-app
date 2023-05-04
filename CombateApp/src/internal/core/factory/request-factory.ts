@@ -6,7 +6,6 @@ import { PRequest } from '../port/request-port';
 import { RequestV4 } from '../request/request-v4';
 
 export class RequestFactory {
-  private _protocolVersion: ProtocolVersion;
   constructor(private readonly _logger: PLogger) {}
 
   private [ProtocolVersionEnum.V4.name](requestDto: DRequest): RequestV4 {

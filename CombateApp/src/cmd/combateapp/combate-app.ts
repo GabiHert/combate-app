@@ -39,7 +39,9 @@ class CombateApp implements PCombateApp {
     }
     const request = this._requestFactory.factory(requestDto, this._protocolVersion);
 
-    await this._cbService.request(request, this._doseCallback);
+    const response = await this._cbService.request(request, this._doseCallback);
+
+    //todo: process the response -> GPS, systematic doses
   }
 
   setDoseCallback(callback: (done: number, target: number) => void): void {

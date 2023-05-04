@@ -1068,6 +1068,11 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@drivetech/node-nmea@^2.0.1":
+  "integrity" "sha512-WFlw6iNx43SCE+xW3j69SzDwQz7dXZ0LyfQtLQyrFQFW0qXkLRhcRG/cxlPiNhSG34FJumLr3wq0aaP2A1+OQA=="
+  "resolved" "https://registry.npmjs.org/@drivetech/node-nmea/-/node-nmea-2.0.1.tgz"
+  "version" "2.0.1"
+
 "@egjs/hammerjs@^2.0.17":
   "integrity" "sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A=="
   "resolved" "https://registry.npmjs.org/@egjs/hammerjs/-/hammerjs-2.0.17.tgz"
