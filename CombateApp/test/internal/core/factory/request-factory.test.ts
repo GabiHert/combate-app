@@ -1,6 +1,6 @@
 import { CONSTANTS } from '../../../../src/internal/config/config';
 import { checkSumBuilder } from '../../../../src/internal/core/builder/check-sum-builder';
-import { DRequest } from '../../../../src/internal/core/dto/request-dto';
+import { RequestDto } from '../../../../src/internal/core/dto/request-dto';
 import { ProtocolVersionEnum } from '../../../../src/internal/core/enum/protocol-version';
 import { ValidationErrorType } from '../../../../src/internal/core/error/error-type';
 import { RequestFactory } from '../../../../src/internal/core/factory/request-factory';
@@ -10,11 +10,11 @@ import { LoggerMock } from '../../../mock/logger-mock';
 describe('request-factory unit test', () => {
   let loggerMocked = new LoggerMock();
   let requestFactory = new RequestFactory(loggerMocked);
-  let requestDto = new DRequest();
+  let requestDto = new RequestDto();
 
   beforeEach(() => {
     loggerMocked.clear();
-    requestDto = new DRequest({ amount: 0 });
+    requestDto = new RequestDto({ amount: 0 });
   });
 
   it('should factory an V4 Request when protocol version is V4 and validations pass', () => {
@@ -28,7 +28,7 @@ describe('request-factory unit test', () => {
   });
 
   it('should throw an error when an error is caught', () => {
-    requestDto = new DRequest();
+    requestDto = new RequestDto();
     expect(() => requestFactory.factory(requestDto, ProtocolVersionEnum.V4)).toThrow(
       new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.DOSE_NOT_DEFINED)
     );

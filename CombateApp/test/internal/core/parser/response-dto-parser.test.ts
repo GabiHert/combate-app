@@ -1,5 +1,5 @@
 import { ResponseDtoParser } from '../../../../src/internal/core/parser/response-dto-parser';
-import { DResponse } from '../../../../src/internal/core/dto/response-dto';
+import { ResponseDto } from '../../../../src/internal/core/dto/response-dto';
 import { StatusEnum } from '../../../../src/internal/core/enum/status';
 import { ValidationErrorType } from '../../../../src/internal/core/error/error-type';
 import { IGpsData } from '../../../../src/internal/interface/gps-data';
@@ -29,7 +29,7 @@ describe('response-dto-parser test', () => {
       timeUTC: '001220.00',
       status: 'A',
     };
-    const responseDto = new DResponse(gpsData, StatusEnum.S, '000');
+    const responseDto = new ResponseDto(gpsData, StatusEnum.S, '000');
     const result = responseBuilder.parseV4(protocol);
     expect(result).toEqual(responseDto);
     expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(2);
@@ -47,7 +47,7 @@ describe('response-dto-parser test', () => {
       timeUTC: '001220.00',
       status: 'A',
     };
-    const responseDto = new DResponse(gpsData, StatusEnum.E, '001');
+    const responseDto = new ResponseDto(gpsData, StatusEnum.E, '001');
     const result = responseBuilder.parseV4(protocol);
     expect(result).toEqual(responseDto);
     expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(2);
@@ -60,7 +60,7 @@ describe('response-dto-parser test', () => {
     gpsData = {
       status: 'V',
     };
-    const responseDto = new DResponse(gpsData, StatusEnum.S, '000');
+    const responseDto = new ResponseDto(gpsData, StatusEnum.S, '000');
 
     expect(responseBuilder.parseV4(protocol)).toEqual(responseDto);
     expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(2);

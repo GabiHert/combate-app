@@ -1,6 +1,6 @@
 import { CONSTANTS } from '../../../../src/internal/config/config';
 import { checkSumBuilder } from '../../../../src/internal/core/builder/check-sum-builder';
-import { DRequest } from '../../../../src/internal/core/dto/request-dto';
+import { RequestDto } from '../../../../src/internal/core/dto/request-dto';
 import { ValidationErrorType } from '../../../../src/internal/core/error/error-type';
 import { RequestV4 } from '../../../../src/internal/core/request/request-v4';
 import { IDoseRequest } from '../../../../src/internal/interface/dose-request';
@@ -8,11 +8,11 @@ import { LoggerMock } from '../../../mock/logger-mock';
 describe('request-v4 unit test', () => {
   let loggerMocked = new LoggerMock();
   let requestV4 = new RequestV4(loggerMocked, checkSumBuilder);
-  let requestDto: DRequest;
+  let requestDto: RequestDto;
   let dose: IDoseRequest;
   beforeEach(() => {
     dose = { amount: 0 };
-    requestDto = new DRequest(dose);
+    requestDto = new RequestDto(dose);
     loggerMocked.clear();
   });
 

@@ -9,6 +9,11 @@ export class BluetoothMock implements PBluetooth {
   getBondedDevicesError: string;
   setDeviceCalled: number;
   setDeviceError: string;
+  readCalled: number;
+  readResult: () => string;
+  readDelay: number;
+  writeCalled: number;
+  writeDelay: number;
 
   clear(): void {
     this.isBluetoothAvailableCalled = 0;
@@ -18,6 +23,11 @@ export class BluetoothMock implements PBluetooth {
     this.getBondedDevicesError = undefined;
     this.setDeviceCalled = 0;
     this.setDeviceError = undefined;
+    this.readCalled = 0;
+    this.readResult = () => '';
+    this.readDelay = 0;
+    this.writeCalled = 0;
+    this.writeDelay = 0;
   }
   async isBluetoothAvailable(): Promise<void> {
     this.isBluetoothAvailableCalled++;
@@ -34,11 +44,14 @@ export class BluetoothMock implements PBluetooth {
 
     return [];
   }
-  read(): Promise<string> {
-    throw new Error('Method not implemented.');
+  async read(): Promise<string> {
+    this.readCalled++;
+    await new Promise((resolve) => setTimeout(resolve, this.readDelay));
+    return this.readResult();
   }
-  write(data: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async write(data: string): Promise<void> {
+    this.writeCalled++;
+    await new Promise((resolve) => setTimeout(resolve, this.writeDelay));
   }
   async setDevice(device): Promise<void> {
     this.setDeviceCalled++;

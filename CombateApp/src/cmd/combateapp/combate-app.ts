@@ -1,4 +1,4 @@
-import { DRequest } from '../../internal/core/dto/request-dto';
+import { RequestDto } from '../../internal/core/dto/request-dto';
 import { ProtocolVersion, ProtocolVersionEnum } from '../../internal/core/enum/protocol-version';
 import { CbServiceFactory, cbServiceFactory } from '../../internal/core/factory/cb-service-factory';
 import { RequestFactory, requestFactory } from '../../internal/core/factory/request-factory';
@@ -19,7 +19,7 @@ class CombateApp implements PCombateApp {
   ) {}
 
   async syncProtocolVersion(): Promise<void> {
-    const requestDto = new DRequest();
+    const requestDto = new RequestDto();
     const request = this._requestFactory.factory(requestDto, ProtocolVersionEnum.V4);
     const cbV4Service = this._cbServiceFactory.factory(ProtocolVersionEnum.V4);
     const response = await cbV4Service.request(request);
@@ -33,7 +33,7 @@ class CombateApp implements PCombateApp {
     this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
   }
 
-  async request(requestDto: DRequest): Promise<void> {
+  async request(requestDto: RequestDto): Promise<void> {
     if (!this._cbService) {
       this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
     }

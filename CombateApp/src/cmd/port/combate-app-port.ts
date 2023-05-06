@@ -1,11 +1,11 @@
-import { DRequest } from '../../internal/core/dto/request-dto';
+import { RequestDto } from '../../internal/core/dto/request-dto';
 
 export interface PCombateApp {
   /**
    * Requests CB to start a task
    * @param requestDto request to be decoded and sent
    */
-  request(requestDto: DRequest): Promise<void>;
+  request(requestDto: RequestDto): Promise<void>;
 
   /**
    * Function to be executed when a dose is finished

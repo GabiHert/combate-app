@@ -1,4 +1,4 @@
-import { DRequest } from '../dto/request-dto';
+import { RequestDto } from '../dto/request-dto';
 
 export interface PRequest {
   /**
@@ -16,5 +16,7 @@ export interface PRequest {
    * Sets and validates requestDto
    * @throws ValidationError
    */
-  setRequestDto(requestDto: DRequest): void;
+  setRequestDto(requestDto: RequestDto): void;
+
+  getRequestDto(): RequestDto;
 }

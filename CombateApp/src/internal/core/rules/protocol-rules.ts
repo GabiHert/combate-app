@@ -1,5 +1,5 @@
 import { CheckSumBuilder, checkSumBuilder } from '../builder/check-sum-builder';
-import { DResponse } from '../dto/response-dto';
+import { ResponseDto } from '../dto/response-dto';
 import { Status } from '../enum/status';
 import { ValidationErrorType } from '../error/error-type';
 import { logger, PLogger } from '../port/logger-port';

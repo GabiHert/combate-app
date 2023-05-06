@@ -1,15 +1,15 @@
 import { CONSTANTS } from '../../config/config';
 import { CheckSumBuilder } from '../builder/check-sum-builder';
-import { DRequest } from '../dto/request-dto';
+import { RequestDto } from '../dto/request-dto';
 import { ValidationErrorType } from '../error/error-type';
 import { PLogger } from '../port/logger-port';
 import { PRequest } from '../port/request-port';
 
 export class RequestV4 implements PRequest {
-  private _requestDto: DRequest;
+  private _requestDto: RequestDto;
   constructor(private readonly _logger: PLogger, private _checkSumBuilder: CheckSumBuilder) {}
 
-  setRequestDto(requestDto: DRequest): void {
+  setRequestDto(requestDto: RequestDto): void {
     try {
       this._logger.info({
         event: 'RequestV4.setRequestDto',
@@ -135,5 +135,9 @@ export class RequestV4 implements PRequest {
       protocol,
     });
     return protocol;
+  }
+
+  getRequestDto(): RequestDto {
+    return this._requestDto;
   }
 }

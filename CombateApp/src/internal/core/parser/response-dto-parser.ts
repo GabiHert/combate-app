@@ -1,6 +1,6 @@
 import gpsSentenceParser from '@drivetech/node-nmea';
 import { IGpsData } from '../../interface/gps-data';
-import { DResponse } from '../dto/response-dto';
+import { ResponseDto } from '../dto/response-dto';
 import { Status, StatusEnum } from '../enum/status';
 import { InvalidGpsDataErrorType } from '../error/error-type';
 import { logger, PLogger } from '../port/logger-port';
@@ -8,7 +8,7 @@ import { protocolRules, ProtocolRules } from '../rules/protocol-rules';
 export class ResponseDtoParser {
   constructor(private readonly _logger: PLogger, private _protocolRules: ProtocolRules) {}
 
-  parseV4(protocol: string): DResponse {
+  parseV4(protocol: string): ResponseDto {
     try {
       this._logger.info({ event: 'ResponseBuilder.buildV4', details: 'Process started', protocol });
 
@@ -43,7 +43,7 @@ export class ResponseDtoParser {
         };
       } else gpsData = { status: 'V' };
 
-      const responseDto = new DResponse(gpsData, status, errorCode);
+      const responseDto = new ResponseDto(gpsData, status, errorCode);
 
       this._logger.info({
         event: 'ResponseBuilder.buildV4',
