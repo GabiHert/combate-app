@@ -1,4 +1,4 @@
-import { ResponseBuilder, responseBuilder } from '../builder/response-builder';
+import { ResponseBuilder, responseBuilder } from '../parser/response-dto-parser';
 import { ProtocolVersion, ProtocolVersionEnum } from '../enum/protocol-version';
 import { PBluetooth, bluetooth } from '../port/bluetooth-port';
 import { PCbService } from '../port/cb-service-port';

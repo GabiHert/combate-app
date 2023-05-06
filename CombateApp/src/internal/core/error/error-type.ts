@@ -8,6 +8,13 @@ export class BluetoothErrorType extends PError {
 
 export class ValidationErrorType extends PError {
   constructor(message: string) {
-    super(message, 1);
+    super(message, 3);
+  }
+}
+
+
+export class InvalidGpsDataErrorType extends PError {
+  constructor(message: string) {
+    super(message, 3);
   }
 }

@@ -1,4 +1,4 @@
-import { ResponseBuilder } from '../../../../src/internal/core/builder/response-builder';
+import { ResponseBuilder } from '../../../../src/internal/core/parser/response-dto-parser';
 import { ProtocolVersionEnum } from '../../../../src/internal/core/enum/protocol-version';
 import { CbServiceFactory } from '../../../../src/internal/core/factory/cb-service-factory';
 
