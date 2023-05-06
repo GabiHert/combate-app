@@ -1,3 +1,4 @@
+import { exp } from 'react-native-reanimated';
 import {
   CheckSumBuilder,
   checkSumBuilder,
@@ -14,11 +15,19 @@ describe('protocol-riles test', () => {
   });
 
   it('should throw an error when V4 protocol length is invalid', () => {
-    let protocol = "&"
-    protocolRules.V4(protocol)
-    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(1)
+    const protocol = '&';
+    expect(()=>protocolRules.V4(protocol)).toThrow(new );
+    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(1);
+    expect(loggerMocked.errorCalled).toBeGreaterThanOrEqual(1);
+    expect(loggerMocked.warnCalled).toBeGreaterThanOrEqual(1);
   });
-  it('should throw an error when V4 protocol header is invalid', () => {});
+  it('should throw an error when V4 protocol header is invalid', () => {
+    const protocol = '!00S000xxxU,001220.00,A,3001.89425,S,05109.81024,W,0.374,,240719,,,A75\r\n';
+    protocolRules.V4(protocol);
+    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(1);
+    expect(loggerMocked.errorCalled).toBeGreaterThanOrEqual(1);
+    expect(loggerMocked.warnCalled).toBeGreaterThanOrEqual(1);
+  });
   it('should throw an error when V4 protocol checkSum is invalid', () => {});
   it('should throw an error when V4 protocol wheelBoltsCount is invalid', () => {});
   it('should throw an error when V4 protocol status is invalid', () => {});
