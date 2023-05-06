@@ -1,10 +1,7 @@
 import { ResponseDtoParser } from '../../../../src/internal/core/parser/response-dto-parser';
 import { DResponse } from '../../../../src/internal/core/dto/response-dto';
 import { StatusEnum } from '../../../../src/internal/core/enum/status';
-import {
-  InvalidGpsDataErrorType,
-  ValidationErrorType,
-} from '../../../../src/internal/core/error/error-type';
+import { ValidationErrorType } from '../../../../src/internal/core/error/error-type';
 import { IGpsData } from '../../../../src/internal/interface/gps-data';
 import { LoggerMock } from '../../../mock/logger-mock';
 import { ProtocolRules, protocolRules } from '../../../../src/internal/core/rules/protocol-rules';
