@@ -1,4 +1,3 @@
-import { PermissionsAndroid } from 'react-native';
 import RNBluetoothClassic, { BluetoothDevice } from 'react-native-bluetooth-classic';
 import { CONSTANTS } from '../../config/config';
 import { BluetoothErrorType } from '../../core/error/error-type';
@@ -10,31 +9,30 @@ export class ABluetooth implements PBluetooth {
   constructor(private readonly _logger: PLogger) {}
 
   private async _checkPermissions(): Promise<void> {
-    this._logger.info({ event: 'ABluetooth.checkPermissions', details: 'Process started' });
-    const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT
-    );
-    if (!hasPermission) {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-        {
-          title: 'Permissão acesso bluetooth',
-          message: 'é necessario acesso ao bluetooth para conexão ao CB.',
-          buttonNeutral: 's',
-          buttonNegative: 'Cancelar',
-          buttonPositive: 'OK',
-        }
-      );
-      if (granted != PermissionsAndroid.RESULTS.GRANTED) {
-        this._logger.warn({
-          event: 'ABluetooth.checkPermissions',
-          details: 'Process warn - permission not granted',
-        });
-
-        //throw new BluetoothErrorType(CONSTANTS.ERRORS.A_BLUETOOTH.PERMISSIONS_DENIED);
-      }
-    }
-    this._logger.info({ event: 'ABluetooth.checkPermissions', details: 'Process finished' });
+    // this._logger.info({ event: 'ABluetooth.checkPermissions', details: 'Process started' });
+    // const hasPermission = await PermissionsAndroid.check(
+    //   PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT
+    // );
+    // if (!hasPermission) {
+    //   const granted = await PermissionsAndroid.request(
+    //     PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+    //     {
+    //       title: 'Permissão acesso bluetooth',
+    //       message: 'é necessario acesso ao bluetooth para conexão ao CB.',
+    //       buttonNeutral: 's',
+    //       buttonNegative: 'Cancelar',
+    //       buttonPositive: 'OK',
+    //     }
+    //   );
+    //   if (granted != PermissionsAndroid.RESULTS.GRANTED) {
+    //     this._logger.warn({
+    //       event: 'ABluetooth.checkPermissions',
+    //       details: 'Process warn - permission not granted',
+    //     });
+    //     //throw new BluetoothErrorType(CONSTANTS.ERRORS.A_BLUETOOTH.PERMISSIONS_DENIED);
+    //   }
+    // }
+    // this._logger.info({ event: 'ABluetooth.checkPermissions', details: 'Process finished' });
   }
 
   async isBluetoothAvailable(): Promise<void> {

@@ -1,5 +1,4 @@
-import { PermissionsAndroid } from 'react-native';
-import { BluetoothDevice, BluetoothError } from 'react-native-bluetooth-classic';
+import { BluetoothDevice } from 'react-native-bluetooth-classic';
 import { CONSTANTS } from '../../internal/config/config';
 import { BluetoothErrorType } from '../../internal/core/error/error-type';
 import { PBluetooth } from '../../internal/core/port/bluetooth-port';

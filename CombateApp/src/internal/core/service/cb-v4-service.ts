@@ -1,11 +1,11 @@
 import { responseDtoParser, ResponseDtoParser } from '../parser/response-dto-parser';
-import { ResponseDto as ResponseDto } from '../dto/response-dto';
-import { bluetooth, PBluetooth } from '../port/bluetooth-port';
+import { ResponseDto } from '../dto/response-dto';
+import { PBluetooth } from '../port/bluetooth-port';
 import { PCbService } from '../port/cb-service-port';
 import { logger, PLogger } from '../port/logger-port';
 import { PRequest } from '../port/request-port';
-import { protocolRules, ProtocolRules } from '../rules/protocol-rules';
 import { timeout } from '../utils/timeout';
+import { RequestTimeoutErrorType } from '../error/error-type';
 
 export class CbV4Service implements PCbService {
   constructor(
@@ -19,15 +19,17 @@ export class CbV4Service implements PCbService {
   ): Promise<ResponseDto> {
     await this._bluetooth.write(request.toProtocol());
 
-    let protocol: string;
-    if (request.getRequestDto().dose?.amount) {
-      await timeout(2000 * request.getRequestDto().dose.amount, this._bluetooth.read());
-    } else protocol = await timeout(2000, this._bluetooth.read());
+    let timeoutMs = 1000;
+    if (request.getRequestDto().dose?.amount) timeoutMs *= request.getRequestDto().dose.amount;
+
+    const protocol = await timeout(
+      2000 * request.getRequestDto().dose.amount,
+      this._bluetooth.read(),
+      new RequestTimeoutErrorType('')
+    );
 
     const responseDto = this._responseDtoParser.parseV4(protocol);
 
     return responseDto;
   }
 }
-
-export const cbV4Service = new CbV4Service(logger, bluetooth, responseDtoParser);

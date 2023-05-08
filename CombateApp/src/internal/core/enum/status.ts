@@ -5,15 +5,15 @@ enum Status_ {
 }
 
 class StatusEnum_ {
-  readonly B: { name: string } = {
+  readonly B: Status = {
     name: Status_.B,
   };
 
-  readonly E: { name: string } = {
+  readonly E: Status = {
     name: Status_.E,
   };
 
-  readonly S: { name: string } = {
+  readonly S: Status = {
     name: Status_.S,
   };
 }

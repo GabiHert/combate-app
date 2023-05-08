@@ -1,6 +1,11 @@
-export const timeout = (millis, promise) => {
+import { PError } from '../error/error-port';
+import { BluetoothErrorType } from '../error/error-type';
+
+export const timeout = (millis, promise, error: PError) => {
   const timeout = new Promise((resolve, reject) =>
-    setTimeout(() => reject(`Timed out after ${millis} ms.`), millis)
+    setTimeout(() => {
+      throw error;
+    }, millis)
   );
   return Promise.race([promise, timeout]);
 };

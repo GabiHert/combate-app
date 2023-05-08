@@ -12,9 +12,14 @@ export class ValidationErrorType extends PError {
   }
 }
 
-
 export class InvalidGpsDataErrorType extends PError {
   constructor(message: string) {
     super(message, 3);
+  }
+}
+
+export class RequestTimeoutErrorType extends PError {
+  constructor(message: string) {
+    super(message, 4);
   }
 }
