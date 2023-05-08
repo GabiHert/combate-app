@@ -1,14 +1,19 @@
 import { CheckSumBuilder, checkSumBuilder } from '../builder/check-sum-builder';
 import { ResponseDto } from '../dto/response-dto';
+import { ProtocolVersion, ProtocolVersionEnum } from '../enum/protocol-version';
 import { Status } from '../enum/status';
 import { ValidationErrorType } from '../error/error-type';
-import { logger, PLogger } from '../port/logger-port';
+import { PLogger, logger } from '../port/logger-port';
 
 export class ProtocolRules {
   constructor(
     private readonly _logger: PLogger,
     private readonly _checkSumBuilder: CheckSumBuilder
   ) {}
+
+  getProtocolVersion(response: ResponseDto): ProtocolVersion {
+    return ProtocolVersionEnum.V4;
+  }
   V4(protocol: string) {
     try {
       this._logger.info({

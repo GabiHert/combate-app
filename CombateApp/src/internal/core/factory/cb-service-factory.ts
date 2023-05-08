@@ -1,15 +1,15 @@
-import { ResponseBuilder, responseBuilder } from '../parser/response-dto-parser';
 import { ProtocolVersion, ProtocolVersionEnum } from '../enum/protocol-version';
-import { PBluetooth, bluetooth } from '../port/bluetooth-port';
+import { ResponseDtoParser } from '../parser/response-dto-parser';
+import { PBluetooth } from '../port/bluetooth-port';
 import { PCbService } from '../port/cb-service-port';
-import { PLogger, logger } from '../port/logger-port';
+import { PLogger } from '../port/logger-port';
 import { CbV4Service } from '../service/cb-v4-service';
 
 export class CbServiceFactory {
   constructor(
     private readonly _logger: PLogger,
     private _bluetooth: PBluetooth,
-    private _responseBuilder: ResponseBuilder
+    private _responseBuilder: ResponseDtoParser
   ) {}
   private [ProtocolVersionEnum.V4.name]() {
     return new CbV4Service(this._logger, this._bluetooth, this._responseBuilder);
@@ -26,5 +26,3 @@ export class CbServiceFactory {
     return service;
   }
 }
-
-export const cbServiceFactory = new CbServiceFactory(logger, bluetooth, responseBuilder);

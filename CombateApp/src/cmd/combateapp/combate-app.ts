@@ -1,7 +1,9 @@
+import { ABluetooth } from '../../internal/adapter/bluetooth/bluetooth';
 import { RequestDto } from '../../internal/core/dto/request-dto';
 import { ProtocolVersion, ProtocolVersionEnum } from '../../internal/core/enum/protocol-version';
-import { CbServiceFactory, cbServiceFactory } from '../../internal/core/factory/cb-service-factory';
+import { CbServiceFactory } from '../../internal/core/factory/cb-service-factory';
 import { RequestFactory, requestFactory } from '../../internal/core/factory/request-factory';
+import { responseDtoParser } from '../../internal/core/parser/response-dto-parser';
 import { PCbService } from '../../internal/core/port/cb-service-port';
 import { PLogger, logger } from '../../internal/core/port/logger-port';
 import { ProtocolRules, protocolRules } from '../../internal/core/rules/protocol-rules';
@@ -24,11 +26,7 @@ class CombateApp implements PCombateApp {
     const cbV4Service = this._cbServiceFactory.factory(ProtocolVersionEnum.V4);
     const response = await cbV4Service.request(request);
 
-    switch (true) {
-      case this._protocolRules.V4(response):
-        this._protocolVersion = ProtocolVersionEnum.V4;
-        break;
-    }
+    this._protocolVersion = this._protocolRules.getProtocolVersion(response);
 
     this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
   }
@@ -41,7 +39,11 @@ class CombateApp implements PCombateApp {
 
     const response = await this._cbService.request(request, this._doseCallback);
 
-    //todo: process the response -> GPS, systematic doses
+    if (requestDto.dose.amount == 0) {
+      //todo: process the response -> GPS, systematic doses
+    }
+
+    //write to csv file
   }
 
   setDoseCallback(callback: (done: number, target: number) => void): void {
@@ -49,4 +51,6 @@ class CombateApp implements PCombateApp {
   }
 }
 
+const bluetooth = new ABluetooth(logger);
+const cbServiceFactory = new CbServiceFactory(logger, bluetooth, responseDtoParser);
 export const combateApp = new CombateApp(logger, cbServiceFactory, requestFactory, protocolRules);

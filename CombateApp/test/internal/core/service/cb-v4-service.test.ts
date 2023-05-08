@@ -3,10 +3,7 @@ import { RequestDto } from '../../../../src/internal/core/dto/request-dto';
 import { ResponseDto } from '../../../../src/internal/core/dto/response-dto';
 import { ProtocolVersionEnum } from '../../../../src/internal/core/enum/protocol-version';
 import { StatusEnum } from '../../../../src/internal/core/enum/status';
-import {
-  RequestFactory,
-  requestFactory,
-} from '../../../../src/internal/core/factory/request-factory';
+import { RequestFactory } from '../../../../src/internal/core/factory/request-factory';
 import { ResponseDtoParser } from '../../../../src/internal/core/parser/response-dto-parser';
 import { ProtocolRules } from '../../../../src/internal/core/rules/protocol-rules';
 import { CbV4Service } from '../../../../src/internal/core/service/cb-v4-service';
@@ -37,18 +34,54 @@ describe('cb-v4-service', () => {
     const request = new RequestFactory(loggerMocked).factory(requestDto, ProtocolVersionEnum.V4);
     const result = await cbV4Service.request(request);
     expect(result).toEqual(responseDto);
+    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(2);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(0);
   });
 
-  it('should throw an error when request taeks too long', async () => {
+  it('should process request with success when 1 dose is requested', async () => {
     const gpsData: IGpsData = { status: 'V' };
-    bluetoothMocked.readDelay = 2000;
     bluetoothMocked.readResult = () => {
       return '&00S000xxx' + checkSumBuilder.build('00S000xxx') + ',V,,,,,,,,,,A75\r\n';
     };
+    requestDto.dose.amount = 1;
     const responseDto = new ResponseDto(gpsData, StatusEnum.S, '000');
     const request = new RequestFactory(loggerMocked).factory(requestDto, ProtocolVersionEnum.V4);
-    await expect(async () => cbV4Service.request(request)).rejects.toThrow();
+    const result = await cbV4Service.request(request);
+    expect(result).toEqual(responseDto);
+    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(2);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(loggerMocked.warnCalled).toBe(0);
   });
+
+  it('should throw an error when request takes too long', async () => {
+    bluetoothMocked.readDelay = 6000;
+    bluetoothMocked.readResult = () => {
+      return '&00S000xxx' + checkSumBuilder.build('00S000xxx') + ',V,,,,,,,,,,A75\r\n';
+    };
+    const request = new RequestFactory(loggerMocked).factory(requestDto, ProtocolVersionEnum.V4);
+    await expect(async () => cbV4Service.request(request)).rejects.toThrow(
+      'Request timeout exceeded'
+    );
+    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(1);
+    expect(loggerMocked.errorCalled).toBe(1);
+    expect(loggerMocked.warnCalled).toBe(0);
+  }, 10000);
+
+  it('should throw an error when dose request takes too long', async () => {
+    bluetoothMocked.readDelay = 11000;
+    requestDto.dose.amount = 1;
+    bluetoothMocked.readResult = () => {
+      return '&00S000xxx' + checkSumBuilder.build('00S000xxx') + ',V,,,,,,,,,,A75\r\n';
+    };
+    const request = new RequestFactory(loggerMocked).factory(requestDto, ProtocolVersionEnum.V4);
+    await expect(async () => cbV4Service.request(request)).rejects.toThrow(
+      'Request timeout exceeded'
+    );
+    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(1);
+    expect(loggerMocked.errorCalled).toBe(1);
+    expect(loggerMocked.warnCalled).toBe(0);
+  }, 12000);
 });
 
 export {};
