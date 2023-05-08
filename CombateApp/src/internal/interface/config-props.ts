@@ -16,9 +16,11 @@ export interface IConfigsProps {
     P5: { NAME: string; DOSE_AMOUNT: number };
     P6: { NAME: string; DOSE_AMOUNT: number };
   };
+
   SYSTEMATIC_DOSE: {
     METERS_BETWEEN_DOSE: number;
   };
+
   STOP_REASONS_EVENTS: TMapString;
   EVENTS: TMapString;
   FARMS: TMapString;
