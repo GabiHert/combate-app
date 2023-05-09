@@ -13,7 +13,7 @@ export class RequestDto {
   maxVelocity: number;
   weather: string;
   streetsAmount: number;
-  numberOfLines: number;
+  linesAmount: number;
   constructor(args: IRequestDtoArgs) {
     this.dose = args.dose;
     this.client = args.client;
@@ -26,6 +26,6 @@ export class RequestDto {
     this.maxVelocity = args.maxVelocity;
     this.weather = args.weather;
     this.streetsAmount = args.streetsAmount;
-    this.numberOfLines = args.numberOfLines;
+    this.linesAmount = args.numberOfLines;
   }
 }
