@@ -1,4 +1,5 @@
 import { IDoseRequest } from '../../interface/dose-request';
+import { IRequestDtoArgs } from '../../interface/request-dto-args';
 
 export class RequestDto {
   dose: IDoseRequest;
@@ -6,7 +7,25 @@ export class RequestDto {
   project: string;
   plot: string;
   tractorName: string;
-  constructor(dose?: IDoseRequest) {
-    this.dose = dose;
+  poisonType: string;
+  doseWeightKg: number;
+  deviceName: string;
+  maxVelocity: number;
+  weather: string;
+  streetsAmount: number;
+  numberOfLines: number;
+  constructor(args: IRequestDtoArgs) {
+    this.dose = args.dose;
+    this.client = args.client;
+    this.project = args.project;
+    this.plot = args.plot;
+    this.tractorName = args.tractorName;
+    this.poisonType = args.poisonType;
+    this.doseWeightKg = args.doseWeightKg;
+    this.deviceName = args.deviceName;
+    this.maxVelocity = args.maxVelocity;
+    this.weather = args.weather;
+    this.streetsAmount = args.streetsAmount;
+    this.numberOfLines = args.numberOfLines;
   }
 }

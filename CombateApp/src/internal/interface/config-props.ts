@@ -5,6 +5,7 @@ export interface IConfigsProps {
     RIGHT_TANK_MAX_LOAD: number;
     LEFT_TANK_MAX_LOAD: number;
     CENTER_TANK_MAX_LOAD: number;
+    MAX_VELOCITY: number;
     DOSE_WEIGHT_KG: number;
   };
 
