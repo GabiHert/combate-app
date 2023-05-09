@@ -60,8 +60,15 @@ export class CsvTableService implements PCsvTableService {
     this._logger.info({ event: 'CsvTableService.insert', details: 'Process finished', result });
     return result;
   }
-  delete(line: number, row: number): void {
-    throw new Error('Method not implemented.');
+  erase(column: number, row: number): void {
+    this._logger.info({
+      event: 'CsvTableService.erase',
+      details: 'Process started',
+      column,
+      row,
+    });
+    this._rows[row][column] = '';
+    this._logger.info({ event: 'CsvTableService.erase', details: 'Process finished' });
   }
   async save(path: string): Promise<void> {
     this._logger.info({
@@ -70,7 +77,7 @@ export class CsvTableService implements PCsvTableService {
       path,
     });
 
-    let data: string = '';
+    let data = '';
     this._rows.forEach((column) => {
       data += column.join() + '\n';
     });

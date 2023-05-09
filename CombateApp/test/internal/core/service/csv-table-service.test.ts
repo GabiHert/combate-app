@@ -18,6 +18,7 @@ describe('csv-table-service test', () => {
   let responseDto: ResponseDto;
   let args: IRequestDtoArgs;
   let gpsData: IGpsData;
+  let data: string;
   beforeEach(() => {
     loggerMocked.clear();
     fileSystemMocked.clear();
@@ -45,20 +46,8 @@ describe('csv-table-service test', () => {
       timeUTC: v4(),
     };
     responseDto = new ResponseDto(gpsData, StatusEnum.S, '000');
-  });
 
-  it('should insert data with success ', () => {
-    const result = csvTableService.insert(requestDto, responseDto, EventEnum.EndTrackPoint);
-    expect(result).toEqual({ row: 0, column: 0 });
-    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(2);
-    expect(loggerMocked.warnCalled).toBe(0);
-    expect(loggerMocked.errorCalled).toBe(0);
-  });
-
-  it('should insert and save data with success', async () => {
-    const path = v4();
-
-    const data =
+    data =
       '&,CLIENTE,PROJETO,TALHAO,MAQUINA,CB4,ISCA,PESO g, VEL MAX,' +
       'CLIMA,RUAS,LINHAS,DATA,HORA,ERRO,EVENTO,ISCAS,TIME UTC,NRW,' +
       'LAT-WGS84,LON-WGS84,SPEED KNOTS\n' +
@@ -73,6 +62,18 @@ describe('csv-table-service test', () => {
         responseDto.gps.timeUTC
       },${responseDto.gps.status},` +
       `${responseDto.gps.latitude},${responseDto.gps.longitude},${responseDto.gps.speedKnots}\n`;
+  });
+
+  it('should insert data with success ', () => {
+    const result = csvTableService.insert(requestDto, responseDto, EventEnum.EndTrackPoint);
+    expect(result).toEqual({ row: 0, column: 0 });
+    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(2);
+    expect(loggerMocked.warnCalled).toBe(0);
+    expect(loggerMocked.errorCalled).toBe(0);
+  });
+
+  it('should insert and save data with success', async () => {
+    const path = v4();
 
     const result = csvTableService.insert(requestDto, responseDto, EventEnum.EndTrackPoint);
     await csvTableService.save(path);
@@ -81,6 +82,29 @@ describe('csv-table-service test', () => {
     expect(loggerMocked.warnCalled).toBe(0);
     expect(loggerMocked.errorCalled).toBe(0);
     expect(fileSystemMocked.writeCalledWith[0]).toEqual({ data, path });
+  });
+
+  it('should erase data with success ', () => {
+    csvTableService.erase(0, 0);
+    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(2);
+    expect(loggerMocked.warnCalled).toBe(0);
+    expect(loggerMocked.errorCalled).toBe(0);
+  });
+
+  it('should erase and save data with success ', () => {
+    const path = v4();
+    csvTableService.erase(0, 0);
+    csvTableService.save(path);
+
+    data =
+      '&,CLIENTE,PROJETO,TALHAO,MAQUINA,CB4,ISCA,PESO g, VEL MAX,' +
+      'CLIMA,RUAS,LINHAS,DATA,HORA,ERRO,EVENTO,ISCAS,TIME UTC,NRW,' +
+      'LAT-WGS84,LON-WGS84,SPEED KNOTS\n';
+
+    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(2);
+    expect(loggerMocked.warnCalled).toBe(0);
+    expect(loggerMocked.errorCalled).toBe(0);
+    expect(fileSystemMocked.writeCalledWith[0]).toEqual({ data: data.replace('&', ''), path });
   });
 });
 

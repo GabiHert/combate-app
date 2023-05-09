@@ -8,6 +8,6 @@ export interface PCsvTableService {
     responseDto: ResponseDto,
     event: Event
   ): { column: number; row: number };
-  delete(line: number, row: number): void;
+  erase(line: number, row: number): void;
   save(path: string): Promise<void>;
 }
