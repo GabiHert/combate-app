@@ -20,6 +20,7 @@ describe('csv-table-service test', () => {
   let gpsData: IGpsData;
   let data: string;
   beforeEach(() => {
+    csvTableService = new CsvTableService(loggerMocked, fileSystemMocked);
     loggerMocked.clear();
     fileSystemMocked.clear();
     args = {
