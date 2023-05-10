@@ -72,6 +72,7 @@ export const CONSTANTS = {
 
 export const DEFAULT_CONFIG: IConfigsProps = {
   APPLICATION: {
+    MAX_VELOCITY: 7,
     LEFT_TANK_MAX_LOAD: 30,
     CENTER_TANK_MAX_LOAD: 30,
     RIGHT_TANK_MAX_LOAD: 30,

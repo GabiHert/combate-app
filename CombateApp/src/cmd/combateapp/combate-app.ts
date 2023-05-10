@@ -1,19 +1,16 @@
-import { event } from 'react-native-reanimated';
-import { ABluetooth } from '../../internal/adapter/bluetooth/bluetooth';
 import { RequestDto } from '../../internal/core/dto/request-dto';
-import { Event, EventEnum } from '../../internal/core/enum/event';
+import { EventEnum } from '../../internal/core/enum/event';
 import { ProtocolVersion, ProtocolVersionEnum } from '../../internal/core/enum/protocol-version';
 import { CbServiceFactory } from '../../internal/core/factory/cb-service-factory';
-import { RequestFactory, requestFactory } from '../../internal/core/factory/request-factory';
-import { responseDtoParser } from '../../internal/core/parser/response-dto-parser';
+import { RequestFactory } from '../../internal/core/factory/request-factory';
 import { PCbService } from '../../internal/core/port/cb-service-port';
 import { PCsvTableService } from '../../internal/core/port/csv-table-service-port';
-import { PLogger, logger } from '../../internal/core/port/logger-port';
-import { ProtocolRules, protocolRules } from '../../internal/core/rules/protocol-rules';
+import { PLogger } from '../../internal/core/port/logger-port';
+import { ProtocolRules } from '../../internal/core/rules/protocol-rules';
 import { distanceCalculator } from '../../internal/core/utils/distance-caluclator';
 import { PCombateApp } from '../port/combate-app-port';
 
-class CombateApp implements PCombateApp {
+export class CombateApp implements PCombateApp {
   private _doseCallback: (done: number, target: number) => void;
   private _protocolVersion: ProtocolVersion;
   private _cbService: PCbService;
@@ -45,13 +42,30 @@ class CombateApp implements PCombateApp {
     systematicMetersBetweenDose: number,
     doseCallback?: (done: number, target: number) => void
   ): Promise<void> {
+    this._logger.info({
+      event: 'CombateApp.begin',
+      details: 'Process started',
+      filePath,
+      systematicMetersBetweenDose,
+      doseCallback: doseCallback != undefined,
+    });
     this._filePath = filePath;
     this._systematicMetersBetweenDose = systematicMetersBetweenDose;
     this._doseCallback = doseCallback;
     await this._csvTableService.save(this._filePath);
+    this._logger.info({
+      event: 'CombateApp.begin',
+      details: 'Process finished',
+    });
   }
 
   async request(requestDto: RequestDto): Promise<void> {
+    this._logger.info({
+      event: 'CombateApp.begin',
+      details: 'Process started',
+      requestDto,
+    });
+
     if (!this._cbService || !this._protocolVersion) {
       await this._syncProtocolVersion(requestDto);
       this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
@@ -61,7 +75,7 @@ class CombateApp implements PCombateApp {
 
     const responseDto = await this._cbService.request(request, this._doseCallback);
 
-    this._csvTableService.insert(requestDto, responseDto, event);
+    this._csvTableService.insert(requestDto, responseDto);
 
     const ranDistance = distanceCalculator(
       this._latitude,

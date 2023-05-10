@@ -15,17 +15,12 @@ export class CsvTableService implements PCsvTableService {
       ),
     ];
   }
-  insert(
-    requestDto: RequestDto,
-    responseDto: ResponseDto,
-    event: Event
-  ): { column: number; row: number } {
+  insert(requestDto: RequestDto, responseDto: ResponseDto): { column: number; row: number } {
     this._logger.info({
       event: 'CsvTableService.insert',
       details: 'Process started',
       responseDto,
       requestDto,
-      cbEvent: event,
     });
 
     const date = dateTimeFormatter.date(responseDto.gps.dateUTC);
@@ -46,7 +41,7 @@ export class CsvTableService implements PCsvTableService {
       date,
       time,
       responseDto.errorCode,
-      event.name,
+      requestDto.event.name,
       requestDto.dose.amount.toString(),
       responseDto.gps.timeUTC,
       responseDto.gps.status,

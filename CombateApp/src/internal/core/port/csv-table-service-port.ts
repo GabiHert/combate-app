@@ -6,7 +6,6 @@ export interface PCsvTableService {
   insert(
     requestDto: RequestDto,
     responseDto: ResponseDto,
-    event: Event
   ): { column: number; row: number };
 
   erase(line: number, row: number): void;

@@ -6,7 +6,7 @@ import { PCsvTableService } from '../../src/internal/core/port/csv-table-service
 
 export class CsvTableServiceMock implements PCsvTableService {
   insertCalled: number;
-  insertCalledWith: { requestDto: RequestDto; responseDto: ResponseDto; event: Event };
+  insertCalledWith: { requestDto: RequestDto; responseDto: ResponseDto };
   eraseCalled: number;
   saveCalled: number;
   saveError: string;
@@ -19,14 +19,9 @@ export class CsvTableServiceMock implements PCsvTableService {
     this.saveError = undefined;
   }
 
-  insert(
-    requestDto: RequestDto,
-    responseDto: ResponseDto,
-    event: Event
-  ): { column: number; row: number } {
+  insert(requestDto: RequestDto, responseDto: ResponseDto): { column: number; row: number } {
     this.insertCalled++;
-    this.insertCalledWith = { requestDto, responseDto, event };
-
+    this.insertCalledWith = { requestDto, responseDto };
     return undefined;
   }
   erase(line: number, row: number): void {
