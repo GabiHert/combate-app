@@ -9,10 +9,10 @@ export class CbServiceFactory {
   constructor(
     private readonly _logger: PLogger,
     private _bluetooth: PBluetooth,
-    private _responseBuilder: ResponseDtoParser
+    private _responseDtoParser: ResponseDtoParser
   ) {}
   private [ProtocolVersionEnum.V4.name]() {
-    return new CbV4Service(this._logger, this._bluetooth, this._responseBuilder);
+    return new CbV4Service(this._logger, this._bluetooth, this._responseDtoParser);
   }
   factory(version: ProtocolVersion): PCbService {
     this._logger.info({ event: 'CbServiceFactory.factory', details: 'Process started', version });

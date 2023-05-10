@@ -11,7 +11,6 @@ import { PCsvTableService } from '../../internal/core/port/csv-table-service-por
 import { PLogger, logger } from '../../internal/core/port/logger-port';
 import { ProtocolRules, protocolRules } from '../../internal/core/rules/protocol-rules';
 import { distanceCalculator } from '../../internal/core/utils/distance-caluclator';
-import { IRequestDtoArgs } from '../../internal/interface/request-dto-args';
 import { PCombateApp } from '../port/combate-app-port';
 
 class CombateApp implements PCombateApp {
@@ -19,30 +18,39 @@ class CombateApp implements PCombateApp {
   private _protocolVersion: ProtocolVersion;
   private _cbService: PCbService;
   private _filePath: string;
-  private _distanceRan: number;
+  private _latitude: number;
+  private _longitude: number;
+  private _systematicMetersBetweenDose: number;
 
   constructor(
     private readonly _logger: PLogger,
-    private _cbServiceFactory: CbServiceFactory,
-    private _csvTableService: PCsvTableService,
-    private _requestFactory: RequestFactory,
-    private _protocolRules: ProtocolRules
+    private readonly _cbServiceFactory: CbServiceFactory,
+    private readonly _csvTableService: PCsvTableService,
+    private readonly _requestFactory: RequestFactory,
+    private readonly _protocolRules: ProtocolRules
   ) {}
 
   private async _syncProtocolVersion(requestDto: RequestDto): Promise<void> {
     const request = this._requestFactory.factory(requestDto, ProtocolVersionEnum.V4);
     const cbV4Service = this._cbServiceFactory.factory(ProtocolVersionEnum.V4);
-    const response = await cbV4Service.request(request);
-
-    this._protocolVersion = this._protocolRules.getProtocolVersion(response);
-
+    const responseDto = await cbV4Service.request(request);
+    this._protocolVersion = this._protocolRules.getProtocolVersion(responseDto);
+    this._latitude = responseDto.gps.latitude;
+    this._longitude = responseDto.gps.longitude;
     this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
   }
 
-  async setFilePath(path: string): Promise<void> {
-    this._filePath = path;
+  async begin(
+    filePath: string,
+    systematicMetersBetweenDose: number,
+    doseCallback?: (done: number, target: number) => void
+  ): Promise<void> {
+    this._filePath = filePath;
+    this._systematicMetersBetweenDose = systematicMetersBetweenDose;
+    this._doseCallback = doseCallback;
     await this._csvTableService.save(this._filePath);
   }
+
   async request(requestDto: RequestDto): Promise<void> {
     if (!this._cbService || !this._protocolVersion) {
       await this._syncProtocolVersion(requestDto);
@@ -53,16 +61,27 @@ class CombateApp implements PCombateApp {
 
     const responseDto = await this._cbService.request(request, this._doseCallback);
 
-    //const distanceCalculator()
-
     this._csvTableService.insert(requestDto, responseDto, event);
+
+    const ranDistance = distanceCalculator(
+      this._latitude,
+      this._longitude,
+      responseDto.gps.latitude,
+      responseDto.gps.longitude
+    );
+
+    this._latitude = responseDto.gps.latitude;
+    this._longitude = responseDto.gps.longitude;
+
+    if (ranDistance >= this._systematicMetersBetweenDose) {
+      const systematicRequestDto = requestDto;
+      systematicRequestDto.dose.amount = 1;
+      systematicRequestDto.event = EventEnum.Systematic;
+      this.request(systematicRequestDto);
+    }
 
     if (requestDto.event === EventEnum.EndTrackPoint) {
       await this._csvTableService.save(this._filePath);
     }
-  }
-
-  setDoseCallback(callback: (done: number, target: number) => void): void {
-    this._doseCallback = callback;
   }
 }

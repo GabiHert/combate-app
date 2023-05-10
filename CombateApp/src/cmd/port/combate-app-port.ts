@@ -6,16 +6,16 @@ export interface PCombateApp {
    * @param requestDto request to be decoded and sent
    */
   request(requestDto: RequestDto): Promise<void>;
-
   /**
-   * Function to be executed when a dose is finished
-   * @param callback callback function
+   * Starts the combateApp with it`s basic information
+   * this method must be called before `request`
+   * @param filePath path to the csv file
+   * @param systematicMetersBetweenDose
+   * @param doseCallback callback function to be executed after each dose
    */
-  setDoseCallback(callback: (done: number, target: number) => void): void;
-
-  /**
-   * Sets file path to the csv file. This method creates the file
-   * @param path path to the csv file
-   */
-  setFilePath(path: string): Promise<void>;
+  begin(
+    filePath: string,
+    systematicMetersBetweenDose: number,
+    doseCallback?: (done: number, target: number) => void
+  ): Promise<void>;
 }
