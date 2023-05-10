@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import { CheckSumBuilder } from '../../../../src/internal/core/builder/check-sum-builder';
 import { RequestDto } from '../../../../src/internal/core/dto/request-dto';
 import { ResponseDto } from '../../../../src/internal/core/dto/response-dto';
@@ -18,7 +19,20 @@ describe('cb-v4-service', () => {
   let protocolRules = new ProtocolRules(loggerMocked, checkSumBuilder);
   let responseDtoParser = new ResponseDtoParser(loggerMocked, protocolRules);
   let cbV4Service = new CbV4Service(loggerMocked, bluetoothMocked, responseDtoParser);
-  let requestDto = new RequestDto({ amount: 0 });
+  let requestDto = new RequestDto({
+    dose: { amount: 0 },
+    client: v4(),
+    deviceName: v4(),
+    doseWeightKg: 0.25,
+    maxVelocity: 7,
+    numberOfLines: 3,
+    plot: v4(),
+    poisonType: v4(),
+    project: v4(),
+    streetsAmount: 2,
+    tractorName: v4(),
+    weather: v4(),
+  });
 
   beforeEach(() => {
     loggerMocked.clear();

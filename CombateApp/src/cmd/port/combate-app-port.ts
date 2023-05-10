@@ -14,8 +14,8 @@ export interface PCombateApp {
   setDoseCallback(callback: (done: number, target: number) => void): void;
 
   /**
-   * Makes a request to identify the CB protocol version
-   *
+   * Sets file path to the csv file. This method creates the file
+   * @param path path to the csv file
    */
-  syncProtocolVersion(): Promise<void>;
+  setFilePath(path: string): Promise<void>;
 }

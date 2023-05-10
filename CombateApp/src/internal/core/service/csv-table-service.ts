@@ -71,19 +71,29 @@ export class CsvTableService implements PCsvTableService {
     this._logger.info({ event: 'CsvTableService.erase', details: 'Process finished' });
   }
   async save(path: string): Promise<void> {
-    this._logger.info({
-      event: 'CsvTableService.save',
-      details: 'Process started',
-      path,
-    });
+    try {
+      this._logger.info({
+        event: 'CsvTableService.save',
+        details: 'Process started',
+        path,
+      });
 
-    let data = '';
-    this._rows.forEach((column) => {
-      data += column.join() + '\n';
-    });
+      let data = '';
+      this._rows.forEach((column) => {
+        data += column.join() + '\n';
+      });
 
-    this._fileSystem.write(data, path);
+      await this._fileSystem.write(data, path);
 
-    this._logger.info({ event: 'CsvTableService.save', details: 'Process finished' });
+      this._logger.info({ event: 'CsvTableService.save', details: 'Process finished' });
+    } catch (err) {
+      this._logger.error({
+        event: 'CsvTableService.save',
+        details: 'Process error',
+        error: err.message,
+      });
+
+      throw err;
+    }
   }
 }

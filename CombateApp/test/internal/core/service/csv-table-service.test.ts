@@ -3,6 +3,7 @@ import { RequestDto } from '../../../../src/internal/core/dto/request-dto';
 import { ResponseDto } from '../../../../src/internal/core/dto/response-dto';
 import { EventEnum } from '../../../../src/internal/core/enum/event';
 import { StatusEnum } from '../../../../src/internal/core/enum/status';
+import { WriteFileErrorType } from '../../../../src/internal/core/error/error-type';
 import { CsvTableService } from '../../../../src/internal/core/service/csv-table-service';
 import { dateTimeFormatter } from '../../../../src/internal/core/utils/date-time-formatter';
 import { IGpsData } from '../../../../src/internal/interface/gps-data';
@@ -92,10 +93,10 @@ describe('csv-table-service test', () => {
     expect(loggerMocked.errorCalled).toBe(0);
   });
 
-  it('should erase and save data with success ', () => {
+  it('should erase and save data with success ', async () => {
     const path = v4();
     csvTableService.erase(0, 0);
-    csvTableService.save(path);
+    await csvTableService.save(path);
 
     data =
       '&,CLIENTE,PROJETO,TALHAO,MAQUINA,CB4,ISCA,PESO g, VEL MAX,' +
@@ -106,6 +107,17 @@ describe('csv-table-service test', () => {
     expect(loggerMocked.warnCalled).toBe(0);
     expect(loggerMocked.errorCalled).toBe(0);
     expect(fileSystemMocked.writeCalledWith[0]).toEqual({ data: data.replace('&', ''), path });
+  });
+
+  it('should throw an error when an error is thrown inside save', async () => {
+    const errorMessage = v4();
+    fileSystemMocked.writeError = errorMessage;
+    await expect(async () => csvTableService.save('')).rejects.toThrow(
+      new WriteFileErrorType(errorMessage)
+    );
+    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(1);
+    expect(loggerMocked.warnCalled).toBe(0);
+    expect(loggerMocked.errorCalled).toBeGreaterThanOrEqual(1);
   });
 });
 

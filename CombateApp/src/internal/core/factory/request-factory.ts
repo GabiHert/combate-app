@@ -26,6 +26,7 @@ export class RequestFactory {
       });
 
       const request = this[protocolVersion.name](requestDto);
+
       this._logger.info({ event: 'RequestFactory.factory', details: 'Process finished', request });
 
       return request;

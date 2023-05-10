@@ -23,3 +23,9 @@ export class RequestTimeoutErrorType extends PError {
     super(message, 4);
   }
 }
+
+export class WriteFileErrorType extends PError {
+  constructor(message: string) {
+    super(message, 5);
+  }
+}

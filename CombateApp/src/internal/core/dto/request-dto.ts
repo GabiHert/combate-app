@@ -1,7 +1,9 @@
 import { IDoseRequest } from '../../interface/dose-request';
 import { IRequestDtoArgs } from '../../interface/request-dto-args';
+import { Event } from '../enum/event';
 
 export class RequestDto {
+  event: Event;
   dose: IDoseRequest;
   client: string;
   project: string;
