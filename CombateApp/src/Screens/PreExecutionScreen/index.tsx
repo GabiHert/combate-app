@@ -5,7 +5,6 @@ import { appConfig } from '../../app/config/app-config';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
 import { weatherToPtWeather } from '../../app/parser/weather-to-pt-weather';
 import { Weather, weatherItems } from '../../internal/core/enum/weather';
-import { config } from '../../internal/core/port/config-cache-port';
 import { preExecutionConfig } from '../../internal/core/port/pre-execution-config-cache-port';
 import { IPreExecutionConfigProps } from '../../internal/interface/config-props';
 import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-form-result';
@@ -16,11 +15,10 @@ import SelectInput from '../../Components/SelectInput';
 import SlideInput from '../../Components/SlideInput';
 import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 import { Theme } from '../../app/theme/theme';
-import { bluetoothApp } from '../../cmd/port/bluetooth-app-port';
-import { validator } from '../../cmd/port/validator-port';
-import { Severity, SeverityEnum } from '../../internal/core/enum/severity';
+import { SeverityEnum } from '../../internal/core/enum/severity';
 import { IItem } from '../../internal/interface/item';
 import { useFocusEffect } from '@react-navigation/native';
+import { bluetoothApp, config, validator } from '../../app/instance/instance';
 
 function PreExecutionScreen(props: { navigation: any }) {
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState<number>(

@@ -5,23 +5,20 @@ import FormInput from '../../Components/FormInput';
 import SlideInput from '../../Components/SlideInput';
 import { Theme } from '../../app/theme/theme';
 import { SeverityEnum } from '../../internal/core/enum/severity';
-import { config } from '../../internal/core/port/config-cache-port';
-
 import { v1 } from 'uuid';
 import SelectInput from '../../Components/SelectInput';
 import { appConfig } from '../../app/config/app-config';
 import { itemArrayToMapString } from '../../app/parser/item-array-to-map-string';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
 import { ptToDefaults } from '../../app/parser/pt-to-defaults';
-import { validator } from '../../cmd/port/validator-port';
 import { CONSTANTS } from '../../internal/config/config';
 import { poisonItems } from '../../internal/core/enum/poison';
 import { IConfigsProps } from '../../internal/interface/config-props';
 import ItemListInput from './components/ItemListInput';
 import ItemRegisterModal from './components/ItemRegisterModal';
 import { IConfigFormResult } from '../../internal/interface/config-form-result';
-import { bluetooth } from '../../internal/core/port/bluetooth-port';
-import { bluetoothApp } from '../../cmd/port/bluetooth-app-port';
+import { config, validator } from '../../app/instance/instance';
+import UnderForestModal from '../ExecutionScreen/components/UnderForestModal';
 
 interface IPreset {
   name: string;
@@ -69,10 +66,12 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     doseAmount: config.getCache().PRESETS.P6.DOSE_AMOUNT,
     name: config.getCache().PRESETS.P6.NAME,
   });
+  const [maxVelocity, setMaxVelocity] = useState<number>(1);
   const [spaceBetweenLines, setSpaceBetweenLines] = useState<number>(0);
 
   const [errors, setErrors] = useState<IConfigFormResult>({
     valid: true,
+    maxVelocity: { errorMessage: undefined },
     centerTankMaxLoad: { errorMessage: undefined },
     doseWeightKg: { errorMessage: undefined },
     leftTankMaxLoad: { errorMessage: undefined },
@@ -283,7 +282,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const onAddPlotPress = useCallback(() => {
     setAddPlotModalVisible(true);
   }, [setAddPlotModalVisible]);
-  
+
   const onAddPlotModalClose = useCallback(() => {
     setAddPlotModalVisible(false);
   }, [setAddPlotModalVisible]);
@@ -343,6 +342,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         PLOTS: itemArrayToMapString(plots),
         STOP_REASONS_EVENTS: itemArrayToMapString(stopReasons),
         APPLICATION: {
+          MAX_VELOCITY: maxVelocity,
           CENTER_TANK_MAX_LOAD: centerTankMaxLoad,
           DOSE_WEIGHT_KG: doseWeightKg,
           LEFT_TANK_MAX_LOAD: leftTankMaxLoad,
@@ -379,6 +379,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           cache.APPLICATION.RIGHT_TANK_MAX_LOAD = rightTankMaxLoad;
           cache.APPLICATION.CENTER_TANK_MAX_LOAD = centerTankMaxLoad;
           cache.APPLICATION.LEFT_TANK_MAX_LOAD = leftTankMaxLoad;
+          cache.APPLICATION.MAX_VELOCITY = maxVelocity;
           cache.PRESETS.P1.DOSE_AMOUNT = preset1.doseAmount;
           cache.PRESETS.P1.NAME = preset1.name;
           cache.PRESETS.P2.DOSE_AMOUNT = preset2.doseAmount;
@@ -435,6 +436,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     farms,
     plots,
     errors,
+    maxVelocity,
   ]);
 
   return (
@@ -539,6 +541,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             keyboardType={'numeric'}
           />
           <Divider w="80%" />
+
           <FormControl.Label
             mt={5}
             _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
@@ -738,6 +741,27 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             minValue={0}
             errorMessage={errors.spaceBetweenLines.errorMessage}
           />
+          <Divider w="80%" />
+
+          <FormControl.Label
+            mt={5}
+            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
+          >
+            Velocidade
+          </FormControl.Label>
+
+          <SlideInput
+            onChangeEnd={setMetersBetweenDose}
+            step={0.5}
+            title={'Metros entre cada dose'}
+            unit={'metros'}
+            defaultValue={config.getCache().APPLICATION.MAX_VELOCITY}
+            disabled={false}
+            maxValue={20}
+            minValue={1}
+            errorMessage={errors.maxVelocity.errorMessage}
+          />
+
           <Divider w="80%" />
 
           <ItemListInput

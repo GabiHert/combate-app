@@ -186,6 +186,7 @@ export class Validator implements PValidator {
 
     let result: IConfigFormResult = {
       valid: true,
+      maxVelocity: { errorMessage: undefined },
       centerTankMaxLoad: { errorMessage: undefined },
       doseWeightKg: { errorMessage: undefined },
       leftTankMaxLoad: { errorMessage: undefined },
@@ -247,6 +248,15 @@ export class Validator implements PValidator {
         this._logger.warn({
           event: 'FormValidator.validateConfigForm',
           details: 'Process warn - Invalid DOSE_WEIGHT_KG',
+        });
+      }
+
+      if (!data.APPLICATION.MAX_VELOCITY || data.APPLICATION.MAX_VELOCITY < 1) {
+        result.valid = false;
+        result.maxVelocity.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_MAX_VELOCITY;
+        this._logger.warn({
+          event: 'FormValidator.validateConfigForm',
+          details: 'Process warn - Invalid MAX_VELOCITY',
         });
       }
     }
