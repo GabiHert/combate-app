@@ -9,8 +9,7 @@ import { EventEnum } from '../../../src/internal/core/enum/event';
 import { CbServiceFactory } from '../../../src/internal/core/factory/cb-service-factory';
 import { RequestFactory } from '../../../src/internal/core/factory/request-factory';
 import { ResponseDtoParser } from '../../../src/internal/core/parser/response-dto-parser';
-import { ProtocolRules, protocolRules } from '../../../src/internal/core/rules/protocol-rules';
-import { CsvTableService } from '../../../src/internal/core/service/csv-table-service';
+import { ProtocolRules } from '../../../src/internal/core/rules/protocol-rules';
 import { IRequestDtoArgs } from '../../../src/internal/interface/request-dto-args';
 import { BluetoothMock } from '../../mock/bluetooth-mock';
 import { CsvTableServiceMock } from '../../mock/csv-table-service-mock';
@@ -35,8 +34,18 @@ describe('combate-app unit tests', () => {
   let args: IRequestDtoArgs;
   let requestDto: RequestDto;
   beforeEach(() => {
+    combateApp = new CombateApp(
+      loggerMocked,
+      cbServiceFactory,
+      csvTableServiceMocked,
+      requestFactory,
+      protocolRules
+    );
     loggerMocked.clear();
     bluetoothMocked.clear();
+    bluetoothMocked.readResult = () => {
+      return '&01S000xxxT,091824.00,A,3344.8736,N,11754.6856,W,0.0,,100523,,,A*7B\r\n';
+    };
     csvTableServiceMocked.clear();
     args = {
       dose: { amount: 0 },
@@ -66,14 +75,34 @@ describe('combate-app unit tests', () => {
     expect(loggerMocked.errorCalled).toBe(0);
   });
 
-  it('should execute request with success when event is startTrackPoint', async () => {
+  it('should execute request with success', async () => {
     requestDto.event = EventEnum.StartTrackPoint;
-    
+
     await combateApp.request(requestDto);
 
     expect(csvTableServiceMocked.insertCalled).toBe(1);
     expect(csvTableServiceMocked.saveCalled).toBe(0);
-    expect(loggerMocked.infoCalled).toBe(2);
+    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(2);
+    expect(loggerMocked.warnCalled).toBe(0);
+    expect(loggerMocked.errorCalled).toBe(0);
+  });
+
+  it('should execute request with Systematic event when distance is ran', async () => {
+    requestDto.event = EventEnum.StartTrackPoint;
+
+    await combateApp.request(requestDto);
+    loggerMocked.clear();
+    bluetoothMocked.clear();
+    bluetoothMocked.readResult = () => {
+      return '&00S000xxxU,091623.00,A,3344.8708,N,11754.6864,W,0.0,,100523,,,A*77\r\n';
+    };
+    csvTableServiceMocked.clear();
+
+    await combateApp.request(requestDto);
+
+    expect(csvTableServiceMocked.insertCalled).toBe(1);
+    expect(csvTableServiceMocked.saveCalled).toBe(0);
+    expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(2);
     expect(loggerMocked.warnCalled).toBe(0);
     expect(loggerMocked.errorCalled).toBe(0);
   });

@@ -1,6 +1,8 @@
 import { RequestDto } from '../../internal/core/dto/request-dto';
+import { ResponseDto } from '../../internal/core/dto/response-dto';
 import { EventEnum } from '../../internal/core/enum/event';
 import { ProtocolVersion, ProtocolVersionEnum } from '../../internal/core/enum/protocol-version';
+import { PError } from '../../internal/core/error/error-port';
 import { CbServiceFactory } from '../../internal/core/factory/cb-service-factory';
 import { RequestFactory } from '../../internal/core/factory/request-factory';
 import { PCbService } from '../../internal/core/port/cb-service-port';
@@ -60,42 +62,89 @@ export class CombateApp implements PCombateApp {
   }
 
   async request(requestDto: RequestDto): Promise<void> {
-    this._logger.info({
-      event: 'CombateApp.begin',
-      details: 'Process started',
-      requestDto,
-    });
+    try {
+      this._logger.info({
+        event: 'CombateApp.request',
+        details: 'Process started',
+        requestDto,
+      });
 
-    if (!this._cbService || !this._protocolVersion) {
-      await this._syncProtocolVersion(requestDto);
-      this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
+      if (!this._cbService || !this._protocolVersion) {
+        await this._syncProtocolVersion(requestDto);
+        this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
+      }
+
+      const request = this._requestFactory.factory(requestDto, this._protocolVersion);
+
+      const responseDto = await this._cbService.request(request, this._doseCallback);
+
+      this._csvTableService.insert(requestDto, responseDto);
+
+      await this._appRules(responseDto, requestDto);
+
+      if (requestDto.event === EventEnum.EndTrackPoint) {
+        await this._csvTableService.save(this._filePath);
+      }
+
+      this._logger.info({
+        event: 'CombateApp.request',
+        details: 'Process finished',
+        requestDto,
+      });
+    } catch (err) {
+      this._logger.error({
+        event: 'CombateApp.request',
+        details: 'Process error',
+        error: err.message,
+      });
     }
+  }
 
-    const request = this._requestFactory.factory(requestDto, this._protocolVersion);
+  private async _appRules(responseDto: ResponseDto, requestDto: RequestDto) {
+    try {
+      this._logger.info({
+        event: 'CombateApp._appRules',
+        details: 'Process started',
+        requestDto,
+        responseDto,
+      });
 
-    const responseDto = await this._cbService.request(request, this._doseCallback);
+      const velocity = responseDto.gps.speedKnots * 1.852;
+      let error: PError = undefined;
 
-    this._csvTableService.insert(requestDto, responseDto);
+      const distance = distanceCalculator(
+        this._latitude,
+        this._longitude,
+        responseDto.gps.latitude,
+        responseDto.gps.longitude
+      );
 
-    const ranDistance = distanceCalculator(
-      this._latitude,
-      this._longitude,
-      responseDto.gps.latitude,
-      responseDto.gps.longitude
-    );
+      this._latitude = responseDto.gps.latitude;
+      this._longitude = responseDto.gps.longitude;
 
-    this._latitude = responseDto.gps.latitude;
-    this._longitude = responseDto.gps.longitude;
+      if (velocity >= requestDto.maxVelocity) {
+      }
 
-    if (ranDistance >= this._systematicMetersBetweenDose) {
-      const systematicRequestDto = requestDto;
-      systematicRequestDto.dose.amount = 1;
-      systematicRequestDto.event = EventEnum.Systematic;
-      this.request(systematicRequestDto);
-    }
+      if (distance >= this._systematicMetersBetweenDose) {
+        const systematicRequestDto = requestDto;
+        systematicRequestDto.dose.amount = 1;
+        systematicRequestDto.event = EventEnum.Systematic;
+        await this.request(systematicRequestDto);
+      }
 
-    if (requestDto.event === EventEnum.EndTrackPoint) {
-      await this._csvTableService.save(this._filePath);
+      if (error) throw error;
+
+      this._logger.info({
+        event: 'CombateApp._appRules',
+        details: 'Process finished',
+      });
+    } catch (err) {
+      this._logger.error({
+        event: 'CombateApp._appRules',
+        details: 'Process error',
+        error: err.message,
+      });
+      throw err;
     }
   }
 }
