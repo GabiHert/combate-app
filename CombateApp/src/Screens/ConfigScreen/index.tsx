@@ -66,7 +66,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     name: configCache.getCache().PRESETS.P6.NAME,
   });
   const [maxVelocity, setMaxVelocity] = useState<number>(1);
-  const [spaceBetweenLines, setSpaceBetweenLines] = useState<number>(0);
+  const [lineSpacing, setLineSpacing] = useState<number>(0);
 
   const [errors, setErrors] = useState<IConfigFormResult>({
     valid: true,
@@ -91,7 +91,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     preset5Name: { errorMessage: undefined },
     preset6Dose: { errorMessage: undefined },
     preset6Name: { errorMessage: undefined },
-    spaceBetweenLines: { errorMessage: undefined },
+    lineSpacing: { errorMessage: undefined },
     stopReasonEvent: { errorMessage: undefined },
     rightTankMaxLoad: { errorMessage: undefined },
   });
@@ -357,7 +357,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         },
         FILE_PATH: filePath,
         POISON_TYPE: ptToDefaults.poison(poison).name,
-        SPACE_BETWEEN_LINES: spaceBetweenLines,
+        SPACE_BETWEEN_LINES: lineSpacing,
         SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: metersBetweenDose },
       };
 
@@ -392,7 +392,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           cache.PRESETS.P4.DOSE_AMOUNT = preset6.doseAmount;
           cache.PRESETS.P4.NAME = preset6.name;
           cache.POISON_TYPE = poison;
-          cache.SPACE_BETWEEN_LINES = spaceBetweenLines;
+          cache.SPACE_BETWEEN_LINES = lineSpacing;
           cache.FILE_PATH = filePath;
 
           await configCache.update(cache);
@@ -431,7 +431,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     preset6,
     poison,
     filePath,
-    spaceBetweenLines,
+    lineSpacing,
     farms,
     plots,
     errors,
@@ -494,15 +494,15 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             Informações local
           </FormControl.Label>
           <SlideInput
-            onChangeEnd={setSpaceBetweenLines}
+            onChangeEnd={setLineSpacing}
             step={0.5}
-            title={'Espaçamento entre linhas'}
+            title={'Espaçamento de linhas'}
             defaultValue={1}
             unit={'metros'}
             disabled={false}
             maxValue={20}
             minValue={1}
-            errorMessage={errors.spaceBetweenLines.errorMessage}
+            errorMessage={errors.lineSpacing.errorMessage}
           />
           <Divider w="80%" />
 
@@ -738,7 +738,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={10}
             minValue={0}
-            errorMessage={errors.spaceBetweenLines.errorMessage}
+            errorMessage={errors.lineSpacing.errorMessage}
           />
           <Divider w="80%" />
 

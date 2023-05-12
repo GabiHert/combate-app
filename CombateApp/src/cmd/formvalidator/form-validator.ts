@@ -232,7 +232,7 @@ export class Validator implements PValidator {
       preset5Name: { errorMessage: undefined },
       preset6Dose: { errorMessage: undefined },
       preset6Name: { errorMessage: undefined },
-      spaceBetweenLines: { errorMessage: undefined },
+      lineSpacing: { errorMessage: undefined },
       stopReasonEvent: { errorMessage: undefined },
       rightTankMaxLoad: { errorMessage: undefined },
     };

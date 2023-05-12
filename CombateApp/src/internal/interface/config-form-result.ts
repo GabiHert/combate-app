@@ -22,6 +22,6 @@ export interface IConfigFormResult {
   farms: { errorMessage: string };
   plots: { errorMessage: string };
   poisonType: { errorMessage: string };
-  spaceBetweenLines: { errorMessage: string };
+  lineSpacing: { errorMessage: string };
   filePath: { errorMessage: string };
 }
