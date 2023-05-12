@@ -1,32 +1,74 @@
-import { defaultConfig } from 'native-base/lib/typescript/core/NativeBaseContext';
 import { IConfigsProps } from '../../interface/config-props';
-import { PCache as PConfigCache } from '../../core/port/config-cache-port';
+import { PCache } from '../../core/port/config-cache-port';
 import { PRepository } from '../../core/port/repository-port';
+import { PLogger } from '../../core/port/logger-port';
 
-export class AConfigCache implements PConfigCache {
+export class AConfigCache implements PCache {
   constructor(
+    private readonly _logger: PLogger,
     private repository: PRepository,
-    private cache?: IConfigsProps,
+    private _cache?: IConfigsProps,
     private prefix = 'CONFIG'
   ) {
     this.updateCache();
   }
   async update(config: IConfigsProps) {
-    this.cache = config;
-    const str = JSON.stringify(config);
-    await this.repository.persist(this.prefix, str);
+    try {
+      this._logger.info({
+        event: 'AConfigCache.update',
+        details: 'Process started',
+        config,
+      });
+
+      this._cache = config;
+      const str = JSON.stringify(config);
+      await this.repository.persist(this.prefix, str);
+
+      this._logger.info({
+        event: 'AConfigCache.update',
+        details: 'Process finished',
+      });
+    } catch (err) {
+      this._logger.error({
+        event: 'AConfigCache.update',
+        details: 'Process error',
+        error: err.message,
+      });
+
+      throw err;
+    }
   }
   getCache(): IConfigsProps {
-    return this.cache;
+    return this._cache;
   }
   async updateCache(): Promise<void> {
-    let str = await this.repository.get(this.prefix);
-    if (!str) {
-      this.update(this.cache);
-      return;
+    try {
+      this._logger.info({
+        event: 'AConfigCache.update',
+        details: 'Process started',
+        config: this._cache,
+      });
+      let str = await this.repository.get(this.prefix);
+      if (!str) {
+        this.update(this._cache);
+        return;
+      }
+      const config = JSON.parse(str);
+      //todo: validate config
+      this._cache = config;
+      this._logger.info({
+        event: 'AConfigCache.update',
+        details: 'Process finished',
+        config,
+      });
+    } catch (err) {
+      this._logger.error({
+        event: 'AConfigCache.updateCache',
+        details: 'Process error',
+        error: err.message,
+      });
+
+      throw err;
     }
-    const config = JSON.parse(str);
-    //todo: validate config
-    this.cache = config;
   }
 }
