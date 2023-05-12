@@ -1,3 +1,4 @@
+import { poisonItems } from '../core/enum/poison';
 import { WeatherEnum } from '../core/enum/weather';
 import { IConfigsProps, IPreExecutionConfigProps } from '../interface/config-props';
 
@@ -10,6 +11,23 @@ export const CONSTANTS = {
   MIN_DOSES: 1,
   FINISHED_WORK_REASON_NAME: 'Fim Operação',
   REQUEST_INTERVAL_MS: 2000,
+  ACTIVITY_ITEMS: [
+    { id: '0', name: 'Manutenção' },
+    { id: '1', name: 'Pré-Plantio' },
+    { id: '2', name: 'Pós-Plantio' },
+    { id: '3', name: 'Pré Corte' },
+  ],
+  APPLICATORS_AMOUNT_ITEMS: [
+    { id: '0', name: '1' },
+    { id: '1', name: '2' },
+    { id: '2', name: '3' },
+  ],
+  STREET_AMOUNT_ITEMS: [
+    { id: '0', name: '1' },
+    { id: '1', name: '2' },
+    { id: '2', name: '3' },
+    { id: '3', name: '5' },
+  ],
   UNDER_FOREST_ITEMS: [
     { name: 'Sub-bosque 1', id: '1' },
     { name: 'Sub-bosque 2', id: '2' },
@@ -49,6 +67,8 @@ export const CONSTANTS = {
       INVALID_CENTER_APPLICATOR_LOAD: 'ERRO',
       INVALID_RIGHT_APPLICATOR_LOAD: 'ERRO',
       INVALID_STREETS_AMOUNT: 'ERRO',
+      INVALID_ACTIVITY: 'ERRO',
+      INVALID_APPLICATORS_AMOUNT: 'ERRO',
     },
     CONFIG_FORM: {
       INVALID_LEFT_TANK_MAX_LOAD: 'ERRO',
@@ -111,11 +131,13 @@ export const DEFAULT_CONFIG: IConfigsProps = {
   FARMS: {},
   PLOTS: {},
   FILE_PATH: 'CombateApp/Resultados',
-  POISON_TYPE: '',
+  POISON_TYPE: poisonItems[0].name,
   SPACE_BETWEEN_LINES: 1,
 };
 
 export const DEFAULT_PRE_EXECUTION_CONFIG: IPreExecutionConfigProps = {
+  applicatorsAmount: 1,
+  activity: '',
   farm: '',
   clientName: '',
   plot: '',
