@@ -13,6 +13,8 @@ export class Validator implements PValidator {
 
   validatePreExecutionForm(data: IPreExecutionConfigProps): IPreExecutionFormResult {
     let result: IPreExecutionFormResult = {
+      applicatorsAmount: { errorMessage: undefined },
+      activity: { errorMessage: undefined },
       valid: true,
       clientName: { errorMessage: undefined },
       projectName: { errorMessage: undefined },
@@ -155,6 +157,29 @@ export class Validator implements PValidator {
         event: 'FormValidator.validatePreExecutionForm',
         details: 'Process warn - leftApplicatorLoad is invalid',
         leftApplicatorLoad: data.leftApplicatorLoad,
+      });
+    }
+
+    if (!data.applicatorsAmount || data.applicatorsAmount < 0 || data.applicatorsAmount > 3) {
+      // applicatorsAmount is invalid
+      result.valid = false;
+      result.applicatorsAmount.errorMessage =
+        CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_APPLICATORS_AMOUNT;
+      this._logger.warn({
+        event: 'FormValidator.validatePreExecutionForm',
+        details: 'Process warn - applicatorsAmount is invalid',
+        leftApplicatorLoad: data.applicatorsAmount,
+      });
+    }
+
+    if (!data.activity) {
+      // activity is invalid
+      result.valid = false;
+      result.activity.errorMessage = CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_ACTIVITY;
+      this._logger.warn({
+        event: 'FormValidator.validatePreExecutionForm',
+        details: 'Process warn - activity is invalid',
+        leftApplicatorLoad: data.activity,
       });
     }
 
