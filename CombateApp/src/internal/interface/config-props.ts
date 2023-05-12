@@ -32,6 +32,7 @@ export interface IConfigsProps {
 }
 
 export interface IPreExecutionConfigProps {
+  applicatorsAmount: number;
   clientName: string;
   projectName: string;
   farm: string;
@@ -43,4 +44,5 @@ export interface IPreExecutionConfigProps {
   rightApplicatorLoad: number;
   streetsAmount: number;
   deviceName: string;
+  activity: string;
 }
