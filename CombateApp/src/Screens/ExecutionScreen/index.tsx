@@ -4,8 +4,6 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { BackHandler } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Severity, SeverityEnum } from '../../internal/core/enum/severity';
-import { config } from '../../internal/core/port/config-cache-port';
-import { preExecutionConfig } from '../../internal/core/port/pre-execution-config-cache-port';
 import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 import { ShowToast } from '../../Components/AlertToast';
@@ -15,8 +13,8 @@ import Sheet, { IApplicatorsPercentage } from './components/Sheet';
 import StatusBar from './components/StatusBar';
 import { Applicator } from './types/applicator';
 import { CONSTANTS } from '../../internal/config/config';
-import { bluetooth } from '../../internal/core/port/bluetooth-port';
 import { useFocusEffect } from '@react-navigation/native';
+import { configCache, preExecutionConfigCache } from '../../app/instance/instance';
 
 function ExecutionScreen(props: { navigation: any }) {
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
@@ -29,19 +27,19 @@ function ExecutionScreen(props: { navigation: any }) {
   const [doseInProgress, setDoseInProgress] = useState<boolean>(false);
 
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState(
-    preExecutionConfig.getCache().leftApplicatorLoad
+    preExecutionConfigCache.getCache().leftApplicatorLoad
   );
   const [leftApplicatorActive, setLeftApplicatorActive] = useState(true);
   const [leftApplicatorAvailable, setLeftApplicatorAvailable] = useState(true);
 
   const [rightApplicatorLoad, setRightApplicatorLoad] = useState(
-    preExecutionConfig.getCache().rightApplicatorLoad
+    preExecutionConfigCache.getCache().rightApplicatorLoad
   );
   const [rightApplicatorActive, setRightApplicatorActive] = useState(true);
   const [rightApplicatorAvailable, setRightApplicatorAvailable] = useState(true);
 
   const [centerApplicatorLoad, setCenterApplicatorLoad] = useState(
-    preExecutionConfig.getCache().centerApplicatorLoad
+    preExecutionConfigCache.getCache().centerApplicatorLoad
   );
   const [centerApplicatorActive, setCenterApplicatorActive] = useState(true);
   const [centerApplicatorAvailable, setCenterApplicatorAvailable] = useState(true);
@@ -49,15 +47,15 @@ function ExecutionScreen(props: { navigation: any }) {
   const [applicatorsLoadPercentage, setApplicatorsLoadPercentage] =
     useState<IApplicatorsPercentage>({
       center: calculateApplicatorsLoadPercentage(
-        config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD,
+        configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD,
         centerApplicatorLoad
       ),
       left: calculateApplicatorsLoadPercentage(
-        config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD,
+        configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD,
         leftApplicatorLoad
       ),
       right: calculateApplicatorsLoadPercentage(
-        config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD,
+        configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD,
         rightApplicatorLoad
       ),
     });
@@ -105,11 +103,11 @@ function ExecutionScreen(props: { navigation: any }) {
         };
         setVelocity(response.velocity);
       }
-      const cache = preExecutionConfig.getCache();
+      const cache = preExecutionConfigCache.getCache();
       cache.leftApplicatorLoad = leftApplicatorLoad;
       cache.rightApplicatorLoad = rightApplicatorLoad;
       cache.centerApplicatorLoad = centerApplicatorLoad;
-      preExecutionConfig.update(cache);
+      preExecutionConfigCache.update(cache);
     }, CONSTANTS.REQUEST_INTERVAL_MS);
 
     return () => clearInterval(interval);
@@ -162,7 +160,7 @@ function ExecutionScreen(props: { navigation: any }) {
             setShowLeftNoLoadWarnOnce(true);
           }
         } else {
-          load -= amount * config.getCache().APPLICATION.DOSE_WEIGHT_KG;
+          load -= amount * configCache.getCache().APPLICATION.DOSE_WEIGHT_KG;
         }
         setLeftApplicatorLoad(load);
       } else if (leftApplicatorAvailable) {
@@ -186,7 +184,7 @@ function ExecutionScreen(props: { navigation: any }) {
             setShowRightNoLoadWarnOnce(true);
           }
         } else {
-          load -= amount * config.getCache().APPLICATION.DOSE_WEIGHT_KG;
+          load -= amount * configCache.getCache().APPLICATION.DOSE_WEIGHT_KG;
         }
         setRightApplicatorLoad(load);
       } else if (rightApplicatorAvailable) {
@@ -210,22 +208,22 @@ function ExecutionScreen(props: { navigation: any }) {
             setShowCenterNoLoadWarnOnce(true);
           }
         } else {
-          load -= amount * config.getCache().APPLICATION.DOSE_WEIGHT_KG;
+          load -= amount * configCache.getCache().APPLICATION.DOSE_WEIGHT_KG;
         }
         setCenterApplicatorLoad(load);
       } else if (centerApplicatorAvailable) {
         setCenterApplicatorActive(true);
       }
       const center = calculateApplicatorsLoadPercentage(
-        config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD,
+        configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD,
         centerApplicatorLoad
       );
       const right = calculateApplicatorsLoadPercentage(
-        config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD,
+        configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD,
         rightApplicatorLoad
       );
       const left = calculateApplicatorsLoadPercentage(
-        config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD,
+        configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD,
         leftApplicatorLoad
       );
       if (left.severity.name != applicatorsLoadPercentage.left.severity.name) {

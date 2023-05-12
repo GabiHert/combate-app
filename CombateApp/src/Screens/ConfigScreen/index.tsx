@@ -1,5 +1,5 @@
 import { Box, Button, Divider, FormControl, ScrollView, VStack } from 'native-base';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ShowToast } from '../../Components/AlertToast';
 import FormInput from '../../Components/FormInput';
 import SlideInput from '../../Components/SlideInput';
@@ -17,8 +17,7 @@ import { IConfigsProps } from '../../internal/interface/config-props';
 import ItemListInput from './components/ItemListInput';
 import ItemRegisterModal from './components/ItemRegisterModal';
 import { IConfigFormResult } from '../../internal/interface/config-form-result';
-import { config, validator } from '../../app/instance/instance';
-import UnderForestModal from '../ExecutionScreen/components/UnderForestModal';
+import { configCache, validator } from '../../app/instance/instance';
 
 interface IPreset {
   name: string;
@@ -27,44 +26,44 @@ interface IPreset {
 
 function ConfigScreen(props: { navigation: any; route: any }) {
   const [rightTankMaxLoad, setRightTankMaxLoad] = useState<number>(
-    config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD
+    configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD
   );
   const [centerTankMaxLoad, setCenterTankMaxLoad] = useState<number>(
-    config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD
+    configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD
   );
   const [leftTankMaxLoad, setLeftTankMaxLoad] = useState<number>(
-    config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD
+    configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD
   );
   const [doseWeightKg, setDoseWeightKg] = useState<number>(
-    config.getCache().APPLICATION.DOSE_WEIGHT_KG
+    configCache.getCache().APPLICATION.DOSE_WEIGHT_KG
   );
   const [metersBetweenDose, setMetersBetweenDose] = useState<number>(
-    config.getCache().SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE
+    configCache.getCache().SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE
   );
-  const [filePath, setFilePath] = useState(config.getCache().FILE_PATH);
+  const [filePath, setFilePath] = useState(configCache.getCache().FILE_PATH);
   const [preset1, setPreset1] = useState<IPreset>({
-    doseAmount: config.getCache().PRESETS.P1.DOSE_AMOUNT,
-    name: config.getCache().PRESETS.P1.NAME,
+    doseAmount: configCache.getCache().PRESETS.P1.DOSE_AMOUNT,
+    name: configCache.getCache().PRESETS.P1.NAME,
   });
   const [preset2, setPreset2] = useState<IPreset>({
-    doseAmount: config.getCache().PRESETS.P2.DOSE_AMOUNT,
-    name: config.getCache().PRESETS.P2.NAME,
+    doseAmount: configCache.getCache().PRESETS.P2.DOSE_AMOUNT,
+    name: configCache.getCache().PRESETS.P2.NAME,
   });
   const [preset3, setPreset3] = useState<IPreset>({
-    doseAmount: config.getCache().PRESETS.P3.DOSE_AMOUNT,
-    name: config.getCache().PRESETS.P3.NAME,
+    doseAmount: configCache.getCache().PRESETS.P3.DOSE_AMOUNT,
+    name: configCache.getCache().PRESETS.P3.NAME,
   });
   const [preset4, setPreset4] = useState<IPreset>({
-    doseAmount: config.getCache().PRESETS.P4.DOSE_AMOUNT,
-    name: config.getCache().PRESETS.P4.NAME,
+    doseAmount: configCache.getCache().PRESETS.P4.DOSE_AMOUNT,
+    name: configCache.getCache().PRESETS.P4.NAME,
   });
   const [preset5, setPreset5] = useState<IPreset>({
-    doseAmount: config.getCache().PRESETS.P5.DOSE_AMOUNT,
-    name: config.getCache().PRESETS.P5.NAME,
+    doseAmount: configCache.getCache().PRESETS.P5.DOSE_AMOUNT,
+    name: configCache.getCache().PRESETS.P5.NAME,
   });
   const [preset6, setPreset6] = useState<IPreset>({
-    doseAmount: config.getCache().PRESETS.P6.DOSE_AMOUNT,
-    name: config.getCache().PRESETS.P6.NAME,
+    doseAmount: configCache.getCache().PRESETS.P6.DOSE_AMOUNT,
+    name: configCache.getCache().PRESETS.P6.NAME,
   });
   const [maxVelocity, setMaxVelocity] = useState<number>(1);
   const [spaceBetweenLines, setSpaceBetweenLines] = useState<number>(0);
@@ -98,21 +97,21 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   });
 
   const [stopReasons, setStopReasons] = useState<Array<{ id: string; name: string }>>(
-    mapStringToItemArray(config.getCache().STOP_REASONS_EVENTS)
+    mapStringToItemArray(configCache.getCache().STOP_REASONS_EVENTS)
   );
   const [events, setEvents] = useState<Array<{ id: string; name: string }>>(
-    mapStringToItemArray(config.getCache().EVENTS)
+    mapStringToItemArray(configCache.getCache().EVENTS)
   );
 
   const [farms, setFarms] = useState<Array<{ id: string; name: string }>>(
-    mapStringToItemArray(config.getCache().FARMS)
+    mapStringToItemArray(configCache.getCache().FARMS)
   );
 
   const [plots, setPlots] = useState<Array<{ id: string; name: string }>>(
-    mapStringToItemArray(config.getCache().PLOTS)
+    mapStringToItemArray(configCache.getCache().PLOTS)
   );
 
-  const [poison, setPoison] = useState(config.getCache().POISON_TYPE);
+  const [poison, setPoison] = useState(configCache.getCache().POISON_TYPE);
 
   const [addReasonModalVisible, setAddReasonModalVisible] = useState(false);
   const [addEventModalVisible, setAddEventModalVisible] = useState(false);
@@ -235,19 +234,19 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   }, [setAddEventModalVisible]);
   const onAddEventRequested = useCallback(
     (name: string) => {
-      let cache = config.getCache();
+      let cache = configCache.getCache();
       const id = v1();
       cache.EVENTS[id] = name;
-      config.update(cache);
+      configCache.update(cache);
       setEvents(mapStringToItemArray(cache.EVENTS));
     },
     [setEvents]
   );
   const onDeleteEventRequested = useCallback(
     (id: string) => {
-      let cache = config.getCache();
+      let cache = configCache.getCache();
       delete cache.EVENTS[id];
-      config.update(cache);
+      configCache.update(cache);
       setEvents(mapStringToItemArray(cache.EVENTS));
     },
     [setEvents]
@@ -261,19 +260,19 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   }, [setAddFarmModalVisible]);
   const onAddFarmRequested = useCallback(
     (name: string) => {
-      let cache = config.getCache();
+      let cache = configCache.getCache();
       const id = v1();
       cache.FARMS[id] = name;
-      config.update(cache);
+      configCache.update(cache);
       setFarms(mapStringToItemArray(cache.FARMS));
     },
     [setFarms, farms]
   );
   const onDeleteFarmRequested = useCallback(
     async (id: string) => {
-      let cache = config.getCache();
+      let cache = configCache.getCache();
       delete cache.FARMS[id];
-      config.update(cache);
+      configCache.update(cache);
       setFarms(mapStringToItemArray(cache.FARMS));
     },
     [setFarms, farms]
@@ -289,10 +288,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
   const onAddPlotRequested = useCallback(
     (name: string) => {
-      let cache = config.getCache();
+      let cache = configCache.getCache();
       const id = v1();
       cache.PLOTS[id] = name;
-      config.update(cache);
+      configCache.update(cache);
       setPlots(mapStringToItemArray(cache.PLOTS));
     },
     [setPlots, plots]
@@ -300,9 +299,9 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
   const onDeletePlotRequested = useCallback(
     (id: string) => {
-      let cache = config.getCache();
+      let cache = configCache.getCache();
       delete cache.PLOTS[id];
-      config.update(cache);
+      configCache.update(cache);
       setPlots(mapStringToItemArray(cache.PLOTS));
     },
     [setPlots, plots]
@@ -317,18 +316,18 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   }, [setAddReasonModalVisible]);
 
   const onAddStopReasonRequested = useCallback((name: string) => {
-    let cache = config.getCache();
+    let cache = configCache.getCache();
     const id = v1();
     cache.STOP_REASONS_EVENTS[id] = name;
-    config.update(cache);
+    configCache.update(cache);
     setStopReasons(mapStringToItemArray(cache.STOP_REASONS_EVENTS));
   }, []);
 
   const onDeleteStopReasonRequested = useCallback(
     (id: string) => {
-      let cache = config.getCache();
+      let cache = configCache.getCache();
       delete cache.STOP_REASONS_EVENTS[id];
-      config.update(cache);
+      configCache.update(cache);
       setStopReasons(mapStringToItemArray(cache.STOP_REASONS_EVENTS));
     },
     [setStopReasons]
@@ -372,8 +371,8 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           durationMs: 2000,
         });
       } else {
-        if (data != config.getCache()) {
-          const cache = config.getCache();
+        if (data != configCache.getCache()) {
+          const cache = configCache.getCache();
 
           cache.APPLICATION.DOSE_WEIGHT_KG = doseWeightKg;
           cache.APPLICATION.RIGHT_TANK_MAX_LOAD = rightTankMaxLoad;
@@ -396,7 +395,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           cache.SPACE_BETWEEN_LINES = spaceBetweenLines;
           cache.FILE_PATH = filePath;
 
-          await config.update(cache);
+          await configCache.update(cache);
 
           ShowToast({
             title: 'Alterações salvas com sucesso',
@@ -518,7 +517,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             description="Preencha este campo com a capacidade máxima do reservatório direito (Kg)"
             errorMessage={errors.rightTankMaxLoad.errorMessage}
             placeholder="25"
-            defaultValue={config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD.toString()}
+            defaultValue={configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD.toString()}
             onChangeText={onRightTankMaxLoadChange}
             keyboardType={'numeric'}
           />
@@ -527,7 +526,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             description="Preencha este campo com a capacidade máxima do reservatório central (Kg)"
             errorMessage={errors.centerTankMaxLoad.errorMessage}
             placeholder="25"
-            defaultValue={config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD.toString()}
+            defaultValue={configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD.toString()}
             onChangeText={onCenterTankMaxLoadChange}
             keyboardType={'numeric'}
           />
@@ -536,7 +535,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             description="Preencha este campo com a capacidade máxima do reservatório esquerdo (Kg)"
             errorMessage={errors.leftTankMaxLoad.errorMessage}
             placeholder="25"
-            defaultValue={config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD.toString()}
+            defaultValue={configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD.toString()}
             onChangeText={onLeftTankMaxLoadChange}
             keyboardType={'numeric'}
           />
@@ -564,7 +563,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             items={[...poisonItems, { id: 'another', name: 'Outro' }]}
             title="Tipo de veneno"
             placeholder=""
-            defaultValue={config.getCache().POISON_TYPE}
+            defaultValue={configCache.getCache().POISON_TYPE}
             errorMessage={errors.poisonType.errorMessage}
           />
           <Divider w="80%" />
@@ -578,7 +577,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title="Nome preset"
             description="Preencha este campo com o nome do preset 1"
             errorMessage={errors.preset1Name.errorMessage}
-            defaultValue={config.getCache().PRESETS.P1.NAME}
+            defaultValue={configCache.getCache().PRESETS.P1.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset1NameChange}
           />
@@ -586,7 +585,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onChangeEnd={onPreset1DoseChange}
             step={0.5}
             title={'Doses'}
-            defaultValue={config.getCache().PRESETS.P1.DOSE_AMOUNT}
+            defaultValue={configCache.getCache().PRESETS.P1.DOSE_AMOUNT}
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
@@ -604,7 +603,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title="Nome preset"
             description="Preencha este campo com o nome do preset 2"
             errorMessage={errors.preset2Name.errorMessage}
-            defaultValue={config.getCache().PRESETS.P2.NAME}
+            defaultValue={configCache.getCache().PRESETS.P2.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset2NameChange}
           />
@@ -612,7 +611,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onChangeEnd={onPreset2DoseChange}
             step={0.5}
             title={'Doses'}
-            defaultValue={config.getCache().PRESETS.P2.DOSE_AMOUNT}
+            defaultValue={configCache.getCache().PRESETS.P2.DOSE_AMOUNT}
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
@@ -629,7 +628,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title="Nome preset"
             description="Preencha este campo com o nome do preset 3"
             errorMessage={errors.preset3Name.errorMessage}
-            defaultValue={config.getCache().PRESETS.P3.NAME}
+            defaultValue={configCache.getCache().PRESETS.P3.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset3NameChange}
           />
@@ -637,7 +636,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onChangeEnd={onPreset3DoseChange}
             step={0.5}
             title={'Doses'}
-            defaultValue={config.getCache().PRESETS.P3.DOSE_AMOUNT}
+            defaultValue={configCache.getCache().PRESETS.P3.DOSE_AMOUNT}
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
@@ -655,7 +654,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title="Nome preset"
             description="Preencha este campo com o nome do preset 4"
             errorMessage={errors.preset4Name.errorMessage}
-            defaultValue={config.getCache().PRESETS.P4.NAME}
+            defaultValue={configCache.getCache().PRESETS.P4.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset4NameChange}
           />
@@ -663,7 +662,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onChangeEnd={onPreset4DoseChange}
             step={0.5}
             title={'Doses'}
-            defaultValue={config.getCache().PRESETS.P4.DOSE_AMOUNT}
+            defaultValue={configCache.getCache().PRESETS.P4.DOSE_AMOUNT}
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
@@ -681,7 +680,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title="Nome preset"
             description="Preencha este campo com o nome do preset 5"
             errorMessage={errors.preset5Name.errorMessage}
-            defaultValue={config.getCache().PRESETS.P5.NAME}
+            defaultValue={configCache.getCache().PRESETS.P5.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset5NameChange}
           />
@@ -690,7 +689,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onChangeEnd={onPreset5DoseChange}
             step={0.5}
             title={'Doses'}
-            defaultValue={config.getCache().PRESETS.P5.DOSE_AMOUNT}
+            defaultValue={configCache.getCache().PRESETS.P5.DOSE_AMOUNT}
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
@@ -708,7 +707,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             title="Nome preset"
             description="Preencha este campo com o nome do preset 6"
             errorMessage={errors.preset6Name.errorMessage}
-            defaultValue={config.getCache().PRESETS.P6.NAME}
+            defaultValue={configCache.getCache().PRESETS.P6.NAME}
             placeholder="Quadrante"
             onChangeText={onPreset6NameChange}
           />
@@ -716,7 +715,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onChangeEnd={onPreset6DoseChange}
             step={0.5}
             title={'Doses'}
-            defaultValue={config.getCache().PRESETS.P6.DOSE_AMOUNT}
+            defaultValue={configCache.getCache().PRESETS.P6.DOSE_AMOUNT}
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
@@ -735,7 +734,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             step={0.5}
             title={'Metros entre cada dose'}
             unit={'metros'}
-            defaultValue={config.getCache().SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE}
+            defaultValue={configCache.getCache().SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE}
             disabled={false}
             maxValue={10}
             minValue={0}
@@ -755,7 +754,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             step={0.5}
             title={'Metros entre cada dose'}
             unit={'metros'}
-            defaultValue={config.getCache().APPLICATION.MAX_VELOCITY}
+            defaultValue={configCache.getCache().APPLICATION.MAX_VELOCITY}
             disabled={false}
             maxValue={20}
             minValue={1}
@@ -785,7 +784,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
 
           <ItemListInput
-            items={mapStringToItemArray(config.getCache().FARMS)}
+            items={mapStringToItemArray(configCache.getCache().FARMS)}
             onAddItemPress={onAddFarmPress}
             onDeleteItemRequested={onDeleteFarmRequested}
             title={'Fazendas'}
@@ -795,7 +794,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
 
           <ItemListInput
-            items={mapStringToItemArray(config.getCache().PLOTS)}
+            items={mapStringToItemArray(configCache.getCache().PLOTS)}
             onAddItemPress={onAddPlotPress}
             onDeleteItemRequested={onDeletePlotRequested}
             title={'Talhões'}
@@ -812,7 +811,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <FormInput
             title="Local para salvar o aruivo"
             description="Preencha este campo com o caminho de pastas para salvar o arquivo .csv"
-            defaultValue={config.getCache().FILE_PATH}
+            defaultValue={configCache.getCache().FILE_PATH}
             onChangeText={setFilePath}
             errorMessage={errors.filePath.errorMessage}
           />

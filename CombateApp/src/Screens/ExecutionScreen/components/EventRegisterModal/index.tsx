@@ -1,10 +1,9 @@
 import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
 import { memo, useCallback, useState } from 'react';
-import { config } from '../../../../internal/core/port/config-cache-port';
 import { appConfig } from '../../../../app/config/app-config';
+import { configCache } from '../../../../app/instance/instance';
 import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
 import { Theme } from '../../../../app/theme/theme';
-import FormInput from '../../../../Components/FormInput';
 import SelectInput from '../../../../Components/SelectInput';
 
 function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
@@ -46,7 +45,7 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
             h={20}
             title="Selecione tipo de evento que foi encontrado"
             placeholder=""
-            items={mapStringToItemArray(config.getCache().EVENTS)}
+            items={mapStringToItemArray(configCache.getCache().EVENTS)}
           />
         </Modal.Body>
         <Modal.Footer
