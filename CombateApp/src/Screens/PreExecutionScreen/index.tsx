@@ -5,7 +5,6 @@ import { appConfig } from '../../app/config/app-config';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
 import { weatherToPtWeather } from '../../app/parser/weather-to-pt-weather';
 import { Weather, weatherItems } from '../../internal/core/enum/weather';
-import { preExecutionConfig } from '../../internal/core/port/pre-execution-config-cache-port';
 import { IPreExecutionConfigProps } from '../../internal/interface/config-props';
 import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-form-result';
 
@@ -18,35 +17,50 @@ import { Theme } from '../../app/theme/theme';
 import { SeverityEnum } from '../../internal/core/enum/severity';
 import { IItem } from '../../internal/interface/item';
 import { useFocusEffect } from '@react-navigation/native';
-import { bluetoothApp, config, validator } from '../../app/instance/instance';
+import {
+  bluetoothApp,
+  configCache,
+  preExecutionConfigCache,
+  validator,
+} from '../../app/instance/instance';
+import { CONSTANTS } from '../../internal/config/config';
 
 function PreExecutionScreen(props: { navigation: any }) {
+  const [applicatorsAmount, setApplicatorsAmount] = useState<number>(1);
+  const [activity, setActivity] = useState<string>(preExecutionConfigCache.getCache().activity);
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState<number>(
-    preExecutionConfig.getCache().leftApplicatorLoad
+    preExecutionConfigCache.getCache().leftApplicatorLoad
   );
   const [centerApplicatorLoad, setCenterApplicatorLoad] = useState<number>(
-    preExecutionConfig.getCache().centerApplicatorLoad
+    preExecutionConfigCache.getCache().centerApplicatorLoad
   );
   const [rightApplicatorLoad, setRightApplicatorLoad] = useState<number>(
-    preExecutionConfig.getCache().rightApplicatorLoad
+    preExecutionConfigCache.getCache().rightApplicatorLoad
   );
-  const [devices, setDevices] = useState<Array<IItem>>([]);
-  const [deviceConnected, setDeviceConnected] = useState(false);
-  const [clientName, setClientName] = useState<string>(preExecutionConfig.getCache().clientName);
-  const [projectName, setProjectName] = useState<string>(preExecutionConfig.getCache().projectName);
-  const [farm, setFarm] = useState<string>(preExecutionConfig.getCache().farm);
-  const [plot, setPlot] = useState<string>(preExecutionConfig.getCache().plot);
-  const [tractorName, setTractorName] = useState<string>(preExecutionConfig.getCache().tractorName);
+  const [devices, setDevices] = useState<Array<IItem>>([{ id: 'idd', name: 'name' }]);
+  const [deviceConnected, setDeviceConnected] = useState(true); //todo: false
+  const [clientName, setClientName] = useState<string>(
+    preExecutionConfigCache.getCache().clientName
+  );
+  const [projectName, setProjectName] = useState<string>(
+    preExecutionConfigCache.getCache().projectName
+  );
+  const [farm, setFarm] = useState<string>(preExecutionConfigCache.getCache().farm);
+  const [plot, setPlot] = useState<string>(preExecutionConfigCache.getCache().plot);
+  const [tractorName, setTractorName] = useState<string>(
+    preExecutionConfigCache.getCache().tractorName
+  );
   const [streetsAmount, setStreetsAmount] = useState<number>(
-    preExecutionConfig.getCache().streetsAmount
+    preExecutionConfigCache.getCache().streetsAmount
   );
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [deviceName, setDeviceName] = useState<string>();
 
   const [weather, setWeather] = useState<Weather>(
-    new Weather(preExecutionConfig.getCache().weather)
+    new Weather(preExecutionConfigCache.getCache().weather)
   );
   const [validationResult, setValidationResult] = useState<IPreExecutionFormResult>({
+    applicatorsAmount: { errorMessage: undefined },
     clientName: { errorMessage: undefined },
     projectName: { errorMessage: undefined },
     plot: { errorMessage: undefined },
@@ -56,6 +70,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     farm: { errorMessage: undefined },
     rightApplicatorLoad: { errorMessage: undefined },
     leftApplicatorLoad: { errorMessage: undefined },
+    activity: { errorMessage: undefined },
     centerApplicatorLoad: { errorMessage: undefined },
     deviceName: { errorMessage: undefined },
     valid: true,
@@ -81,6 +96,8 @@ function PreExecutionScreen(props: { navigation: any }) {
 
   const onNextPressed = useCallback(async () => {
     const data: IPreExecutionConfigProps = {
+      applicatorsAmount,
+      activity,
       clientName,
       projectName,
       plot,
@@ -97,9 +114,8 @@ function PreExecutionScreen(props: { navigation: any }) {
     const result = validator.validatePreExecutionForm(data);
 
     if (result.valid && deviceConnected) {
-      if (data != preExecutionConfig.getCache()) {
-        await preExecutionConfig.update(data);
-      }
+      await preExecutionConfigCache.update(data);
+
       props.navigation.navigate('ExecutionScreen');
     } else {
       setValidationResult(result);
@@ -121,6 +137,8 @@ function PreExecutionScreen(props: { navigation: any }) {
     leftApplicatorLoad,
     rightApplicatorLoad,
     centerApplicatorLoad,
+    activity,
+    applicatorsAmount,
   ]);
 
   const setWeatherCallback = useCallback(
@@ -147,7 +165,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           deviceId = device.id;
         }
       });
-      await bluetoothApp.selectDevice(deviceId);
+      //await bluetoothApp.selectDevice(deviceId);
       setDeviceConnected(true);
       ShowToast({
         durationMs: 3000,
@@ -180,13 +198,12 @@ function PreExecutionScreen(props: { navigation: any }) {
           >
             Informações cliente
           </FormControl.Label>
-
           <FormInput
             title="Nome"
             description="Preencha este campo com o nome do cliente"
             errorMessage={validationResult.clientName.errorMessage}
             placeholder="Cliente X"
-            defaultValue={preExecutionConfig.getCache().clientName}
+            defaultValue={preExecutionConfigCache.getCache().clientName}
             onChangeText={setClientName}
           />
           <FormInput
@@ -194,28 +211,34 @@ function PreExecutionScreen(props: { navigation: any }) {
             description="Preencha este campo com o nome do projeto"
             errorMessage={validationResult.projectName.errorMessage}
             placeholder="Projeto x"
-            defaultValue={preExecutionConfig.getCache().projectName}
+            defaultValue={preExecutionConfigCache.getCache().projectName}
             onChangeText={setProjectName}
           />
           <SelectInput
             title="Fazenda"
             onItemSelected={setFarm}
-            items={mapStringToItemArray(config.getCache().FARMS)}
-            defaultValue={preExecutionConfig.getCache().farm}
+            items={mapStringToItemArray(configCache.getCache().FARMS)}
+            defaultValue={preExecutionConfigCache.getCache().farm}
             errorMessage={validationResult.farm.errorMessage}
             placeholder={''}
           />
           <SelectInput
             title="Talhão"
             onItemSelected={setPlot}
-            items={mapStringToItemArray(config.getCache().PLOTS)}
-            defaultValue={preExecutionConfig.getCache().plot}
+            items={mapStringToItemArray(configCache.getCache().PLOTS)}
+            defaultValue={preExecutionConfigCache.getCache().plot}
             errorMessage={validationResult.plot.errorMessage}
             placeholder={''}
           />
-
+          <SelectInput
+            title="Atividade"
+            onItemSelected={setActivity}
+            items={CONSTANTS.ACTIVITY_ITEMS}
+            defaultValue={preExecutionConfigCache.getCache().activity}
+            errorMessage={validationResult.activity.errorMessage}
+            placeholder={''}
+          />
           <Divider w="80%" />
-
           <FormControl.Label
             mt={5}
             _text={{
@@ -225,17 +248,14 @@ function PreExecutionScreen(props: { navigation: any }) {
           >
             Informações equipamento
           </FormControl.Label>
-
           <FormInput
             title="Nome do trator"
             description="Preencha este campo com o nome do trator que está sendo utilizado"
             errorMessage={validationResult.tractorName.errorMessage}
-            defaultValue={preExecutionConfig.getCache().tractorName}
+            defaultValue={preExecutionConfigCache.getCache().tractorName}
             onChangeText={setTractorName}
           />
-
           <Divider w="80%" />
-
           <FormControl.Label
             mt={5}
             _text={{
@@ -245,21 +265,14 @@ function PreExecutionScreen(props: { navigation: any }) {
           >
             Informações do local
           </FormControl.Label>
-
           <SelectInput
             placeholder=""
             onItemSelected={setStreetsAmountCallback}
             title="Numero de ruas"
-            items={[
-              { id: '0', name: '1' },
-              { id: '1', name: '2' },
-              { id: '2', name: '3' },
-              { id: '3', name: '5' },
-            ]}
-            defaultValue={preExecutionConfig.getCache().streetsAmount.toString()}
+            items={CONSTANTS.STREET_AMOUNT_ITEMS}
+            defaultValue={preExecutionConfigCache.getCache().streetsAmount.toString()}
             errorMessage={validationResult.streetsAmount.errorMessage}
           />
-
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
@@ -270,18 +283,15 @@ function PreExecutionScreen(props: { navigation: any }) {
           >
             Clima
           </FormControl.Label>
-
           <SelectInput
             onItemSelected={setWeatherCallback}
             placeholder={''}
             title={'Clima'}
             items={weatherItems}
             errorMessage={validationResult.weather.errorMessage}
-            defaultValue={weatherToPtWeather(preExecutionConfig.getCache().weather)}
+            defaultValue={weatherToPtWeather(preExecutionConfigCache.getCache().weather)}
           />
-
           <Divider w="80%" />
-
           <FormControl.Label
             mt={5}
             _text={{
@@ -298,7 +308,6 @@ function PreExecutionScreen(props: { navigation: any }) {
             items={devices}
             errorMessage={validationResult.deviceName.errorMessage}
           />
-
           <Button
             isLoading={isConnecting}
             isLoadingText="Conectando"
@@ -318,40 +327,48 @@ function PreExecutionScreen(props: { navigation: any }) {
               fontSize: Theme().font.size.xl(appConfig.screen),
             }}
           >
-            Carga nos reservatórios
+            Dosadores
           </FormControl.Label>
+
+          <SelectInput
+            title="Número de dosadores"
+            onItemSelected={(value) => setApplicatorsAmount(Number(value))}
+            items={CONSTANTS.APPLICATORS_AMOUNT_ITEMS}
+            defaultValue={applicatorsAmount.toString()}
+            errorMessage={validationResult.applicatorsAmount.errorMessage}
+            placeholder={''}
+          />
+
           <SlideInput
             onChangeEnd={setRightApplicatorLoad}
             step={0.5}
             title="Reservatório direito"
             unit="Kg"
-            defaultValue={preExecutionConfig.getCache().rightApplicatorLoad}
+            defaultValue={preExecutionConfigCache.getCache().rightApplicatorLoad}
             disabled={false}
-            maxValue={config.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD}
+            maxValue={configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD}
             minValue={1}
             errorMessage={validationResult.rightApplicatorLoad.errorMessage}
           />
-
           <SlideInput
             onChangeEnd={setCenterApplicatorLoad}
             step={0.5}
             title="Reservatório central"
             unit="Kg"
-            defaultValue={preExecutionConfig.getCache().centerApplicatorLoad}
+            defaultValue={preExecutionConfigCache.getCache().centerApplicatorLoad}
             disabled={false}
-            maxValue={config.getCache().APPLICATION.CENTER_TANK_MAX_LOAD}
+            maxValue={configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD}
             minValue={1}
             errorMessage={validationResult.centerApplicatorLoad.errorMessage}
           />
-
           <SlideInput
             onChangeEnd={setLeftApplicatorLoad}
             step={0.5}
             title="Reservatório esquerdo"
             unit="Kg"
-            defaultValue={preExecutionConfig.getCache().leftApplicatorLoad}
+            defaultValue={preExecutionConfigCache.getCache().leftApplicatorLoad}
             disabled={false}
-            maxValue={config.getCache().APPLICATION.LEFT_TANK_MAX_LOAD}
+            maxValue={configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD}
             minValue={1}
             errorMessage={validationResult.leftApplicatorLoad.errorMessage}
           />
