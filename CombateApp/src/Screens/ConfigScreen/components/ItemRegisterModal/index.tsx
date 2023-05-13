@@ -35,7 +35,14 @@ function ItemRegisterModal(props: {
     }
   }, [setIsValid, name]);
   return (
-    <Modal isOpen={props.isOpen} onClose={props.onClose}>
+    <Modal
+      isOpen={props.isOpen}
+      onClose={() => {
+        setValidationError(undefined);
+        setIsValid(true);
+        props.onClose();
+      }}
+    >
       <Modal.Content maxWidth="400px">
         <Modal.CloseButton />
         <Modal.Header>{props.title}</Modal.Header>

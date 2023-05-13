@@ -1,7 +1,6 @@
 import { Button, FormControl, Modal } from 'native-base';
 import { memo, useCallback, useState } from 'react';
 import { appConfig } from '../../../../app/config/app-config';
-import { instance } from '../../../../app/instance/instance';
 import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
 import { Theme } from '../../../../app/theme/theme';
 import SelectInput from '../../../../Components/SelectInput';
@@ -45,7 +44,7 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
             h={20}
             title="Selecione tipo de evento que foi encontrado"
             placeholder=""
-            items={mapStringToItemArray(instance.configCache.getCache().EVENTS)}
+            items={mapStringToItemArray(Instance.GetInstance().configCache.getCache().EVENTS)}
           />
         </Modal.Body>
         <Modal.Footer

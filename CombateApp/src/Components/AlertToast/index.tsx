@@ -1,8 +1,12 @@
 import { Alert, CloseIcon, HStack, IconButton, Text, Toast } from 'native-base';
+import Sound from 'react-native-sound';
 import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 import { Severity } from '../../internal/core/enum/severity';
+const alertSound = require('../../app/assets/alert.mp3');
 
+Sound.setCategory('Playback');
+const alert = new Sound(alertSound, Sound.MAIN_BUNDLE);
 export function AlertToast(props: {
   title: string;
   message?: string;
@@ -62,7 +66,12 @@ export function ShowToast(props: {
   durationMs: number;
   severity: Severity;
   closeButton?: boolean;
+  alertSounding?: boolean;
 }) {
+  if (props.alertSounding) {
+    alert.setVolume(1).play().setNumberOfLoops(-1);
+  }
+
   let onCloseButtonPressed = undefined;
   const id = Math.random();
   if (props.closeButton) {
@@ -74,6 +83,9 @@ export function ShowToast(props: {
     id: id,
     duration: props.durationMs ? props.durationMs + 1000 : undefined,
     placement: 'top',
+    onCloseComplete: () => {
+      if (props.alertSounding) alert.stop();
+    },
     render: () => {
       return (
         <AlertToast

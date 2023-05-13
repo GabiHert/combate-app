@@ -20,7 +20,7 @@ import { ProtocolRules } from '../../internal/core/rules/protocol-rules';
 import { CsvTableService } from '../../internal/core/service/csv-table-service';
 import { IConfigsProps, IPreExecutionConfigProps } from '../../internal/interface/config-props';
 
-export class Intance {
+export class Instance {
   readonly logger: PLogger;
   readonly combateApp: PCombateApp;
   readonly configCache: PCache<IConfigsProps>;
@@ -28,7 +28,13 @@ export class Intance {
   readonly validator: PValidator;
   readonly preExecutionConfigCache: PCache<IPreExecutionConfigProps>;
 
-  constructor() {
+  private static _instance: Instance;
+  static GetInstance(): Instance {
+    if (!this._instance) this._instance = new Instance();
+    return this._instance;
+  }
+
+  private constructor() {
     this.logger = new ALogger(true);
 
     const bluetooth = new ABluetooth(this.logger);
@@ -56,5 +62,3 @@ export class Intance {
     );
   }
 }
-
-export const instance = new Intance();

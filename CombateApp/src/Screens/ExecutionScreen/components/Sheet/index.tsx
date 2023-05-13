@@ -2,7 +2,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Box, Button, Center, Stack, Text, VStack, WarningOutlineIcon } from 'native-base';
 import React, { memo, useCallback, useState } from 'react';
 import { appConfig } from '../../../../app/config/app-config';
-import { instance } from '../../../../app/instance/instance';
 import { Theme } from '../../../../app/theme/theme';
 import { Severity } from '../../../../internal/core/enum/severity';
 import EventRegisterModal from '../EventRegisterModal';
@@ -166,7 +165,7 @@ function Sheet(props: {
               <Text fontSize={Theme().font.size.xl(appConfig.screen)} fontWeight="bold">
                 {Math.trunc(
                   props.appliedDoses *
-                    instance.configCache.getCache().APPLICATION.DOSE_WEIGHT_KG *
+                    Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG *
                     1000
                 )}
               </Text>

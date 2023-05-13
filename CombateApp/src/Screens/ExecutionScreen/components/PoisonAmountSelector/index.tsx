@@ -1,30 +1,29 @@
 import { Button, Center, HStack, Stack, Text } from 'native-base';
 import React, { memo } from 'react';
 import { appConfig } from '../../../../app/config/app-config';
-import { instance } from '../../../../app/instance/instance';
 import { Theme } from '../../../../app/theme/theme';
 
 function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void }) {
   function onPreset1Pressed() {
-    props.onPresetPressed(instance.configCache.getCache().PRESETS.P1.DOSE_AMOUNT);
+    props.onPresetPressed(Instance.GetInstance().configCache.getCache().PRESETS.P1.DOSE_AMOUNT);
   }
 
   function onPreset2Pressed() {
-    props.onPresetPressed(instance.configCache.getCache().PRESETS.P2.DOSE_AMOUNT);
+    props.onPresetPressed(Instance.GetInstance().configCache.getCache().PRESETS.P2.DOSE_AMOUNT);
   }
 
   function onPreset3Pressed() {
-    props.onPresetPressed(instance.configCache.getCache().PRESETS.P3.DOSE_AMOUNT);
+    props.onPresetPressed(Instance.GetInstance().configCache.getCache().PRESETS.P3.DOSE_AMOUNT);
   }
 
   function onPreset4Pressed() {
-    props.onPresetPressed(instance.configCache.getCache().PRESETS.P4.DOSE_AMOUNT);
+    props.onPresetPressed(Instance.GetInstance().configCache.getCache().PRESETS.P4.DOSE_AMOUNT);
   }
   function onPreset5Pressed() {
-    props.onPresetPressed(instance.configCache.getCache().PRESETS.P5.DOSE_AMOUNT);
+    props.onPresetPressed(Instance.GetInstance().configCache.getCache().PRESETS.P5.DOSE_AMOUNT);
   }
   function onPreset6Pressed() {
-    props.onPresetPressed(instance.configCache.getCache().PRESETS.P6.DOSE_AMOUNT);
+    props.onPresetPressed(Instance.GetInstance().configCache.getCache().PRESETS.P6.DOSE_AMOUNT);
   }
 
   return (
@@ -65,7 +64,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
             _text={{ color: 'black', fontSize: Theme().font.size.m(appConfig.screen) }}
             _pressed={{ opacity: 0.8 }}
           >
-            {instance.configCache.getCache().PRESETS.P1.NAME}
+            {Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME}
           </Button>
           <Button
             onPress={onPreset2Pressed}
@@ -77,7 +76,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
             _text={{ color: 'black', fontSize: Theme().font.size.m(appConfig.screen) }}
             _pressed={{ opacity: 0.8 }}
           >
-            {instance.configCache.getCache().PRESETS.P2.NAME}
+            {Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME}
           </Button>
           <Button
             onPress={onPreset3Pressed}
@@ -88,7 +87,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
             _text={{ color: 'black', fontSize: Theme().font.size.m(appConfig.screen) }}
             _pressed={{ opacity: 0.8 }}
           >
-            {instance.configCache.getCache().PRESETS.P3.NAME}
+            {Instance.GetInstance().configCache.getCache().PRESETS.P3.NAME}
           </Button>
         </Stack>
 
@@ -109,7 +108,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
             _text={{ color: 'black', fontSize: Theme().font.size.m(appConfig.screen) }}
             _pressed={{ opacity: 0.8 }}
           >
-            {instance.configCache.getCache().PRESETS.P4.NAME}
+            {Instance.GetInstance().configCache.getCache().PRESETS.P4.NAME}
           </Button>
           <Button
             onPress={onPreset5Pressed}
@@ -121,7 +120,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
             _text={{ color: 'black', fontSize: Theme().font.size.m(appConfig.screen) }}
             _pressed={{ opacity: 0.8 }}
           >
-            {instance.configCache.getCache().PRESETS.P5.NAME}
+            {Instance.GetInstance().configCache.getCache().PRESETS.P5.NAME}
           </Button>
           <Button
             onPress={onPreset6Pressed}
@@ -132,7 +131,7 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => void
             _text={{ color: 'black', fontSize: Theme().font.size.m(appConfig.screen) }}
             _pressed={{ opacity: 0.8 }}
           >
-            {instance.configCache.getCache().PRESETS.P6.NAME}
+            {Instance.GetInstance().configCache.getCache().PRESETS.P6.NAME}
           </Button>
         </Stack>
       </HStack>

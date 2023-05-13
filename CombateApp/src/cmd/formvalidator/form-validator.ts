@@ -1,4 +1,4 @@
-import { instance } from '../../app/instance/instance';
+import { Instance } from '../../app/instance/instance';
 import { CONSTANTS } from '../../internal/config/config';
 import { PoisonEnum } from '../../internal/core/enum/poison';
 import { WeatherEnum } from '../../internal/core/enum/weather';
@@ -19,7 +19,7 @@ export class Validator implements PValidator {
   }
   constructor(private _logger: PLogger, private readonly _config: PCache<IConfigsProps>) {}
 
-  private _basicStringValidation(str: string): boolean {
+  static BasicStringValidation(str: string): boolean {
     if (!str || str.length == 0) {
       return false;
     }
@@ -34,18 +34,20 @@ export class Validator implements PValidator {
     }
     return true;
   }
+
   validateStopReasonForm(stopReason: string): string {
-    instance.logger.info({
+    Instance.GetInstance().logger.info({
       event: 'FormValidator.validateStopReasonForm',
       details: 'Process started',
       stopReason,
     });
 
     let result: string;
-    if (this._basicStringValidation(stopReason))
+
+    if (Validator.BasicStringValidation(stopReason))
       result = CONSTANTS.ERRORS.STOP_REASON_FORM.INVALID_STOP_REASON;
 
-    instance.logger.info({
+    Instance.GetInstance().logger.info({
       event: 'FormValidator.validateStopReasonForm',
       details: 'Process finished',
       result,
@@ -54,15 +56,15 @@ export class Validator implements PValidator {
     return result;
   }
   validatePlotForm(plot: string): string {
-    instance.logger.info({
+    Instance.GetInstance().logger.info({
       event: 'FormValidator.validatePlotForm',
       details: 'Process started',
       plot,
     });
 
     let result: string;
-    if (this._basicStringValidation(plot)) result = CONSTANTS.ERRORS.PLOT_FORM.INVALID_PLOT;
-    instance.logger.info({
+    if (Validator.BasicStringValidation(plot)) result = CONSTANTS.ERRORS.PLOT_FORM.INVALID_PLOT;
+    Instance.GetInstance().logger.info({
       event: 'FormValidator.validatePlotForm',
       details: 'Process finished',
     });
@@ -70,15 +72,15 @@ export class Validator implements PValidator {
     return result;
   }
   validateFarmForm(farm: string): string {
-    instance.logger.info({
+    Instance.GetInstance().logger.info({
       event: 'FormValidator.validateFarmForm',
       details: 'Process started',
       farm,
     });
     let result: string;
-    if (this._basicStringValidation(farm)) result = CONSTANTS.ERRORS.FARM_FORM.INVALID_FARM;
+    if (Validator.BasicStringValidation(farm)) result = CONSTANTS.ERRORS.FARM_FORM.INVALID_FARM;
 
-    instance.logger.info({
+    Instance.GetInstance().logger.info({
       event: 'FormValidator.validateFarmForm',
       details: 'Process finished',
     });
@@ -86,15 +88,15 @@ export class Validator implements PValidator {
     return result;
   }
   validateEventForm(event: string): string {
-    instance.logger.info({
+    Instance.GetInstance().logger.info({
       event: 'FormValidator.validateEventForm',
       details: 'Process started',
       Event: event,
     });
     let result: string;
-    if (this._basicStringValidation(event)) result = CONSTANTS.ERRORS.EVENT_FORM.INVALID_EVENT;
+    if (Validator.BasicStringValidation(event)) result = CONSTANTS.ERRORS.EVENT_FORM.INVALID_EVENT;
 
-    instance.logger.info({
+    Instance.GetInstance().logger.info({
       event: 'FormValidator.validateEventForm',
       details: 'Process finished',
     });

@@ -5,7 +5,6 @@ import React, { useCallback, useState } from 'react';
 import { BackHandler } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { appConfig } from '../../app/config/app-config';
-import { instance } from '../../app/instance/instance';
 import { Theme } from '../../app/theme/theme';
 import { ShowToast } from '../../Components/AlertToast';
 import { CONSTANTS } from '../../internal/config/config';
@@ -26,19 +25,19 @@ function ExecutionScreen(props: { navigation: any }) {
   const [doseInProgress, setDoseInProgress] = useState<boolean>(false);
 
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState(
-    instance.preExecutionConfigCache.getCache().leftApplicatorLoad
+    Instance.GetInstance().preExecutionConfigCache.getCache().leftApplicatorLoad
   );
   const [leftApplicatorActive, setLeftApplicatorActive] = useState(true);
   const [leftApplicatorAvailable, setLeftApplicatorAvailable] = useState(true);
 
   const [rightApplicatorLoad, setRightApplicatorLoad] = useState(
-    instance.preExecutionConfigCache.getCache().rightApplicatorLoad
+    Instance.GetInstance().preExecutionConfigCache.getCache().rightApplicatorLoad
   );
   const [rightApplicatorActive, setRightApplicatorActive] = useState(true);
   const [rightApplicatorAvailable, setRightApplicatorAvailable] = useState(true);
 
   const [centerApplicatorLoad, setCenterApplicatorLoad] = useState(
-    instance.preExecutionConfigCache.getCache().centerApplicatorLoad
+    Instance.GetInstance().preExecutionConfigCache.getCache().centerApplicatorLoad
   );
   const [centerApplicatorActive, setCenterApplicatorActive] = useState(true);
   const [centerApplicatorAvailable, setCenterApplicatorAvailable] = useState(true);
@@ -46,15 +45,15 @@ function ExecutionScreen(props: { navigation: any }) {
   const [applicatorsLoadPercentage, setApplicatorsLoadPercentage] =
     useState<IApplicatorsPercentage>({
       center: calculateApplicatorsLoadPercentage(
-        instance.configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD,
+        Instance.GetInstance().configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD,
         centerApplicatorLoad
       ),
       left: calculateApplicatorsLoadPercentage(
-        instance.configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD,
+        Instance.GetInstance().configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD,
         leftApplicatorLoad
       ),
       right: calculateApplicatorsLoadPercentage(
-        instance.configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD,
+        Instance.GetInstance().configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD,
         rightApplicatorLoad
       ),
     });
@@ -102,11 +101,11 @@ function ExecutionScreen(props: { navigation: any }) {
         };
         setVelocity(response.velocity);
       }
-      const cache = instance.preExecutionConfigCache.getCache();
+      const cache = Instance.GetInstance().preExecutionConfigCache.getCache();
       cache.leftApplicatorLoad = leftApplicatorLoad;
       cache.rightApplicatorLoad = rightApplicatorLoad;
       cache.centerApplicatorLoad = centerApplicatorLoad;
-      instance.preExecutionConfigCache.update(cache);
+      Instance.GetInstance().preExecutionConfigCache.update(cache);
     }, CONSTANTS.REQUEST_INTERVAL_MS);
 
     return () => clearInterval(interval);
@@ -159,7 +158,7 @@ function ExecutionScreen(props: { navigation: any }) {
             setShowLeftNoLoadWarnOnce(true);
           }
         } else {
-          load -= amount * instance.configCache.getCache().APPLICATION.DOSE_WEIGHT_KG;
+          load -= amount * Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG;
         }
         setLeftApplicatorLoad(load);
       } else if (leftApplicatorAvailable) {
@@ -183,7 +182,7 @@ function ExecutionScreen(props: { navigation: any }) {
             setShowRightNoLoadWarnOnce(true);
           }
         } else {
-          load -= amount * instance.configCache.getCache().APPLICATION.DOSE_WEIGHT_KG;
+          load -= amount * Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG;
         }
         setRightApplicatorLoad(load);
       } else if (rightApplicatorAvailable) {
@@ -207,22 +206,22 @@ function ExecutionScreen(props: { navigation: any }) {
             setShowCenterNoLoadWarnOnce(true);
           }
         } else {
-          load -= amount * instance.configCache.getCache().APPLICATION.DOSE_WEIGHT_KG;
+          load -= amount * Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG;
         }
         setCenterApplicatorLoad(load);
       } else if (centerApplicatorAvailable) {
         setCenterApplicatorActive(true);
       }
       const center = calculateApplicatorsLoadPercentage(
-        instance.configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD,
+        Instance.GetInstance().configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD,
         centerApplicatorLoad
       );
       const right = calculateApplicatorsLoadPercentage(
-        instance.configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD,
+        Instance.GetInstance().configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD,
         rightApplicatorLoad
       );
       const left = calculateApplicatorsLoadPercentage(
-        instance.configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD,
+        Instance.GetInstance().configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD,
         leftApplicatorLoad
       );
       if (left.severity.name != applicatorsLoadPercentage.left.severity.name) {
