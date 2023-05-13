@@ -1,23 +1,23 @@
 import { Box, Button, Divider, FormControl, ScrollView, VStack } from 'native-base';
 import { useCallback, useState } from 'react';
-import { ShowToast } from '../../Components/AlertToast';
-import FormInput from '../../Components/FormInput';
-import SlideInput from '../../Components/SlideInput';
-import { Theme } from '../../app/theme/theme';
-import { SeverityEnum } from '../../internal/core/enum/severity';
 import { v1 } from 'uuid';
-import SelectInput from '../../Components/SelectInput';
 import { appConfig } from '../../app/config/app-config';
+import { instance } from '../../app/instance/instance';
 import { itemArrayToMapString } from '../../app/parser/item-array-to-map-string';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
 import { ptToDefaults } from '../../app/parser/pt-to-defaults';
+import { Theme } from '../../app/theme/theme';
+import { ShowToast } from '../../Components/AlertToast';
+import FormInput from '../../Components/FormInput';
+import SelectInput from '../../Components/SelectInput';
+import SlideInput from '../../Components/SlideInput';
 import { CONSTANTS } from '../../internal/config/config';
 import { poisonItems } from '../../internal/core/enum/poison';
+import { SeverityEnum } from '../../internal/core/enum/severity';
+import { IConfigFormResult } from '../../internal/interface/config-form-result';
 import { IConfigsProps } from '../../internal/interface/config-props';
 import ItemListInput from './components/ItemListInput';
 import ItemRegisterModal from './components/ItemRegisterModal';
-import { IConfigFormResult } from '../../internal/interface/config-form-result';
-import { instance } from '../../app/instance/instance';
 
 interface IPreset {
   name: string;
@@ -458,9 +458,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         onAddPressed={onAddEventRequested}
         isOpen={addEventModalVisible}
         onClose={onAddEventModalClose}
-        validator={() => {
-          return undefined;
-        }}
+        validator={instance.validator.validateEventForm}
       />
       <ItemRegisterModal
         title="Adicionar fazenda"
@@ -469,9 +467,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         onAddPressed={onAddFarmRequested}
         isOpen={addFarmModalVisible}
         onClose={onAddFarmModalClose}
-        validator={() => {
-          return undefined;
-        }}
+        validator={instance.validator.validateFarmForm}
       />
       <ItemRegisterModal
         title="Adicionar talhão"
@@ -480,9 +476,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         onAddPressed={onAddPlotRequested}
         isOpen={addPlotModalVisible}
         onClose={onAddPlotModalClose}
-        validator={() => {
-          return undefined;
-        }}
+        validator={instance.validator.validatePlotForm}
       />
 
       <ScrollView w="100%">

@@ -18,44 +18,40 @@ export class Validator implements PValidator {
     return this._instance;
   }
   constructor(private _logger: PLogger, private readonly _config: PCache<IConfigsProps>) {}
+
+  private _basicStringValidation(str: string): boolean {
+    if (!str || str.length == 0) {
+      return false;
+    }
+
+    let onlySpaces = true;
+    for (let i = 0; i < str.length; i++) {
+      if (str[i] != ' ') onlySpaces = false;
+    }
+
+    if (onlySpaces) {
+      return false;
+    }
+    return true;
+  }
   validateStopReasonForm(stopReason: string): string {
     instance.logger.info({
       event: 'FormValidator.validateStopReasonForm',
       details: 'Process started',
       stopReason,
     });
-    let result: string = undefined;
 
-    if (!stopReason || stopReason.length == 0) {
+    let result: string;
+    if (this._basicStringValidation(stopReason))
       result = CONSTANTS.ERRORS.STOP_REASON_FORM.INVALID_STOP_REASON;
-      instance.logger.warn({
-        event: 'FormValidator.validateStopReasonForm',
-        details: 'Process warn',
-        result,
-      });
-      return result;
-    }
-
-    let onlySpaces = true;
-    for (let i = 0; i < stopReason.length; i++) {
-      if (stopReason[i] != ' ') onlySpaces = false;
-    }
-
-    if (onlySpaces) {
-      result = CONSTANTS.ERRORS.STOP_REASON_FORM.INVALID_STOP_REASON;
-      instance.logger.warn({
-        event: 'FormValidator.validateStopReasonForm',
-        details: 'Process warn',
-        result,
-      });
-      return result;
-    }
 
     instance.logger.info({
       event: 'FormValidator.validateStopReasonForm',
       details: 'Process finished',
       result,
     });
+
+    return result;
   }
   validatePlotForm(plot: string): string {
     instance.logger.info({
@@ -63,8 +59,9 @@ export class Validator implements PValidator {
       details: 'Process started',
       plot,
     });
-    let result: string = undefined;
 
+    let result: string;
+    if (this._basicStringValidation(plot)) result = CONSTANTS.ERRORS.PLOT_FORM.INVALID_PLOT;
     instance.logger.info({
       event: 'FormValidator.validatePlotForm',
       details: 'Process finished',
@@ -78,7 +75,8 @@ export class Validator implements PValidator {
       details: 'Process started',
       farm,
     });
-    let result: string = undefined;
+    let result: string;
+    if (this._basicStringValidation(farm)) result = CONSTANTS.ERRORS.FARM_FORM.INVALID_FARM;
 
     instance.logger.info({
       event: 'FormValidator.validateFarmForm',
@@ -93,7 +91,8 @@ export class Validator implements PValidator {
       details: 'Process started',
       Event: event,
     });
-    let result: string = undefined;
+    let result: string;
+    if (this._basicStringValidation(event)) result = CONSTANTS.ERRORS.EVENT_FORM.INVALID_EVENT;
 
     instance.logger.info({
       event: 'FormValidator.validateEventForm',

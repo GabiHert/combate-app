@@ -40,6 +40,15 @@ export const CONSTANTS = {
   ],
   REQUEST: { HEADER: 'INF' },
   ERRORS: {
+    PLOT_FORM: {
+      INVALID_PLOT: 'ERROR',
+    },
+    FARM_FORM: {
+      INVALID_FARM: 'ERROR',
+    },
+    EVENT_FORM: {
+      INVALID_EVENT: 'ERROR',
+    },
     STOP_REASON_FORM: {
       INVALID_STOP_REASON: 'ERROR',
     },
