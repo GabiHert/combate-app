@@ -1,5 +1,4 @@
 import { BluetoothDevice } from 'react-native-bluetooth-classic';
-import { logger } from './logger-port';
 
 export interface PBluetooth {
   /**

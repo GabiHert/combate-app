@@ -1,6 +1,6 @@
-import { ResponseBuilder } from '../../../../src/internal/core/parser/response-dto-parser';
 import { ProtocolVersionEnum } from '../../../../src/internal/core/enum/protocol-version';
 import { CbServiceFactory } from '../../../../src/internal/core/factory/cb-service-factory';
+import { ResponseDtoParser } from '../../../../src/internal/core/parser/response-dto-parser';
 
 import { CbV4Service } from '../../../../src/internal/core/service/cb-v4-service';
 import { BluetoothMock } from '../../../mock/bluetooth-mock';
@@ -17,7 +17,7 @@ jest.mock('../../../../src/internal/core/port/bluetooth-port', () => {
 
 describe('cb-service-factory unit test', () => {
   let loggerMocked = new LoggerMock();
-  let responseBuilder = new ResponseBuilder(loggerMocked);
+  let responseBuilder = new ResponseDtoParser(loggerMocked);
   let cbServiceFactory = new CbServiceFactory(loggerMocked, undefined, responseBuilder);
   beforeEach(() => {
     loggerMocked.clear();

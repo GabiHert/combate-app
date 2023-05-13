@@ -1,9 +1,9 @@
-import { IPreExecutionConfigProps } from '../../interface/config-props';
-import { PRepository } from '../../core/port/repository-port';
-import { PPreExecutionConfigCache as PPreExecutionCache } from '../../core/port/pre-execution-config-cache-port';
+import { PCache } from '../../core/port/cache-port';
 import { PLogger } from '../../core/port/logger-port';
+import { PRepository } from '../../core/port/repository-port';
+import { IPreExecutionConfigProps } from '../../interface/config-props';
 
-export class APreExecutionConfigCache implements PPreExecutionCache {
+export class APreExecutionConfigCache implements PCache<IPreExecutionConfigProps> {
   constructor(
     private readonly _logger: PLogger,
     private readonly repository: PRepository,

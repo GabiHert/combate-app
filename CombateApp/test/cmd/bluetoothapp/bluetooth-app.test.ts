@@ -1,7 +1,6 @@
 import { v4 } from 'uuid';
 import { BluetoothApp } from '../../../src/cmd/bluetoothapp/bluetooth-app';
 import { BluetoothErrorType } from '../../../src/internal/core/error/error-type';
-import { logger, PLogger } from '../../../src/internal/core/port/logger-port';
 import { BluetoothMock } from '../../mock/bluetooth-mock';
 import { LoggerMock } from '../../mock/logger-mock';
 

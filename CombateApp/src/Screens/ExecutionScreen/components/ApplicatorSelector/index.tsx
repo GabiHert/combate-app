@@ -1,12 +1,10 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { Box, Button, Stack, Text } from 'native-base';
 import React, { memo, useState } from 'react';
-import { useEffect } from 'react';
-import { Severity, SeverityEnum } from '../../../../internal/core/enum/severity';
 import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import { ShowToast as showToast } from '../../../../Components/AlertToast';
-import { Applicator } from '../../types/applicator';
-import { useFocusEffect } from '@react-navigation/native';
+import { SeverityEnum } from '../../../../internal/core/enum/severity';
 
 function ApplicatorSelector(props: {
   leftApplicatorActive: boolean;

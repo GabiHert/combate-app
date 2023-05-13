@@ -1,5 +1,5 @@
 import { Box, Button, Divider, FormControl, IconButton, ScrollView, VStack } from 'native-base';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { appConfig } from '../../app/config/app-config';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
@@ -8,56 +8,53 @@ import { Weather, weatherItems } from '../../internal/core/enum/weather';
 import { IPreExecutionConfigProps } from '../../internal/interface/config-props';
 import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-form-result';
 
+import { useFocusEffect } from '@react-navigation/native';
+import { instance } from '../../app/instance/instance';
+import { ptToDefaults } from '../../app/parser/pt-to-defaults';
+import { Theme } from '../../app/theme/theme';
 import { ShowToast, ShowToast as showToast } from '../../Components/AlertToast';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
 import SlideInput from '../../Components/SlideInput';
-import { ptToDefaults } from '../../app/parser/pt-to-defaults';
-import { Theme } from '../../app/theme/theme';
+import { CONSTANTS } from '../../internal/config/config';
 import { SeverityEnum } from '../../internal/core/enum/severity';
 import { IItem } from '../../internal/interface/item';
-import { useFocusEffect } from '@react-navigation/native';
-import {
-  bluetoothApp,
-  configCache,
-  preExecutionConfigCache,
-  validator,
-} from '../../app/instance/instance';
-import { CONSTANTS } from '../../internal/config/config';
 
 function PreExecutionScreen(props: { navigation: any }) {
   const [applicatorsAmount, setApplicatorsAmount] = useState<number>(1);
-  const [activity, setActivity] = useState<string>(preExecutionConfigCache.getCache().activity);
+  const [activity, setActivity] = useState<string>(
+    instance.preExecutionConfigCache.getCache().activity
+  );
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState<number>(
-    preExecutionConfigCache.getCache().leftApplicatorLoad
+    instance.preExecutionConfigCache.getCache().leftApplicatorLoad
   );
   const [centerApplicatorLoad, setCenterApplicatorLoad] = useState<number>(
-    preExecutionConfigCache.getCache().centerApplicatorLoad
+    instance.preExecutionConfigCache.getCache().centerApplicatorLoad
   );
   const [rightApplicatorLoad, setRightApplicatorLoad] = useState<number>(
-    preExecutionConfigCache.getCache().rightApplicatorLoad
+    instance.preExecutionConfigCache.getCache().rightApplicatorLoad
   );
   const [devices, setDevices] = useState<Array<IItem>>([{ id: 'idd', name: 'name' }]);
   const [deviceConnected, setDeviceConnected] = useState(true); //todo: false
   const [clientName, setClientName] = useState<string>(
-    preExecutionConfigCache.getCache().clientName
+    instance.preExecutionConfigCache.getCache().clientName
   );
   const [projectName, setProjectName] = useState<string>(
-    preExecutionConfigCache.getCache().projectName
+    instance.preExecutionConfigCache.getCache().projectName
   );
-  const [farm, setFarm] = useState<string>(preExecutionConfigCache.getCache().farm);
-  const [plot, setPlot] = useState<string>(preExecutionConfigCache.getCache().plot);
+  const [farm, setFarm] = useState<string>(instance.preExecutionConfigCache.getCache().farm);
+  const [plot, setPlot] = useState<string>(instance.preExecutionConfigCache.getCache().plot);
   const [tractorName, setTractorName] = useState<string>(
-    preExecutionConfigCache.getCache().tractorName
+    instance.preExecutionConfigCache.getCache().tractorName
   );
   const [streetsAmount, setStreetsAmount] = useState<number>(
-    preExecutionConfigCache.getCache().streetsAmount
+    instance.preExecutionConfigCache.getCache().streetsAmount
   );
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [deviceName, setDeviceName] = useState<string>();
 
   const [weather, setWeather] = useState<Weather>(
-    new Weather(preExecutionConfigCache.getCache().weather)
+    new Weather(instance.preExecutionConfigCache.getCache().weather)
   );
   const [validationResult, setValidationResult] = useState<IPreExecutionFormResult>({
     applicatorsAmount: { errorMessage: undefined },
@@ -111,10 +108,10 @@ function PreExecutionScreen(props: { navigation: any }) {
       deviceName,
     };
 
-    const result = validator.validatePreExecutionForm(data);
+    const result = instance.validator.validatePreExecutionForm(data);
 
     if (result.valid && deviceConnected) {
-      await preExecutionConfigCache.update(data);
+      await instance.preExecutionConfigCache.update(data);
 
       props.navigation.navigate('ExecutionScreen');
     } else {
@@ -203,7 +200,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             description="Preencha este campo com o nome do cliente"
             errorMessage={validationResult.clientName.errorMessage}
             placeholder="Cliente X"
-            defaultValue={preExecutionConfigCache.getCache().clientName}
+            defaultValue={instance.preExecutionConfigCache.getCache().clientName}
             onChangeText={setClientName}
           />
           <FormInput
@@ -211,22 +208,22 @@ function PreExecutionScreen(props: { navigation: any }) {
             description="Preencha este campo com o nome do projeto"
             errorMessage={validationResult.projectName.errorMessage}
             placeholder="Projeto x"
-            defaultValue={preExecutionConfigCache.getCache().projectName}
+            defaultValue={instance.preExecutionConfigCache.getCache().projectName}
             onChangeText={setProjectName}
           />
           <SelectInput
             title="Fazenda"
             onItemSelected={setFarm}
-            items={mapStringToItemArray(configCache.getCache().FARMS)}
-            defaultValue={preExecutionConfigCache.getCache().farm}
+            items={mapStringToItemArray(instance.configCache.getCache().FARMS)}
+            defaultValue={instance.preExecutionConfigCache.getCache().farm}
             errorMessage={validationResult.farm.errorMessage}
             placeholder={''}
           />
           <SelectInput
             title="Talhão"
             onItemSelected={setPlot}
-            items={mapStringToItemArray(configCache.getCache().PLOTS)}
-            defaultValue={preExecutionConfigCache.getCache().plot}
+            items={mapStringToItemArray(instance.configCache.getCache().PLOTS)}
+            defaultValue={instance.preExecutionConfigCache.getCache().plot}
             errorMessage={validationResult.plot.errorMessage}
             placeholder={''}
           />
@@ -234,7 +231,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             title="Atividade"
             onItemSelected={setActivity}
             items={CONSTANTS.ACTIVITY_ITEMS}
-            defaultValue={preExecutionConfigCache.getCache().activity}
+            defaultValue={instance.preExecutionConfigCache.getCache().activity}
             errorMessage={validationResult.activity.errorMessage}
             placeholder={''}
           />
@@ -252,7 +249,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             title="Nome do trator"
             description="Preencha este campo com o nome do trator que está sendo utilizado"
             errorMessage={validationResult.tractorName.errorMessage}
-            defaultValue={preExecutionConfigCache.getCache().tractorName}
+            defaultValue={instance.preExecutionConfigCache.getCache().tractorName}
             onChangeText={setTractorName}
           />
           <Divider w="80%" />
@@ -270,7 +267,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             onItemSelected={setStreetsAmountCallback}
             title="Numero de ruas"
             items={CONSTANTS.STREET_AMOUNT_ITEMS}
-            defaultValue={preExecutionConfigCache.getCache().streetsAmount.toString()}
+            defaultValue={instance.preExecutionConfigCache.getCache().streetsAmount.toString()}
             errorMessage={validationResult.streetsAmount.errorMessage}
           />
           <Divider w="80%" />
@@ -289,7 +286,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             title={'Clima'}
             items={weatherItems}
             errorMessage={validationResult.weather.errorMessage}
-            defaultValue={weatherToPtWeather(preExecutionConfigCache.getCache().weather)}
+            defaultValue={weatherToPtWeather(instance.preExecutionConfigCache.getCache().weather)}
           />
           <Divider w="80%" />
           <FormControl.Label
@@ -344,9 +341,9 @@ function PreExecutionScreen(props: { navigation: any }) {
             step={0.5}
             title="Reservatório direito"
             unit="Kg"
-            defaultValue={preExecutionConfigCache.getCache().rightApplicatorLoad}
+            defaultValue={instance.preExecutionConfigCache.getCache().rightApplicatorLoad}
             disabled={false}
-            maxValue={configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD}
+            maxValue={instance.configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD}
             minValue={1}
             errorMessage={validationResult.rightApplicatorLoad.errorMessage}
           />
@@ -355,9 +352,9 @@ function PreExecutionScreen(props: { navigation: any }) {
             step={0.5}
             title="Reservatório central"
             unit="Kg"
-            defaultValue={preExecutionConfigCache.getCache().centerApplicatorLoad}
+            defaultValue={instance.preExecutionConfigCache.getCache().centerApplicatorLoad}
             disabled={false}
-            maxValue={configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD}
+            maxValue={instance.configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD}
             minValue={1}
             errorMessage={validationResult.centerApplicatorLoad.errorMessage}
           />
@@ -366,9 +363,9 @@ function PreExecutionScreen(props: { navigation: any }) {
             step={0.5}
             title="Reservatório esquerdo"
             unit="Kg"
-            defaultValue={preExecutionConfigCache.getCache().leftApplicatorLoad}
+            defaultValue={instance.preExecutionConfigCache.getCache().leftApplicatorLoad}
             disabled={false}
-            maxValue={configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD}
+            maxValue={instance.configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD}
             minValue={1}
             errorMessage={validationResult.leftApplicatorLoad.errorMessage}
           />

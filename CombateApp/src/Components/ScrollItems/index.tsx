@@ -1,6 +1,6 @@
-import { Box, Center, Divider, HStack, ScrollView, Text } from 'native-base';
+import { ScrollView, Text } from 'native-base';
 import { memo } from 'react';
-import { FlatList, SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native';
 
 function Item(props: { label: string }) {
   return <Text>{props.label}</Text>;

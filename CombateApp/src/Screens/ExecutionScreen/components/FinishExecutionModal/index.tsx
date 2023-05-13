@@ -1,12 +1,12 @@
 import { Button, FormControl, Modal } from 'native-base';
 import { memo, useCallback, useState } from 'react';
-import SelectInput from '../../../../Components/SelectInput';
 import { appConfig } from '../../../../app/config/app-config';
+import { instance } from '../../../../app/instance/instance';
 import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
 import { Theme } from '../../../../app/theme/theme';
+import SelectInput from '../../../../Components/SelectInput';
 import { CONSTANTS } from '../../../../internal/config/config';
 import UnderForestModal from '../UnderForestModal';
-import { configCache, validator } from '../../../../app/instance/instance';
 
 function FinishExecutionModal(props: {
   isOpen: boolean;
@@ -33,7 +33,7 @@ function FinishExecutionModal(props: {
   }, []);
 
   const onFinishPressed = useCallback(() => {
-    const errorMessage = validator.validateFinishExecutionForm(event);
+    const errorMessage = instance.validator.validateFinishExecutionForm(event);
     if (!errorMessage) {
       //todo:call backend to register event
       if (event == CONSTANTS.FINISHED_WORK_REASON_NAME) {
@@ -75,7 +75,7 @@ function FinishExecutionModal(props: {
             h={20}
             title="Descreva o motivo do fim da execução"
             placeholder=""
-            items={mapStringToItemArray(configCache.getCache().STOP_REASONS_EVENTS)}
+            items={mapStringToItemArray(instance.configCache.getCache().STOP_REASONS_EVENTS)}
             errorMessage={eventError}
           />
         </Modal.Body>

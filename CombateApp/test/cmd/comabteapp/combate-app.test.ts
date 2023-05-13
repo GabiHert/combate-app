@@ -1,9 +1,6 @@
 import { v4 } from 'uuid';
 import { CombateApp } from '../../../src/cmd/combateapp/combate-app';
-import {
-  CheckSumBuilder,
-  checkSumBuilder,
-} from '../../../src/internal/core/builder/check-sum-builder';
+import { CheckSumBuilder } from '../../../src/internal/core/builder/check-sum-builder';
 import { RequestDto } from '../../../src/internal/core/dto/request-dto';
 import { EventEnum } from '../../../src/internal/core/enum/event';
 import { CbServiceFactory } from '../../../src/internal/core/factory/cb-service-factory';

@@ -1,4 +1,4 @@
-import { PLogger, logger } from '../port/logger-port';
+import { PLogger } from '../port/logger-port';
 
 export class CheckSumBuilder {
   constructor(private readonly _logger: PLogger) {}
@@ -20,5 +20,3 @@ export class CheckSumBuilder {
     return csString;
   }
 }
-
-export const checkSumBuilder = new CheckSumBuilder(logger);

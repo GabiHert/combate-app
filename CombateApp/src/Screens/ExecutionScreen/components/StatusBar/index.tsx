@@ -1,4 +1,4 @@
-import { Box, Center, HStack, Stack } from 'native-base';
+import { Box, Center, HStack } from 'native-base';
 import React, { memo } from 'react';
 import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';

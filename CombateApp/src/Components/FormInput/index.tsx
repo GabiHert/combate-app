@@ -1,6 +1,6 @@
 import { FormControl, Input, WarningOutlineIcon } from 'native-base';
-import React, { memo, useCallback, useEffect, useState } from 'react';
-import { KeyboardTypeOptions, useWindowDimensions } from 'react-native';
+import React, { memo, useCallback, useState } from 'react';
+import { KeyboardTypeOptions } from 'react-native';
 import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 

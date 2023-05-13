@@ -28,6 +28,8 @@ function ItemRegisterModal(props: {
       setIsValid(false);
       setValidationError(error);
     } else {
+      setValidationError(error);
+      setIsValid(true);
       props.onAddPressed(name);
       props.onClose();
     }

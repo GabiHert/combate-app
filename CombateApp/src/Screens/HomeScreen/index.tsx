@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { CONSTANTS } from '../../internal/config/config';
 import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
 import LoginModal from '../../Components/LoginModal';
+import { CONSTANTS } from '../../internal/config/config';
 const backgroundImage = require('../../app/assets/homebackground.png');
 const combate = require('../../app/assets/COMBATE.png');
 

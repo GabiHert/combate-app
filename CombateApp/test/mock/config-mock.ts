@@ -1,4 +1,4 @@
-import { PCache } from '../../src/internal/core/port/config-cache-port';
+import { PCache } from '../../src/internal/core/port/cache-port';
 import { IConfigsProps } from '../../src/internal/interface/config-props';
 
 export class ConfigMock implements PCache {

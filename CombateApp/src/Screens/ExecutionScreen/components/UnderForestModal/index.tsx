@@ -1,9 +1,9 @@
 import { Button, FormControl, Modal } from 'native-base';
 import { memo, useCallback, useState } from 'react';
-import SelectInput from '../../../../Components/SelectInput';
 import { appConfig } from '../../../../app/config/app-config';
+import { instance } from '../../../../app/instance/instance';
 import { Theme } from '../../../../app/theme/theme';
-import { validator } from '../../../../cmd/port/validator-port';
+import SelectInput from '../../../../Components/SelectInput';
 import { CONSTANTS } from '../../../../internal/config/config';
 
 function UnderForestModal(props: { isOpen: boolean; onClose: () => void; onOkPress: () => void }) {
@@ -19,7 +19,7 @@ function UnderForestModal(props: { isOpen: boolean; onClose: () => void; onOkPre
 
   const onFinishPressed = useCallback(() => {
     //todo:call backend to register event
-    const errorMessage = validator.validateUnderForestForm(underForest);
+    const errorMessage = instance.validator.validateUnderForestForm(underForest);
     if (!errorMessage) {
       props.onOkPress();
     } else {

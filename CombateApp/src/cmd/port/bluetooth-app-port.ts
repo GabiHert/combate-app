@@ -1,6 +1,4 @@
-import { logger } from '../../internal/core/port/logger-port';
 import { IItem } from '../../internal/interface/item';
-import { BluetoothApp } from '../bluetoothapp/bluetooth-app';
 
 export interface PBluetoothApp {
   /**

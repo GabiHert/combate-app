@@ -1,13 +1,12 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { Box, Button, Center, Stack, Text, VStack, WarningOutlineIcon } from 'native-base';
-import React, { memo, useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { min } from 'react-native-reanimated';
-import { Severity } from '../../../../internal/core/enum/severity';
+import React, { memo, useCallback, useState } from 'react';
 import { appConfig } from '../../../../app/config/app-config';
+import { instance } from '../../../../app/instance/instance';
 import { Theme } from '../../../../app/theme/theme';
+import { Severity } from '../../../../internal/core/enum/severity';
 import EventRegisterModal from '../EventRegisterModal';
 import FinishExecutionModal from '../FinishExecutionModal';
-import { useFocusEffect } from '@react-navigation/native';
-import { configCache } from '../../../../app/instance/instance';
 
 export interface IApplicatorsPercentage {
   left: { percentage: number; severity: Severity };
@@ -166,7 +165,9 @@ function Sheet(props: {
             <Stack direction={'row'} alignItems="baseline" justifyContent="center">
               <Text fontSize={Theme().font.size.xl(appConfig.screen)} fontWeight="bold">
                 {Math.trunc(
-                  props.appliedDoses * configCache.getCache().APPLICATION.DOSE_WEIGHT_KG * 1000
+                  props.appliedDoses *
+                    instance.configCache.getCache().APPLICATION.DOSE_WEIGHT_KG *
+                    1000
                 )}
               </Text>
               <Text fontSize={Theme().font.size.s(appConfig.screen)}>g</Text>

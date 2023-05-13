@@ -1,10 +1,9 @@
 import gpsSentenceParser from '@drivetech/node-nmea';
 import { IGpsData } from '../../interface/gps-data';
 import { ResponseDto } from '../dto/response-dto';
-import { Status, StatusEnum } from '../enum/status';
-import { InvalidGpsDataErrorType } from '../error/error-type';
-import { logger, PLogger } from '../port/logger-port';
-import { protocolRules, ProtocolRules } from '../rules/protocol-rules';
+import { Status } from '../enum/status';
+import { PLogger } from '../port/logger-port';
+import { ProtocolRules } from '../rules/protocol-rules';
 export class ResponseDtoParser {
   constructor(private readonly _logger: PLogger, private _protocolRules: ProtocolRules) {}
 
@@ -63,5 +62,3 @@ export class ResponseDtoParser {
     }
   }
 }
-
-export const responseDtoParser = new ResponseDtoParser(logger, protocolRules);

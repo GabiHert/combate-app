@@ -1,19 +1,7 @@
-import {
-  Alert,
-  Box,
-  CloseIcon,
-  Divider,
-  HStack,
-  IconButton,
-  Stack,
-  Text,
-  theme,
-  Toast,
-  VStack,
-} from 'native-base';
-import { Severity } from '../../internal/core/enum/severity';
+import { Alert, CloseIcon, HStack, IconButton, Text, Toast } from 'native-base';
 import { appConfig } from '../../app/config/app-config';
 import { Theme } from '../../app/theme/theme';
+import { Severity } from '../../internal/core/enum/severity';
 
 export function AlertToast(props: {
   title: string;

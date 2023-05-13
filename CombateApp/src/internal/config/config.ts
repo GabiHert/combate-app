@@ -22,6 +22,11 @@ export const CONSTANTS = {
     { id: '1', name: '2' },
     { id: '2', name: '3' },
   ],
+  PRESET_NAME_ITEMS: [
+    { id: '0', name: 'Pequeno' },
+    { id: '1', name: 'Médio' },
+    { id: '2', name: 'Grande' },
+  ],
   STREET_AMOUNT_ITEMS: [
     { id: '0', name: '1' },
     { id: '1', name: '2' },
@@ -35,6 +40,9 @@ export const CONSTANTS = {
   ],
   REQUEST: { HEADER: 'INF' },
   ERRORS: {
+    STOP_REASON_FORM: {
+      INVALID_STOP_REASON: 'ERROR',
+    },
     REQUEST_V4: {
       DOSE_AMOUNT_BELLOW_ZERO: '',
       DOSE_NOT_DEFINED: 'ERR',
@@ -100,12 +108,12 @@ export const DEFAULT_CONFIG: IConfigsProps = {
     DOSE_WEIGHT_KG: 0.025,
   },
   PRESETS: {
-    P1: { NAME: 'Preset 1', DOSE_AMOUNT: 2 },
-    P2: { NAME: 'Preset 2', DOSE_AMOUNT: 3 },
-    P3: { NAME: 'Preset 3', DOSE_AMOUNT: 4 },
-    P4: { NAME: 'Preset 4', DOSE_AMOUNT: 5 },
-    P5: { NAME: 'Preset 5', DOSE_AMOUNT: 6 },
-    P6: { NAME: 'Preset 6', DOSE_AMOUNT: 7 },
+    P1: { NAME: CONSTANTS.PRESET_NAME_ITEMS[0].name, DOSE_AMOUNT: 1 },
+    P2: { NAME: CONSTANTS.PRESET_NAME_ITEMS[0].name, DOSE_AMOUNT: 1 },
+    P3: { NAME: CONSTANTS.PRESET_NAME_ITEMS[0].name, DOSE_AMOUNT: 1 },
+    P4: { NAME: CONSTANTS.PRESET_NAME_ITEMS[0].name, DOSE_AMOUNT: 1 },
+    P5: { NAME: CONSTANTS.PRESET_NAME_ITEMS[0].name, DOSE_AMOUNT: 1 },
+    P6: { NAME: CONSTANTS.PRESET_NAME_ITEMS[0].name, DOSE_AMOUNT: 1 },
   },
   SYSTEMATIC_DOSE: {
     METERS_BETWEEN_DOSE: 1,

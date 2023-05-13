@@ -1,9 +1,9 @@
-import { CheckSumBuilder, checkSumBuilder } from '../builder/check-sum-builder';
+import { CheckSumBuilder } from '../builder/check-sum-builder';
 import { ResponseDto } from '../dto/response-dto';
 import { ProtocolVersion, ProtocolVersionEnum } from '../enum/protocol-version';
 import { Status } from '../enum/status';
 import { ValidationErrorType } from '../error/error-type';
-import { PLogger, logger } from '../port/logger-port';
+import { PLogger } from '../port/logger-port';
 
 export class ProtocolRules {
   constructor(
@@ -113,5 +113,3 @@ export class ProtocolRules {
     }
   }
 }
-
-export const protocolRules = new ProtocolRules(logger, checkSumBuilder);

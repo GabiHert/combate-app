@@ -1,11 +1,10 @@
 {
-    "java.compile.nullAnalysis.mode": "disabled",
-    "emmet.preferences": {
-    
-    },
-      "editor.codeActionsOnSave": {
-       "source.fixAll.eslint": true
-    },
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+  "java.compile.nullAnalysis.mode": "disabled",
+  "emmet.preferences": {},
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.organizeImports": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
 }

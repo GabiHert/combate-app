@@ -1,6 +1,5 @@
-import { Box, Button, FormControl, Input, Modal, VStack, WarningOutlineIcon } from 'native-base';
+import { Button, FormControl, Modal } from 'native-base';
 import { memo, useCallback, useState } from 'react';
-import { Text } from 'react-native-svg';
 import { Theme } from '../../app/theme/theme';
 import FormInput from '../FormInput';
 

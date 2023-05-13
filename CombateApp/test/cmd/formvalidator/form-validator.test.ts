@@ -30,6 +30,7 @@ describe('FormValidator unit tests', () => {
       SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: 2 },
       STOP_REASONS_EVENTS: { stopReasonEvent },
       APPLICATION: {
+        MAX_VELOCITY: 2,
         CENTER_TANK_MAX_LOAD: 0,
         DOSE_WEIGHT_KG: 0,
         LEFT_TANK_MAX_LOAD: 0,
@@ -51,6 +52,8 @@ describe('FormValidator unit tests', () => {
     };
     loggerMocked.clear();
     preExecutionFormData = {
+      activity: '',
+      applicatorsAmount: 1,
       deviceName: v4(),
       clientName: v4(),
       projectName: v4(),
@@ -65,6 +68,8 @@ describe('FormValidator unit tests', () => {
     };
 
     preExecutionFormResult = {
+      activity: { errorMessage: undefined },
+      applicatorsAmount: { errorMessage: undefined },
       valid: true,
       clientName: { errorMessage: undefined },
       projectName: { errorMessage: undefined },
@@ -81,6 +86,7 @@ describe('FormValidator unit tests', () => {
 
     configFormData = {
       APPLICATION: {
+        MAX_VELOCITY: 2,
         CENTER_TANK_MAX_LOAD: 30,
         DOSE_WEIGHT_KG: 0.025,
         LEFT_TANK_MAX_LOAD: 30,
@@ -106,6 +112,7 @@ describe('FormValidator unit tests', () => {
 
     configFormResult = {
       valid: true,
+      maxVelocity: { errorMessage: undefined },
       centerTankMaxLoad: { errorMessage: undefined },
       doseWeightKg: { errorMessage: undefined },
       leftTankMaxLoad: { errorMessage: undefined },

@@ -1,6 +1,5 @@
 import { RequestDto } from '../dto/request-dto';
 import { ResponseDto } from '../dto/response-dto';
-import { Event } from '../enum/event';
 import { PCsvTableService } from '../port/csv-table-service-port';
 import { PFileSystem } from '../port/file-system-port';
 import { PLogger } from '../port/logger-port';

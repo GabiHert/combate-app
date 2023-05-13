@@ -1,7 +1,8 @@
+import { instance } from '../../app/instance/instance';
 import { CONSTANTS } from '../../internal/config/config';
 import { PoisonEnum } from '../../internal/core/enum/poison';
 import { WeatherEnum } from '../../internal/core/enum/weather';
-import { PCache } from '../../internal/core/port/config-cache-port';
+import { PCache } from '../../internal/core/port/cache-port';
 import { PLogger } from '../../internal/core/port/logger-port';
 import { IConfigFormResult } from '../../internal/interface/config-form-result';
 import { IConfigsProps, IPreExecutionConfigProps } from '../../internal/interface/config-props';
@@ -9,7 +10,98 @@ import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-
 import { PValidator } from '../port/validator-port';
 
 export class Validator implements PValidator {
-  constructor(private readonly _logger: PLogger, private readonly _config: PCache) {}
+  private static _instance: Validator;
+  static GetInstance(logger: PLogger, config: PCache<IConfigsProps>): Validator {
+    if (!this._instance) {
+      this._instance = new Validator(logger, config);
+    }
+    return this._instance;
+  }
+  constructor(private _logger: PLogger, private readonly _config: PCache<IConfigsProps>) {}
+  validateStopReasonForm(stopReason: string): string {
+    instance.logger.info({
+      event: 'FormValidator.validateStopReasonForm',
+      details: 'Process started',
+      stopReason,
+    });
+    let result: string = undefined;
+
+    if (!stopReason || stopReason.length == 0) {
+      result = CONSTANTS.ERRORS.STOP_REASON_FORM.INVALID_STOP_REASON;
+      instance.logger.warn({
+        event: 'FormValidator.validateStopReasonForm',
+        details: 'Process warn',
+        result,
+      });
+      return result;
+    }
+
+    let onlySpaces = true;
+    for (let i = 0; i < stopReason.length; i++) {
+      if (stopReason[i] != ' ') onlySpaces = false;
+    }
+
+    if (onlySpaces) {
+      result = CONSTANTS.ERRORS.STOP_REASON_FORM.INVALID_STOP_REASON;
+      instance.logger.warn({
+        event: 'FormValidator.validateStopReasonForm',
+        details: 'Process warn',
+        result,
+      });
+      return result;
+    }
+
+    instance.logger.info({
+      event: 'FormValidator.validateStopReasonForm',
+      details: 'Process finished',
+      result,
+    });
+  }
+  validatePlotForm(plot: string): string {
+    instance.logger.info({
+      event: 'FormValidator.validatePlotForm',
+      details: 'Process started',
+      plot,
+    });
+    let result: string = undefined;
+
+    instance.logger.info({
+      event: 'FormValidator.validatePlotForm',
+      details: 'Process finished',
+    });
+
+    return result;
+  }
+  validateFarmForm(farm: string): string {
+    instance.logger.info({
+      event: 'FormValidator.validateFarmForm',
+      details: 'Process started',
+      farm,
+    });
+    let result: string = undefined;
+
+    instance.logger.info({
+      event: 'FormValidator.validateFarmForm',
+      details: 'Process finished',
+    });
+
+    return result;
+  }
+  validateEventForm(event: string): string {
+    instance.logger.info({
+      event: 'FormValidator.validateEventForm',
+      details: 'Process started',
+      Event: event,
+    });
+    let result: string = undefined;
+
+    instance.logger.info({
+      event: 'FormValidator.validateEventForm',
+      details: 'Process finished',
+    });
+
+    return result;
+  }
 
   validatePreExecutionForm(data: IPreExecutionConfigProps): IPreExecutionFormResult {
     let result: IPreExecutionFormResult = {
