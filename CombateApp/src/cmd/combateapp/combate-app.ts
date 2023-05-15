@@ -82,7 +82,7 @@ export class CombateApp implements PCombateApp {
 
       await this._appRules(responseDto, requestDto);
 
-      if (requestDto.event === EventEnum.EndTrackPoint) {
+      if (requestDto.event === EventEnum.EndTrackPoint.name) {
         await this._csvTableService.save(this._filePath);
       }
 
@@ -128,7 +128,7 @@ export class CombateApp implements PCombateApp {
       if (distance >= this._systematicMetersBetweenDose) {
         const systematicRequestDto = requestDto;
         systematicRequestDto.dose.amount = 1;
-        systematicRequestDto.event = EventEnum.Systematic;
+        systematicRequestDto.event = EventEnum.Systematic.name;
         await this.request(systematicRequestDto);
       }
 

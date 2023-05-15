@@ -271,8 +271,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             onItemSelected={setStreetsAmountCallback}
             title="Numero de ruas"
             items={CONSTANTS.STREET_AMOUNT_ITEMS}
-            defaultValue={instance
-              .GetInstance()
+            defaultValue={Instance.GetInstance()
               .preExecutionConfigCache.getCache()
               .streetsAmount.toString()}
             errorMessage={validationResult.streetsAmount.errorMessage}

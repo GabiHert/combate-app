@@ -1,9 +1,9 @@
 import { IDoseRequest } from '../../interface/dose-request';
 import { IRequestDtoArgs } from '../../interface/request-dto-args';
-import { Event } from '../enum/event';
 
 export class RequestDto {
-  event: Event;
+  event: string;
+  applicatorsAmount: number;
   dose: IDoseRequest;
   client: string;
   project: string;
@@ -17,6 +17,7 @@ export class RequestDto {
   streetsAmount: number;
   linesAmount: number;
   constructor(args: IRequestDtoArgs) {
+    this.event = args.event;
     this.dose = args.dose;
     this.client = args.client;
     this.project = args.project;

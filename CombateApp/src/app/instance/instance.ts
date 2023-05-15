@@ -7,6 +7,7 @@ import { PValidator } from '../../cmd/port/validator-port';
 import { ABluetooth } from '../../internal/adapter/bluetooth/bluetooth';
 import { AConfigCache } from '../../internal/adapter/cache/config-cache';
 import { APreExecutionConfigCache } from '../../internal/adapter/cache/pre-execution-config-cache';
+import { AFileSystem } from '../../internal/adapter/filesystem/file-system';
 import { ALogger } from '../../internal/adapter/logger/logger-adapter';
 import { AAsyncStorage } from '../../internal/adapter/repository/async-storage-adapter';
 import { DEFAULT_CONFIG, DEFAULT_PRE_EXECUTION_CONFIG } from '../../internal/config/config';
@@ -38,7 +39,8 @@ export class Instance {
     this.logger = new ALogger(true);
 
     const bluetooth = new ABluetooth(this.logger);
-    const csvTableService = new CsvTableService(this.logger, undefined);
+    const fileSystem = new AFileSystem(this.logger);
+    const csvTableService = new CsvTableService(this.logger, fileSystem);
     const checkSumBuilder = new CheckSumBuilder(this.logger);
     const protocolRules = new ProtocolRules(this.logger, checkSumBuilder);
     const responseDtoParser = new ResponseDtoParser(this.logger, protocolRules);
