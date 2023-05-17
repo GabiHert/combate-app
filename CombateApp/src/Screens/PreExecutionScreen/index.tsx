@@ -80,8 +80,8 @@ function PreExecutionScreen(props: { navigation: any }) {
   useFocusEffect(() => {
     const interval = setInterval(async () => {
       try {
-        //await bluetoothApp.init();
-        //setDevices(await bluetoothApp.getBondedDevices());
+        await Instance.GetInstance().bluetoothApp.init();
+        setDevices(await Instance.GetInstance().bluetoothApp.getBondedDevices());
       } catch (err) {
         ShowToast({
           durationMs: 3000,
