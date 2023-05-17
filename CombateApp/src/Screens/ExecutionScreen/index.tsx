@@ -4,10 +4,13 @@ import { Box } from 'native-base';
 import React, { useCallback, useState } from 'react';
 import { BackHandler } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { appConfig } from '../../app/config/app-config';
-import { Theme } from '../../app/theme/theme';
 import { ShowToast } from '../../Components/AlertToast';
+import { appConfig } from '../../app/config/app-config';
+import { Instance } from '../../app/instance/instance';
+import { Theme } from '../../app/theme/theme';
 import { CONSTANTS } from '../../internal/config/config';
+import { RequestDto } from '../../internal/core/dto/request-dto';
+import { EventEnum } from '../../internal/core/enum/event';
 import { Severity, SeverityEnum } from '../../internal/core/enum/severity';
 import ApplicatorSelector from './components/ApplicatorSelector';
 import PoisonAmountSelector from './components/PoisonAmountSelector';
@@ -91,7 +94,28 @@ function ExecutionScreen(props: { navigation: any }) {
   useFocusEffect(() => {
     const interval = setInterval(async () => {
       if (!doseInProgress) {
-        //todo: perform CB request
+        const requestDto = new RequestDto({
+          applicatorsAmount:
+            Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount,
+          client: Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
+          deviceName: Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
+          doseWeightKg: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG,
+          event: EventEnum.TrackPoint.name,
+          maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
+          numberOfLines: 1,
+          plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
+          poisonType: '',
+          project: Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
+          streetsAmount: Instance.GetInstance().preExecutionConfigCache.getCache().streetsAmount,
+          tractorName: Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
+          weather: Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+          dose: {
+            amount: 1,
+          },
+        });
+
+        const responseDto = await Instance.GetInstance().combateApp.request(requestDto);
+
         let response = {
           gpsStatus: SeverityEnum.WARN,
           bluetoothStatus: SeverityEnum.OK,
