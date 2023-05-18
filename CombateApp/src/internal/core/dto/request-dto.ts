@@ -29,6 +29,6 @@ export class RequestDto {
     this.maxVelocity = args.maxVelocity;
     this.weather = args.weather;
     this.streetsAmount = args.streetsAmount;
-    this.linesAmount = args.numberOfLines;
+    this.linesAmount = args.linesSpacing;
   }
 }

@@ -25,7 +25,7 @@ describe('cb-v4-service', () => {
     deviceName: v4(),
     doseWeightKg: 0.25,
     maxVelocity: 7,
-    numberOfLines: 3,
+    linesSpacing: 3,
     plot: v4(),
     poisonType: v4(),
     project: v4(),

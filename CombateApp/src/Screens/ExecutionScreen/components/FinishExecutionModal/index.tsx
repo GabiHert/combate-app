@@ -1,6 +1,7 @@
 import { Button, FormControl, Modal } from 'native-base';
 import { memo, useCallback, useState } from 'react';
 import { appConfig } from '../../../../app/config/app-config';
+import { Instance } from '../../../../app/instance/instance';
 import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
 import { Theme } from '../../../../app/theme/theme';
 import SelectInput from '../../../../Components/SelectInput';

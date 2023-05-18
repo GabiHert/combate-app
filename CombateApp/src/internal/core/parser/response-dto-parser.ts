@@ -25,9 +25,9 @@ export class ResponseDtoParser {
         '*' +
         commaSeparated[commaSeparated.length - 1].substring(1);
 
-      const timeUTC = commaSeparated[1];
       const gprmc = '$GPRMC' + commaSeparated.join(',');
       const data = gpsSentenceParser.parse(gprmc);
+      const speed = Math.trunc(data.speed.knots * 1.852).toString();
 
       let gpsData: IGpsData;
       if (data.valid) {
@@ -36,8 +36,7 @@ export class ResponseDtoParser {
           status: data.mode[0],
           latitude: data.loc.geojson.coordinates[1],
           longitude: data.loc.geojson.coordinates[0],
-          speedKnots: data.speed.knots,
-          timeUTC,
+          speed,
           dateUTC: date,
         };
       } else gpsData = { status: 'V' };

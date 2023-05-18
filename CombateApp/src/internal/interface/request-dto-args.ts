@@ -14,5 +14,5 @@ export interface IRequestDtoArgs {
   maxVelocity: number;
   weather: string;
   streetsAmount: number;
-  numberOfLines: number;
+  linesSpacing: number;
 }

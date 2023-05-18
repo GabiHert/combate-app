@@ -1,7 +1,7 @@
-import { checkSumBuilder } from '../builder/check-sum-builder';
+import { CheckSumBuilder } from '../builder/check-sum-builder';
 import { RequestDto } from '../dto/request-dto';
 import { ProtocolVersion, ProtocolVersionEnum } from '../enum/protocol-version';
-import { PLogger, logger } from '../port/logger-port';
+import { PLogger } from '../port/logger-port';
 import { PRequest } from '../port/request-port';
 import { RequestV4 } from '../request/request-v4';
 
@@ -10,7 +10,7 @@ export class RequestFactory {
 
   private [ProtocolVersionEnum.V4.name](requestDto: RequestDto): RequestV4 {
     this._logger.info({ event: 'RequestFactory.V4', details: 'Process started' });
-    const requestV4 = new RequestV4(this._logger, checkSumBuilder);
+    const requestV4 = new RequestV4(this._logger, new CheckSumBuilder(this._logger));
     requestV4.setRequestDto(requestDto);
     this._logger.info({ event: 'RequestFactory.V4', details: 'Process finished' });
 
@@ -40,5 +40,3 @@ export class RequestFactory {
     }
   }
 }
-
-export const requestFactory = new RequestFactory(logger);

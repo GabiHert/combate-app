@@ -2,6 +2,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Box, Button, Center, Stack, Text, VStack, WarningOutlineIcon } from 'native-base';
 import React, { memo, useCallback, useState } from 'react';
 import { appConfig } from '../../../../app/config/app-config';
+import { Instance } from '../../../../app/instance/instance';
 import { Theme } from '../../../../app/theme/theme';
 import { Severity } from '../../../../internal/core/enum/severity';
 import EventRegisterModal from '../EventRegisterModal';

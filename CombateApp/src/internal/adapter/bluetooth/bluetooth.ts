@@ -122,7 +122,7 @@ export class ABluetooth implements PBluetooth {
       throw err;
     }
   }
-  async read(): Promise<string> {
+  async read(timeoutMs: number): Promise<string> {
     try {
       this._logger.info({
         event: 'BluetoothApp.read',
@@ -149,8 +149,19 @@ export class ABluetooth implements PBluetooth {
           details: 'data available',
         });
 
-        const data = await this._device.read();
-        message = data.toString();
+        const end = new Date();
+        end.setMilliseconds(new Date().getMilliseconds() + timeoutMs);
+        while (new Date().getTime() <= end.getTime() && !message) {
+          const data = await this._device.read();
+          message = data.toString();
+        }
+        if (!message) {
+          this._logger.warn({
+            event: 'BluetoothApp.read',
+            details: 'Process warn - device not selected',
+          });
+          throw new BluetoothErrorType(CONSTANTS.ERRORS.A_BLUETOOTH.READ_TIMEOUT);
+        }
       }
 
       this._logger.info({

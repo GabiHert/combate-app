@@ -64,6 +64,7 @@ export const CONSTANTS = {
       EMPTY_DEVICE_LIST: 'Lista de dispositivos vazia',
     },
     A_BLUETOOTH: {
+      READ_TIMEOUT: 'Tempo para leitura de bluetooth exedido',
       PERMISSIONS_DENIED: 'Permissão para acesso bluetooth negada',
       NOT_ENABLED: 'Bluetooth não ativado',
       NOT_AVAILABLE: 'Bluetooth não disponível',
@@ -149,7 +150,7 @@ export const DEFAULT_CONFIG: IConfigsProps = {
   PLOTS: {},
   FILE_PATH: 'CombateApp/Resultados',
   POISON_TYPE: poisonItems[0].name,
-  SPACE_BETWEEN_LINES: 1,
+  LINES_SPACING: 1,
 };
 
 export const DEFAULT_PRE_EXECUTION_CONFIG: IPreExecutionConfigProps = {

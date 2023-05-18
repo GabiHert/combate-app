@@ -4,10 +4,10 @@ import { Box } from 'native-base';
 import React, { useCallback, useState } from 'react';
 import { BackHandler } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { ShowToast } from '../../Components/AlertToast';
 import { appConfig } from '../../app/config/app-config';
 import { Instance } from '../../app/instance/instance';
 import { Theme } from '../../app/theme/theme';
+import { ShowToast } from '../../Components/AlertToast';
 import { CONSTANTS } from '../../internal/config/config';
 import { RequestDto } from '../../internal/core/dto/request-dto';
 import { EventEnum } from '../../internal/core/enum/event';
@@ -24,7 +24,7 @@ function ExecutionScreen(props: { navigation: any }) {
   const spaceBetweenBlocksHeight = 3;
   const snapPoints = [40, appConfig.screen.height / 2];
   let handleSheetChanges: any;
-  const [velocity, setVelocity] = useState<number>(0);
+  const [velocity, setVelocity] = useState<string>('');
   const [doseInProgress, setDoseInProgress] = useState<boolean>(false);
 
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState(
@@ -94,36 +94,38 @@ function ExecutionScreen(props: { navigation: any }) {
   useFocusEffect(() => {
     const interval = setInterval(async () => {
       if (!doseInProgress) {
-        const requestDto = new RequestDto({
-          applicatorsAmount:
-            Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount,
-          client: Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
-          deviceName: Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
-          doseWeightKg: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG,
-          event: EventEnum.TrackPoint.name,
-          maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
-          numberOfLines: 1,
-          plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
-          poisonType: '',
-          project: Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
-          streetsAmount: Instance.GetInstance().preExecutionConfigCache.getCache().streetsAmount,
-          tractorName: Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
-          weather: Instance.GetInstance().preExecutionConfigCache.getCache().weather,
-          dose: {
-            amount: 1,
-          },
-        });
+        try {
+          const requestDto = new RequestDto({
+            applicatorsAmount:
+              Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount,
+            client: Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
+            deviceName: Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
+            doseWeightKg: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG,
+            event: EventEnum.TrackPoint.name,
+            maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
+            linesSpacing: Instance.GetInstance().configCache.getCache().LINES_SPACING,
+            plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
+            poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
+            project: Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
+            streetsAmount: Instance.GetInstance().preExecutionConfigCache.getCache().streetsAmount,
+            tractorName: Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
+            weather: Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+            dose: {
+              amount: 0,
+            },
+          });
 
-        const responseDto = await Instance.GetInstance().combateApp.request(requestDto);
+          //const responseDto = await Instance.GetInstance().combateApp.request(requestDto);
 
-        let response = {
-          gpsStatus: SeverityEnum.WARN,
-          bluetoothStatus: SeverityEnum.OK,
-          applicatorsStatus: SeverityEnum.OK,
-          velocity: 10,
-          location: { latitude: '', longitude: '' },
-        };
-        setVelocity(response.velocity);
+          //setVelocity(responseDto.gps.speed);
+        } catch (err) {
+          ShowToast({
+            durationMs: 15000,
+            title: 'Reservatório Esquerdo Vazio',
+            message: err.message,
+            severity: SeverityEnum.ERROR,
+          });
+        }
       }
       const cache = Instance.GetInstance().preExecutionConfigCache.getCache();
       cache.leftApplicatorLoad = leftApplicatorLoad;
@@ -162,8 +164,40 @@ function ExecutionScreen(props: { navigation: any }) {
 
   const processDose = useCallback(
     async (amount: number) => {
-      setDoseInProgress(true);
-      //call backend
+      if (!doseInProgress) {
+        setDoseInProgress(true);
+        try {
+          const requestDto = new RequestDto({
+            applicatorsAmount:
+              Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount,
+            client: Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
+            deviceName: Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
+            doseWeightKg: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG,
+            event: EventEnum.TrackPoint.name,
+            maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
+            linesSpacing: Instance.GetInstance().configCache.getCache().LINES_SPACING,
+            plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
+            poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
+            project: Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
+            streetsAmount: Instance.GetInstance().preExecutionConfigCache.getCache().streetsAmount,
+            tractorName: Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
+            weather: Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+            dose: {
+              amount: 0,
+            },
+          });
+          const responseDto = await Instance.GetInstance().combateApp.request(requestDto);
+          setVelocity(responseDto.gps.speed);
+          setDoseInProgress(false);
+        } catch (err) {
+          ShowToast({
+            durationMs: 1000,
+            title: 'Erro requisição',
+            message: err.message,
+            severity: SeverityEnum.ERROR,
+          });
+        }
+      }
       let activeApplicators = 0;
       if (leftApplicatorActive) {
         activeApplicators++;
@@ -295,7 +329,6 @@ function ExecutionScreen(props: { navigation: any }) {
       }
       setApplicatorsLoadPercentage({ center, right, left });
 
-      setDoseInProgress(false);
       setAppliedDoses(appliedDoses + amount * activeApplicators);
     },
     [
@@ -317,8 +350,8 @@ function ExecutionScreen(props: { navigation: any }) {
   );
 
   const onPresetPressed = useCallback(
-    (value: number) => {
-      processDose(value);
+    async (value: number) => {
+      await processDose(value);
     },
     [processDose]
   );

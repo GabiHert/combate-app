@@ -26,7 +26,7 @@ describe('FormValidator unit tests', () => {
   beforeEach(() => {
     stopReasonEvent = v4();
     configMocked.cache = {
-      SPACE_BETWEEN_LINES: 1,
+      LINES_SPACING: 1,
       SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: 2 },
       STOP_REASONS_EVENTS: { stopReasonEvent },
       APPLICATION: {
@@ -105,7 +105,7 @@ describe('FormValidator unit tests', () => {
         P5: { DOSE_AMOUNT: 6, NAME: 'teste' },
         P6: { DOSE_AMOUNT: 7, NAME: 'teste' },
       },
-      SPACE_BETWEEN_LINES: 1,
+      LINES_SPACING: 1,
       STOP_REASONS_EVENTS: { 1: v4() },
       SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: 10 },
     };

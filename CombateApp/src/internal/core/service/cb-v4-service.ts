@@ -26,7 +26,7 @@ export class CbV4Service implements PCbService {
       if (request.getRequestDto().dose?.amount) timeoutMs *= request.getRequestDto().dose.amount;
       const protocol = await timeout(
         timeoutMs,
-        this._bluetooth.read(),
+        this._bluetooth.read(timeoutMs),
         new RequestTimeoutErrorType('Request timeout exceeded')
       );
 

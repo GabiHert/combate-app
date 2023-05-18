@@ -13,7 +13,7 @@ import { AAsyncStorage } from '../../internal/adapter/repository/async-storage-a
 import { DEFAULT_CONFIG, DEFAULT_PRE_EXECUTION_CONFIG } from '../../internal/config/config';
 import { CheckSumBuilder } from '../../internal/core/builder/check-sum-builder';
 import { CbServiceFactory } from '../../internal/core/factory/cb-service-factory';
-import { requestFactory } from '../../internal/core/factory/request-factory';
+import { RequestFactory } from '../../internal/core/factory/request-factory';
 import { ResponseDtoParser } from '../../internal/core/parser/response-dto-parser';
 import { PCache } from '../../internal/core/port/cache-port';
 import { PLogger } from '../../internal/core/port/logger-port';
@@ -46,6 +46,7 @@ export class Instance {
     const responseDtoParser = new ResponseDtoParser(this.logger, protocolRules);
     const cbServiceFactory = new CbServiceFactory(this.logger, bluetooth, responseDtoParser);
     const repository = new AAsyncStorage(this.logger);
+    const requestFactory = new RequestFactory(this.logger)
 
     this.combateApp = new CombateApp(
       this.logger,

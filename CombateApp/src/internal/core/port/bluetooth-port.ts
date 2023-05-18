@@ -24,7 +24,7 @@ export interface PBluetooth {
    * @return received message
    * @throws an error if data cannot be read.
    */
-  read(): Promise<string>;
+  read(timeoutMs: number): Promise<string>;
 
   /**
    * Writes to the connected device

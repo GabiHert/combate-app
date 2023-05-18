@@ -27,7 +27,7 @@ export interface IConfigsProps {
   FARMS: TMapString;
   PLOTS: TMapString;
   POISON_TYPE: string;
-  SPACE_BETWEEN_LINES: number;
+  LINES_SPACING: number;
   FILE_PATH: string;
 }
 

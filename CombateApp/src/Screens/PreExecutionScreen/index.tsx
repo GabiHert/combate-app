@@ -90,7 +90,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           severity: SeverityEnum.ERROR,
         });
       }
-    }, 5000);
+    }, 10000);
 
     return () => clearInterval(interval);
   });
@@ -166,7 +166,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           deviceId = device.id;
         }
       });
-      //await bluetoothApp.selectDevice(deviceId);
+      await Instance.GetInstance().bluetoothApp.selectDevice(deviceId);
       setDeviceConnected(true);
       ShowToast({
         durationMs: 3000,

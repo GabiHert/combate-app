@@ -4,7 +4,7 @@ import { appConfig } from '../../../../app/config/app-config';
 import { Theme } from '../../../../app/theme/theme';
 import { IApplicatorsPercentage } from '../Sheet';
 
-function StatusBar(props: { velocity: number; applicatorsLoadPercentage: IApplicatorsPercentage }) {
+function StatusBar(props: { velocity: string; applicatorsLoadPercentage: IApplicatorsPercentage }) {
   return (
     <HStack bgColor={Theme().color.b400} width="98%" borderRadius={50} pl={8} pr={8} height="95%">
       <HStack w={'80%'} space={3}>

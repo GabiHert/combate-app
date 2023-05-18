@@ -61,7 +61,7 @@ export class CombateApp implements PCombateApp {
     });
   }
 
-  async request(requestDto: RequestDto): Promise<void> {
+  async request(requestDto: RequestDto): Promise<ResponseDto> {
     try {
       this._logger.info({
         event: 'CombateApp.request',
@@ -89,8 +89,9 @@ export class CombateApp implements PCombateApp {
       this._logger.info({
         event: 'CombateApp.request',
         details: 'Process finished',
-        requestDto,
+        responseDto,
       });
+      return responseDto;
     } catch (err) {
       this._logger.error({
         event: 'CombateApp.request',
@@ -109,7 +110,7 @@ export class CombateApp implements PCombateApp {
         responseDto,
       });
 
-      const velocity = responseDto.gps.speedKnots * 1.852;
+      const velocity = Number(responseDto.gps.speed);
       let error: PError = undefined;
 
       const distance = distanceCalculator(
