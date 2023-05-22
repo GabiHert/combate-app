@@ -23,7 +23,6 @@ import { Theme } from '../../app/theme/theme';
 import { ShowToast, ShowToast as showToast } from '../../Components/AlertToast';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
-import SlideInput from '../../Components/SlideInput';
 import { CONSTANTS } from '../../internal/config/config';
 import { SeverityEnum } from '../../internal/core/enum/severity';
 import { IItem } from '../../internal/interface/item';
@@ -347,69 +346,6 @@ function PreExecutionScreen(props: { navigation: any }) {
               Pesquisar
             </Button>
           </HStack>
-
-          <Divider w="80%" />
-
-          <FormControl.Label
-            mt={5}
-            _text={{
-              fontWeight: 'bold',
-              fontSize: Theme().font.size.xl(appConfig.screen),
-            }}
-          >
-            Dosadores
-          </FormControl.Label>
-
-          <SelectInput
-            title="Número de dosadores"
-            onItemSelected={(value) => setApplicatorsAmount(Number(value))}
-            items={CONSTANTS.APPLICATORS_AMOUNT_ITEMS}
-            defaultValue={applicatorsAmount.toString()}
-            errorMessage={validationResult.applicatorsAmount.errorMessage}
-            placeholder={''}
-          />
-
-          <SlideInput
-            onChangeEnd={setRightApplicatorLoad}
-            step={0.5}
-            title="Reservatório direito"
-            unit="Kg"
-            defaultValue={
-              Instance.GetInstance().preExecutionConfigCache.getCache().rightApplicatorLoad
-            }
-            disabled={false}
-            maxValue={Instance.GetInstance().configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD}
-            minValue={1}
-            errorMessage={validationResult.rightApplicatorLoad.errorMessage}
-          />
-          <SlideInput
-            onChangeEnd={setCenterApplicatorLoad}
-            step={0.5}
-            title="Reservatório central"
-            unit="Kg"
-            defaultValue={
-              Instance.GetInstance().preExecutionConfigCache.getCache().centerApplicatorLoad
-            }
-            disabled={false}
-            maxValue={
-              Instance.GetInstance().configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD
-            }
-            minValue={1}
-            errorMessage={validationResult.centerApplicatorLoad.errorMessage}
-          />
-          <SlideInput
-            onChangeEnd={setLeftApplicatorLoad}
-            step={0.5}
-            title="Reservatório esquerdo"
-            unit="Kg"
-            defaultValue={
-              Instance.GetInstance().preExecutionConfigCache.getCache().leftApplicatorLoad
-            }
-            disabled={false}
-            maxValue={Instance.GetInstance().configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD}
-            minValue={1}
-            errorMessage={validationResult.leftApplicatorLoad.errorMessage}
-          />
         </VStack>
         <Box w="20%" h="60px" />
       </ScrollView>

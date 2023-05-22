@@ -217,41 +217,41 @@ export class Validator implements PValidator {
       });
     }
 
-    if (!data.leftApplicatorLoad) {
-      // leftApplicatorLoad is invalid
-      result.valid = false;
-      result.leftApplicatorLoad.errorMessage =
-        CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_LEFT_APPLICATOR_LOAD;
-      this._logger.warn({
-        event: 'FormValidator.validatePreExecutionForm',
-        details: 'Process warn - leftApplicatorLoad is invalid',
-        leftApplicatorLoad: data.leftApplicatorLoad,
-      });
-    }
+    // if (!data.leftApplicatorLoad) {
+    //   // leftApplicatorLoad is invalid
+    //   result.valid = false;
+    //   result.leftApplicatorLoad.errorMessage =
+    //     CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_LEFT_APPLICATOR_LOAD;
+    //   this._logger.warn({
+    //     event: 'FormValidator.validatePreExecutionForm',
+    //     details: 'Process warn - leftApplicatorLoad is invalid',
+    //     leftApplicatorLoad: data.leftApplicatorLoad,
+    //   });
+    // }
 
-    if (!data.centerApplicatorLoad) {
-      // centerApplicatorLoad is invalid
-      result.valid = false;
-      result.centerApplicatorLoad.errorMessage =
-        CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_CENTER_APPLICATOR_LOAD;
-      this._logger.warn({
-        event: 'FormValidator.validatePreExecutionForm',
-        details: 'Process warn - leftApplicatorLoad is invalid',
-        leftApplicatorLoad: data.leftApplicatorLoad,
-      });
-    }
+    // if (!data.centerApplicatorLoad) {
+    //   // centerApplicatorLoad is invalid
+    //   result.valid = false;
+    //   result.centerApplicatorLoad.errorMessage =
+    //     CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_CENTER_APPLICATOR_LOAD;
+    //   this._logger.warn({
+    //     event: 'FormValidator.validatePreExecutionForm',
+    //     details: 'Process warn - leftApplicatorLoad is invalid',
+    //     leftApplicatorLoad: data.leftApplicatorLoad,
+    //   });
+    // }
 
-    if (!data.rightApplicatorLoad) {
-      // rightApplicatorLoad is invalid
-      result.valid = false;
-      result.rightApplicatorLoad.errorMessage =
-        CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_RIGHT_APPLICATOR_LOAD;
-      this._logger.warn({
-        event: 'FormValidator.validatePreExecutionForm',
-        details: 'Process warn - leftApplicatorLoad is invalid',
-        leftApplicatorLoad: data.leftApplicatorLoad,
-      });
-    }
+    // if (!data.rightApplicatorLoad) {
+    //   // rightApplicatorLoad is invalid
+    //   result.valid = false;
+    //   result.rightApplicatorLoad.errorMessage =
+    //     CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_RIGHT_APPLICATOR_LOAD;
+    //   this._logger.warn({
+    //     event: 'FormValidator.validatePreExecutionForm',
+    //     details: 'Process warn - leftApplicatorLoad is invalid',
+    //     leftApplicatorLoad: data.leftApplicatorLoad,
+    //   });
+    // }
 
     if (!data.applicatorsAmount || data.applicatorsAmount < 0 || data.applicatorsAmount > 3) {
       // applicatorsAmount is invalid
