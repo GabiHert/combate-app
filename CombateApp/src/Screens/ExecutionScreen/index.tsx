@@ -24,26 +24,26 @@ function ExecutionScreen(props: { navigation: any }) {
   const spaceBetweenBlocksHeight = 3;
   const snapPoints = [40, appConfig.screen.height / 2];
   let handleSheetChanges: any;
-  const [velocity, setVelocity] = useState<string>('');
+  const [velocity, setVelocity] = useState<string>('?');
   const [doseInProgress, setDoseInProgress] = useState<boolean>(false);
 
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState(
     Instance.GetInstance().preExecutionConfigCache.getCache().leftApplicatorLoad
   );
-  const [leftApplicatorActive, setLeftApplicatorActive] = useState(true);
-  const [leftApplicatorAvailable, setLeftApplicatorAvailable] = useState(true);
+  const [leftApplicatorActive, setLeftApplicatorActive] = useState(false);
+  const [leftApplicatorAvailable, setLeftApplicatorAvailable] = useState(false);
 
   const [rightApplicatorLoad, setRightApplicatorLoad] = useState(
     Instance.GetInstance().preExecutionConfigCache.getCache().rightApplicatorLoad
   );
-  const [rightApplicatorActive, setRightApplicatorActive] = useState(true);
-  const [rightApplicatorAvailable, setRightApplicatorAvailable] = useState(true);
+  const [rightApplicatorActive, setRightApplicatorActive] = useState(false);
+  const [rightApplicatorAvailable, setRightApplicatorAvailable] = useState(false);
 
   const [centerApplicatorLoad, setCenterApplicatorLoad] = useState(
     Instance.GetInstance().preExecutionConfigCache.getCache().centerApplicatorLoad
   );
-  const [centerApplicatorActive, setCenterApplicatorActive] = useState(true);
-  const [centerApplicatorAvailable, setCenterApplicatorAvailable] = useState(true);
+  const [centerApplicatorActive, setCenterApplicatorActive] = useState(false);
+  const [centerApplicatorAvailable, setCenterApplicatorAvailable] = useState(false);
 
   const [applicatorsLoadPercentage, setApplicatorsLoadPercentage] =
     useState<IApplicatorsPercentage>({
@@ -77,10 +77,12 @@ function ExecutionScreen(props: { navigation: any }) {
       return SeverityEnum.OK;
     }
   }
+
   function calculateApplicatorsLoadPercentage(
     maxLoad: number,
     currentLoadKg: number
   ): { percentage: number; severity: Severity } {
+    console.log(currentLoadKg);
     const percentage = Math.round((currentLoadKg / maxLoad) * 100);
     const severity = getLoadPercentageStatusSeverity(percentage);
     return { severity, percentage };
@@ -95,28 +97,26 @@ function ExecutionScreen(props: { navigation: any }) {
     const interval = setInterval(async () => {
       if (!doseInProgress) {
         try {
-          const requestDto = new RequestDto({
-            applicatorsAmount:
-              Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount,
-            client: Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
-            deviceName: Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
-            doseWeightKg: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG,
-            event: EventEnum.TrackPoint.name,
-            maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
-            linesSpacing: Instance.GetInstance().configCache.getCache().LINES_SPACING,
-            plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
-            poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
-            project: Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
-            streetsAmount: Instance.GetInstance().preExecutionConfigCache.getCache().streetsAmount,
-            tractorName: Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
-            weather: Instance.GetInstance().preExecutionConfigCache.getCache().weather,
-            dose: {
-              amount: 0,
-            },
-          });
-
+          //   const requestDto = new RequestDto({
+          //     applicatorsAmount:
+          //       Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount,
+          //     client: Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
+          //     deviceName: Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
+          //     doseWeightKg: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG,
+          //     event: EventEnum.TrackPoint.name,
+          //     maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
+          //     linesSpacing: Instance.GetInstance().configCache.getCache().LINES_SPACING,
+          //     plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
+          //     poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
+          //     project: Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
+          //     streetsAmount: Instance.GetInstance().preExecutionConfigCache.getCache().streetsAmount,
+          //     tractorName: Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
+          //     weather: Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+          //     dose: {
+          //       amount: 0,
+          //     },
+          //   });
           //const responseDto = await Instance.GetInstance().combateApp.request(requestDto);
-
           //setVelocity(responseDto.gps.speed);
         } catch (err) {
           ShowToast({
@@ -128,10 +128,16 @@ function ExecutionScreen(props: { navigation: any }) {
         }
       }
       const cache = Instance.GetInstance().preExecutionConfigCache.getCache();
-      cache.leftApplicatorLoad = leftApplicatorLoad;
-      cache.rightApplicatorLoad = rightApplicatorLoad;
-      cache.centerApplicatorLoad = centerApplicatorLoad;
-      Instance.GetInstance().preExecutionConfigCache.update(cache);
+      if (
+        cache.leftApplicatorLoad != leftApplicatorLoad ||
+        cache.centerApplicatorLoad != centerApplicatorLoad ||
+        cache.rightApplicatorLoad != rightApplicatorLoad
+      ) {
+        cache.leftApplicatorLoad = leftApplicatorLoad;
+        cache.rightApplicatorLoad = rightApplicatorLoad;
+        cache.centerApplicatorLoad = centerApplicatorLoad;
+        Instance.GetInstance().preExecutionConfigCache.update(cache);
+      }
     }, CONSTANTS.REQUEST_INTERVAL_MS);
 
     return () => clearInterval(interval);
@@ -183,13 +189,20 @@ function ExecutionScreen(props: { navigation: any }) {
             tractorName: Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
             weather: Instance.GetInstance().preExecutionConfigCache.getCache().weather,
             dose: {
-              amount: 0,
+              amount,
             },
           });
-          const responseDto = await Instance.GetInstance().combateApp.request(requestDto);
-          setVelocity(responseDto.gps.speed);
+          // const responseDto = await Instance.GetInstance().combateApp.request(requestDto);
+          //setVelocity(responseDto.gps.speed);
+
+          setAppliedDoses(
+            appliedDoses +
+              amount * Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount
+          );
+
           setDoseInProgress(false);
         } catch (err) {
+          setDoseInProgress(false);
           ShowToast({
             durationMs: 1000,
             title: 'Erro requisição',
@@ -198,160 +211,14 @@ function ExecutionScreen(props: { navigation: any }) {
           });
         }
       }
-      let activeApplicators = 0;
-      if (leftApplicatorActive) {
-        activeApplicators++;
-        let load = leftApplicatorLoad;
-        if (load <= 1) {
-          load = 0;
-          if (!showLeftNoLoadWarnOnce) {
-            ShowToast({
-              durationMs: 15000,
-              title: 'Reservatório Esquerdo Vazio',
-              message:
-                'Por favor, verifique a carga do dosador esquerdo e o desative se estiver vazio.',
-              severity: SeverityEnum.WARN,
-              closeButton: true,
-            });
-            setShowLeftNoLoadWarnOnce(true);
-          }
-        } else {
-          load -= amount * Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG;
-        }
-        setLeftApplicatorLoad(load);
-      } else if (leftApplicatorAvailable) {
-        setLeftApplicatorActive(true);
-      }
-
-      if (rightApplicatorActive) {
-        activeApplicators++;
-        let load = rightApplicatorLoad;
-        if (load <= 1) {
-          load = 0;
-          if (!showRightNoLoadWarnOnce) {
-            ShowToast({
-              durationMs: 15000,
-              title: 'Reservatório Direito Vazio',
-              message:
-                'Por favor, verifique a carga do dosador direito e o desative se estiver vazio.',
-              severity: SeverityEnum.WARN,
-              closeButton: true,
-            });
-            setShowRightNoLoadWarnOnce(true);
-          }
-        } else {
-          load -= amount * Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG;
-        }
-        setRightApplicatorLoad(load);
-      } else if (rightApplicatorAvailable) {
-        setRightApplicatorActive(true);
-      }
-
-      if (centerApplicatorActive) {
-        activeApplicators++;
-        let load = centerApplicatorLoad;
-        if (load <= 1) {
-          load = 0;
-          if (!showCenterNoLoadWarnOnce) {
-            ShowToast({
-              durationMs: 15000,
-              title: 'Reservatório Central Vazio',
-              message:
-                'Por favor, verifique a carga do dosador central e o desative se estiver vazio.',
-              severity: SeverityEnum.WARN,
-              closeButton: true,
-            });
-            setShowCenterNoLoadWarnOnce(true);
-          }
-        } else {
-          load -= amount * Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG;
-        }
-        setCenterApplicatorLoad(load);
-      } else if (centerApplicatorAvailable) {
-        setCenterApplicatorActive(true);
-      }
-      const center = calculateApplicatorsLoadPercentage(
-        Instance.GetInstance().configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD,
-        centerApplicatorLoad
-      );
-      const right = calculateApplicatorsLoadPercentage(
-        Instance.GetInstance().configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD,
-        rightApplicatorLoad
-      );
-      const left = calculateApplicatorsLoadPercentage(
-        Instance.GetInstance().configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD,
-        leftApplicatorLoad
-      );
-      if (left.severity.name != applicatorsLoadPercentage.left.severity.name) {
-        let durationMs = 5000;
-        let closeButton = false;
-        if (left.severity.name == SeverityEnum.ERROR.name) {
-          durationMs = 10000;
-          closeButton = true;
-        }
-        ShowToast({
-          title: `Reservatório Esquerdo: ${left.percentage}%`,
-          message: `Atingido menos de ${left.percentage}% de sua capacidade total.`,
-          durationMs,
-          severity: left.severity,
-          closeButton,
-        });
-      }
-      if (right.severity.name != applicatorsLoadPercentage.right.severity.name) {
-        let durationMs = 5000;
-        let closeButton = false;
-        if (right.severity.name == SeverityEnum.ERROR.name) {
-          durationMs = 10000;
-          closeButton = true;
-        }
-        ShowToast({
-          title: `Reservatório Direito: ${right.percentage}%`,
-          message: `Atingido menos de ${right.percentage}% de sua capacidade total.`,
-          durationMs,
-          severity: right.severity,
-          closeButton,
-        });
-      }
-      if (center.severity.name != applicatorsLoadPercentage.center.severity.name) {
-        let durationMs = 5000;
-        let closeButton = false;
-        if (center.severity.name == SeverityEnum.ERROR.name) {
-          durationMs = 10000;
-          closeButton = true;
-        }
-        ShowToast({
-          title: `Reservatório Cenral: ${center.percentage}%`,
-          message: `Atingido menos de ${center.percentage}% de sua capacidade total.`,
-          durationMs,
-          severity: center.severity,
-          closeButton,
-        });
-      }
-      setApplicatorsLoadPercentage({ center, right, left });
-
-      setAppliedDoses(appliedDoses + amount * activeApplicators);
     },
-    [
-      centerApplicatorLoad,
-      leftApplicatorLoad,
-      rightApplicatorLoad,
-      centerApplicatorActive,
-      leftApplicatorActive,
-      rightApplicatorActive,
-      centerApplicatorAvailable,
-      leftApplicatorAvailable,
-      rightApplicatorAvailable,
-      doseInProgress,
-      setAppliedDoses,
-      setApplicatorsLoadPercentage,
-      applicatorsLoadPercentage,
-      appliedDoses,
-    ]
+    [doseInProgress, appliedDoses]
   );
 
   const onPresetPressed = useCallback(
-    async (value: number) => {
+    async (value: number, callback: () => void) => {
       await processDose(value);
+      callback();
     },
     [processDose]
   );
@@ -434,4 +301,5 @@ function ExecutionScreen(props: { navigation: any }) {
     </GestureHandlerRootView>
   );
 }
+
 export default ExecutionScreen;

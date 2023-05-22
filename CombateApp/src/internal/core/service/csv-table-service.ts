@@ -15,44 +15,54 @@ export class CsvTableService implements PCsvTableService {
     ];
   }
   insert(requestDto: RequestDto, responseDto: ResponseDto): { column: number; row: number } {
-    this._logger.info({
-      event: 'CsvTableService.insert',
-      details: 'Process started',
-      responseDto,
-      requestDto,
-    });
+    try {
+      this._logger.info({
+        event: 'CsvTableService.insert',
+        details: 'Process started',
+        responseDto,
+        requestDto,
+      });
 
-    const date = dateTimeFormatter.date(responseDto.gps.dateUTC);
-    const time = dateTimeFormatter.time(responseDto.gps.dateUTC);
-    const data = [
-      '&',
-      requestDto.client,
-      requestDto.project,
-      requestDto.plot,
-      requestDto.tractorName,
-      requestDto.deviceName,
-      requestDto.poisonType,
-      (requestDto.doseWeightKg * 1000).toString(),
-      requestDto.maxVelocity.toString(),
-      requestDto.weather,
-      requestDto.streetsAmount.toString(),
-      requestDto.linesAmount.toString(),
-      date,
-      time,
-      responseDto.errorCode,
-      requestDto.event.name,
-      requestDto.dose.amount.toString(),
-      responseDto.gps.timeUTC,
-      responseDto.gps.status,
-      responseDto.gps.latitude.toString(),
-      responseDto.gps.longitude.toString(),
-      responseDto.gps.speedKnots.toString(),
-    ];
-    this._rows.push(data);
+      const date = dateTimeFormatter.date(responseDto.gps.dateUTC);
+      const time = dateTimeFormatter.time(responseDto.gps.dateUTC);
+      const data = [
+        '&',
+        requestDto.client,
+        requestDto.project,
+        requestDto.plot,
+        requestDto.tractorName,
+        requestDto.deviceName,
+        requestDto.poisonType,
+        (requestDto.doseWeightKg * 1000).toString(),
+        requestDto.maxVelocity.toString(),
+        requestDto.weather,
+        requestDto.streetsAmount.toString(),
+        requestDto.linesAmount.toString(),
+        date,
+        time,
+        responseDto.errorCode,
+        requestDto.event,
+        requestDto.dose.amount.toString(),
+        responseDto.gps.status,
+        responseDto.gps.latitude.toString(),
+        responseDto.gps.longitude.toString(),
+        responseDto.gps.speed,
+      ];
 
-    const result = { row: 0, column: 0 };
-    this._logger.info({ event: 'CsvTableService.insert', details: 'Process finished', result });
-    return result;
+      this._rows.push(data);
+
+      const result = { row: 0, column: 0 };
+      this._logger.info({ event: 'CsvTableService.insert', details: 'Process finished', result });
+      return result;
+    } catch (err) {
+      this._logger.error({
+        event: 'CsvTableService.insert',
+        details: 'Process error',
+        error: err.message,
+      });
+
+      throw err;
+    }
   }
   erase(column: number, row: number): void {
     this._logger.info({

@@ -4,210 +4,9 @@ import { appConfig } from '../../../../app/config/app-config';
 import { Instance } from '../../../../app/instance/instance';
 import { Theme } from '../../../../app/theme/theme';
 
-function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => Promise<void> }) {
-  function resetButtons() {
-    setLoadingButtons({
-      P1: false,
-      P2: false,
-      P3: false,
-      P4: false,
-      P5: false,
-      P6: false,
-    });
-    setEnabledButtons({
-      P1: false,
-      P2: false,
-      P3: false,
-      P4: false,
-      P5: false,
-      P6: false,
-    });
-  }
-
-  const onPreset1Pressed = useCallback(async () => {
-    try {
-      setEnabledButtons({
-        P1: true,
-        P2: false,
-        P3: false,
-        P4: false,
-        P5: false,
-        P6: false,
-      });
-      setLoadingButtons({
-        P1: true,
-        P2: false,
-        P3: false,
-        P4: false,
-        P5: false,
-        P6: false,
-      });
-      await props.onPresetPressed(
-        Instance.GetInstance().configCache.getCache().PRESETS.P1.DOSE_AMOUNT
-      );
-
-      resetButtons();
-    } catch (err) {
-      resetButtons();
-      throw err;
-    }
-  }, []);
-
-  const onPreset2Pressed = useCallback(async () => {
-    try {
-      setEnabledButtons({
-        P1: false,
-        P2: true,
-        P3: false,
-        P4: false,
-        P5: false,
-        P6: false,
-      });
-      setLoadingButtons({
-        P1: false,
-        P2: true,
-        P3: false,
-        P4: false,
-        P5: false,
-        P6: false,
-      });
-      await props.onPresetPressed(
-        Instance.GetInstance().configCache.getCache().PRESETS.P2.DOSE_AMOUNT
-      );
-
-      resetButtons();
-    } catch (err) {
-      resetButtons();
-      throw err;
-    }
-  }, []);
-  const onPreset3Pressed = useCallback(async () => {
-    try {
-      setEnabledButtons({
-        P1: false,
-        P2: false,
-        P3: true,
-        P4: false,
-        P5: false,
-        P6: false,
-      });
-      setLoadingButtons({
-        P1: false,
-        P2: false,
-        P3: true,
-        P4: false,
-        P5: false,
-        P6: false,
-      });
-
-      await props.onPresetPressed(
-        Instance.GetInstance().configCache.getCache().PRESETS.P3.DOSE_AMOUNT
-      );
-
-      resetButtons();
-    } catch (err) {
-      resetButtons();
-      throw err;
-    }
-  }, []);
-
-  const onPreset4Pressed = useCallback(async () => {
-    try {
-      setEnabledButtons({
-        P1: false,
-        P2: false,
-        P3: false,
-        P4: true,
-        P5: false,
-        P6: false,
-      });
-      setLoadingButtons({
-        P1: false,
-        P2: false,
-        P3: false,
-        P4: true,
-        P5: false,
-        P6: false,
-      });
-
-      await props.onPresetPressed(
-        Instance.GetInstance().configCache.getCache().PRESETS.P4.DOSE_AMOUNT
-      );
-
-      resetButtons();
-    } catch (err) {
-      resetButtons();
-      throw err;
-    }
-  }, []);
-
-  const onPreset5Pressed = useCallback(async () => {
-    try {
-      setEnabledButtons({
-        P1: false,
-        P2: false,
-        P3: false,
-        P4: false,
-        P5: true,
-        P6: false,
-      });
-      setLoadingButtons({
-        P1: false,
-        P2: false,
-        P3: false,
-        P4: false,
-        P5: true,
-        P6: false,
-      });
-      await props.onPresetPressed(
-        Instance.GetInstance().configCache.getCache().PRESETS.P5.DOSE_AMOUNT
-      );
-
-      resetButtons();
-    } catch (err) {
-      resetButtons();
-      throw err;
-    }
-  }, []);
-
-  const onPreset6Pressed = useCallback(async () => {
-    try {
-      setEnabledButtons({
-        P1: false,
-        P2: false,
-        P3: false,
-        P4: false,
-        P5: false,
-        P6: true,
-      });
-      setLoadingButtons({
-        P1: false,
-        P2: false,
-        P3: false,
-        P4: false,
-        P5: false,
-        P6: true,
-      });
-      await props.onPresetPressed(
-        Instance.GetInstance().configCache.getCache().PRESETS.P6.DOSE_AMOUNT
-      );
-
-      resetButtons();
-    } catch (err) {
-      resetButtons();
-      throw err;
-    }
-  }, []);
-
-  const [enabledButtons, setEnabledButtons] = useState({
-    P1: true,
-    P2: true,
-    P3: true,
-    P4: true,
-    P5: true,
-    P6: true,
-  });
-
+function PoisonAmountSelector(props: {
+  onPresetPressed: (amount: number, callback: () => void) => Promise<void>;
+}) {
   const [loadingButtons, setLoadingButtons] = useState({
     P1: false,
     P2: false,
@@ -216,6 +15,146 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => Prom
     P5: false,
     P6: false,
   });
+
+  const resetButtons = useCallback(() => {
+    setLoadingButtons({
+      P1: false,
+      P2: false,
+      P3: false,
+      P4: false,
+      P5: false,
+      P6: false,
+    });
+  }, [loadingButtons]);
+
+  const onPreset1Pressed = useCallback(async () => {
+    try {
+      setLoadingButtons({
+        P1: true,
+        P2: false,
+        P3: false,
+        P4: false,
+        P5: false,
+        P6: false,
+      });
+      await props.onPresetPressed(
+        Instance.GetInstance().configCache.getCache().PRESETS.P1.DOSE_AMOUNT,
+        resetButtons
+      );
+    } catch (err) {
+      resetButtons();
+      throw err;
+    }
+  }, [loadingButtons]);
+
+  const onPreset2Pressed = useCallback(async () => {
+    try {
+      setLoadingButtons({
+        P1: false,
+        P2: true,
+        P3: false,
+        P4: false,
+        P5: false,
+        P6: false,
+      });
+      await props.onPresetPressed(
+        Instance.GetInstance().configCache.getCache().PRESETS.P2.DOSE_AMOUNT,
+        resetButtons
+      );
+    } catch (err) {
+      resetButtons();
+      throw err;
+    }
+  }, [loadingButtons]);
+  const onPreset3Pressed = useCallback(async () => {
+    try {
+      setLoadingButtons({
+        P1: false,
+        P2: false,
+        P3: true,
+        P4: false,
+        P5: false,
+        P6: false,
+      });
+
+      await props.onPresetPressed(
+        Instance.GetInstance().configCache.getCache().PRESETS.P3.DOSE_AMOUNT,
+        resetButtons
+      );
+
+      resetButtons();
+    } catch (err) {
+      resetButtons();
+      throw err;
+    }
+  }, [loadingButtons]);
+
+  const onPreset4Pressed = useCallback(async () => {
+    try {
+      setLoadingButtons({
+        P1: false,
+        P2: false,
+        P3: false,
+        P4: true,
+        P5: false,
+        P6: false,
+      });
+
+      await props.onPresetPressed(
+        Instance.GetInstance().configCache.getCache().PRESETS.P4.DOSE_AMOUNT,
+        resetButtons
+      );
+
+      resetButtons();
+    } catch (err) {
+      resetButtons();
+      throw err;
+    }
+  }, [loadingButtons]);
+
+  const onPreset5Pressed = useCallback(async () => {
+    try {
+      setLoadingButtons({
+        P1: false,
+        P2: false,
+        P3: false,
+        P4: false,
+        P5: true,
+        P6: false,
+      });
+      await props.onPresetPressed(
+        Instance.GetInstance().configCache.getCache().PRESETS.P5.DOSE_AMOUNT,
+        resetButtons
+      );
+
+      resetButtons();
+    } catch (err) {
+      resetButtons();
+      throw err;
+    }
+  }, [loadingButtons]);
+
+  const onPreset6Pressed = useCallback(async () => {
+    try {
+      setLoadingButtons({
+        P1: false,
+        P2: false,
+        P3: false,
+        P4: false,
+        P5: false,
+        P6: true,
+      });
+      await props.onPresetPressed(
+        Instance.GetInstance().configCache.getCache().PRESETS.P6.DOSE_AMOUNT,
+        resetButtons
+      );
+
+      resetButtons();
+    } catch (err) {
+      resetButtons();
+      throw err;
+    }
+  }, [loadingButtons]);
 
   return (
     <Center>
@@ -246,7 +185,6 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => Prom
           width="50%"
         >
           <Button
-            isDisabled={!enabledButtons.P1}
             isLoading={loadingButtons.P1}
             isLoadingText="Dosando"
             onPress={onPreset1Pressed}
@@ -261,7 +199,6 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => Prom
             {Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME}
           </Button>
           <Button
-            isDisabled={!enabledButtons.P2}
             isLoading={loadingButtons.P2}
             isLoadingText="Dosando"
             onPress={onPreset2Pressed}
@@ -276,7 +213,6 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => Prom
             {Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME}
           </Button>
           <Button
-            isDisabled={!enabledButtons.P3}
             isLoading={loadingButtons.P3}
             isLoadingText="Dosando"
             onPress={onPreset3Pressed}
@@ -299,7 +235,6 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => Prom
           width="50%"
         >
           <Button
-            isDisabled={!enabledButtons.P4}
             isLoading={loadingButtons.P4}
             isLoadingText="Dosando"
             onPress={onPreset4Pressed}
@@ -314,7 +249,6 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => Prom
             {Instance.GetInstance().configCache.getCache().PRESETS.P4.NAME}
           </Button>
           <Button
-            isDisabled={!enabledButtons.P5}
             isLoading={loadingButtons.P5}
             isLoadingText="Dosando"
             onPress={onPreset5Pressed}
@@ -329,7 +263,6 @@ function PoisonAmountSelector(props: { onPresetPressed: (amount: number) => Prom
             {Instance.GetInstance().configCache.getCache().PRESETS.P5.NAME}
           </Button>
           <Button
-            isDisabled={!enabledButtons.P6}
             isLoading={loadingButtons.P6}
             isLoadingText="Dosando"
             onPress={onPreset6Pressed}

@@ -14,23 +14,27 @@ export class ResponseDtoParser {
       this._protocolRules.V4(protocol);
 
       let sentence = protocol.substring(11);
-      sentence = sentence.substring(0, sentence.length - 2);
+      sentence = sentence.substring(0, sentence.length - 1);
       const status = new Status(protocol[3]);
       const errorCode = protocol.substring(4, 7);
       const commaSeparated = sentence.split(',');
 
       //Adds "*" to checkSum. Ex: A30 --> A*30
-      commaSeparated[commaSeparated.length - 1] =
+      const gprmcCs =
         commaSeparated[commaSeparated.length - 1][0] +
         '*' +
-        commaSeparated[commaSeparated.length - 1].substring(1);
+        commaSeparated[commaSeparated.length - 1][1] +
+        commaSeparated[commaSeparated.length - 1][2];
+
+      commaSeparated[commaSeparated.length - 1] = gprmcCs;
 
       const gprmc = '$GPRMC' + commaSeparated.join(',');
       const data = gpsSentenceParser.parse(gprmc);
-      const speed = Math.trunc(data.speed.knots * 1.852).toString();
 
       let gpsData: IGpsData;
       if (data.valid) {
+        const speed = Math.trunc(data.speed.knots * 1.852).toString();
+
         const date = <Date>data.datetime;
         gpsData = {
           status: data.mode[0],

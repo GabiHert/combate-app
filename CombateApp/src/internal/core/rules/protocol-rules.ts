@@ -30,14 +30,25 @@ export class ProtocolRules {
         });
         throw new ValidationErrorType('Protocol length does not mach rules');
       }
-
-      if (protocol.split(',')[0].length != 11) {
+      const protocolSplited = protocol.split(',');
+      if (protocolSplited[0].length != 11) {
         this._logger.warn({
           event: 'ProtocolRules.V4',
           details: 'Process warn',
           warn: 'protocol length different from expected',
         });
         throw new ValidationErrorType('Protocol length does not mach rules');
+      }
+
+      if (protocolSplited[protocolSplited.length - 1].includes('*')) {
+        this._logger.warn({
+          event: 'ProtocolRules.V4',
+          details: 'Process warn',
+          warn: 'protocol length different from expected',
+        });
+        throw new ValidationErrorType(
+          'Protocol gps checkSum different from expected, received invalid character *'
+        );
       }
 
       if (protocol[0] != '&') {
@@ -86,17 +97,6 @@ export class ProtocolRules {
           warn: 'protocol wheelBoltsCounter different from expected',
         });
         throw new ValidationErrorType('Protocol errorCode does not mach rules');
-      }
-
-      const protocolEnd = protocol.substring(protocol.length - 2, protocol.length);
-      if (protocolEnd != '\r\n') {
-        this._logger.warn({
-          event: 'ProtocolRules.V4',
-          details: 'Process warn',
-          warn: 'protocolEnd different from expected',
-          protocolEnd,
-        });
-        throw new ValidationErrorType('Protocol end different from expected');
       }
 
       this._logger.info({

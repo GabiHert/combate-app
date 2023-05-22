@@ -22,7 +22,7 @@ class PtToDefaults {
         break;
     }
 
-    return { name: '' };
+    return new Weather(valuePt);
   }
 
   poison(poison: string): Poison {

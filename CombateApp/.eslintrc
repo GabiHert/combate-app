@@ -20,6 +20,7 @@
         "react-native"
     ],
     "rules": {
+        "prettier/prettier": ["error", { "singleQuote": true }],
         // allow .js files to contain JSX code
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
             

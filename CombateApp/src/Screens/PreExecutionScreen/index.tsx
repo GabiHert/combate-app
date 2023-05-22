@@ -1,4 +1,13 @@
-import { Box, Button, Divider, FormControl, IconButton, ScrollView, VStack } from 'native-base';
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  HStack,
+  IconButton,
+  ScrollView,
+  VStack,
+} from 'native-base';
 import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { appConfig } from '../../app/config/app-config';
@@ -8,7 +17,6 @@ import { Weather, weatherItems } from '../../internal/core/enum/weather';
 import { IPreExecutionConfigProps } from '../../internal/interface/config-props';
 import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-form-result';
 
-import { useFocusEffect } from '@react-navigation/native';
 import { Instance } from '../../app/instance/instance';
 import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 import { Theme } from '../../app/theme/theme';
@@ -34,8 +42,8 @@ function PreExecutionScreen(props: { navigation: any }) {
   const [rightApplicatorLoad, setRightApplicatorLoad] = useState<number>(
     Instance.GetInstance().preExecutionConfigCache.getCache().rightApplicatorLoad
   );
-  const [devices, setDevices] = useState<Array<IItem>>([{ id: 'idd', name: 'name' }]);
-  const [deviceConnected, setDeviceConnected] = useState(true); //todo: false
+  const [devices, setDevices] = useState<Array<IItem>>([]);
+  const [deviceConnected, setDeviceConnected] = useState(false);
   const [clientName, setClientName] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().clientName
   );
@@ -55,7 +63,11 @@ function PreExecutionScreen(props: { navigation: any }) {
     Instance.GetInstance().preExecutionConfigCache.getCache().streetsAmount
   );
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
-  const [deviceName, setDeviceName] = useState<string>();
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+
+  const [deviceName, setDeviceName] = useState<string>(
+    Instance.GetInstance().preExecutionConfigCache.getCache().deviceName
+  );
 
   const [weather, setWeather] = useState<Weather>(
     new Weather(Instance.GetInstance().preExecutionConfigCache.getCache().weather)
@@ -77,23 +89,22 @@ function PreExecutionScreen(props: { navigation: any }) {
     valid: true,
   });
 
-  useFocusEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        await Instance.GetInstance().bluetoothApp.init();
-        setDevices(await Instance.GetInstance().bluetoothApp.getBondedDevices());
-      } catch (err) {
-        ShowToast({
-          durationMs: 3000,
-          title: 'Erro Bluetooth',
-          message: err.message,
-          severity: SeverityEnum.ERROR,
-        });
-      }
-    }, 10000);
-
-    return () => clearInterval(interval);
-  });
+  const searchDevicesCallback = useCallback(async () => {
+    try {
+      setIsSearching(true);
+      await Instance.GetInstance().bluetoothApp.init();
+      const data = await Instance.GetInstance().bluetoothApp.getBondedDevices();
+      setDevices(data);
+    } catch (err) {
+      ShowToast({
+        durationMs: 3000,
+        title: 'Erro Bluetooth',
+        message: err.message,
+        severity: SeverityEnum.ERROR,
+      });
+    }
+    setIsSearching(false);
+  }, []);
 
   const onNextPressed = useCallback(async () => {
     const data: IPreExecutionConfigProps = {
@@ -121,7 +132,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     } else {
       setValidationResult(result);
       ShowToast({
-        durationMs: 3000,
+        durationMs: 2000,
         title: 'Informações inválidas',
         message: 'Revise o formulário',
         severity: SeverityEnum.ERROR,
@@ -313,15 +324,29 @@ function PreExecutionScreen(props: { navigation: any }) {
             items={devices}
             errorMessage={validationResult.deviceName.errorMessage}
           />
-          <Button
-            isLoading={isConnecting}
-            isLoadingText="Conectando"
-            _pressed={{ opacity: 0.8 }}
-            background={Theme().color.b300}
-            onPress={connectToBluetoothCallback}
-          >
-            Conectar
-          </Button>
+          <HStack>
+            <Button
+              isLoading={isConnecting}
+              isLoadingText="Conectando"
+              _pressed={{ opacity: 0.8 }}
+              background={Theme().color.b300}
+              onPress={connectToBluetoothCallback}
+            >
+              Conectar
+            </Button>
+
+            <Box width={2} />
+
+            <Button
+              isLoading={isSearching}
+              isLoadingText="Pesquisando"
+              _pressed={{ opacity: 0.8 }}
+              background={Theme().color.b300}
+              onPress={searchDevicesCallback}
+            >
+              Pesquisar
+            </Button>
+          </HStack>
 
           <Divider w="80%" />
 

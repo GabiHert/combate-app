@@ -28,6 +28,15 @@ export class Instance {
   readonly bluetoothApp: PBluetoothApp;
   readonly validator: PValidator;
   readonly preExecutionConfigCache: PCache<IPreExecutionConfigProps>;
+  private _connectedDeviceId: string;
+
+  getConnectedDeviceId(): string {
+    return this._connectedDeviceId;
+  }
+
+  setConnectedDeviceId(id: string) {
+    this._connectedDeviceId = id;
+  }
 
   private static _instance: Instance;
   static GetInstance(): Instance {
@@ -46,7 +55,7 @@ export class Instance {
     const responseDtoParser = new ResponseDtoParser(this.logger, protocolRules);
     const cbServiceFactory = new CbServiceFactory(this.logger, bluetooth, responseDtoParser);
     const repository = new AAsyncStorage(this.logger);
-    const requestFactory = new RequestFactory(this.logger)
+    const requestFactory = new RequestFactory(this.logger);
 
     this.combateApp = new CombateApp(
       this.logger,

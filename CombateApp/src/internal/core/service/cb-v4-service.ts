@@ -36,7 +36,7 @@ export class CbV4Service implements PCbService {
 
       return responseDto;
     } catch (err) {
-      this._logger.error({
+      this. _logger.error({
         event: 'CbV4Service.request',
         details: 'Process error',
         error: err.message,

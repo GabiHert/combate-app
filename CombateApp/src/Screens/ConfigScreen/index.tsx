@@ -171,7 +171,6 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
   const onPreset6NameChange = useCallback(
     (text: string) => {
-      console.log(text);
       const aux = preset6;
       aux.name = text;
       setPreset6(aux);

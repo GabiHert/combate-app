@@ -78,7 +78,7 @@ export class CombateApp implements PCombateApp {
 
       const responseDto = await this._cbService.request(request, this._doseCallback);
 
-      this._csvTableService.insert(requestDto, responseDto);
+      //this._csvTableService.insert(requestDto, responseDto);
 
       await this._appRules(responseDto, requestDto);
 
@@ -98,6 +98,7 @@ export class CombateApp implements PCombateApp {
         details: 'Process error',
         error: err.message,
       });
+      throw err;
     }
   }
 
