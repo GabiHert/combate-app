@@ -1,3 +1,4 @@
+import { CONSTANTS } from '../../config/config';
 import { ResponseDto } from '../dto/response-dto';
 import { RequestTimeoutErrorType } from '../error/error-type';
 import { ResponseDtoParser } from '../parser/response-dto-parser';
@@ -22,11 +23,11 @@ export class CbV4Service implements PCbService {
 
       await this._bluetooth.write(request.toProtocol());
 
-      let timeoutMs = 5000;
+      let timeoutMs = CONSTANTS.APPLICATION.DOSE_TIMEOUT_MS;
       if (request.getRequestDto().dose?.amount) timeoutMs *= request.getRequestDto().dose.amount;
       const protocol = await timeout(
         timeoutMs,
-        this._bluetooth.read(timeoutMs),
+        this._bluetooth.read(CONSTANTS.APPLICATION.BLUETOOTH_READ_TIMEOUT_MS),
         new RequestTimeoutErrorType('Request timeout exceeded')
       );
 
@@ -36,7 +37,7 @@ export class CbV4Service implements PCbService {
 
       return responseDto;
     } catch (err) {
-      this. _logger.error({
+      this._logger.error({
         event: 'CbV4Service.request',
         details: 'Process error',
         error: err.message,

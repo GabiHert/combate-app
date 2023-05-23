@@ -32,7 +32,7 @@ describe('FormValidator unit tests', () => {
       APPLICATION: {
         MAX_VELOCITY: 2,
         CENTER_TANK_MAX_LOAD: 0,
-        DOSE_WEIGHT_KG: 0,
+        DOSE_WEIGHT_G: 0,
         LEFT_TANK_MAX_LOAD: 0,
         RIGHT_TANK_MAX_LOAD: 0,
       },
@@ -88,7 +88,7 @@ describe('FormValidator unit tests', () => {
       APPLICATION: {
         MAX_VELOCITY: 2,
         CENTER_TANK_MAX_LOAD: 30,
-        DOSE_WEIGHT_KG: 0.025,
+        DOSE_WEIGHT_G: 0.025,
         LEFT_TANK_MAX_LOAD: 30,
         RIGHT_TANK_MAX_LOAD: 30,
       },
@@ -114,7 +114,7 @@ describe('FormValidator unit tests', () => {
       valid: true,
       maxVelocity: { errorMessage: undefined },
       centerTankMaxLoad: { errorMessage: undefined },
-      doseWeightKg: { errorMessage: undefined },
+      doseWeightG: { errorMessage: undefined },
       leftTankMaxLoad: { errorMessage: undefined },
       preset1Dose: { errorMessage: undefined },
       preset1Name: { errorMessage: undefined },

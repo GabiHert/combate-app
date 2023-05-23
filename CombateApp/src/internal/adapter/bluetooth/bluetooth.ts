@@ -17,6 +17,7 @@ export class ABluetooth implements PBluetooth {
       for (let i = 0; i < devices.length; i++) {
         if (devices[i].id == Instance.GetInstance().getConnectedDeviceId()) {
           this._device = devices[i];
+          if (!this._device.isConnected()) await this._device.connect();
           return;
         }
       }

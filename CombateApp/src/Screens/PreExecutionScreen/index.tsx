@@ -103,7 +103,7 @@ function PreExecutionScreen(props: { navigation: any }) {
       });
     }
     setIsSearching(false);
-  }, []);
+  }, [devices]);
 
   const onNextPressed = useCallback(async () => {
     const data: IPreExecutionConfigProps = {
@@ -171,6 +171,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     setIsConnecting(true);
     try {
       let deviceId: string;
+      if (!devices.length) await searchDevicesCallback();
       devices.forEach((device) => {
         if (device.name == deviceName) {
           deviceId = device.id;
@@ -194,7 +195,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     }
 
     setIsConnecting(false);
-  }, [deviceName]);
+  }, [deviceName, devices]);
 
   return (
     <Box justifyContent={'center'} alignItems={'center'} h="100%">

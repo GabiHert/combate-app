@@ -28,7 +28,7 @@ describe('csv-table-service test', () => {
       dose: { amount: 0 },
       client: v4(),
       deviceName: v4(),
-      doseWeightKg: 0.25,
+      doseWeightG: 0.25,
       maxVelocity: 7,
       linesSpacing: 3,
       plot: v4(),
@@ -55,7 +55,7 @@ describe('csv-table-service test', () => {
       'LAT-WGS84,LON-WGS84,SPEED KNOTS\n' +
       `&,${requestDto.client},${requestDto.project},${requestDto.plot},${requestDto.tractorName},${
         requestDto.deviceName
-      },${requestDto.poisonType},${requestDto.doseWeightKg * 1000},${requestDto.maxVelocity},` +
+      },${requestDto.poisonType},${requestDto.doseWeightG * 1000},${requestDto.maxVelocity},` +
       `${requestDto.weather},${requestDto.streetsAmount},${
         requestDto.linesAmount
       },${dateTimeFormatter.date(responseDto.gps.dateUTC)},${dateTimeFormatter.time(

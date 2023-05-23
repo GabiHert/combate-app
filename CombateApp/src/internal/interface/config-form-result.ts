@@ -4,7 +4,7 @@ export interface IConfigFormResult {
   centerTankMaxLoad: { errorMessage: string };
   leftTankMaxLoad: { errorMessage: string };
   maxVelocity: { errorMessage: string };
-  doseWeightKg: { errorMessage: string };
+  doseWeightG: { errorMessage: string };
   preset1Name: { errorMessage: string };
   preset2Name: { errorMessage: string };
   preset3Name: { errorMessage: string };

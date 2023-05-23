@@ -35,8 +35,8 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const [leftTankMaxLoad, setLeftTankMaxLoad] = useState<number>(
     Instance.GetInstance().configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD
   );
-  const [doseWeightKg, setDoseWeightKg] = useState<number>(
-    Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG
+  const [doseWeightG, setDoseWeightG] = useState<number>(
+    Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G
   );
   const [metersBetweenDose, setMetersBetweenDose] = useState<number>(
     Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE
@@ -73,7 +73,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     valid: true,
     maxVelocity: { errorMessage: undefined },
     centerTankMaxLoad: { errorMessage: undefined },
-    doseWeightKg: { errorMessage: undefined },
+    doseWeightG: { errorMessage: undefined },
     leftTankMaxLoad: { errorMessage: undefined },
     preset1Dose: { errorMessage: undefined },
     preset1Name: { errorMessage: undefined },
@@ -344,7 +344,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         APPLICATION: {
           MAX_VELOCITY: maxVelocity,
           CENTER_TANK_MAX_LOAD: centerTankMaxLoad,
-          DOSE_WEIGHT_KG: doseWeightKg,
+          DOSE_WEIGHT_G: doseWeightG,
           LEFT_TANK_MAX_LOAD: leftTankMaxLoad,
           RIGHT_TANK_MAX_LOAD: rightTankMaxLoad,
         },
@@ -376,7 +376,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         if (data != Instance.GetInstance().configCache.getCache()) {
           const cache = Instance.GetInstance().configCache.getCache();
 
-          cache.APPLICATION.DOSE_WEIGHT_KG = doseWeightKg;
+          cache.APPLICATION.DOSE_WEIGHT_G = doseWeightG;
           cache.APPLICATION.RIGHT_TANK_MAX_LOAD = rightTankMaxLoad;
           cache.APPLICATION.CENTER_TANK_MAX_LOAD = centerTankMaxLoad;
           cache.APPLICATION.LEFT_TANK_MAX_LOAD = leftTankMaxLoad;
@@ -421,7 +421,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       });
     }
   }, [
-    doseWeightKg,
+    doseWeightG,
     rightTankMaxLoad,
     centerTankMaxLoad,
     leftTankMaxLoad,
@@ -505,7 +505,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           </FormControl.Label>
           <SlideInput
             onChangeEnd={setLineSpacing}
-            step={0.5}
+            step={1}
             title={'Espaçamento de linhas'}
             defaultValue={1}
             unit={'metros'}
@@ -566,13 +566,13 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <SlideInput
             defaultValue={5}
             maxValue={30}
-            minValue={1}
-            onChangeEnd={setDoseWeightKg}
+            minValue={5}
+            onChangeEnd={setDoseWeightG}
             step={1}
             title={'Peso dose'}
             unit={'g'}
             disabled={false}
-            errorMessage={errors.doseWeightKg.errorMessage}
+            errorMessage={errors.doseWeightG.errorMessage}
           />
           <SelectInput
             onItemSelected={setPoison}
@@ -600,7 +600,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           />
           <SlideInput
             onChangeEnd={onPreset1DoseChange}
-            step={0.5}
+            step={1}
             title={'Doses'}
             defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P1.DOSE_AMOUNT}
             disabled={false}
@@ -627,7 +627,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           />
           <SlideInput
             onChangeEnd={onPreset2DoseChange}
-            step={0.5}
+            step={1}
             title={'Doses'}
             defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P2.DOSE_AMOUNT}
             disabled={false}
@@ -653,7 +653,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           />
           <SlideInput
             onChangeEnd={onPreset3DoseChange}
-            step={0.5}
+            step={1}
             title={'Doses'}
             defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P3.DOSE_AMOUNT}
             disabled={false}
@@ -680,7 +680,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           />
           <SlideInput
             onChangeEnd={onPreset4DoseChange}
-            step={0.5}
+            step={1}
             title={'Doses'}
             defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P4.DOSE_AMOUNT}
             disabled={false}
@@ -708,7 +708,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
           <SlideInput
             onChangeEnd={onPreset5DoseChange}
-            step={0.5}
+            step={1}
             title={'Doses'}
             defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P5.DOSE_AMOUNT}
             disabled={false}
@@ -735,7 +735,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           />
           <SlideInput
             onChangeEnd={onPreset6DoseChange}
-            step={0.5}
+            step={1}
             title={'Doses'}
             defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P6.DOSE_AMOUNT}
             disabled={false}
@@ -753,7 +753,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           </FormControl.Label>
           <SlideInput
             onChangeEnd={setMetersBetweenDose}
-            step={0.5}
+            step={1}
             title={'Metros entre cada dose'}
             unit={'metros'}
             defaultValue={
@@ -775,7 +775,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
           <SlideInput
             onChangeEnd={setMetersBetweenDose}
-            step={0.5}
+            step={1}
             title={'Metros entre cada dose'}
             unit={'metros'}
             defaultValue={Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY}

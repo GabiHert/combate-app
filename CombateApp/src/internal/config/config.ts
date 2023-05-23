@@ -6,11 +6,13 @@ export const CONSTANTS = {
   APPLICATION: {
     VERSION: '0.0.0',
     BLUETOOTH_WRITE_RETRIES: 5,
+    BLUETOOTH_READ_TIMEOUT_MS: 10000,
+    DOSE_TIMEOUT_MS: 7000,
   },
   MAX_DOSES: 20,
   MIN_DOSES: 1,
   FINISHED_WORK_REASON_NAME: 'Fim Operação',
-  REQUEST_INTERVAL_MS: 2000,
+  REQUEST_INTERVAL_MS: 3000,
   ACTIVITY_ITEMS: [
     { id: '0', name: 'Manutenção' },
     { id: '1', name: 'Pré-Plantio' },
@@ -92,7 +94,7 @@ export const CONSTANTS = {
       INVALID_LEFT_TANK_MAX_LOAD: 'ERRO',
       INVALID_CENTER_TANK_MAX_LOAD: 'ERRO',
       INVALID_RIGHT_TANK_MAX_LOAD: 'ERRO',
-      INVALID_DOSE_WEIGHT_KG: 'ERRO',
+      INVALID_DOSE_WEIGHT_G: 'ERRO',
       INVALID_REQUEST_INTERVAL_MS: 'ERRO',
       INVALID_PRESET: 'ERRO',
       INVALID_PRESET_NAME: 'ERRO',
@@ -115,7 +117,7 @@ export const DEFAULT_CONFIG: IConfigsProps = {
     LEFT_TANK_MAX_LOAD: 30,
     CENTER_TANK_MAX_LOAD: 30,
     RIGHT_TANK_MAX_LOAD: 30,
-    DOSE_WEIGHT_KG: 0.025,
+    DOSE_WEIGHT_G: 0.025,
   },
   PRESETS: {
     P1: { NAME: CONSTANTS.PRESET_NAME_ITEMS[0].name, DOSE_AMOUNT: 1 },
@@ -166,5 +168,5 @@ export const DEFAULT_PRE_EXECUTION_CONFIG: IPreExecutionConfigProps = {
   leftApplicatorLoad: 23,
   streetsAmount: 1,
   rightApplicatorLoad: 23,
-  deviceName: 'CB5_TESTE',
+  deviceName: '',
 };

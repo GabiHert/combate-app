@@ -306,7 +306,7 @@ export class Validator implements PValidator {
       valid: true,
       maxVelocity: { errorMessage: undefined },
       centerTankMaxLoad: { errorMessage: undefined },
-      doseWeightKg: { errorMessage: undefined },
+      doseWeightG: { errorMessage: undefined },
       leftTankMaxLoad: { errorMessage: undefined },
       preset1Dose: { errorMessage: undefined },
       preset1Name: { errorMessage: undefined },
@@ -360,12 +360,12 @@ export class Validator implements PValidator {
           details: 'Process warn - Invalid RIGHT_TANK_MAX_LOAD',
         });
       }
-      if (!data.APPLICATION.DOSE_WEIGHT_KG || data.APPLICATION.DOSE_WEIGHT_KG < 0.005) {
+      if (!data.APPLICATION.DOSE_WEIGHT_G || data.APPLICATION.DOSE_WEIGHT_G < 5) {
         result.valid = false;
-        result.doseWeightKg.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_DOSE_WEIGHT_KG;
+        result.doseWeightG.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_DOSE_WEIGHT_G;
         this._logger.warn({
           event: 'FormValidator.validateConfigForm',
-          details: 'Process warn - Invalid DOSE_WEIGHT_KG',
+          details: 'Process warn - Invalid DOSE_WEIGHT_G',
         });
       }
 

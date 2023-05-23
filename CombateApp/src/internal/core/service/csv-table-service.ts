@@ -33,7 +33,7 @@ export class CsvTableService implements PCsvTableService {
         requestDto.tractorName,
         requestDto.deviceName,
         requestDto.poisonType,
-        (requestDto.doseWeightKg * 1000).toString(),
+        (requestDto.doseWeightG * 1000).toString(),
         requestDto.maxVelocity.toString(),
         requestDto.weather,
         requestDto.streetsAmount.toString(),

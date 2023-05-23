@@ -9,7 +9,7 @@ export interface IRequestDtoArgs {
   plot: string;
   tractorName: string;
   poisonType: string;
-  doseWeightKg: number;
+  doseWeightG: number;
   deviceName: string;
   maxVelocity: number;
   weather: string;

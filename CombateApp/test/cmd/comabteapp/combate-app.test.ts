@@ -48,7 +48,7 @@ describe('combate-app unit tests', () => {
       dose: { amount: 0 },
       client: v4(),
       deviceName: v4(),
-      doseWeightKg: 0.25,
+      doseWeightG: 0.25,
       maxVelocity: 7,
       linesSpacing: 3,
       plot: v4(),

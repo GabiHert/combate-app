@@ -16,11 +16,11 @@ export interface IApplicatorsPercentage {
 
 function formatDate(date: Date): string {
   const day = date.getDate();
-
   const month = date.getMonth();
   const year = date.getFullYear();
   const hours = date.getHours();
   const minutes = date.getMinutes();
+
   return `${day < 10 ? '0' + day : day}/${month < 10 ? '0' + month : month}/${year} ${
     hours < 10 ? '0' + hours : hours
   }:${minutes < 10 ? '0' + minutes : minutes}`;
@@ -164,11 +164,13 @@ function Sheet(props: {
             </Stack>
             <Stack direction={'row'} alignItems="baseline" justifyContent="center">
               <Text fontSize={Theme().font.size.xl(appConfig.screen)} fontWeight="bold">
-                {Math.trunc(
+                {!(
                   props.appliedDoses *
-                    Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_KG *
-                    1000
-                )}
+                  Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G
+                )
+                  ? 0
+                  : props.appliedDoses *
+                    Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G}
               </Text>
               <Text fontSize={Theme().font.size.s(appConfig.screen)}>g</Text>
             </Stack>

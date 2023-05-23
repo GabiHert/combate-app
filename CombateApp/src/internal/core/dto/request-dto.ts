@@ -10,7 +10,7 @@ export class RequestDto {
   plot: string;
   tractorName: string;
   poisonType: string;
-  doseWeightKg: number;
+  doseWeightG: number;
   deviceName: string;
   maxVelocity: number;
   weather: string;
@@ -24,7 +24,7 @@ export class RequestDto {
     this.plot = args.plot;
     this.tractorName = args.tractorName;
     this.poisonType = args.poisonType;
-    this.doseWeightKg = args.doseWeightKg;
+    this.doseWeightG = args.doseWeightG;
     this.deviceName = args.deviceName;
     this.maxVelocity = args.maxVelocity;
     this.weather = args.weather;
