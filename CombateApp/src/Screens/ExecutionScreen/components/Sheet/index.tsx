@@ -86,7 +86,6 @@ function Sheet(props: {
 
   const onModalFinishPressed = useCallback(() => {
     onFinishExecutionModalClose();
-    //todo: show another modal asking about subBosque
     props.onFinishPressed();
   }, []);
   return (

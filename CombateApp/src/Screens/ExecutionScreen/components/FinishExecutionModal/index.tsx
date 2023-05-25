@@ -4,8 +4,11 @@ import { appConfig } from '../../../../app/config/app-config';
 import { Instance } from '../../../../app/instance/instance';
 import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
 import { Theme } from '../../../../app/theme/theme';
+import { ShowToast } from '../../../../Components/AlertToast';
 import SelectInput from '../../../../Components/SelectInput';
 import { CONSTANTS } from '../../../../internal/config/config';
+import { RequestDto } from '../../../../internal/core/dto/request-dto';
+import { SeverityEnum } from '../../../../internal/core/enum/severity';
 import UnderForestModal from '../UnderForestModal';
 
 function FinishExecutionModal(props: {
@@ -16,6 +19,7 @@ function FinishExecutionModal(props: {
   const [event, setEvent] = useState<string>();
   const [underForestModalVisible, setUnderForestModalVisible] = useState(false);
   const [eventError, setEventError] = useState<string>();
+  const [registerEventInProgress, setRegisterEventInProgress] = useState(false);
 
   const onUnderForestModalClose = useCallback(() => {
     setUnderForestModalVisible(false);
@@ -28,21 +32,62 @@ function FinishExecutionModal(props: {
     [setEvent]
   );
 
-  const onUnderForestModalOkPress = useCallback(() => {
+  const onUnderForestModalOkPress = useCallback(async () => {
+    try {
+      //todo: understand what must be done with underForest
+      const requestDto = new RequestDto({
+        applicatorsAmount:
+          Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount,
+        client: Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
+        deviceName: Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
+        doseWeightG: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G,
+        event,
+        maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
+        linesSpacing: Instance.GetInstance().configCache.getCache().LINES_SPACING,
+        plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
+        poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
+        project: Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
+        streetsAmount: Instance.GetInstance().preExecutionConfigCache.getCache().streetsAmount,
+        tractorName: Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
+        weather: Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+        dose: {
+          amount: 0,
+        },
+      });
+      await Instance.GetInstance().combateApp.request(requestDto);
+    } catch (err) {
+      ShowToast({
+        durationMs: 3000,
+        title: 'Erro requisição',
+        message: err.message,
+        severity: SeverityEnum.ERROR,
+      });
+    }
     props.onFinishExecutionPress();
   }, []);
 
   const onFinishPressed = useCallback(() => {
-    const errorMessage = Instance.GetInstance().validator.validateFinishExecutionForm(event);
-    if (!errorMessage) {
-      //todo:call backend to register event
-      if (event == CONSTANTS.FINISHED_WORK_REASON_NAME) {
-        setUnderForestModalVisible(true);
+    try {
+      setRegisterEventInProgress(true);
+      const errorMessage = Instance.GetInstance().validator.validateFinishExecutionForm(event);
+      if (!errorMessage) {
+        if (event == CONSTANTS.FINISHED_WORK_REASON_NAME) {
+          setUnderForestModalVisible(true);
+        } else {
+          props.onFinishExecutionPress();
+        }
       } else {
-        props.onFinishExecutionPress();
+        setEventError(errorMessage);
       }
-    } else {
-      setEventError(errorMessage);
+    } catch (err) {
+      ShowToast({
+        durationMs: 3000,
+        title: 'Erro inesperado',
+        message: err.message,
+        severity: SeverityEnum.ERROR,
+      });
+    } finally {
+      setRegisterEventInProgress(false);
     }
   }, [event, eventError, setUnderForestModalVisible]);
   return (

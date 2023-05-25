@@ -119,7 +119,7 @@ function ExecutionScreen(props: { navigation: any }) {
           setVelocity(responseDto.gps.speed);
         } catch (err) {
           ShowToast({
-            durationMs: 15000,
+            durationMs: 3000,
             title: 'Erro requisição',
             message: err.message,
             severity: SeverityEnum.ERROR,
