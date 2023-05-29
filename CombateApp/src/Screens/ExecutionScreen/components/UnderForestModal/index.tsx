@@ -6,7 +6,11 @@ import { Theme } from '../../../../app/theme/theme';
 import SelectInput from '../../../../Components/SelectInput';
 import { CONSTANTS } from '../../../../internal/config/config';
 
-function UnderForestModal(props: { isOpen: boolean; onClose: () => void; onOkPress: () => void }) {
+function UnderForestModal(props: {
+  isOpen: boolean;
+  onClose: () => void;
+  onOkPress: (underForest: string) => Promise<void>;
+}) {
   const [underForest, setUnderForest] = useState<string>();
   const [underForestError, setUnderForestError] = useState<string>();
 
@@ -17,11 +21,10 @@ function UnderForestModal(props: { isOpen: boolean; onClose: () => void; onOkPre
     [setUnderForest]
   );
 
-  const onFinishPressed = useCallback(() => {
-    //todo:call backend to register event
+  const onFinishPressed = useCallback(async () => {
     const errorMessage = Instance.GetInstance().validator.validateUnderForestForm(underForest);
     if (!errorMessage) {
-      props.onOkPress();
+      await props.onOkPress(underForest);
     } else {
       setUnderForestError(errorMessage);
     }

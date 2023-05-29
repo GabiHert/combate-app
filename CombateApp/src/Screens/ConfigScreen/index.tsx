@@ -358,7 +358,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         },
         FILE_PATH: filePath,
         POISON_TYPE: ptToDefaults.poison(poison).name,
-        LINES_SPACING: lineSpacing,
+        LINES_AMOUNT: lineSpacing,
         SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: metersBetweenDose },
       };
 
@@ -394,7 +394,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           cache.PRESETS.P6.DOSE_AMOUNT = preset6.doseAmount;
           cache.PRESETS.P6.NAME = preset6.name;
           cache.POISON_TYPE = poison;
-          cache.LINES_SPACING = lineSpacing;
+          cache.LINES_AMOUNT = lineSpacing;
           cache.FILE_PATH = filePath;
 
           await Instance.GetInstance().configCache.update(cache);

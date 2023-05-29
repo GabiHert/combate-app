@@ -35,7 +35,7 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
           doseWeightG: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G,
           event,
           maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
-          linesSpacing: Instance.GetInstance().configCache.getCache().LINES_SPACING,
+          linesSpacing: Instance.GetInstance().configCache.getCache().LINES_AMOUNT,
           plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
           poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
           project: Instance.GetInstance().preExecutionConfigCache.getCache().projectName,

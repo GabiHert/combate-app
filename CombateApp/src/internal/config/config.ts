@@ -152,7 +152,7 @@ export const DEFAULT_CONFIG: IConfigsProps = {
   PLOTS: {},
   FILE_PATH: 'CombateApp/Resultados',
   POISON_TYPE: poisonItems[0].name,
-  LINES_SPACING: 1,
+  LINES_AMOUNT: 1,
 };
 
 export const DEFAULT_PRE_EXECUTION_CONFIG: IPreExecutionConfigProps = {
