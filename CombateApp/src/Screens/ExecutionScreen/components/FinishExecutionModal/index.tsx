@@ -48,7 +48,7 @@ function FinishExecutionModal(props: {
         dose: { amount: 0 },
         doseWeightG: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G,
         event: CONSTANTS.FINISHED_WORK_REASON_NAME,
-        linesAmount: Instance.GetInstance().configCache.getCache().LINES_AMOUNT,
+        linesAmount: Instance.GetInstance().configCache.getCache().LINE_SPACING,
         maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
         plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
         poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,

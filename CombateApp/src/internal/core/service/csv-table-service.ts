@@ -25,29 +25,29 @@ export class CsvTableService implements PCsvTableService {
 
       const date = dateTimeFormatter.date(responseDto.gps.dateUTC);
       const time = dateTimeFormatter.time(responseDto.gps.dateUTC);
-      const data = [
-        '&',
-        requestDto.client,
-        requestDto.project,
-        requestDto.plot,
-        requestDto.tractorName,
-        requestDto.deviceName,
-        requestDto.poisonType,
-        (requestDto.doseWeightG * 1000).toString(),
-        requestDto.maxVelocity.toString(),
-        requestDto.weather,
-        requestDto.streetsAmount.toString(),
-        requestDto.linesAmount.toString(),
-        date,
-        time,
-        responseDto.errorCode,
-        requestDto.event,
-        requestDto.dose.amount.toString(),
-        responseDto.gps.status,
-        responseDto.gps.latitude.toString(),
-        responseDto.gps.longitude.toString(),
-        responseDto.gps.speed,
-      ];
+      const data = [];
+
+      data.push('&');
+      data.push(requestDto.client);
+      data.push(requestDto.project);
+      data.push(requestDto.plot);
+      data.push(requestDto.tractorName);
+      data.push(requestDto.deviceName);
+      data.push(requestDto.poisonType);
+      data.push((requestDto.doseWeightG * 1000).toString());
+      data.push(requestDto.maxVelocity.toString());
+      data.push(requestDto.weather);
+      data.push(requestDto.streetsAmount.toString());
+      data.push(requestDto.linesSpacing.toString());
+      data.push(date);
+      data.push(time);
+      data.push(responseDto.errorCode);
+      data.push(requestDto.event);
+      data.push(requestDto.dose.amount.toString());
+      data.push(responseDto.gps.status);
+      data.push(responseDto.gps.latitude.toString());
+      data.push(responseDto.gps.longitude.toString());
+      data.push(responseDto.gps.speed);
 
       this._rows.push(data);
 

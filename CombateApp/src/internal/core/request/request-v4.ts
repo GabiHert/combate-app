@@ -84,6 +84,24 @@ export class RequestV4 implements PRequest {
         throw new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.DOSE_AMOUNT_GREATER_THAN_10);
       }
 
+      if (!this._requestDto.linesSpacing) {
+        this._logger.warn({
+          event: 'RequestV4.validate',
+          details: 'Process warn',
+          warn: 'linesSpacing must be specified',
+        });
+        throw new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.LINE_SPACING_NOT_DEFINED);
+      }
+
+      if (this._requestDto.linesSpacing <= 0) {
+        this._logger.warn({
+          event: 'RequestV4.validate',
+          details: 'Process warn',
+          warn: 'linesSpacing should be grater than 0',
+        });
+        throw new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.LINE_SPACING_GREATER_THAN_0);
+      }
+
       this._logger.info({
         event: 'RequestV4.validate',
         details: 'Process finished',

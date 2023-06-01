@@ -5,8 +5,6 @@ import * as React from 'react';
 import { useWindowDimensions } from 'react-native';
 import 'react-native-get-random-values';
 import { appConfig } from './src/app/config/app-config';
-import { Instance } from './src/app/instance/instance';
-import { DEFAULT_PRE_EXECUTION_CONFIG } from './src/internal/config/config';
 import ConfigScreen from './src/Screens/ConfigScreen';
 import ExecutionScreen from './src/Screens/ExecutionScreen';
 import HomeScreen from './src/Screens/HomeScreen';
@@ -15,7 +13,7 @@ import PreExecutionScreen from './src/Screens/PreExecutionScreen';
 const Stack = createNativeStackNavigator();
 
 //Instance.GetInstance().configCache.update(DEFAULT_CONFIG);
-Instance.GetInstance().preExecutionConfigCache.update(DEFAULT_PRE_EXECUTION_CONFIG);
+//Instance.GetInstance().preExecutionConfigCache.update(DEFAULT_PRE_EXECUTION_CONFIG);
 export default function App() {
   appConfig.screen = {
     ...useWindowDimensions(),

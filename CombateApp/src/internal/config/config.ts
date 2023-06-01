@@ -60,6 +60,8 @@ export const CONSTANTS = {
       NOT_DEFINED: '',
       DOSE_AMOUNT_NOT_DEFINED: '',
       DOSE_AMOUNT_GREATER_THAN_10: '',
+      LINE_SPACING_NOT_DEFINED: '',
+      LINE_SPACING_GREATER_THAN_0: '',
     },
     BLUETOOTH_APP: {
       DEVICE_NOT_AVAILABLE: 'Dispositivo não disponível',
@@ -105,6 +107,7 @@ export const CONSTANTS = {
       INVALID_POISON_TYPE: 'ERRO',
       INVALID_FARMS: 'ERRO',
       INVALID_MAX_VELOCITY: 'ERRO',
+      INVALID_METERS_BETWEEN_DOSE: 'ERRO',
     },
     FINISH_EXECUTION_FORM: { INVALID_REASON: '' },
     UNDER_FOREST_FORM: { INVALID_UNDER_FOREST: '' },
@@ -152,7 +155,7 @@ export const DEFAULT_CONFIG: IConfigsProps = {
   PLOTS: {},
   FILE_PATH: 'CombateApp/Resultados',
   POISON_TYPE: poisonItems[0].name,
-  LINES_AMOUNT: 1,
+  LINE_SPACING: 1,
 };
 
 export const DEFAULT_PRE_EXECUTION_CONFIG: IPreExecutionConfigProps = {

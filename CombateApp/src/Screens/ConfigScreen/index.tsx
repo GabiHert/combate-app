@@ -67,7 +67,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     name: Instance.GetInstance().configCache.getCache().PRESETS.P6.NAME,
   });
   const [maxVelocity, setMaxVelocity] = useState<number>(1);
-  const [lineSpacing, setLineSpacing] = useState<number>(0);
+  const [lineSpacing, setLineSpacing] = useState<number>(1);
 
   const [errors, setErrors] = useState<IConfigFormResult>({
     valid: true,
@@ -93,6 +93,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     preset6Dose: { errorMessage: undefined },
     preset6Name: { errorMessage: undefined },
     lineSpacing: { errorMessage: undefined },
+    metersBetweenDose: { errorMessage: undefined },
     stopReasonEvent: { errorMessage: undefined },
     rightTankMaxLoad: { errorMessage: undefined },
   });
@@ -358,7 +359,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         },
         FILE_PATH: filePath,
         POISON_TYPE: ptToDefaults.poison(poison).name,
-        LINES_AMOUNT: lineSpacing,
+        LINE_SPACING: lineSpacing,
         SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: metersBetweenDose },
       };
 
@@ -394,7 +395,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           cache.PRESETS.P6.DOSE_AMOUNT = preset6.doseAmount;
           cache.PRESETS.P6.NAME = preset6.name;
           cache.POISON_TYPE = poison;
-          cache.LINES_AMOUNT = lineSpacing;
+          cache.LINE_SPACING = lineSpacing;
           cache.FILE_PATH = filePath;
 
           await Instance.GetInstance().configCache.update(cache);
@@ -762,7 +763,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             disabled={false}
             maxValue={10}
             minValue={0}
-            errorMessage={errors.lineSpacing.errorMessage}
+            errorMessage={errors.metersBetweenDose.errorMessage}
           />
           <Divider w="80%" />
 

@@ -162,7 +162,7 @@ export class Validator implements PValidator {
       });
     }
 
-    if (!data.farm || data.farm.length <= 2) {
+    if (!data.farm || data.farm.length < 2) {
       // farm is invalid
       result.valid = false;
       result.farm.errorMessage = CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_FARM;
@@ -313,6 +313,7 @@ export class Validator implements PValidator {
       preset2Dose: { errorMessage: undefined },
       preset2Name: { errorMessage: undefined },
       preset3Dose: { errorMessage: undefined },
+      metersBetweenDose: { errorMessage: undefined },
       preset3Name: { errorMessage: undefined },
       preset4Dose: { errorMessage: undefined },
       preset4Name: { errorMessage: undefined },
@@ -375,6 +376,21 @@ export class Validator implements PValidator {
         this._logger.warn({
           event: 'FormValidator.validateConfigForm',
           details: 'Process warn - Invalid MAX_VELOCITY',
+        });
+      }
+    }
+
+    if (data.SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE) {
+      if (
+        !data.SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE ||
+        data.SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE < 1
+      ) {
+        result.valid = false;
+        result.metersBetweenDose.errorMessage =
+          CONSTANTS.ERRORS.CONFIG_FORM.INVALID_METERS_BETWEEN_DOSE;
+        this._logger.warn({
+          event: 'FormValidator.validateConfigForm',
+          details: 'Process warn - Invalid INVALID_METERS_BETWEEN_DOSE',
         });
       }
     }

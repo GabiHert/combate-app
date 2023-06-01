@@ -17,6 +17,7 @@ export interface IConfigFormResult {
   preset4Dose: { errorMessage: string };
   preset5Dose: { errorMessage: string };
   preset6Dose: { errorMessage: string };
+  metersBetweenDose: { errorMessage: string };
   stopReasonEvent: { errorMessage: string };
   events: { errorMessage: string };
   farms: { errorMessage: string };

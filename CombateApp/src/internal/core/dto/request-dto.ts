@@ -15,7 +15,7 @@ export class RequestDto {
   maxVelocity: number;
   weather: string;
   streetsAmount: number;
-  linesAmount: number;
+  linesSpacing: number;
   constructor(args: IRequestDtoArgs) {
     this.event = args.event;
     this.dose = args.dose;
@@ -29,6 +29,6 @@ export class RequestDto {
     this.maxVelocity = args.maxVelocity;
     this.weather = args.weather;
     this.streetsAmount = args.streetsAmount;
-    this.linesAmount = args.linesSpacing;
+    this.linesSpacing = args.linesSpacing;
   }
 }
