@@ -9,7 +9,7 @@ import { PCbService } from '../../internal/core/port/cb-service-port';
 import { PCsvTableService } from '../../internal/core/port/csv-table-service-port';
 import { PLogger } from '../../internal/core/port/logger-port';
 import { ProtocolRules } from '../../internal/core/rules/protocol-rules';
-import { distanceCalculator } from '../../internal/core/utils/distance-caluclator';
+import { distanceCalculatorMeters } from '../../internal/core/utils/distance-caluclator';
 import { PCombateApp } from '../port/combate-app-port';
 
 export class CombateApp implements PCombateApp {
@@ -114,7 +114,7 @@ export class CombateApp implements PCombateApp {
       const velocity = Number(responseDto.gps.speed);
       let error: PError = undefined;
 
-      const distance = distanceCalculator(
+      const distance = distanceCalculatorMeters(
         this._latitude,
         this._longitude,
         responseDto.gps.latitude,
