@@ -30,8 +30,13 @@ function UnderForestModal(props: {
     }
   }, [underForest]);
 
+  const onClose = useCallback(() => {
+    setUnderForestError('');
+    props.onClose();
+  }, []);
+
   return (
-    <Modal isOpen={props.isOpen} onClose={props.onClose}>
+    <Modal isOpen={props.isOpen} onClose={onClose}>
       <Modal.Content maxWidth="500px" maxH={'500px'}>
         <Modal.CloseButton />
         <Modal.Header

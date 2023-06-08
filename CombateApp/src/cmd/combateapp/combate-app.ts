@@ -1,8 +1,10 @@
+import { PermissionsAndroid } from 'react-native';
+import { CONSTANTS } from '../../internal/config/config';
 import { RequestDto } from '../../internal/core/dto/request-dto';
 import { ResponseDto } from '../../internal/core/dto/response-dto';
 import { EventEnum } from '../../internal/core/enum/event';
 import { ProtocolVersion, ProtocolVersionEnum } from '../../internal/core/enum/protocol-version';
-import { PError } from '../../internal/core/error/error-port';
+import { PermissionsErrorType } from '../../internal/core/error/error-type';
 import { CbServiceFactory } from '../../internal/core/factory/cb-service-factory';
 import { RequestFactory } from '../../internal/core/factory/request-factory';
 import { PCbService } from '../../internal/core/port/cb-service-port';
@@ -39,6 +41,31 @@ export class CombateApp implements PCombateApp {
     this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
   }
 
+  async permissions() {
+    this._logger.info({
+      event: 'CombateApp.permissions',
+      details: 'Process started',
+    });
+
+    let granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      {
+        title: 'Pernissão para escrita de arquivos',
+        message: 'O aplicativo necessita desta autorização para realizar a escrita de arquivos.',
+        buttonNegative: 'Negar',
+        buttonPositive: 'OK',
+      }
+    );
+    if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+      throw new PermissionsErrorType(CONSTANTS.ERRORS.PERMISSIONS.WRITE_STORAGE_PERMISSION);
+    }
+
+    this._logger.info({
+      event: 'CombateApp.permissions',
+      details: 'Process finished',
+    });
+  }
+
   async begin(
     filePath: string,
     systematicMetersBetweenDose: number,
@@ -51,6 +78,7 @@ export class CombateApp implements PCombateApp {
       systematicMetersBetweenDose,
       doseCallback: doseCallback != undefined,
     });
+
     this._filePath = filePath;
     this._systematicMetersBetweenDose = systematicMetersBetweenDose;
     this._doseCallback = doseCallback;
@@ -112,7 +140,6 @@ export class CombateApp implements PCombateApp {
       });
 
       const velocity = Number(responseDto.gps.speed);
-      let error: PError = undefined;
 
       const distance = distanceCalculatorMeters(
         this._latitude,
@@ -133,8 +160,6 @@ export class CombateApp implements PCombateApp {
         systematicRequestDto.event = EventEnum.Systematic.name;
         await this.request(systematicRequestDto);
       }
-
-      if (error) throw error;
 
       this._logger.info({
         event: 'CombateApp._appRules',

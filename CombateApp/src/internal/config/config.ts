@@ -12,7 +12,7 @@ export const CONSTANTS = {
   MAX_DOSES: 20,
   MIN_DOSES: 1,
   FINISHED_WORK_REASON_NAME: 'Fim Operação',
-  REQUEST_INTERVAL_MS: 3000,
+  REQUEST_INTERVAL_MS: 3500,
   ACTIVITY_ITEMS: [
     { id: '0', name: 'Manutenção' },
     { id: '1', name: 'Pré-Plantio' },
@@ -42,6 +42,10 @@ export const CONSTANTS = {
   ],
   REQUEST: { HEADER: 'INF' },
   ERRORS: {
+    PERMISSIONS: {
+      WRITE_STORAGE_PERMISSION: 'Acesso de escrita em arquivos negado',
+      BLUETOOTH_CONNECT: 'Acesso de conexão Bluetooth negado',
+    },
     PLOT_FORM: {
       INVALID_PLOT: 'ERROR',
     },
@@ -55,13 +59,13 @@ export const CONSTANTS = {
       INVALID_STOP_REASON: 'ERROR',
     },
     REQUEST_V4: {
-      DOSE_AMOUNT_BELLOW_ZERO: '',
-      DOSE_NOT_DEFINED: 'ERR',
-      NOT_DEFINED: '',
-      DOSE_AMOUNT_NOT_DEFINED: '',
-      DOSE_AMOUNT_GREATER_THAN_10: '',
-      LINE_SPACING_NOT_DEFINED: '',
-      LINE_SPACING_GREATER_THAN_0: '',
+      DOSE_AMOUNT_BELLOW_ZERO: 'ERRO',
+      DOSE_NOT_DEFINED: 'ERRO',
+      NOT_DEFINED: 'ERRO',
+      DOSE_AMOUNT_NOT_DEFINED: 'ERRO',
+      DOSE_AMOUNT_GREATER_THAN_10: 'ERRO',
+      LINE_SPACING_NOT_DEFINED: 'ERRO',
+      LINE_SPACING_GREATER_THAN_0: 'ERRO',
     },
     BLUETOOTH_APP: {
       DEVICE_NOT_AVAILABLE: 'Dispositivo não disponível',
@@ -109,8 +113,8 @@ export const CONSTANTS = {
       INVALID_MAX_VELOCITY: 'ERRO',
       INVALID_METERS_BETWEEN_DOSE: 'ERRO',
     },
-    FINISH_EXECUTION_FORM: { INVALID_REASON: '' },
-    UNDER_FOREST_FORM: { INVALID_UNDER_FOREST: '' },
+    FINISH_EXECUTION_FORM: { INVALID_REASON: 'ERRO' },
+    UNDER_FOREST_FORM: { INVALID_UNDER_FOREST: 'ERRO' },
   },
 };
 

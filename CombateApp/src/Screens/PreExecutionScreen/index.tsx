@@ -25,6 +25,7 @@ import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
 import { CONSTANTS } from '../../internal/config/config';
 import { SeverityEnum } from '../../internal/core/enum/severity';
+import { dateTimeFormatter } from '../../internal/core/utils/date-time-formatter';
 import { IItem } from '../../internal/interface/item';
 
 function PreExecutionScreen(props: { navigation: any }) {
@@ -127,7 +128,44 @@ function PreExecutionScreen(props: { navigation: any }) {
     if (result.valid && deviceConnected) {
       await Instance.GetInstance().preExecutionConfigCache.update(data);
 
-      props.navigation.navigate('ExecutionScreen');
+      try {
+        const preExecutionConfigCache = Instance.GetInstance().preExecutionConfigCache.getCache();
+        const configCache = Instance.GetInstance().configCache.getCache();
+        const date = new Date();
+
+        let fileName =
+          preExecutionConfigCache.clientName +
+          '_' +
+          preExecutionConfigCache.projectName +
+          '_' +
+          preExecutionConfigCache.activity +
+          '_' +
+          preExecutionConfigCache.plot +
+          '_' +
+          preExecutionConfigCache.farm +
+          '_' +
+          dateTimeFormatter.date(date) +
+          '_' +
+          dateTimeFormatter.time(date) +
+          '.csv';
+
+        fileName = fileName.replace(/\//g, '-');
+        fileName = fileName.replace(/\:/g, '-');
+
+        await Instance.GetInstance().combateApp.begin(
+          fileName,
+          configCache.SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE
+        );
+
+        props.navigation.navigate('ExecutionScreen');
+      } catch (err) {
+        ShowToast({
+          durationMs: 3000,
+          title: 'Erro Begin',
+          message: err.message,
+          severity: SeverityEnum.ERROR,
+        });
+      }
     } else {
       setValidationResult(result);
       ShowToast({

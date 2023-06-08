@@ -7,6 +7,7 @@ import { Theme } from '../../../../app/theme/theme';
 import { ShowToast } from '../../../../Components/AlertToast';
 import SelectInput from '../../../../Components/SelectInput';
 import { CONSTANTS } from '../../../../internal/config/config';
+import { EventEnum } from '../../../../internal/core/enum/event';
 import { SeverityEnum } from '../../../../internal/core/enum/severity';
 import UnderForestModal from '../UnderForestModal';
 
@@ -26,19 +27,8 @@ function FinishExecutionModal(props: {
     setUnderForestModalVisible(false);
   }, [setUnderForestModalVisible]);
 
-  const onUnderForestModalOkPress = useCallback(
-    async (underForest: string) => {
-      try {
-        //todo: understand what must be done with underForest
-        setUnderForest(underForest);
-      } catch (err) {
-        ShowToast({
-          durationMs: 3000,
-          title: 'Erro requisição',
-          message: err.message,
-          severity: SeverityEnum.ERROR,
-        });
-      }
+  const onOkPress = useCallback(async () => {
+    try {
       setUnderForestModalVisible(false);
       setLoading(true);
       await Instance.GetInstance().combateApp.request({
@@ -47,8 +37,8 @@ function FinishExecutionModal(props: {
         deviceName: Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
         dose: { amount: 0 },
         doseWeightG: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G,
-        event: CONSTANTS.FINISHED_WORK_REASON_NAME,
-        linesAmount: Instance.GetInstance().configCache.getCache().LINE_SPACING,
+        event: EventEnum.EndTrackPoint.name,
+        linesSpacing: Instance.GetInstance().configCache.getCache().LINE_SPACING,
         maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
         plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
         poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
@@ -58,7 +48,41 @@ function FinishExecutionModal(props: {
         weather: Instance.GetInstance().preExecutionConfigCache.getCache().weather,
       });
       setLoading(false);
+    } catch (err) {
+      ShowToast({
+        durationMs: 3000,
+        title: 'Erro requisição',
+        message: err.message,
+        severity: SeverityEnum.ERROR,
+      });
+      setLoading(false);
+    }
+  }, []);
+
+  const onUnderForestModalOkPress = useCallback(
+    async (underForest: string) => {
+      setUnderForest(underForest);
+
+      setUnderForestModalVisible(false);
+      setLoading(true);
+      await Instance.GetInstance().combateApp.request({
+        applicatorsAmount: 0,
+        client: Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
+        deviceName: Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
+        dose: { amount: 0 },
+        doseWeightG: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G,
+        event: EventEnum.EndTrackPoint.name,
+        linesSpacing: Instance.GetInstance().configCache.getCache().LINE_SPACING,
+        maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
+        plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
+        poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
+        project: Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
+        streetsAmount: Instance.GetInstance().preExecutionConfigCache.getCache().streetsAmount,
+        tractorName: Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
+        weather: Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+      });
       props.onFinishExecutionPress();
+      setLoading(false);
     },
     [setUnderForest, setUnderForestModalVisible]
   );
@@ -71,6 +95,7 @@ function FinishExecutionModal(props: {
         if (event == CONSTANTS.FINISHED_WORK_REASON_NAME) {
           setUnderForestModalVisible(true);
         } else {
+          onOkPress();
           props.onFinishExecutionPress();
         }
       } else {
@@ -87,8 +112,14 @@ function FinishExecutionModal(props: {
       setRegisterEventInProgress(false);
     }
   }, [event, eventError, setUnderForestModalVisible]);
+
+  const onClose = useCallback(() => {
+    setEventError('');
+    props.onClose();
+  }, [setEventError]);
+
   return (
-    <Modal isOpen={props.isOpen} onClose={props.onClose}>
+    <Modal isOpen={props.isOpen} onClose={onClose}>
       <UnderForestModal
         isOpen={underForestModalVisible}
         onClose={onUnderForestModalClose}

@@ -29,3 +29,9 @@ export class WriteFileErrorType extends PError {
     super(message, 5);
   }
 }
+
+export class PermissionsErrorType extends PError {
+  constructor(message: string) {
+    super(message, 6);
+  }
+}

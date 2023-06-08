@@ -19,4 +19,6 @@ export interface PCombateApp {
     systematicMetersBetweenDose: number,
     doseCallback?: (done: number, target: number) => void
   ): Promise<void>;
+
+  permissions(): Promise<void>;
 }

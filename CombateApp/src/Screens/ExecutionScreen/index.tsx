@@ -95,6 +95,7 @@ function ExecutionScreen(props: { navigation: any }) {
   useFocusEffect(() => {
     const interval = setInterval(async () => {
       if (!doseInProgress) {
+        setDoseInProgress(true);
         try {
           const requestDto = new RequestDto({
             applicatorsAmount:
@@ -124,6 +125,8 @@ function ExecutionScreen(props: { navigation: any }) {
             message: err.message,
             severity: SeverityEnum.ERROR,
           });
+        } finally {
+          setDoseInProgress(false);
         }
       }
       const cache = Instance.GetInstance().preExecutionConfigCache.getCache();
@@ -197,16 +200,15 @@ function ExecutionScreen(props: { navigation: any }) {
           const applicatorsAmount =
             Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount;
           setAppliedDoses(_aux + amount * applicatorsAmount);
-
-          setDoseInProgress(false);
         } catch (err) {
-          setDoseInProgress(false);
           ShowToast({
-            durationMs: 1000,
+            durationMs: 3000,
             title: 'Erro requisição',
             message: err.message,
             severity: SeverityEnum.ERROR,
           });
+        } finally {
+          setDoseInProgress(false);
         }
       }
     },

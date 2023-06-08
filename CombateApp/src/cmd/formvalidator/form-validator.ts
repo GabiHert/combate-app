@@ -78,7 +78,13 @@ export class Validator implements PValidator {
       farm,
     });
     let result: string;
-    if (Validator.BasicStringValidation(farm)) result = CONSTANTS.ERRORS.FARM_FORM.INVALID_FARM;
+    if (!Validator.BasicStringValidation(farm)) result = CONSTANTS.ERRORS.FARM_FORM.INVALID_FARM;
+    if (result && result.length > 0) {
+      Instance.GetInstance().logger.warn({
+        event: 'FormValidator.validateFarmForm',
+        details: 'Process warn - invalid farm',
+      });
+    }
 
     Instance.GetInstance().logger.info({
       event: 'FormValidator.validateFarmForm',
@@ -94,8 +100,13 @@ export class Validator implements PValidator {
       Event: event,
     });
     let result: string;
-    if (Validator.BasicStringValidation(event)) result = CONSTANTS.ERRORS.EVENT_FORM.INVALID_EVENT;
-
+    if (!Validator.BasicStringValidation(event)) result = CONSTANTS.ERRORS.EVENT_FORM.INVALID_EVENT;
+    if (result && result.length > 0) {
+      Instance.GetInstance().logger.warn({
+        event: 'FormValidator.validateEventForm',
+        details: 'Process warn - invalid event',
+      });
+    }
     Instance.GetInstance().logger.info({
       event: 'FormValidator.validateEventForm',
       details: 'Process finished',
