@@ -1,11 +1,11 @@
-import { Button, Center, HStack, Stack, Text } from 'native-base';
+import { Button, Center, HStack, Stack } from 'native-base';
 import React, { memo, useCallback, useState } from 'react';
 import { appConfig } from '../../../../app/config/app-config';
 import { Instance } from '../../../../app/instance/instance';
 import { Theme } from '../../../../app/theme/theme';
 
 function PoisonAmountSelector(props: {
-  onPresetPressed: (amount: number, callback: () => void) => Promise<void>;
+  onPresetPressed: (amount: {NAME:string,DOSE_AMOUNT:number}, callback: () => void) => Promise<void>;
 }) {
   const [loadingButtons, setLoadingButtons] = useState({
     P1: false,
@@ -38,7 +38,7 @@ function PoisonAmountSelector(props: {
         P6: false,
       });
       await props.onPresetPressed(
-        Instance.GetInstance().configCache.getCache().PRESETS.P1.DOSE_AMOUNT,
+        Instance.GetInstance().configCache.getCache().PRESETS.P1,
         resetButtons
       );
     } catch (err) {
@@ -58,7 +58,7 @@ function PoisonAmountSelector(props: {
         P6: false,
       });
       await props.onPresetPressed(
-        Instance.GetInstance().configCache.getCache().PRESETS.P2.DOSE_AMOUNT,
+        Instance.GetInstance().configCache.getCache().PRESETS.P2,
         resetButtons
       );
     } catch (err) {
@@ -78,7 +78,7 @@ function PoisonAmountSelector(props: {
       });
 
       await props.onPresetPressed(
-        Instance.GetInstance().configCache.getCache().PRESETS.P3.DOSE_AMOUNT,
+        Instance.GetInstance().configCache.getCache().PRESETS.P3,
         resetButtons
       );
 
@@ -101,7 +101,7 @@ function PoisonAmountSelector(props: {
       });
 
       await props.onPresetPressed(
-        Instance.GetInstance().configCache.getCache().PRESETS.P4.DOSE_AMOUNT,
+        Instance.GetInstance().configCache.getCache().PRESETS.P4,
         resetButtons
       );
 
@@ -123,7 +123,7 @@ function PoisonAmountSelector(props: {
         P6: false,
       });
       await props.onPresetPressed(
-        Instance.GetInstance().configCache.getCache().PRESETS.P5.DOSE_AMOUNT,
+        Instance.GetInstance().configCache.getCache().PRESETS.P5,
         resetButtons
       );
 
@@ -145,7 +145,7 @@ function PoisonAmountSelector(props: {
         P6: true,
       });
       await props.onPresetPressed(
-        Instance.GetInstance().configCache.getCache().PRESETS.P6.DOSE_AMOUNT,
+        Instance.GetInstance().configCache.getCache().PRESETS.P6,
         resetButtons
       );
 
@@ -166,17 +166,6 @@ function PoisonAmountSelector(props: {
         justifyContent={'center'}
         height="95%"
       >
-        <Text
-          style={{
-            color: Theme().color.b500,
-            fontSize: Theme().font.size.m(appConfig.screen),
-            textAlign: 'center',
-          }}
-          position={'absolute'}
-          top={1}
-        >
-          Presets
-        </Text>
         <Stack
           direction={'column'}
           alignItems="center"
