@@ -6,7 +6,7 @@ import {
   HStack,
   IconButton,
   ScrollView,
-  VStack,
+  VStack
 } from 'native-base';
 import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -20,7 +20,7 @@ import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-
 import { Instance } from '../../app/instance/instance';
 import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 import { Theme } from '../../app/theme/theme';
-import { ShowToast, ShowToast as showToast } from '../../Components/AlertToast';
+import { ShowToast } from '../../Components/AlertToast';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
 import { CONSTANTS } from '../../internal/config/config';
@@ -96,12 +96,7 @@ function PreExecutionScreen(props: { navigation: any }) {
       const data = await Instance.GetInstance().bluetoothApp.getBondedDevices();
       setDevices(data);
     } catch (err) {
-      ShowToast({
-        durationMs: 3000,
-        title: 'Erro Bluetooth',
-        message: err.message,
-        severity: SeverityEnum.ERROR,
-      });
+      await Instance.GetInstance().errorHandler.handle(err);
     }
     setIsSearching(false);
   }, [devices]);
@@ -159,12 +154,7 @@ function PreExecutionScreen(props: { navigation: any }) {
 
         props.navigation.navigate('ExecutionScreen');
       } catch (err) {
-        ShowToast({
-          durationMs: 3000,
-          title: 'Erro Begin',
-          message: err.message,
-          severity: SeverityEnum.ERROR,
-        });
+        await Instance.GetInstance().errorHandler.handle(err);
       }
     } else {
       setValidationResult(result);
@@ -223,12 +213,7 @@ function PreExecutionScreen(props: { navigation: any }) {
         severity: SeverityEnum.OK,
       });
     } catch (err) {
-      showToast({
-        durationMs: 3000,
-        message: err.message,
-        title: 'Erro de conexão Bluetooth',
-        severity: SeverityEnum.ERROR,
-      });
+      await Instance.GetInstance().errorHandler.handle(err);
       setDeviceConnected(false);
     }
 
