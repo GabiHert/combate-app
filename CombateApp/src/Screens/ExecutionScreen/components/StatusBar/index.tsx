@@ -36,7 +36,7 @@ function StatusBar(props: {
           >
             {props.loadPercentageEnabled
               ? props.applicatorsLoadPercentage.left.percentage.toString() + '%'
-              : '?'}
+              : ' '}
           </Center>
         </Center>
         <Center
@@ -62,7 +62,7 @@ function StatusBar(props: {
           >
             {props.loadPercentageEnabled
               ? props.applicatorsLoadPercentage.center.percentage.toString() + '%'
-              : '?'}
+              : ' '}
           </Center>
         </Center>
         <Center
@@ -88,7 +88,7 @@ function StatusBar(props: {
           >
             {props.loadPercentageEnabled
               ? props.applicatorsLoadPercentage.right.percentage.toString() + '%'
-              : '?'}
+              : ' '}
           </Center>
         </Center>
       </HStack>
