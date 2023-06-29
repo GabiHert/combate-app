@@ -8,6 +8,7 @@ import { PBluetoothApp } from '../port/bluetooth-app-port';
 
 export class BluetoothApp implements PBluetoothApp {
   private _devices: Array<BluetoothDevice>;
+  private _deviceId:string
   constructor(private readonly _logger: PLogger, private readonly _bluetooth: PBluetooth) {}
 
   async init(): Promise<void> {
@@ -98,5 +99,9 @@ export class BluetoothApp implements PBluetoothApp {
 
       throw err;
     }
+  }
+
+  get deviceId(){
+    return this.deviceId;
   }
 }
