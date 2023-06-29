@@ -49,39 +49,34 @@ export class RequestV4 implements PRequest {
         });
         throw new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.NOT_DEFINED);
       }
-      if (!this._requestDto.dose) {
-        this._logger.warn({
-          event: 'RequestV4.validate',
-          details: 'Process warn',
-          warn: 'dose is undefined',
-        });
-        throw new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.NOT_DEFINED);
-      }
-      if (this._requestDto.dose.amount == undefined) {
-        this._logger.warn({
-          event: 'RequestV4.validate',
-          details: 'Process warn',
-          warn: 'dose amount is undefined',
-        });
-        throw new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.DOSE_AMOUNT_NOT_DEFINED);
-      }
+      if (this._requestDto.dose) {
+        if (this._requestDto.dose.amount == undefined) {
+          this._logger.warn({
+            event: 'RequestV4.validate',
+            details: 'Process warn',
+            warn: 'dose amount is undefined',
+          });
+          throw new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.DOSE_AMOUNT_NOT_DEFINED);
+        }
+  
+        if (this._requestDto.dose.amount < 0) {
+          this._logger.warn({
+            event: 'RequestV4.validate',
+            details: 'Process warn',
+            warn: 'dose amount is < 0',
+          });
+          throw new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.DOSE_AMOUNT_BELLOW_ZERO);
+        }
+  
+        if (this._requestDto.dose.amount > 10) {
+          this._logger.warn({
+            event: 'RequestV4.validate',
+            details: 'Process warn',
+            warn: 'dose amount is > 10',
+          });
+          throw new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.DOSE_AMOUNT_GREATER_THAN_10);
+        }
 
-      if (this._requestDto.dose.amount < 0) {
-        this._logger.warn({
-          event: 'RequestV4.validate',
-          details: 'Process warn',
-          warn: 'dose amount is < 0',
-        });
-        throw new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.DOSE_AMOUNT_BELLOW_ZERO);
-      }
-
-      if (this._requestDto.dose.amount > 10) {
-        this._logger.warn({
-          event: 'RequestV4.validate',
-          details: 'Process warn',
-          warn: 'dose amount is > 10',
-        });
-        throw new ValidationErrorType(CONSTANTS.ERRORS.REQUEST_V4.DOSE_AMOUNT_GREATER_THAN_10);
       }
 
       if (!this._requestDto.linesSpacing) {
@@ -122,7 +117,8 @@ export class RequestV4 implements PRequest {
       request: this._requestDto,
     });
     let doseAmount: string;
-    if (this._requestDto.dose.amount) {
+ 
+    if (this._requestDto.dose && this._requestDto.dose.amount) {
       if (this._requestDto.dose.amount == 10) {
         doseAmount = '0';
       } else {
