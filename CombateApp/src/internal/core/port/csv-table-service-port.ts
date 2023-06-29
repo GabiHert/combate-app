@@ -2,9 +2,9 @@ import { RequestDto } from '../dto/request-dto';
 import { ResponseDto } from '../dto/response-dto';
 
 export interface PCsvTableService {
-  insert(requestDto: RequestDto, responseDto: ResponseDto): { column: number; row: number };
+  begin(path:string):Promise<void>
 
-  erase(line: number, row: number): void;
+  insert(path:string,requestDto: RequestDto, responseDto: ResponseDto):Promise<void>
 
-  save(path: string): Promise<void>;
+  create(path: string):Promise<void>;
 }

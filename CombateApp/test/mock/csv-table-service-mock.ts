@@ -1,7 +1,6 @@
 import { RequestDto } from '../../src/internal/core/dto/request-dto';
 import { ResponseDto } from '../../src/internal/core/dto/response-dto';
-import { Event } from '../../src/internal/core/enum/event';
-import { WriteFileErrorType } from '../../src/internal/core/error/error-type';
+import { FileSystemErrorType } from '../../src/internal/core/error/error-type';
 import { PCsvTableService } from '../../src/internal/core/port/csv-table-service-port';
 
 export class CsvTableServiceMock implements PCsvTableService {
@@ -30,7 +29,7 @@ export class CsvTableServiceMock implements PCsvTableService {
   async save(path: string): Promise<void> {
     this.saveCalled++;
     if (this.saveError) {
-      throw new WriteFileErrorType(this.saveError);
+      throw new FileSystemErrorType(this.saveError);
     }
   }
 }

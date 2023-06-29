@@ -82,7 +82,7 @@ export class CombateApp implements PCombateApp {
     this._filePath = filePath;
     this._systematicMetersBetweenDose = systematicMetersBetweenDose;
     this._doseCallback = doseCallback;
-    await this._csvTableService.save(this._filePath);
+    await this._csvTableService.begin(this._filePath);
     this._logger.info({
       event: 'CombateApp.begin',
       details: 'Process finished',
@@ -106,13 +106,9 @@ export class CombateApp implements PCombateApp {
 
       const responseDto = await this._cbService.request(request, this._doseCallback);
 
-      this._csvTableService.insert(requestDto, responseDto);
+      await this._csvTableService.insert(this._filePath,requestDto, responseDto);
 
       await this._appRules(responseDto, requestDto);
-
-      if (requestDto.event === EventEnum.EndTrackPoint.name) {
-        await this._csvTableService.save(this._filePath);
-      }
 
       this._logger.info({
         event: 'CombateApp.request',

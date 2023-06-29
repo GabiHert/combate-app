@@ -1,20 +1,88 @@
+import { weatherToPtWeather } from '../../../app/parser/weather-to-pt-weather';
 import { RequestDto } from '../dto/request-dto';
 import { ResponseDto } from '../dto/response-dto';
 import { PCsvTableService } from '../port/csv-table-service-port';
 import { PFileSystem } from '../port/file-system-port';
 import { PLogger } from '../port/logger-port';
 import { dateTimeFormatter } from '../utils/date-time-formatter';
-
+interface Fields {
+  Cliente: string;
+  Projeto: string;
+  Talhao: string;
+  Maquina: string;
+  CB: string;
+  DosesTotais: string;
+  TipoIsca: string;
+  PesoG: string;
+  VelocidadeMaxima: string;
+  Clima: string;
+  Ruas: string;
+  Linhas: string;
+  Data: string;
+  Hora: string;
+  Erro: string;
+  Alerta: string;
+  Evento: string;
+  Latitude: string;
+  Longitude: string;
+  VelocidadeKmH: string;
+}
 export class CsvTableService implements PCsvTableService {
-  private _rows: Array<Array<string>>;
   constructor(private readonly _logger: PLogger, private readonly _fileSystem: PFileSystem) {
-    this._rows = [
-      '&,CLIENTE,PROJETO,TALHAO,MAQUINA,CB4,ISCA,PESO g, VEL MAX,CLIMA,RUAS,LINHAS,DATA,HORA,ERRO,EVENTO,ISCAS,TIME UTC,NRW,LAT-WGS84,LON-WGS84,SPEED KNOTS'.split(
-        ','
-      ),
-    ];
+    
   }
-  insert(requestDto: RequestDto, responseDto: ResponseDto): { column: number; row: number } {
+  async begin(path: string): Promise<void> {
+    try {
+      this._logger.info({
+        event: 'CsvTableService.insert',
+        details: 'Process started',
+        path,
+        
+      });
+
+      const fields :Fields= {
+        Cliente: "",
+        Projeto: "",
+        Talhao: "",
+        Maquina: "",
+        CB: "",
+        DosesTotais: "",
+        TipoIsca: "",
+        PesoG:"",
+        VelocidadeMaxima: "",
+        Clima: "",
+        Ruas: "",
+        Linhas: "",
+        Data: "",
+        Hora: "",
+        Erro: "",
+        Alerta:"" ,
+        Evento: "",
+        Latitude:"",
+        Longitude: "",
+        VelocidadeKmH: "",
+      };
+      
+      let data = []
+      Object.keys(fields).forEach((key)=>{
+          data.push(key)    
+       })
+
+       data.push('\n');
+
+      await this._fileSystem.write(data.join(","),path)
+      
+      this._logger.info({ event: 'CsvTableService.insert', details: 'Process finished' });
+    } catch (err) {
+      this._logger.error({
+        event: 'CsvTableService.insert',
+        details: 'Process error',
+        error: err.message,
+      });
+
+      throw err;
+    }  }
+  async insert(path:string,requestDto: RequestDto, responseDto: ResponseDto):Promise<void> {
     try {
       this._logger.info({
         event: 'CsvTableService.insert',
@@ -25,35 +93,58 @@ export class CsvTableService implements PCsvTableService {
 
       const date = dateTimeFormatter.date(responseDto.gps.dateUTC);
       const time = dateTimeFormatter.time(responseDto.gps.dateUTC);
-      const data = [];
 
-      data.push('&');
-      data.push(requestDto.client);
-      data.push(requestDto.project);
-      data.push(requestDto.plot);
-      data.push(requestDto.tractorName);
-      data.push(requestDto.deviceName);
-      data.push(requestDto.poisonType);
-      data.push((requestDto.doseWeightG * 1000).toString());
-      data.push(requestDto.maxVelocity.toString());
-      data.push(requestDto.weather);
-      data.push(requestDto.streetsAmount.toString());
-      data.push(requestDto.linesSpacing.toString());
-      data.push(date);
-      data.push(time);
-      data.push(responseDto.errorCode);
-      data.push(requestDto.event);
-      data.push(requestDto.dose.amount.toString());
-      data.push(responseDto.gps.status);
-      data.push(responseDto.gps.latitude.toString());
-      data.push(responseDto.gps.longitude.toString());
-      data.push(responseDto.gps.speed);
+      let doseAmount = 0;
+      if(requestDto.dose&&requestDto.dose.amount){
+        if (requestDto.dose.centerApplicator) {
+          doseAmount += requestDto.dose.amount;
+        }
+        if (requestDto.dose.leftApplicator) {
+          doseAmount += requestDto.dose.amount;
+        }
+        if (requestDto.dose.rightApplicator) {
+          doseAmount += requestDto.dose.amount;
+        }
+        if(!requestDto.dose.rightApplicator&&!requestDto.dose.leftApplicator&&!requestDto.dose.centerApplicator){
+          doseAmount = requestDto.dose.amount;
+        }
+      }else{
+        requestDto.dose = {amount:0}
+      }
 
-      this._rows.push(data);
+      const fields :Fields= {
+        Cliente: requestDto.client,
+        Projeto: requestDto.project,
+        Talhao: requestDto.plot,
+        Maquina: requestDto.tractorName,
+        CB: requestDto.deviceName,
+        DosesTotais: doseAmount.toString(),
+        TipoIsca: requestDto.poisonType,
+        PesoG:requestDto.doseWeightG.toString(),
+        VelocidadeMaxima: requestDto.maxVelocity.toString(),
+        Clima: weatherToPtWeather(requestDto.weather),
+        Ruas: requestDto.streetsAmount.toString(),
+        Linhas: requestDto.linesSpacing.toString(),
+        Data: date,
+        Hora: time,
+        Erro: responseDto.errorCode,
+        Alerta:requestDto.alert ,
+        Evento: requestDto.event,
+        Latitude:responseDto.gps.latitude.toString(),
+        Longitude: responseDto.gps.latitude.toString(),
+        VelocidadeKmH: responseDto.gps.speed,
+      };
+      
+      let data = []
+      Object.keys(fields).forEach((key)=>{
+        data.push(fields[key])  
+       })
 
-      const result = { row: 0, column: 0 };
-      this._logger.info({ event: 'CsvTableService.insert', details: 'Process finished', result });
-      return result;
+       data.push('\n')
+
+      await this._fileSystem.write(data.join(","),path)
+      
+      this._logger.info({ event: 'CsvTableService.insert', details: 'Process finished' });
     } catch (err) {
       this._logger.error({
         event: 'CsvTableService.insert',
@@ -64,35 +155,21 @@ export class CsvTableService implements PCsvTableService {
       throw err;
     }
   }
-  erase(column: number, row: number): void {
-    this._logger.info({
-      event: 'CsvTableService.erase',
-      details: 'Process started',
-      column,
-      row,
-    });
-    this._rows[row][column] = '';
-    this._logger.info({ event: 'CsvTableService.erase', details: 'Process finished' });
-  }
-  async save(path: string): Promise<void> {
+
+  async create(path: string): Promise<void> {
     try {
       this._logger.info({
-        event: 'CsvTableService.save',
+        event: 'CsvTableService.create',
         details: 'Process started',
         path,
       });
 
-      let data = '';
-      this._rows.forEach((column) => {
-        data += column.join() + '\n';
-      });
+      await this._fileSystem.create(path);
 
-      await this._fileSystem.write(data, path);
-
-      this._logger.info({ event: 'CsvTableService.save', details: 'Process finished' });
+      this._logger.info({ event: 'CsvTableService.create', details: 'Process finished' });
     } catch (err) {
       this._logger.error({
-        event: 'CsvTableService.save',
+        event: 'CsvTableService.create',
         details: 'Process error',
         error: err.message,
       });

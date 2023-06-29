@@ -3,7 +3,7 @@ import { RequestDto } from '../../../../src/internal/core/dto/request-dto';
 import { ResponseDto } from '../../../../src/internal/core/dto/response-dto';
 import { EventEnum } from '../../../../src/internal/core/enum/event';
 import { StatusEnum } from '../../../../src/internal/core/enum/status';
-import { WriteFileErrorType } from '../../../../src/internal/core/error/error-type';
+import { FileSystemErrorType } from '../../../../src/internal/core/error/error-type';
 import { CsvTableService } from '../../../../src/internal/core/service/csv-table-service';
 import { dateTimeFormatter } from '../../../../src/internal/core/utils/date-time-formatter';
 import { IGpsData } from '../../../../src/internal/interface/gps-data';
@@ -113,7 +113,7 @@ describe('csv-table-service test', () => {
     const errorMessage = v4();
     fileSystemMocked.writeError = errorMessage;
     await expect(async () => csvTableService.save('')).rejects.toThrow(
-      new WriteFileErrorType(errorMessage)
+      new FileSystemErrorType(errorMessage)
     );
     expect(loggerMocked.infoCalled).toBeGreaterThanOrEqual(1);
     expect(loggerMocked.warnCalled).toBe(0);
@@ -121,4 +121,5 @@ describe('csv-table-service test', () => {
   });
 });
 
-export {};
+export { };
+

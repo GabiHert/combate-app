@@ -15,8 +15,8 @@ export class AFileSystem implements PFileSystem {
         path: fileName,
       });
 
-      await RNFS.writeFile(fileName, data, 'utf8');
-
+      await RNFS.write(fileName, data);
+      
       this._logger.info({ event: 'AFileSystem.write', details: 'Process finished' });
     } catch (err) {
       this._logger.error({
@@ -27,7 +27,27 @@ export class AFileSystem implements PFileSystem {
       throw err;
     }
   }
-  create(path: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async create(fileName: string): Promise<void> {
+    try {
+      fileName = RNFS.DownloadDirectoryPath + '/' + fileName;
+
+      this._logger.info({
+        event: 'AFileSystem.create',
+        details: 'Process started',
+        path: fileName,
+      });
+
+      await RNFS.writeFile(fileName,"");
+
+      this._logger.info({ event: 'AFileSystem.create', details: 'Process finished' });
+    } catch (err) {
+      this._logger.error({
+        event: 'AFileSystem.create',
+        details: 'Process error',
+        error: err.message,
+      });
+      throw err;
+    }
+
   }
 }
