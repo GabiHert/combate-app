@@ -4,10 +4,8 @@ import { appConfig } from '../../../../app/config/app-config';
 import { Instance } from '../../../../app/instance/instance';
 import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
 import { Theme } from '../../../../app/theme/theme';
-import { ShowToast } from '../../../../Components/AlertToast';
 import SelectInput from '../../../../Components/SelectInput';
 import { RequestDto } from '../../../../internal/core/dto/request-dto';
-import { SeverityEnum } from '../../../../internal/core/enum/severity';
 
 function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
   const [event, setEvent] = useState<string>();
@@ -50,12 +48,7 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
         props.onClose();
       }
     } catch (err) {
-      ShowToast({
-        durationMs: 3000,
-        title: 'Erro requisição',
-        message: err.message,
-        severity: SeverityEnum.ERROR,
-      });
+      await Instance.GetInstance().errorHandler.handle(err)
     } finally {
       setRegisterEventInProgress(false);
     }

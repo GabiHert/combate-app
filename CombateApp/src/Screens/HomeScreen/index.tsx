@@ -6,10 +6,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { appConfig } from '../../app/config/app-config';
 import { Instance } from '../../app/instance/instance';
 import { Theme } from '../../app/theme/theme';
-import { ShowToast } from '../../Components/AlertToast';
 import LoginModal from '../../Components/LoginModal';
 import { CONSTANTS } from '../../internal/config/config';
-import { SeverityEnum } from '../../internal/core/enum/severity';
 const backgroundImage = require('../../app/assets/homebackground.png');
 const combate = require('../../app/assets/COMBATE.png');
 
@@ -28,12 +26,7 @@ function HomeScreen(props: { navigation: any; route: any }) {
       try {
         await Instance.GetInstance().combateApp.permissions();
       } catch (err) {
-        ShowToast({
-          durationMs: 3000,
-          title: 'Erro Begin',
-          message: err.message,
-          severity: SeverityEnum.ERROR,
-        });
+        await Instance.GetInstance().errorHandler.handle(err);
       }
     };
     execute();

@@ -16,9 +16,11 @@ import { CbServiceFactory } from '../../internal/core/factory/cb-service-factory
 import { RequestFactory } from '../../internal/core/factory/request-factory';
 import { ResponseDtoParser } from '../../internal/core/parser/response-dto-parser';
 import { PCache } from '../../internal/core/port/cache-port';
+import { PErrorHandlerService } from '../../internal/core/port/error-handler-service-port';
 import { PLogger } from '../../internal/core/port/logger-port';
 import { ProtocolRules } from '../../internal/core/rules/protocol-rules';
 import { CsvTableService } from '../../internal/core/service/csv-table-service';
+import { ErrorHandlerService } from '../../internal/core/service/error-handler-service';
 import { IConfigsProps, IPreExecutionConfigProps } from '../../internal/interface/config-props';
 
 export class Instance {
@@ -28,7 +30,9 @@ export class Instance {
   readonly bluetoothApp: PBluetoothApp;
   readonly validator: PValidator;
   readonly preExecutionConfigCache: PCache<IPreExecutionConfigProps>;
+  readonly errorHandler:PErrorHandlerService;
   private _connectedDeviceId: string;
+  
 
   getConnectedDeviceId(): string {
     return this._connectedDeviceId;
@@ -72,5 +76,6 @@ export class Instance {
       repository,
       DEFAULT_PRE_EXECUTION_CONFIG
     );
+   this.errorHandler= new ErrorHandlerService(this.logger,this.bluetoothApp);
   }
 }

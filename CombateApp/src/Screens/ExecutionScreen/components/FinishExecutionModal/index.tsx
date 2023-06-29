@@ -4,11 +4,9 @@ import { appConfig } from '../../../../app/config/app-config';
 import { Instance } from '../../../../app/instance/instance';
 import { mapStringToItemArray } from '../../../../app/parser/map-string-to-item-array';
 import { Theme } from '../../../../app/theme/theme';
-import { ShowToast } from '../../../../Components/AlertToast';
 import SelectInput from '../../../../Components/SelectInput';
 import { CONSTANTS } from '../../../../internal/config/config';
 import { EventEnum } from '../../../../internal/core/enum/event';
-import { SeverityEnum } from '../../../../internal/core/enum/severity';
 import UnderForestModal from '../UnderForestModal';
 
 function FinishExecutionModal(props: {
@@ -32,10 +30,10 @@ function FinishExecutionModal(props: {
       setUnderForestModalVisible(false);
       setLoading(true);
       await Instance.GetInstance().combateApp.request({
-        applicatorsAmount: 0,
+        applicatorsAmount:
+        Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount,
         client: Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
         deviceName: Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
-        dose: { amount: 0 },
         doseWeightG: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G,
         event: EventEnum.EndTrackPoint.name,
         linesSpacing: Instance.GetInstance().configCache.getCache().LINE_SPACING,
@@ -49,12 +47,7 @@ function FinishExecutionModal(props: {
       });
       setLoading(false);
     } catch (err) {
-      ShowToast({
-        durationMs: 3000,
-        title: 'Erro requisição',
-        message: err.message,
-        severity: SeverityEnum.ERROR,
-      });
+      await Instance.GetInstance().errorHandler.handle(err)
       setLoading(false);
     }
   }, []);
@@ -64,30 +57,12 @@ function FinishExecutionModal(props: {
       setUnderForest(underForest);
 
       setUnderForestModalVisible(false);
-      setLoading(true);
-      await Instance.GetInstance().combateApp.request({
-        applicatorsAmount: 0,
-        client: Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
-        deviceName: Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
-        dose: { amount: 0 },
-        doseWeightG: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G,
-        event: EventEnum.EndTrackPoint.name,
-        linesSpacing: Instance.GetInstance().configCache.getCache().LINE_SPACING,
-        maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
-        plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
-        poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
-        project: Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
-        streetsAmount: Instance.GetInstance().preExecutionConfigCache.getCache().streetsAmount,
-        tractorName: Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
-        weather: Instance.GetInstance().preExecutionConfigCache.getCache().weather,
-      });
-      props.onFinishExecutionPress();
-      setLoading(false);
+     await onOkPress()
     },
     [setUnderForest, setUnderForestModalVisible]
   );
 
-  const onFinishPressed = useCallback(() => {
+  const onFinishPressed = useCallback(async () =>{
     try {
       setRegisterEventInProgress(true);
       const errorMessage = Instance.GetInstance().validator.validateFinishExecutionForm(event);
@@ -95,19 +70,14 @@ function FinishExecutionModal(props: {
         if (event == CONSTANTS.FINISHED_WORK_REASON_NAME) {
           setUnderForestModalVisible(true);
         } else {
-          onOkPress();
+          await onOkPress();
           props.onFinishExecutionPress();
         }
       } else {
         setEventError(errorMessage);
       }
     } catch (err) {
-      ShowToast({
-        durationMs: 3000,
-        title: 'Erro inesperado',
-        message: err.message,
-        severity: SeverityEnum.ERROR,
-      });
+      await Instance.GetInstance().errorHandler.handle(err)
     } finally {
       setRegisterEventInProgress(false);
     }

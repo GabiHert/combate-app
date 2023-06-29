@@ -7,7 +7,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { appConfig } from '../../app/config/app-config';
 import { Instance } from '../../app/instance/instance';
 import { Theme } from '../../app/theme/theme';
-import { ShowToast } from '../../Components/AlertToast';
 import { CONSTANTS } from '../../internal/config/config';
 import { RequestDto } from '../../internal/core/dto/request-dto';
 import { EventEnum } from '../../internal/core/enum/event';
@@ -24,8 +23,8 @@ function ExecutionScreen(props: { navigation: any }) {
   const spaceBetweenBlocksHeight = 3;
   const snapPoints = [40, appConfig.screen.height / 2];
   let handleSheetChanges: any;
-  const [velocity, setVelocity] = useState<string>('?');
-  const [doseInProgress, setDoseInProgress] = useState<boolean>(false);
+  const [velocity, setVelocity] = useState<string>(' ');
+  const [requestOnProgress, setRequestOnProgress] = useState<boolean>(false);
 
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState(
     Instance.GetInstance().preExecutionConfigCache.getCache().leftApplicatorLoad
@@ -94,8 +93,8 @@ function ExecutionScreen(props: { navigation: any }) {
 
   useFocusEffect(() => {
     const interval = setInterval(async () => {
-      if (!doseInProgress) {
-        setDoseInProgress(true);
+      if (!requestOnProgress) {
+        setRequestOnProgress(true);
         try {
           const requestDto = new RequestDto({
             applicatorsAmount:
@@ -119,14 +118,9 @@ function ExecutionScreen(props: { navigation: any }) {
           const responseDto = await Instance.GetInstance().combateApp.request(requestDto);
           setVelocity(responseDto.gps.speed);
         } catch (err) {
-          ShowToast({
-            durationMs: 3000,
-            title: 'Erro requisição',
-            message: err.message,
-            severity: SeverityEnum.ERROR,
-          });
+          await Instance.GetInstance().errorHandler.handle(err)
         } finally {
-          setDoseInProgress(false);
+          setRequestOnProgress(false);
         }
       }
       const cache = Instance.GetInstance().preExecutionConfigCache.getCache();
@@ -171,9 +165,9 @@ function ExecutionScreen(props: { navigation: any }) {
   );
 
   const processDose = useCallback(
-    async (amount: number) => {
-      if (!doseInProgress) {
-        setDoseInProgress(true);
+    async (preset: {NAME:string, DOSE_AMOUNT:number}) => {
+      if (!requestOnProgress) {
+        setRequestOnProgress(true);
         try {
           const requestDto = new RequestDto({
             applicatorsAmount:
@@ -181,7 +175,7 @@ function ExecutionScreen(props: { navigation: any }) {
             client: Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
             deviceName: Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
             doseWeightG: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G,
-            event: EventEnum.TrackPoint.name,
+            event: preset.NAME,
             maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
             linesSpacing: Instance.GetInstance().configCache.getCache().LINE_SPACING,
             plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
@@ -191,7 +185,7 @@ function ExecutionScreen(props: { navigation: any }) {
             tractorName: Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
             weather: Instance.GetInstance().preExecutionConfigCache.getCache().weather,
             dose: {
-              amount,
+              amount:preset.DOSE_AMOUNT,
             },
           });
           const responseDto = await Instance.GetInstance().combateApp.request(requestDto);
@@ -199,24 +193,20 @@ function ExecutionScreen(props: { navigation: any }) {
           const _aux = !appliedDoses ? 0 : appliedDoses;
           const applicatorsAmount =
             Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount;
-          setAppliedDoses(_aux + amount * applicatorsAmount);
+          setAppliedDoses(_aux + preset.DOSE_AMOUNT * applicatorsAmount);
         } catch (err) {
-          ShowToast({
-            durationMs: 3000,
-            title: 'Erro requisição',
-            message: err.message,
-            severity: SeverityEnum.ERROR,
-          });
+          await Instance.GetInstance().errorHandler.handle(err)
+
         } finally {
-          setDoseInProgress(false);
+          setRequestOnProgress(false);
         }
       }
     },
-    [doseInProgress, appliedDoses]
+    [requestOnProgress, appliedDoses]
   );
 
   const onPresetPressed = useCallback(
-    async (value: number, callback: () => void) => {
+    async (value: {NAME:string, DOSE_AMOUNT:number}, callback: () => void) => {
       await processDose(value);
       callback();
     },

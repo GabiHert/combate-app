@@ -414,12 +414,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         }
       }
     } catch (err) {
-      ShowToast({
-        title: 'Erro ao salvar alterações',
-        severity: SeverityEnum.ERROR,
-        message: err.message,
-        durationMs: 2000,
-      });
+     await Instance.GetInstance().errorHandler.handle(err)
     }
   }, [
     doseWeightG,
@@ -777,8 +772,8 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <SlideInput
             onChangeEnd={setMetersBetweenDose}
             step={1}
-            title={'Metros entre cada dose'}
-            unit={'metros'}
+            title={'Velocidade máxima permitida'}
+            unit={'Km/h'}
             defaultValue={Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY}
             disabled={false}
             maxValue={20}
