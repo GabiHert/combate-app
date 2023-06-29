@@ -18,13 +18,7 @@ export class InvalidGpsDataErrorType extends PError {
   }
 }
 
-export class RequestTimeoutErrorType extends PError {
-  constructor(message: string) {
-    super(message, 4);
-  }
-}
-
-export class WriteFileErrorType extends PError {
+export class FileSystemErrorType extends PError {
   constructor(message: string) {
     super(message, 5);
   }
