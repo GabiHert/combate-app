@@ -8,8 +8,11 @@ import { timeout } from '../../core/utils/timeout';
 
 export class ABluetooth implements PBluetooth {
   private _device: BluetoothDevice;
+  private inProgress:boolean
 
-  constructor(private readonly _logger: PLogger) {}
+  constructor(private readonly _logger: PLogger) {
+    this.inProgress = false;
+  }
 
   private async _healthCheck(): Promise<void> {
     if (!this._device) {
@@ -225,9 +228,18 @@ export class ABluetooth implements PBluetooth {
           details: 'data is about to be written',
         });
 
+          while(this.inProgress){
+            this._logger.info({
+              event: 'ABluetooth.write',
+              details: 'waiting concurrent progress',
+            });
+          }
+          
         let count = 0;
         do {
+          this.inProgress = true;
           const result = await this._device.write(data, 'ascii');
+
           if (result) break;
           count++;
         } while (count < CONSTANTS.APPLICATION.BLUETOOTH_WRITE_RETRIES);
@@ -253,6 +265,8 @@ export class ABluetooth implements PBluetooth {
       });
 
       throw err;
+    }finally{
+      this.inProgress = false;
     }
   }
 
