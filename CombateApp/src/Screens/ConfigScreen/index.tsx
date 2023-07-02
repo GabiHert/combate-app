@@ -1,11 +1,10 @@
 import { Box, Button, Divider, FormControl, ScrollView, VStack } from 'native-base';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { v1 } from 'uuid';
 import { appConfig } from '../../app/config/app-config';
 import { Instance } from '../../app/instance/instance';
 import { itemArrayToMapString } from '../../app/parser/item-array-to-map-string';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
-import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 import { Theme } from '../../app/theme/theme';
 import { Validator } from '../../cmd/formvalidator/form-validator';
 import { ShowToast } from '../../Components/AlertToast';
@@ -41,6 +40,11 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const [metersBetweenDose, setMetersBetweenDose] = useState<number>(
     Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE
   );
+
+  useEffect(()=>{
+
+  },[metersBetweenDose])
+
   const [filePath, setFilePath] = useState(Instance.GetInstance().configCache.getCache().FILE_PATH);
   const [preset1, setPreset1] = useState<IPreset>({
     doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P1.DOSE_AMOUNT,
@@ -66,8 +70,8 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P6.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P6.NAME,
   });
-  const [maxVelocity, setMaxVelocity] = useState<number>(1);
-  const [lineSpacing, setLineSpacing] = useState<number>(1);
+  const [maxVelocity, setMaxVelocity] = useState<number>(Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY);
+  const [lineSpacing, setLineSpacing] = useState<number>(Instance.GetInstance().configCache.getCache().LINE_SPACING);
 
   const [errors, setErrors] = useState<IConfigFormResult>({
     valid: true,
@@ -358,7 +362,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           P6: { NAME: preset6.name, DOSE_AMOUNT: preset6.doseAmount },
         },
         FILE_PATH: filePath,
-        POISON_TYPE: ptToDefaults.poison(poison).name,
+        POISON_TYPE: poison,
         LINE_SPACING: lineSpacing,
         SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: metersBetweenDose },
       };
@@ -396,6 +400,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           cache.PRESETS.P6.NAME = preset6.name;
           cache.POISON_TYPE = poison;
           cache.LINE_SPACING = lineSpacing;
+          cache.SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE = metersBetweenDose;
           cache.FILE_PATH = filePath;
 
           await Instance.GetInstance().configCache.update(cache);
@@ -503,7 +508,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onChangeEnd={setLineSpacing}
             step={1}
             title={'Espaçamento de linhas'}
-            defaultValue={1}
+            defaultValue={Instance.GetInstance().configCache.getCache().LINE_SPACING}
             unit={'metros'}
             disabled={false}
             maxValue={20}
@@ -560,7 +565,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             Informações Dosagem
           </FormControl.Label>
           <SlideInput
-            defaultValue={5}
+            defaultValue={Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G}
             maxValue={30}
             minValue={5}
             onChangeEnd={setDoseWeightG}
@@ -572,7 +577,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           />
           <SelectInput
             onItemSelected={setPoison}
-            items={[...poisonItems, { id: 'another', name: 'Outro' }]}
+            items={poisonItems}
             title="Tipo de veneno"
             placeholder=""
             defaultValue={Instance.GetInstance().configCache.getCache().POISON_TYPE}
@@ -757,7 +762,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             }
             disabled={false}
             maxValue={10}
-            minValue={0}
+            minValue={2}
             errorMessage={errors.metersBetweenDose.errorMessage}
           />
           <Divider w="80%" />
@@ -770,7 +775,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           </FormControl.Label>
 
           <SlideInput
-            onChangeEnd={setMetersBetweenDose}
+            onChangeEnd={setMaxVelocity}
             step={1}
             title={'Velocidade máxima permitida'}
             unit={'Km/h'}

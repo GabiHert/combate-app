@@ -1,11 +1,10 @@
 enum Poisons {
-  SL = 'SL',
-  FP = 'FP',
-  SL_R = 'SL_R',
-  MEBIO = 'MEBIO',
-}
-
-class PoisonEnum_ {
+  SL = 'Granel SL',
+  FP = 'Granel FP',
+  SL_R = 'Granel SL-R',
+  MEBIO = 'Mebio',
+  OUTRO = 'Outro'
+}class PoisonEnum_ {
   readonly MEBIO: { name: string } = {
     name: Poisons.MEBIO,
   };
@@ -17,6 +16,9 @@ class PoisonEnum_ {
   };
   readonly SL: { name: string } = {
     name: Poisons.SL,
+  };
+  readonly OUTRO: { name: string } = {
+    name: Poisons.OUTRO,
   };
 }
 
@@ -41,6 +43,9 @@ export class Poison {
       case PoisonEnum.SL_R.name:
         this.name = PoisonEnum.SL_R.name;
         break;
+        case PoisonEnum.OUTRO.name:
+          this.name = PoisonEnum.OUTRO.name;
+          break;
       default:
         throw new Error(`Unknown poison ${poison}`);
     }
@@ -52,4 +57,6 @@ export const poisonItems: Array<{ id: string; name: string }> = [
   { id: PoisonEnum.MEBIO.name, name: 'Granel FP' },
   { id: PoisonEnum.SL.name, name: 'Grandel SL-R' },
   { id: PoisonEnum.SL_R.name, name: 'Mebio' },
+  { id: PoisonEnum.OUTRO.name, name: 'Outro' },
+
 ];

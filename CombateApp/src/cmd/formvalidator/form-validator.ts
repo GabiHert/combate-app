@@ -1,6 +1,6 @@
 import { Instance } from '../../app/instance/instance';
 import { CONSTANTS } from '../../internal/config/config';
-import { PoisonEnum } from '../../internal/core/enum/poison';
+import { Poison } from '../../internal/core/enum/poison';
 import { WeatherEnum } from '../../internal/core/enum/weather';
 import { PCache } from '../../internal/core/port/cache-port';
 import { PLogger } from '../../internal/core/port/logger-port';
@@ -514,12 +514,15 @@ export class Validator implements PValidator {
       });
     }
 
-    const poisonTypes = [];
-    Object.keys(PoisonEnum).forEach((key) => {
-      poisonTypes.push(PoisonEnum[key].name);
-    });
 
-    if (!data.POISON_TYPE || !poisonTypes.includes(data.POISON_TYPE)) {
+    let isValidPoisonType = true;
+    try{
+      new Poison(data.POISON_TYPE);
+    }catch{
+      isValidPoisonType = false;
+    }
+
+    if (!data.POISON_TYPE || !isValidPoisonType) {
       result.valid = false;
       result.poisonType.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_POISON_TYPE;
       this._logger.warn({
