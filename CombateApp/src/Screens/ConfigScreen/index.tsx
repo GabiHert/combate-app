@@ -454,6 +454,13 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           if (!Validator.BasicStringValidation(value)) {
             return CONSTANTS.ERRORS.STOP_REASON_FORM.INVALID_STOP_REASON;
           }
+          let error = undefined;
+          Object.keys(Instance.GetInstance().configCache.getCache().STOP_REASONS_EVENTS).forEach((key) => {
+            if (value == Instance.GetInstance().configCache.getCache().STOP_REASONS_EVENTS[key]){
+              error = CONSTANTS.ERRORS.STOP_REASON_FORM.INVALID_STOP_REASON
+            }
+          });
+          return error;
         }}
       />
       <ItemRegisterModal
@@ -467,6 +474,13 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           if (!Validator.BasicStringValidation(value)) {
             return CONSTANTS.ERRORS.EVENT_FORM.INVALID_EVENT;
           }
+          let error = undefined;
+          Object.keys(Instance.GetInstance().configCache.getCache().EVENTS).forEach((key) => {
+            if (value == Instance.GetInstance().configCache.getCache().EVENTS[key]){
+              error = CONSTANTS.ERRORS.EVENT_FORM.INVALID_EVENT
+            }
+          });
+          return error;
         }}
       />
       <ItemRegisterModal
@@ -480,6 +494,13 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           if (!Validator.BasicStringValidation(value)) {
             return CONSTANTS.ERRORS.FARM_FORM.INVALID_FARM;
           }
+          let error = undefined;
+          Object.keys(Instance.GetInstance().configCache.getCache().FARMS).forEach((key) => {
+            if (value == Instance.GetInstance().configCache.getCache().FARMS[key]){
+              error = CONSTANTS.ERRORS.FARM_FORM.INVALID_FARM
+            }
+          });
+          return error;
         }}
       />
       <ItemRegisterModal
@@ -493,6 +514,13 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           if (!Validator.BasicStringValidation(value)) {
             return CONSTANTS.ERRORS.PLOT_FORM.INVALID_PLOT;
           }
+          let error = undefined;
+          Object.keys(Instance.GetInstance().configCache.getCache().PLOTS).forEach((key) => {
+            if (value == Instance.GetInstance().configCache.getCache().PLOTS[key]){
+              error = CONSTANTS.ERRORS.PLOT_FORM.INVALID_PLOT
+            }
+          });
+          return error;
         }}
       />
 
