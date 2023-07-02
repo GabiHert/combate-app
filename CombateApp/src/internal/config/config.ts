@@ -3,6 +3,10 @@ import { WeatherEnum } from '../core/enum/weather';
 import { IConfigsProps, IPreExecutionConfigProps } from '../interface/config-props';
 
 export const CONSTANTS = {
+  CONFIG_LOGIN:{
+    USER:"123",
+    PASSWORD:"123"
+  },
   APPLICATION: {
     VERSION: '0.0.0',
     BLUETOOTH_WRITE_RETRIES: 5,
@@ -173,7 +177,7 @@ export const DEFAULT_PRE_EXECUTION_CONFIG: IPreExecutionConfigProps = {
   plot: 'teste',
   projectName: 'teste',
   tractorName: 'teste',
-  weather: WeatherEnum.DRY.name,
+  weather: WeatherEnum.SECO.name,
   centerApplicatorLoad: 23,
   leftApplicatorLoad: 23,
   streetsAmount: 1,

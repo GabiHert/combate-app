@@ -30,11 +30,16 @@ function LoginModal(props: {
     const isValid = props.loginValidator({ user, password });
     setIsValid(isValid);
     if (isValid) {
-      props.onClose();
+      onCloseCallback();
     }
   }, [user, password, setIsValid, setValidationError]);
+
+  const onCloseCallback = useCallback(()=>{
+    setIsValid(true);
+    props.onClose();
+  },[])
   return (
-    <Modal isOpen={props.isOpen} onClose={props.onClose}>
+    <Modal isOpen={props.isOpen} onClose={onCloseCallback}>
       <Modal.Content maxWidth="400px">
         <Modal.CloseButton />
         <Modal.Header>Configurações</Modal.Header>
