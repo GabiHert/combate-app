@@ -1,5 +1,5 @@
 import { Box, Button, Divider, FormControl, ScrollView, VStack } from 'native-base';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { v1 } from 'uuid';
 import { appConfig } from '../../app/config/app-config';
 import { Instance } from '../../app/instance/instance';
@@ -25,55 +25,86 @@ interface IPreset {
 }
 
 function ConfigScreen(props: { navigation: any; route: any }) {
-  const [rightTankMaxLoad, setRightTankMaxLoad] = useState<number>(
+  const rightTankMaxLoad = useRef<number>(
     Instance.GetInstance().configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD
   );
-  const [centerTankMaxLoad, setCenterTankMaxLoad] = useState<number>(
+  function setRightTankMaxLoad(value){
+    rightTankMaxLoad.current = value
+  }
+  const centerTankMaxLoad = useRef<number>(
     Instance.GetInstance().configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD
   );
-  const [leftTankMaxLoad, setLeftTankMaxLoad] = useState<number>(
+  const leftTankMaxLoad = useRef<number>(
     Instance.GetInstance().configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD
   );
-  const [doseWeightG, setDoseWeightG] = useState<number>(
+  const doseWeightG = useRef<number>(
     Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G
   );
-  const [metersBetweenDose, setMetersBetweenDose] = useState<number>(
+  function setDoseWeightG(value){
+    doseWeightG.current = value
+  }
+  const metersBetweenDose = useRef(
     Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE
   );
-
-  useEffect(()=>{
-
-  },[metersBetweenDose])
-
-  const [filePath, setFilePath] = useState(Instance.GetInstance().configCache.getCache().FILE_PATH);
-  const [preset1, setPreset1] = useState<IPreset>({
+  function setMetersBetweenDose(value){
+    metersBetweenDose.current = value
+  }
+  const filePath = useRef(Instance.GetInstance().configCache.getCache().FILE_PATH);
+  function setFilePath(value){
+    filePath.current = value
+  }
+  const preset1  = useRef<IPreset>({
     doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P1.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME,
   });
-  const [preset2, setPreset2] = useState<IPreset>({
+  function setPreset1(value){
+    preset1.current = value
+  }
+  const preset2 = useRef<IPreset>({
     doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P2.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME,
   });
-  const [preset3, setPreset3] = useState<IPreset>({
+  function setPreset2(value){
+    preset2.current = value
+  }
+  const preset3 = useRef<IPreset>({
     doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P3.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P3.NAME,
   });
-  const [preset4, setPreset4] = useState<IPreset>({
+  function setPreset3(value){
+    preset3.current = value
+  }
+  const preset4 = useRef<IPreset>({
     doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P4.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P4.NAME,
   });
-  const [preset5, setPreset5] = useState<IPreset>({
+  function setPreset4(value){
+    preset4.current = value
+  }
+  const preset5 = useRef<IPreset>({
     doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P5.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P5.NAME,
   });
-  const [preset6, setPreset6] = useState<IPreset>({
+  function setPreset5(value){
+    preset5.current = value
+  }
+  const preset6  = useRef<IPreset>({
     doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P6.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P6.NAME,
   });
-  const [maxVelocity, setMaxVelocity] = useState<number>(Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY);
-  const [lineSpacing, setLineSpacing] = useState<number>(Instance.GetInstance().configCache.getCache().LINE_SPACING);
+  function setPreset6(value){
+    preset6.current = value
+  }
+  const maxVelocity  = useRef<number>(Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY);
+  function setMaxVelocity(value){
+    maxVelocity.current = value
+  }
+  const lineSpacing  = useRef<number>(Instance.GetInstance().configCache.getCache().LINE_SPACING);
+  function setLineSpacing(value){
+    lineSpacing.current = value
+  }
 
-  const [errors, setErrors] = useState<IConfigFormResult>({
+  const [errors,setErrors] = useState<IConfigFormResult>({
     valid: true,
     maxVelocity: { errorMessage: undefined },
     centerTankMaxLoad: { errorMessage: undefined },
@@ -102,49 +133,52 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     rightTankMaxLoad: { errorMessage: undefined },
   });
 
-  const [stopReasons, setStopReasons] = useState<Array<{ id: string; name: string }>>(
+  const [stopReasons,setStopReasons] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(Instance.GetInstance().configCache.getCache().STOP_REASONS_EVENTS)
   );
-  const [events, setEvents] = useState<Array<{ id: string; name: string }>>(
+  const [events,setEvents] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(Instance.GetInstance().configCache.getCache().EVENTS)
   );
 
-  const [farms, setFarms] = useState<Array<{ id: string; name: string }>>(
+  const [farms,setFarms] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(Instance.GetInstance().configCache.getCache().FARMS)
   );
 
-  const [plots, setPlots] = useState<Array<{ id: string; name: string }>>(
+  const [plots,setPlots] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(Instance.GetInstance().configCache.getCache().PLOTS)
   );
 
-  const [poison, setPoison] = useState(Instance.GetInstance().configCache.getCache().POISON_TYPE);
+  const poison = useRef(Instance.GetInstance().configCache.getCache().POISON_TYPE);
+  function setPoison(value){
+    poison.current = value
+  }
 
-  const [addReasonModalVisible, setAddReasonModalVisible] = useState(false);
-  const [addEventModalVisible, setAddEventModalVisible] = useState(false);
-  const [addFarmModalVisible, setAddFarmModalVisible] = useState(false);
-  const [addPlotModalVisible, setAddPlotModalVisible] = useState(false);
+  const [addReasonModalVisible,setAddReasonModalVisible] = useState(false);
+  const [addEventModalVisible,setAddEventModalVisible] = useState(false);
+  const [addFarmModalVisible,setAddFarmModalVisible]  = useState(false);
+  const [addPlotModalVisible,setAddPlotModalVisible] = useState(false);
 
   function onRightTankMaxLoadChange(text: string) {
-    setRightTankMaxLoad(Number(text));
+    rightTankMaxLoad.current = Number(text);
   }
   function onLeftTankMaxLoadChange(text: string) {
-    setLeftTankMaxLoad(Number(text));
+    leftTankMaxLoad.current = Number(text);
   }
   function onCenterTankMaxLoadChange(text: string) {
-    setCenterTankMaxLoad(Number(text));
+    centerTankMaxLoad.current = Number(text);
   }
 
   const onPreset1NameChange = useCallback(
     (text: string) => {
-      const aux = preset1;
+      const aux = preset1.current;
       aux.name = text;
-      setPreset1(aux);
+      preset1.current= aux;
     },
     [preset1]
   );
   const onPreset2NameChange = useCallback(
     (text: string) => {
-      const aux = preset2;
+      const aux = preset2.current;
       aux.name = text;
       setPreset2(aux);
     },
@@ -152,7 +186,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
   const onPreset3NameChange = useCallback(
     (text: string) => {
-      const aux = preset3;
+      const aux = preset3.current;
       aux.name = text;
       setPreset3(aux);
     },
@@ -160,7 +194,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
   const onPreset4NameChange = useCallback(
     (text: string) => {
-      const aux = preset4;
+      const aux = preset4.current;
       aux.name = text;
       setPreset4(aux);
     },
@@ -168,7 +202,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
   const onPreset5NameChange = useCallback(
     (text: string) => {
-      const aux = preset5;
+      const aux = preset5.current;
       aux.name = text;
       setPreset5(aux);
     },
@@ -176,7 +210,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
   const onPreset6NameChange = useCallback(
     (text: string) => {
-      const aux = preset6;
+      const aux = preset6.current;
       aux.name = text;
       setPreset6(aux);
     },
@@ -185,7 +219,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
   const onPreset1DoseChange = useCallback(
     (doses: number) => {
-      const aux = preset1;
+      const aux = preset1.current;
       aux.doseAmount = doses;
       setPreset1(aux);
     },
@@ -193,7 +227,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
   const onPreset2DoseChange = useCallback(
     (doses: number) => {
-      const aux = preset2;
+      const aux = preset2.current;
       aux.doseAmount = doses;
       setPreset2(aux);
     },
@@ -201,7 +235,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
   const onPreset3DoseChange = useCallback(
     (doses: number) => {
-      const aux = preset3;
+      const aux = preset3.current;
       aux.doseAmount = doses;
       setPreset3(aux);
     },
@@ -209,7 +243,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
   const onPreset4DoseChange = useCallback(
     (doses: number) => {
-      const aux = preset4;
+      const aux = preset4.current;
       aux.doseAmount = doses;
       setPreset4(aux);
     },
@@ -217,7 +251,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
   const onPreset5DoseChange = useCallback(
     (doses: number) => {
-      const aux = preset5;
+      const aux = preset5.current;
       aux.doseAmount = doses;
       setPreset5(aux);
     },
@@ -225,7 +259,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   );
   const onPreset6DoseChange = useCallback(
     (doses: number) => {
-      const aux = preset6;
+      const aux = preset6.current;
       aux.doseAmount = doses;
       setPreset6(aux);
     },
@@ -234,10 +268,12 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
   const onAddEventPress = useCallback(() => {
     setAddEventModalVisible(true);
-  }, [setAddEventModalVisible]);
+  }, []);
+
   const onAddEventModalClose = useCallback(() => {
     setAddEventModalVisible(false);
-  }, [setAddEventModalVisible]);
+  }, []);
+
   const onAddEventRequested = useCallback(
     (name: string) => {
       let cache = Instance.GetInstance().configCache.getCache();
@@ -248,6 +284,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     },
     [setEvents]
   );
+
   const onDeleteEventRequested = useCallback(
     (id: string) => {
       let cache = Instance.GetInstance().configCache.getCache();
@@ -260,10 +297,12 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
   const onAddFarmPress = useCallback(() => {
     setAddFarmModalVisible(true);
-  }, [setAddFarmModalVisible]);
+  }, []);
+
   const onAddFarmModalClose = useCallback(() => {
     setAddFarmModalVisible(false);
-  }, [setAddFarmModalVisible]);
+  }, []);
+
   const onAddFarmRequested = useCallback(
     (name: string) => {
       let cache = Instance.GetInstance().configCache.getCache();
@@ -274,6 +313,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     },
     [setFarms, farms]
   );
+
   const onDeleteFarmRequested = useCallback(
     async (id: string) => {
       let cache = Instance.GetInstance().configCache.getCache();
@@ -286,11 +326,11 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
   const onAddPlotPress = useCallback(() => {
     setAddPlotModalVisible(true);
-  }, [setAddPlotModalVisible]);
+  }, []);
 
   const onAddPlotModalClose = useCallback(() => {
     setAddPlotModalVisible(false);
-  }, [setAddPlotModalVisible]);
+  }, []);
 
   const onAddPlotRequested = useCallback(
     (name: string) => {
@@ -315,11 +355,11 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
   const onAddStopReasonPress = useCallback(() => {
     setAddReasonModalVisible(true);
-  }, [setAddReasonModalVisible]);
+  }, []);
 
   const onAddReasonModalClose = useCallback(() => {
     setAddReasonModalVisible(false);
-  }, [setAddReasonModalVisible]);
+  }, []);
 
   const onAddStopReasonRequested = useCallback((name: string) => {
     let cache = Instance.GetInstance().configCache.getCache();
@@ -347,24 +387,24 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         PLOTS: itemArrayToMapString(plots),
         STOP_REASONS_EVENTS: itemArrayToMapString(stopReasons),
         APPLICATION: {
-          MAX_VELOCITY: maxVelocity,
-          CENTER_TANK_MAX_LOAD: centerTankMaxLoad,
-          DOSE_WEIGHT_G: doseWeightG,
-          LEFT_TANK_MAX_LOAD: leftTankMaxLoad,
-          RIGHT_TANK_MAX_LOAD: rightTankMaxLoad,
+          MAX_VELOCITY: maxVelocity.current,
+          CENTER_TANK_MAX_LOAD: centerTankMaxLoad.current,
+          DOSE_WEIGHT_G: doseWeightG.current,
+          LEFT_TANK_MAX_LOAD: leftTankMaxLoad.current,
+          RIGHT_TANK_MAX_LOAD: rightTankMaxLoad.current,
         },
         PRESETS: {
-          P1: { NAME: preset1.name, DOSE_AMOUNT: preset1.doseAmount },
-          P2: { NAME: preset2.name, DOSE_AMOUNT: preset2.doseAmount },
-          P3: { NAME: preset3.name, DOSE_AMOUNT: preset3.doseAmount },
-          P4: { NAME: preset4.name, DOSE_AMOUNT: preset4.doseAmount },
-          P5: { NAME: preset5.name, DOSE_AMOUNT: preset5.doseAmount },
-          P6: { NAME: preset6.name, DOSE_AMOUNT: preset6.doseAmount },
+          P1: { NAME: preset1.current.name, DOSE_AMOUNT: preset1.current.doseAmount },
+          P2: { NAME: preset2.current.name, DOSE_AMOUNT: preset2.current.doseAmount },
+          P3: { NAME: preset3.current.name, DOSE_AMOUNT: preset3.current.doseAmount },
+          P4: { NAME: preset4.current.name, DOSE_AMOUNT: preset4.current.doseAmount },
+          P5: { NAME: preset5.current.name, DOSE_AMOUNT: preset5.current.doseAmount },
+          P6: { NAME: preset6.current.name, DOSE_AMOUNT: preset6.current.doseAmount },
         },
-        FILE_PATH: filePath,
-        POISON_TYPE: poison,
-        LINE_SPACING: lineSpacing,
-        SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: metersBetweenDose },
+        FILE_PATH: filePath.current,
+        POISON_TYPE: poison.current,
+        LINE_SPACING: lineSpacing.current,
+        SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: metersBetweenDose.current },
       };
 
       const result = Instance.GetInstance().validator.validateConfigForm(data);
@@ -381,27 +421,27 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         if (data != Instance.GetInstance().configCache.getCache()) {
           const cache = Instance.GetInstance().configCache.getCache();
 
-          cache.APPLICATION.DOSE_WEIGHT_G = doseWeightG;
-          cache.APPLICATION.RIGHT_TANK_MAX_LOAD = rightTankMaxLoad;
-          cache.APPLICATION.CENTER_TANK_MAX_LOAD = centerTankMaxLoad;
-          cache.APPLICATION.LEFT_TANK_MAX_LOAD = leftTankMaxLoad;
-          cache.APPLICATION.MAX_VELOCITY = maxVelocity;
-          cache.PRESETS.P1.DOSE_AMOUNT = preset1.doseAmount;
-          cache.PRESETS.P1.NAME = preset1.name;
-          cache.PRESETS.P2.DOSE_AMOUNT = preset2.doseAmount;
-          cache.PRESETS.P2.NAME = preset2.name;
-          cache.PRESETS.P3.DOSE_AMOUNT = preset3.doseAmount;
-          cache.PRESETS.P3.NAME = preset3.name;
-          cache.PRESETS.P4.DOSE_AMOUNT = preset4.doseAmount;
-          cache.PRESETS.P4.NAME = preset4.name;
-          cache.PRESETS.P5.DOSE_AMOUNT = preset5.doseAmount;
-          cache.PRESETS.P5.NAME = preset5.name;
-          cache.PRESETS.P6.DOSE_AMOUNT = preset6.doseAmount;
-          cache.PRESETS.P6.NAME = preset6.name;
-          cache.POISON_TYPE = poison;
-          cache.LINE_SPACING = lineSpacing;
-          cache.SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE = metersBetweenDose;
-          cache.FILE_PATH = filePath;
+          cache.APPLICATION.DOSE_WEIGHT_G = doseWeightG.current;
+          cache.APPLICATION.RIGHT_TANK_MAX_LOAD = rightTankMaxLoad.current;
+          cache.APPLICATION.CENTER_TANK_MAX_LOAD = centerTankMaxLoad.current;
+          cache.APPLICATION.LEFT_TANK_MAX_LOAD = leftTankMaxLoad.current;
+          cache.APPLICATION.MAX_VELOCITY = maxVelocity.current;
+          cache.PRESETS.P1.DOSE_AMOUNT = preset1.current.doseAmount;
+          cache.PRESETS.P1.NAME = preset1.current.name;
+          cache.PRESETS.P2.DOSE_AMOUNT = preset2.current.doseAmount;
+          cache.PRESETS.P2.NAME = preset2.current.name;
+          cache.PRESETS.P3.DOSE_AMOUNT = preset3.current.doseAmount;
+          cache.PRESETS.P3.NAME = preset3.current.name;
+          cache.PRESETS.P4.DOSE_AMOUNT = preset4.current.doseAmount;
+          cache.PRESETS.P4.NAME = preset4.current.name;
+          cache.PRESETS.P5.DOSE_AMOUNT = preset5.current.doseAmount;
+          cache.PRESETS.P5.NAME = preset5.current.name;
+          cache.PRESETS.P6.DOSE_AMOUNT = preset6.current.doseAmount;
+          cache.PRESETS.P6.NAME = preset6.current.name;
+          cache.POISON_TYPE = poison.current;
+          cache.LINE_SPACING = lineSpacing.current;
+          cache.SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE = metersBetweenDose.current;
+          cache.FILE_PATH = filePath.current;
 
           await Instance.GetInstance().configCache.update(cache);
 
@@ -781,7 +821,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             Dose Sistemática
           </FormControl.Label>
           <SlideInput
-            onChangeEnd={setMetersBetweenDose}
+            onChangeEnd={(value)=>{metersBetweenDose.current = value}}
             step={1}
             title={'Metros entre cada dose'}
             unit={'metros'}
