@@ -12,13 +12,11 @@ import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { appConfig } from '../../app/config/app-config';
 import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
-import { weatherToPtWeather } from '../../app/parser/weather-to-pt-weather';
 import { Weather, weatherItems } from '../../internal/core/enum/weather';
 import { IPreExecutionConfigProps } from '../../internal/interface/config-props';
 import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-form-result';
 
 import { Instance } from '../../app/instance/instance';
-import { ptToDefaults } from '../../app/parser/pt-to-defaults';
 import { Theme } from '../../app/theme/theme';
 import { ShowToast } from '../../Components/AlertToast';
 import FormInput from '../../Components/FormInput';
@@ -29,7 +27,6 @@ import { dateTimeFormatter } from '../../internal/core/utils/date-time-formatter
 import { IItem } from '../../internal/interface/item';
 
 function PreExecutionScreen(props: { navigation: any }) {
-  const [applicatorsAmount, setApplicatorsAmount] = useState<number>(1);
   const [activity, setActivity] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().activity
   );
@@ -41,6 +38,9 @@ function PreExecutionScreen(props: { navigation: any }) {
   );
   const [rightApplicatorLoad, setRightApplicatorLoad] = useState<number>(
     Instance.GetInstance().preExecutionConfigCache.getCache().rightApplicatorLoad
+  );
+  const [applicatorsAmount, setApplicatorsAmount] = useState<number>(
+    Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount
   );
   const [devices, setDevices] = useState<Array<IItem>>([]);
   const [deviceConnected, setDeviceConnected] = useState(false);
@@ -182,8 +182,11 @@ function PreExecutionScreen(props: { navigation: any }) {
 
   const setWeatherCallback = useCallback(
     (value: string) => {
-      const weather = ptToDefaults.weather(value);
-      setWeather(weather);
+      try {
+      setWeather(new Weather(value));
+      }catch(err){
+        Instance.GetInstance().errorHandler.handle(err)
+      }
     },
     [setWeather]
   );
@@ -195,6 +198,12 @@ function PreExecutionScreen(props: { navigation: any }) {
     [setStreetsAmount]
   );
 
+  const setApplicatorsAmountCallback = useCallback(
+    (value: string) => {
+      setApplicatorsAmount(Number(value));
+    },
+    [setApplicatorsAmount]
+  );
   const connectToBluetoothCallback = useCallback(async () => {
     setIsConnecting(true);
     try {
@@ -290,6 +299,16 @@ function PreExecutionScreen(props: { navigation: any }) {
             defaultValue={Instance.GetInstance().preExecutionConfigCache.getCache().tractorName}
             onChangeText={setTractorName}
           />
+            <SelectInput
+            placeholder=""
+            onItemSelected={setApplicatorsAmountCallback}
+            title="Número de dosadores"
+            items={[{id:"1",name:"1"},{id:"2",name:"2"},{id:"3",name:"3"}]}
+            defaultValue={Instance.GetInstance()
+              .preExecutionConfigCache.getCache()
+              .streetsAmount.toString()}
+            errorMessage={validationResult.streetsAmount.errorMessage}
+          />
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
@@ -303,7 +322,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           <SelectInput
             placeholder=""
             onItemSelected={setStreetsAmountCallback}
-            title="Numero de ruas"
+            title="Número de ruas"
             items={CONSTANTS.STREET_AMOUNT_ITEMS}
             defaultValue={Instance.GetInstance()
               .preExecutionConfigCache.getCache()
@@ -326,9 +345,9 @@ function PreExecutionScreen(props: { navigation: any }) {
             title={'Clima'}
             items={weatherItems}
             errorMessage={validationResult.weather.errorMessage}
-            defaultValue={weatherToPtWeather(
+            defaultValue={
               Instance.GetInstance().preExecutionConfigCache.getCache().weather
-            )}
+            }
           />
           <Divider w="80%" />
           <FormControl.Label

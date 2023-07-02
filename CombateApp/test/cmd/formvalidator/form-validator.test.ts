@@ -5,8 +5,8 @@ import { PoisonEnum } from '../../../src/internal/core/enum/poison';
 import { WeatherEnum } from '../../../src/internal/core/enum/weather';
 import { IConfigFormResult } from '../../../src/internal/interface/config-form-result';
 import {
-  IConfigsProps,
-  IPreExecutionConfigProps,
+    IConfigsProps,
+    IPreExecutionConfigProps
 } from '../../../src/internal/interface/config-props';
 import { IPreExecutionFormResult } from '../../../src/internal/interface/pre-execution-form-result';
 import { ConfigMock } from '../../mock/config-mock';
@@ -60,7 +60,7 @@ describe('FormValidator unit tests', () => {
       farm: v4(),
       plot: v4(),
       tractorName: v4(),
-      weather: WeatherEnum.AFTER_RAIN.name,
+      weather: WeatherEnum.POS_CHUVA.name,
       leftApplicatorLoad: 2,
       centerApplicatorLoad: 2,
       rightApplicatorLoad: 2,
@@ -733,4 +733,5 @@ describe('FormValidator unit tests', () => {
   });
 });
 
-export {};
+export { };
+

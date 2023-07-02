@@ -211,10 +211,10 @@ export class Validator implements PValidator {
       !data.weather ||
       data.weather.length === 0 ||
       ![
-        WeatherEnum.AFTER_RAIN.name,
-        WeatherEnum.CHANCE_OF_RAIN.name,
-        WeatherEnum.DEW.name,
-        WeatherEnum.DRY.name,
+        WeatherEnum.POS_CHUVA.name,
+        WeatherEnum.CHANCE_DE_CHUVA.name,
+        WeatherEnum.ORVALHO.name,
+        WeatherEnum.SECO.name,
         WeatherEnum.HUMID.name,
       ].includes(data.weather)
     ) {

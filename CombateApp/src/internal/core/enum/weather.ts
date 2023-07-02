@@ -1,27 +1,27 @@
 enum Weathers {
-  DRY = 'DRY',
-  HUMID = 'HUMID',
-  MUGGY = 'MUGGY',
-  AFTER_RAIN = 'AFTER_RAIN',
-  CHANCE_OF_RAIN = 'CHANCE_OF_RAIN',
-  DEW = 'DEW',
+  SECO = 'Seco',
+  HUMIDO = 'Humido',
+  ABAFADO = 'Abafado',
+  POS_CHUVA = 'Pós chuva',
+  CHANCE_DE_CHUVA = 'Chance de chuva',
+  ORVALHO = 'Orvalho',
 }
 
 class WeatherEnum_ {
-  readonly DRY: { name: string } = {
-    name: Weathers.DRY,
+  readonly SECO: { name: string } = {
+    name: Weathers.SECO,
   };
   readonly HUMID: { name: string } = {
-    name: Weathers.HUMID,
+    name: Weathers.HUMIDO,
   };
-  readonly AFTER_RAIN: { name: string } = {
-    name: Weathers.AFTER_RAIN,
+  readonly POS_CHUVA: { name: string } = {
+    name: Weathers.POS_CHUVA,
   };
-  readonly CHANCE_OF_RAIN: { name: string } = {
-    name: Weathers.CHANCE_OF_RAIN,
+  readonly CHANCE_DE_CHUVA: { name: string } = {
+    name: Weathers.CHANCE_DE_CHUVA,
   };
-  readonly DEW: { name: string } = {
-    name: Weathers.DEW,
+  readonly ORVALHO: { name: string } = {
+    name: Weathers.ORVALHO,
   };
 }
 
@@ -31,24 +31,24 @@ export class Weather {
   readonly name: string;
   constructor(weather: string) {
     switch (weather) {
-      case WeatherEnum.DRY.name:
-        this.name = Weathers.DRY;
+      case WeatherEnum.SECO.name:
+        this.name = Weathers.SECO;
         break;
 
       case WeatherEnum.HUMID.name:
-        this.name = Weathers.HUMID;
+        this.name = Weathers.HUMIDO;
         break;
 
-      case WeatherEnum.AFTER_RAIN.name:
-        this.name = Weathers.AFTER_RAIN;
+      case WeatherEnum.POS_CHUVA.name:
+        this.name = Weathers.POS_CHUVA;
         break;
 
-      case WeatherEnum.CHANCE_OF_RAIN.name:
-        this.name = Weathers.CHANCE_OF_RAIN;
+      case WeatherEnum.CHANCE_DE_CHUVA.name:
+        this.name = Weathers.CHANCE_DE_CHUVA;
         break;
 
-      case WeatherEnum.DEW.name:
-        this.name = Weathers.DEW;
+      case WeatherEnum.ORVALHO.name:
+        this.name = Weathers.ORVALHO;
         break;
       default:
         throw new Error(`Unknown weather ${weather}`);
@@ -57,9 +57,9 @@ export class Weather {
 }
 
 export const weatherItems: Array<{ id: string; name: string }> = [
-  { id: WeatherEnum.AFTER_RAIN.name, name: 'Pós chuva' },
-  { id: WeatherEnum.CHANCE_OF_RAIN.name, name: 'Chance de chuva' },
-  { id: WeatherEnum.DEW.name, name: 'Orvalho' },
-  { id: WeatherEnum.DRY.name, name: 'Seco' },
+  { id: WeatherEnum.POS_CHUVA.name, name: 'Pós chuva' },
+  { id: WeatherEnum.CHANCE_DE_CHUVA.name, name: 'Chance de chuva' },
+  { id: WeatherEnum.ORVALHO.name, name: 'Orvalho' },
+  { id: WeatherEnum.SECO.name, name: 'Seco' },
   { id: WeatherEnum.HUMID.name, name: 'Humido' },
 ];
