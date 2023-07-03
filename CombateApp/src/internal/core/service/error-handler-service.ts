@@ -14,14 +14,17 @@ export class ErrorHandlerService implements PErrorHandlerService{
             error: err.message,
           });
 
+          if(err.notify){
+            ShowToast({
+              title:"Erro "+err.errorCode,
+              message:err.message,
+              durationMs:err.permanent?undefined:3000,
+              severity:SeverityEnum.ERROR,
+              closeButton:err.permanent,
+              alertSounding:err.sound
+            })
+          }
 
-          ShowToast({
-            title:"Ocorreu um erro!  "+err.errorCode,
-            message:err.message,
-            durationMs:3000,
-            severity:SeverityEnum.ERROR,
-          })
-        
 
         this._logger.info({
             event: 'ErrorHandlerService.handle',
