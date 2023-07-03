@@ -10,6 +10,7 @@ interface Fields {
   Talhao: string;
   Maquina: string;
   CB: string;
+  Dosadores:string;
   DosesTotais: string;
   TipoIsca: string;
   PesoG: string;
@@ -45,6 +46,7 @@ export class CsvTableService implements PCsvTableService {
         Talhao: "",
         Maquina: "",
         CB: "",
+        Dosadores:"",
         DosesTotais: "",
         TipoIsca: "",
         PesoG:"",
@@ -95,18 +97,7 @@ export class CsvTableService implements PCsvTableService {
 
       let doseAmount = 0;
       if(requestDto.dose&&requestDto.dose.amount){
-        if (requestDto.dose.centerApplicator) {
-          doseAmount += requestDto.dose.amount;
-        }
-        if (requestDto.dose.leftApplicator) {
-          doseAmount += requestDto.dose.amount;
-        }
-        if (requestDto.dose.rightApplicator) {
-          doseAmount += requestDto.dose.amount;
-        }
-        if(!requestDto.dose.rightApplicator&&!requestDto.dose.leftApplicator&&!requestDto.dose.centerApplicator){
-          doseAmount = requestDto.dose.amount;
-        }
+        doseAmount = requestDto.dose.amount * requestDto.applicatorsAmount;
       }else{
         requestDto.dose = {amount:0}
       }
@@ -117,6 +108,7 @@ export class CsvTableService implements PCsvTableService {
         Talhao: requestDto.plot,
         Maquina: requestDto.tractorName,
         CB: requestDto.deviceName,
+        Dosadores: requestDto.applicatorsAmount.toString(),
         DosesTotais: doseAmount.toString(),
         TipoIsca: requestDto.poisonType,
         PesoG:requestDto.doseWeightG.toString(),
