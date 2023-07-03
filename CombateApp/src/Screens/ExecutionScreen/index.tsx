@@ -1,7 +1,7 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import { useFocusEffect } from '@react-navigation/native';
 import { Box } from 'native-base';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { BackHandler } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { appConfig } from '../../app/config/app-config';
@@ -24,8 +24,11 @@ function ExecutionScreen(props: { navigation: any }) {
   const snapPoints = [40, appConfig.screen.height / 2];
   let handleSheetChanges: any;
   const [velocity, setVelocity] = useState<string>(' ');
-  const [requestOnProgress, setRequestOnProgress] = useState<boolean>(false);
-
+  const requestOnProgress = useRef<boolean>(false);
+  function setRequestOnProgress(value:boolean){
+    requestOnProgress.current = value
+  }
+  
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState(
     Instance.GetInstance().preExecutionConfigCache.getCache().leftApplicatorLoad
   );
@@ -93,7 +96,7 @@ function ExecutionScreen(props: { navigation: any }) {
 
   useFocusEffect(() => {
     const interval = setInterval(async () => {
-      if (!requestOnProgress) {
+      if (!requestOnProgress.current) {
         setRequestOnProgress(true);
         try {
           const requestDto = new RequestDto({
@@ -166,7 +169,7 @@ function ExecutionScreen(props: { navigation: any }) {
 
   const processDose = useCallback(
     async (preset: {NAME:string, DOSE_AMOUNT:number}) => {
-      if (!requestOnProgress) {
+      if (!requestOnProgress.current) {
         setRequestOnProgress(true);
         try {
           const requestDto = new RequestDto({
@@ -202,7 +205,7 @@ function ExecutionScreen(props: { navigation: any }) {
         }
       }
     },
-    [requestOnProgress, appliedDoses]
+    [appliedDoses]
   );
 
   const onPresetPressed = useCallback(
