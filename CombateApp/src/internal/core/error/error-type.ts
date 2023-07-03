@@ -40,7 +40,7 @@ export class MaxVelocityErrorType extends PError {
 
 export class BluetoothErrorType extends PError {
   constructor(message: string) {
-    super(message, "007",true,true,false);
+    super(message, "007",true,false,false);
   }
 }
 
