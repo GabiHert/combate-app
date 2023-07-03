@@ -161,7 +161,7 @@ export const DEFAULT_CONFIG: IConfigsProps = {
   EVENTS: {
     a: 'Necessário desvio',
     b: 'Possível seguir',
-    c: 'Intransponível, retorno',
+    c: 'Retorno',
   },
   FARMS: {},
   PLOTS: {},
