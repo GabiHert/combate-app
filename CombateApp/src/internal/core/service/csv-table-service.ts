@@ -1,4 +1,3 @@
-import { weatherToPtWeather } from '../../../app/parser/weather-to-pt-weather';
 import { RequestDto } from '../dto/request-dto';
 import { ResponseDto } from '../dto/response-dto';
 import { PCsvTableService } from '../port/csv-table-service-port';
@@ -122,7 +121,7 @@ export class CsvTableService implements PCsvTableService {
         TipoIsca: requestDto.poisonType,
         PesoG:requestDto.doseWeightG.toString(),
         VelocidadeMaxima: requestDto.maxVelocity.toString(),
-        Clima: weatherToPtWeather(requestDto.weather),
+        Clima: requestDto.weather,
         Ruas: requestDto.streetsAmount.toString(),
         Linhas: requestDto.linesSpacing.toString(),
         Data: date,
