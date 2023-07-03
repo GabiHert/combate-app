@@ -16,7 +16,7 @@ export const CONSTANTS = {
   MAX_DOSES: 10,
   MIN_DOSES: 1,
   FINISHED_WORK_REASON_NAME: 'Fim Operação',
-  REQUEST_INTERVAL_MS: 10000,
+  REQUEST_INTERVAL_MS: 3000,
   ACTIVITY_ITEMS: [
     { id: '0', name: 'Manutenção' },
     { id: '1', name: 'Pré-Plantio' },
@@ -49,6 +49,7 @@ export const CONSTANTS = {
   ],
   REQUEST: { HEADER: 'INF' },
   ERRORS: {
+    MAX_VELOCITY:"",
     PERMISSIONS: {
       WRITE_STORAGE_PERMISSION: 'Acesso de escrita em arquivos negado',
       BLUETOOTH_CONNECT: 'Acesso de conexão Bluetooth negado',
