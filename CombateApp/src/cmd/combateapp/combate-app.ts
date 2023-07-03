@@ -4,7 +4,7 @@ import { RequestDto } from '../../internal/core/dto/request-dto';
 import { ResponseDto } from '../../internal/core/dto/response-dto';
 import { EventEnum } from '../../internal/core/enum/event';
 import { ProtocolVersion, ProtocolVersionEnum } from '../../internal/core/enum/protocol-version';
-import { MaxVelocityErrorType, PermissionsErrorType } from '../../internal/core/error/error-type';
+import { DoseProcessTimeOut, GenericErrorType, GpsErrorType, MaxVelocityErrorType, PermissionsErrorType, ValidationErrorType } from '../../internal/core/error/error-type';
 import { CbServiceFactory } from '../../internal/core/factory/cb-service-factory';
 import { RequestFactory } from '../../internal/core/factory/request-factory';
 import { PCbService } from '../../internal/core/port/cb-service-port';
@@ -134,6 +134,19 @@ export class CombateApp implements PCombateApp {
         requestDto,
         responseDto,
       });
+
+      if (responseDto.errorCode != "000"){
+        const errors = {
+          "001":new ValidationErrorType("Validação requisição [CB]"),
+          "002":new DoseProcessTimeOut("Dose demorando para finalizar [CB]"),
+          "003":new GpsErrorType("GPS demorando para responder [CB]"),
+        }
+        if(errors[responseDto.errorCode]){
+          throw new errors[responseDto.errorCode]
+        }else{
+          throw new GenericErrorType("Código de erro CB não mapeado ("+responseDto.errorCode+")")
+        }
+      }
 
       const velocity = Number(responseDto.gps.speed);
 
