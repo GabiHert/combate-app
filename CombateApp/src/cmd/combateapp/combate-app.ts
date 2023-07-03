@@ -4,14 +4,13 @@ import { RequestDto } from '../../internal/core/dto/request-dto';
 import { ResponseDto } from '../../internal/core/dto/response-dto';
 import { EventEnum } from '../../internal/core/enum/event';
 import { ProtocolVersion, ProtocolVersionEnum } from '../../internal/core/enum/protocol-version';
-import { PermissionsErrorType } from '../../internal/core/error/error-type';
+import { MaxVelocityErrorType, PermissionsErrorType } from '../../internal/core/error/error-type';
 import { CbServiceFactory } from '../../internal/core/factory/cb-service-factory';
 import { RequestFactory } from '../../internal/core/factory/request-factory';
 import { PCbService } from '../../internal/core/port/cb-service-port';
 import { PCsvTableService } from '../../internal/core/port/csv-table-service-port';
 import { PLogger } from '../../internal/core/port/logger-port';
 import { ProtocolRules } from '../../internal/core/rules/protocol-rules';
-import { distanceCalculatorMeters } from '../../internal/core/utils/distance-caluclator';
 import { PCombateApp } from '../port/combate-app-port';
 
 export class CombateApp implements PCombateApp {
@@ -19,9 +18,9 @@ export class CombateApp implements PCombateApp {
   private _protocolVersion: ProtocolVersion;
   private _cbService: PCbService;
   private _filePath: string;
-  private _latitude: number;
-  private _longitude: number;
+  private _lastRequestTime;
   private _systematicMetersBetweenDose: number;
+
 
   constructor(
     private readonly _logger: PLogger,
@@ -35,9 +34,8 @@ export class CombateApp implements PCombateApp {
     const request = this._requestFactory.factory(requestDto, ProtocolVersionEnum.V4);
     const cbV4Service = this._cbServiceFactory.factory(ProtocolVersionEnum.V4);
     const responseDto = await cbV4Service.request(request);
+    this._lastRequestTime = new Date().getTime();
     this._protocolVersion = this._protocolRules.getProtocolVersion(responseDto);
-    this._latitude = responseDto.gps.latitude;
-    this._longitude = responseDto.gps.longitude;
     this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
   }
 
@@ -106,6 +104,8 @@ export class CombateApp implements PCombateApp {
 
       const responseDto = await this._cbService.request(request, this._doseCallback);
 
+      this._lastRequestTime = new Date().getTime();
+
       await this._csvTableService.insert(this._filePath,requestDto, responseDto);
 
       await this._appRules(responseDto, requestDto);
@@ -137,20 +137,15 @@ export class CombateApp implements PCombateApp {
 
       const velocity = Number(responseDto.gps.speed);
 
-      const distance = distanceCalculatorMeters(
-        this._latitude,
-        this._longitude,
-        responseDto.gps.latitude,
-        responseDto.gps.longitude
-      );
-
-      this._latitude = responseDto.gps.latitude;
-      this._longitude = responseDto.gps.longitude;
-
       if (velocity >= requestDto.maxVelocity) {
+        throw new MaxVelocityErrorType(CONSTANTS.ERRORS.MAX_VELOCITY) 
       }
 
-      if (distance >= this._systematicMetersBetweenDose) {
+      const elapsedTimeH =( this._lastRequestTime - new Date().getTime())/3600000;
+  
+      const distanceM = (velocity * elapsedTimeH)/1000
+
+      if (distanceM >= this._systematicMetersBetweenDose) {
         const systematicRequestDto = requestDto;
         systematicRequestDto.dose.amount = 1;
         systematicRequestDto.event = EventEnum.Systematic.name;
