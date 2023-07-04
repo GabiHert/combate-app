@@ -16,7 +16,9 @@ import PoisonAmountSelector from './components/PoisonAmountSelector';
 import Sheet, { IApplicatorsPercentage } from './components/Sheet';
 import StatusBar from './components/StatusBar';
 
+
 function ExecutionScreen(props: { navigation: any }) {
+  const promises = useRef<Array<()=>Promise<void>>>([])
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
   const sheetHeight = appConfig.screen.height / 2 - 30;
   const blockHeight = sheetHeight / 3;
@@ -27,6 +29,11 @@ function ExecutionScreen(props: { navigation: any }) {
   const requestOnProgress = useRef<boolean>(false);
   function setRequestOnProgress(value:boolean){
     requestOnProgress.current = value
+  }
+
+  const startRequestTime = useRef<number>(0);
+  function setStartRequestTime(value:number){
+    startRequestTime.current = value
   }
   
   const [leftApplicatorLoad, setLeftApplicatorLoad] = useState(
@@ -95,10 +102,9 @@ function ExecutionScreen(props: { navigation: any }) {
   });
 
   useFocusEffect(() => {
-    const interval = setInterval(async () => {
-      if (!requestOnProgress.current) {
-        setRequestOnProgress(true);
+    async function trackPoint(){
         try {
+          setRequestOnProgress(true);
           const requestDto = new RequestDto({
             applicatorsAmount:
               Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount,
@@ -120,27 +126,54 @@ function ExecutionScreen(props: { navigation: any }) {
           });
           const responseDto = await Instance.GetInstance().combateApp.request(requestDto);
           setVelocity(responseDto.gps.speed);
+          
+          const cache = Instance.GetInstance().preExecutionConfigCache.getCache();
+          if (
+            cache.leftApplicatorLoad != leftApplicatorLoad ||
+            cache.centerApplicatorLoad != centerApplicatorLoad ||
+            cache.rightApplicatorLoad != rightApplicatorLoad
+          ) {
+            cache.leftApplicatorLoad = leftApplicatorLoad;
+            cache.rightApplicatorLoad = rightApplicatorLoad;
+            cache.centerApplicatorLoad = centerApplicatorLoad;
+            await Instance.GetInstance().preExecutionConfigCache.update(cache);
+          }
         } catch (err) {
           await Instance.GetInstance().errorHandler.handle(err)
         } finally {
           setRequestOnProgress(false);
         }
-      }
-      const cache = Instance.GetInstance().preExecutionConfigCache.getCache();
-      if (
-        cache.leftApplicatorLoad != leftApplicatorLoad ||
-        cache.centerApplicatorLoad != centerApplicatorLoad ||
-        cache.rightApplicatorLoad != rightApplicatorLoad
-      ) {
-        cache.leftApplicatorLoad = leftApplicatorLoad;
-        cache.rightApplicatorLoad = rightApplicatorLoad;
-        cache.centerApplicatorLoad = centerApplicatorLoad;
-        Instance.GetInstance().preExecutionConfigCache.update(cache);
-      }
-    }, CONSTANTS.REQUEST_INTERVAL_MS);
-
+    }
+      
+    const interval = setInterval(() => {
+    const length = promises.current.length
+      if(!requestOnProgress.current && length == 0){
+        if (new Date().getTime() > (startRequestTime.current + CONSTANTS.REQUEST_INTERVAL_MS)){
+          setStartRequestTime(new Date().getTime());
+          promises.current.push(trackPoint)
+        }
+      }}, 1000);
     return () => clearInterval(interval);
-  });
+    
+ });
+
+ useFocusEffect(()=>{
+  const interval = setInterval(async ()=>{
+    const length = promises.current.length
+    if(!requestOnProgress.current && length>0){
+        console.log(promises.current)
+        const reverted = promises.current.reverse();
+        const promiseFunc = reverted.pop()
+        promises.current = reverted.reverse();
+
+        await promiseFunc();
+      
+    }    
+  },500)
+
+  return () => clearInterval(interval);
+  
+ })
 
   const onFinishButtonPress = useCallback(() => {
     props.navigation.navigate('HomeScreen');
@@ -168,8 +201,8 @@ function ExecutionScreen(props: { navigation: any }) {
   );
 
   const processDose = useCallback(
-    async (preset: {NAME:string, DOSE_AMOUNT:number}) => {
-      if (!requestOnProgress.current) {
+    async (preset: {NAME:string, DOSE_AMOUNT:number},callback:()=>void) => {
+      async function effect(){
         setRequestOnProgress(true);
         try {
           const requestDto = new RequestDto({
@@ -202,16 +235,25 @@ function ExecutionScreen(props: { navigation: any }) {
 
         } finally {
           setRequestOnProgress(false);
+          callback();
         }
       }
+
+   
+       effect();
     },
     [appliedDoses]
   );
 
+
   const onPresetPressed = useCallback(
     async (value: {NAME:string, DOSE_AMOUNT:number}, callback: () => void) => {
-      await processDose(value);
-      callback();
+
+      async function process(){
+        await processDose(value,callback)
+      }
+      promises.current.push(process)
+
     },
     [processDose]
   );
