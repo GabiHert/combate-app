@@ -161,7 +161,6 @@ function ExecutionScreen(props: { navigation: any }) {
   const interval = setInterval(async ()=>{
     const length = promises.current.length
     if(!requestOnProgress.current && length>0){
-        console.log(promises.current)
         const reverted = promises.current.reverse();
         const promiseFunc = reverted.pop()
         promises.current = reverted.reverse();
@@ -258,6 +257,18 @@ function ExecutionScreen(props: { navigation: any }) {
     [processDose]
   );
 
+  const onEventRegister = useCallback(
+    async (promise:Promise<void>) => {
+
+      async function process(){
+        await promise
+      }
+      promises.current.push(process)
+
+    },
+    [processDose]
+  );
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Box height={'15%'} alignItems="center" justifyContent="center" width="100%">
@@ -326,6 +337,7 @@ function ExecutionScreen(props: { navigation: any }) {
           blockHeight={blockHeight}
           sheetHeight={sheetHeight}
           spaceBetweenBlocksHeight={spaceBetweenBlocksHeight}
+          onEventRegister={onEventRegister}
           onFinishPressed={() => {
             onFinishButtonPress();
           }}

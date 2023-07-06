@@ -1,5 +1,5 @@
 import { Button, Center, HStack, Stack } from 'native-base';
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback, useRef, useState } from 'react';
 import { appConfig } from '../../../../app/config/app-config';
 import { Instance } from '../../../../app/instance/instance';
 import { Theme } from '../../../../app/theme/theme';
@@ -16,145 +16,148 @@ function PoisonAmountSelector(props: {
     P6: false,
   });
 
-  const resetButtons = useCallback(() => {
-    setLoadingButtons({
-      P1: false,
-      P2: false,
-      P3: false,
-      P4: false,
-      P5: false,
-      P6: false,
-    });
-  }, [loadingButtons]);
+  const loadingButtonsRef = useRef(loadingButtons);
+
+  function setLoadingButtonsRef (value) {
+   loadingButtonsRef.current = value
+    setLoadingButtons(loadingButtonsRef.current);
+  }
 
   const onPreset1Pressed = useCallback(async () => {
     try {
-      setLoadingButtons({
+      setLoadingButtonsRef({
+        ...loadingButtonsRef.current,
         P1: true,
-        P2: false,
-        P3: false,
-        P4: false,
-        P5: false,
-        P6: false,
       });
       await props.onPresetPressed(
         Instance.GetInstance().configCache.getCache().PRESETS.P1,
-        resetButtons
+        ()=>{
+          const aux = {...loadingButtonsRef.current}
+          aux.P1 = false
+          setLoadingButtonsRef(aux);
+        }
       );
     } catch (err) {
-      resetButtons();
+      const aux = {...loadingButtonsRef.current}
+      aux.P1 = false
+      setLoadingButtonsRef(aux);
       throw err;
     }
-  }, [loadingButtons]);
+  }, []);
 
   const onPreset2Pressed = useCallback(async () => {
     try {
-      setLoadingButtons({
-        P1: false,
+      setLoadingButtonsRef({
+        ...loadingButtonsRef.current,
         P2: true,
-        P3: false,
-        P4: false,
-        P5: false,
-        P6: false,
       });
       await props.onPresetPressed(
         Instance.GetInstance().configCache.getCache().PRESETS.P2,
-        resetButtons
+        ()=>{
+          const aux = {...loadingButtonsRef.current}
+          aux.P2 = false
+          setLoadingButtonsRef(aux);
+        }
       );
+      
     } catch (err) {
-      resetButtons();
+      const aux = {...loadingButtonsRef.current}
+      aux.P2 = false
+      setLoadingButtonsRef(aux);
       throw err;
     }
-  }, [loadingButtons]);
+  }, []);
   const onPreset3Pressed = useCallback(async () => {
     try {
-      setLoadingButtons({
-        P1: false,
-        P2: false,
+      setLoadingButtonsRef({
+        ...loadingButtonsRef.current,
         P3: true,
-        P4: false,
-        P5: false,
-        P6: false,
       });
 
       await props.onPresetPressed(
         Instance.GetInstance().configCache.getCache().PRESETS.P3,
-        resetButtons
+        ()=>{
+          const aux = {...loadingButtonsRef.current}
+          aux.P3 = false
+          setLoadingButtonsRef(aux);
+        }
       );
-
-      resetButtons();
     } catch (err) {
-      resetButtons();
+      const aux = {...loadingButtonsRef.current}
+      aux.P3 = false
+      setLoadingButtonsRef(aux);
       throw err;
     }
-  }, [loadingButtons]);
+  }, []);
 
   const onPreset4Pressed = useCallback(async () => {
     try {
-      setLoadingButtons({
-        P1: false,
-        P2: false,
-        P3: false,
+      setLoadingButtonsRef({
+        ...loadingButtonsRef.current,
         P4: true,
-        P5: false,
-        P6: false,
       });
 
       await props.onPresetPressed(
         Instance.GetInstance().configCache.getCache().PRESETS.P4,
-        resetButtons
-      );
-
-      resetButtons();
+        ()=>{
+          const aux = {...loadingButtonsRef.current}
+          aux.P4 = false
+          setLoadingButtonsRef(aux);
+        }
+      )
+     
     } catch (err) {
-      resetButtons();
+      const aux = {...loadingButtonsRef.current}
+      aux.P4 = false
+      setLoadingButtonsRef(aux);
       throw err;
     }
-  }, [loadingButtons]);
+  }, []);
 
   const onPreset5Pressed = useCallback(async () => {
     try {
-      setLoadingButtons({
-        P1: false,
-        P2: false,
-        P3: false,
-        P4: false,
+      setLoadingButtonsRef({
+       ...loadingButtonsRef.current,
         P5: true,
-        P6: false,
       });
       await props.onPresetPressed(
         Instance.GetInstance().configCache.getCache().PRESETS.P5,
-        resetButtons
+        ()=>{
+          const aux = {...loadingButtonsRef.current}
+          aux.P5 = false
+          setLoadingButtonsRef(aux);
+        }
       );
 
-      resetButtons();
     } catch (err) {
-      resetButtons();
+      const aux = {...loadingButtonsRef.current}
+      aux.P5 = false
+      setLoadingButtonsRef(aux);
       throw err;
     }
-  }, [loadingButtons]);
+  }, []);
 
   const onPreset6Pressed = useCallback(async () => {
     try {
-      setLoadingButtons({
-        P1: false,
-        P2: false,
-        P3: false,
-        P4: false,
-        P5: false,
+      setLoadingButtonsRef({
+        ...loadingButtonsRef.current,
         P6: true,
       });
       await props.onPresetPressed(
         Instance.GetInstance().configCache.getCache().PRESETS.P6,
-        resetButtons
+        ()=>{
+          const aux = {...loadingButtonsRef.current}
+          aux.P6 = false
+          setLoadingButtonsRef(aux);
+        }
       );
-
-      resetButtons();
     } catch (err) {
-      resetButtons();
+      const aux = {...loadingButtonsRef.current}
+      aux.P6 = false
+      setLoadingButtonsRef(aux);
       throw err;
     }
-  }, [loadingButtons]);
+  }, []);
 
   return (
     <Center>

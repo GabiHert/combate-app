@@ -13,6 +13,7 @@ function FinishExecutionModal(props: {
   isOpen: boolean;
   onClose: () => void;
   onFinishExecutionPress: () => void;
+  onEventRegister:(promise:Promise<void>)=>Promise<void>
 }) {
   const [event, setEvent] = useState<string>();
   const [underForestModalVisible, setUnderForestModalVisible] = useState(false);
@@ -57,7 +58,7 @@ function FinishExecutionModal(props: {
       setUnderForest(underForest);
 
       setUnderForestModalVisible(false);
-     await onOkPress()
+      await props.onEventRegister(onOkPress())
     },
     [setUnderForest, setUnderForestModalVisible]
   );
@@ -70,7 +71,7 @@ function FinishExecutionModal(props: {
         if (event == CONSTANTS.FINISHED_WORK_REASON_NAME) {
           setUnderForestModalVisible(true);
         } else {
-          await onOkPress();
+          await props.onEventRegister(onOkPress());
           props.onFinishExecutionPress();
         }
       } else {

@@ -32,6 +32,7 @@ function Sheet(props: {
     centerApplicatorLoad: number;
   };
   onFinishPressed: () => void;
+  onEventRegister:(promise:Promise<void>)=>Promise<void>
   appliedDoses: number;
   sheetHeight: number;
   blockHeight: number;
@@ -90,11 +91,12 @@ function Sheet(props: {
   }, []);
   return (
     <VStack height={props.sheetHeight - 30} alignItems="center" space={4}>
-      <EventRegisterModal isOpen={eventRegisterVisible} onClose={onEventRegisterClose} />
+      <EventRegisterModal isOpen={eventRegisterVisible} onClose={onEventRegisterClose}  onEventRegister={props.onEventRegister} />
       <FinishExecutionModal
         isOpen={finishExecutionModalVisible}
         onClose={onFinishExecutionModalClose}
         onFinishExecutionPress={onModalFinishPressed}
+        onEventRegister={props.onEventRegister}
       />
       <Box
         width="100%"

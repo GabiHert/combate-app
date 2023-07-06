@@ -7,7 +7,7 @@ import { Theme } from '../../../../app/theme/theme';
 import SelectInput from '../../../../Components/SelectInput';
 import { RequestDto } from '../../../../internal/core/dto/request-dto';
 
-function EventRegisterModal(props: { isOpen: boolean; onClose: () => void }) {
+function EventRegisterModal(props: { isOpen: boolean; onClose: () => void;onEventRegister:(promise:Promise<void>)=>Promise<void>}) {
   const [event, setEvent] = useState<string>();
   const [registerEventInProgress, setRegisterEventInProgress] = useState(false);
   const [eventError, setEventError] = useState<string>();
