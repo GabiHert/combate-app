@@ -7,7 +7,9 @@ import { Theme } from '../../../../app/theme/theme';
 import SelectInput from '../../../../Components/SelectInput';
 import { RequestDto } from '../../../../internal/core/dto/request-dto';
 
-function EventRegisterModal(props: { isOpen: boolean; onClose: () => void;onEventRegister:(promise:Promise<void>)=>Promise<void>}) {
+function EventRegisterModal(props: { isOpen: boolean; onClose: () => void;
+  onEventRegister:(requestDto:RequestDto,callback:()=>void)=>void
+}) {
   const [event, setEvent] = useState<string>();
   const [registerEventInProgress, setRegisterEventInProgress] = useState(false);
   const [eventError, setEventError] = useState<string>();
@@ -18,10 +20,8 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void;onEven
     [setEvent]
   );
 
-  const onRegisterPress = useCallback(async () => {
+  const register = useCallback(async () => {
     try {
-      setRegisterEventInProgress(true);
-
       const errorMessage = Instance.GetInstance().validator.validateEventForm(event);
       setEventError(errorMessage);
       if (!errorMessage) {
@@ -45,12 +45,12 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void;onEven
           },
         });
         await Instance.GetInstance().combateApp.request(requestDto);
-        props.onClose();
+        
       }
     } catch (err) {
       await Instance.GetInstance().errorHandler.handle(err)
     } finally {
-      setRegisterEventInProgress(false);
+ 
     }
   }, [event, registerEventInProgress]);
 
@@ -58,7 +58,34 @@ function EventRegisterModal(props: { isOpen: boolean; onClose: () => void;onEven
     setEventError('');
     props.onClose();
   }, []);
+  
 
+  async function onRegisterPress(){
+    setRegisterEventInProgress(true);
+     props.onEventRegister({
+      applicatorsAmount:
+        Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount,
+      client: Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
+      deviceName: Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
+      doseWeightG: Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G,
+      event,
+      maxVelocity: Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY,
+      linesSpacing: Instance.GetInstance().configCache.getCache().LINE_SPACING,
+      plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
+      poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
+      project: Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
+      streetsAmount: Instance.GetInstance().preExecutionConfigCache.getCache().streetsAmount,
+      tractorName: Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
+      weather: Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+      dose: {
+        amount: 0,
+      },
+    },()=>{
+      props.onClose();
+      setRegisterEventInProgress(false);
+    })
+  }
+  
   return (
     <Modal isOpen={props.isOpen} onClose={onClose}>
       <Modal.Content maxWidth="500px" maxH={'500px'}>

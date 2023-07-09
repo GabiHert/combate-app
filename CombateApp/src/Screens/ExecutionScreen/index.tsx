@@ -1,7 +1,7 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import { useFocusEffect } from '@react-navigation/native';
 import { Box } from 'native-base';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BackHandler } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { appConfig } from '../../app/config/app-config';
@@ -70,7 +70,12 @@ function ExecutionScreen(props: { navigation: any }) {
       ),
     });
 
+    const appliedDosesRef = useRef(0)
   const [appliedDoses, setAppliedDoses] = useState<number>(0);
+  const addAppliedDosesCallback = useCallback((value:number)=>{
+    appliedDosesRef.current += value
+    setAppliedDoses(appliedDosesRef.current);
+  },[appliedDoses])
   const [showRightNoLoadWarnOnce, setShowRightNoLoadWarnOnce] = useState(false);
   const [showLeftNoLoadWarnOnce, setShowLeftNoLoadWarnOnce] = useState(false);
   const [showCenterNoLoadWarnOnce, setShowCenterNoLoadWarnOnce] = useState(false);
@@ -157,22 +162,20 @@ function ExecutionScreen(props: { navigation: any }) {
     
  });
 
- useFocusEffect(()=>{
+ useEffect(()=>{
   const interval = setInterval(async ()=>{
     const length = promises.current.length
     if(!requestOnProgress.current && length>0){
         const reverted = promises.current.reverse();
         const promiseFunc = reverted.pop()
         promises.current = reverted.reverse();
-
         await promiseFunc();
-      
     }    
   },500)
 
   return () => clearInterval(interval);
   
- })
+ },[])
 
   const onFinishButtonPress = useCallback(() => {
     props.navigation.navigate('HomeScreen');
@@ -199,9 +202,9 @@ function ExecutionScreen(props: { navigation: any }) {
     [setCenterApplicatorActive]
   );
 
+
   const processDose = useCallback(
     async (preset: {NAME:string, DOSE_AMOUNT:number},callback:()=>void) => {
-      async function effect(){
         setRequestOnProgress(true);
         try {
           const requestDto = new RequestDto({
@@ -225,10 +228,6 @@ function ExecutionScreen(props: { navigation: any }) {
           });
           const responseDto = await Instance.GetInstance().combateApp.request(requestDto);
           setVelocity(responseDto.gps.speed);
-          const _aux = !appliedDoses ? 0 : appliedDoses;
-          const applicatorsAmount =
-            Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount;
-          setAppliedDoses(_aux + preset.DOSE_AMOUNT * applicatorsAmount);
         } catch (err) {
           await Instance.GetInstance().errorHandler.handle(err)
 
@@ -236,36 +235,46 @@ function ExecutionScreen(props: { navigation: any }) {
           setRequestOnProgress(false);
           callback();
         }
-      }
-
-   
-       effect();
     },
-    [appliedDoses]
+    []
   );
 
 
   const onPresetPressed = useCallback(
-    async (value: {NAME:string, DOSE_AMOUNT:number}, callback: () => void) => {
+    async (preset: {NAME:string, DOSE_AMOUNT:number}, callback: () => void) => {
 
       async function process(){
-        await processDose(value,callback)
+        await processDose(preset,callback)
+        const applicatorsAmount =
+        Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount;
+      addAppliedDosesCallback(preset.DOSE_AMOUNT * applicatorsAmount);
+      console.log(preset.DOSE_AMOUNT)
+      console.log(applicatorsAmount)
       }
       promises.current.push(process)
 
     },
-    [processDose]
+    []
   );
 
   const onEventRegister = useCallback(
-    async (promise:Promise<void>) => {
-
+     (requestDto:RequestDto,callback:()=>void) => {
       async function process(){
-        await promise
-      }
+        setRequestOnProgress(true);
+        try {
+          await Instance.GetInstance().combateApp.request(requestDto);
+        } catch (err) {
+          await Instance.GetInstance().errorHandler.handle(err)
+        }finally{
+          setRequestOnProgress(false);
+          callback()
+        }
+      } 
+
       promises.current.push(process)
 
     },
+
     [processDose]
   );
 

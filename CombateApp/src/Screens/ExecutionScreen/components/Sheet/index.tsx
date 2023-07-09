@@ -4,6 +4,7 @@ import React, { memo, useCallback, useState } from 'react';
 import { appConfig } from '../../../../app/config/app-config';
 import { Instance } from '../../../../app/instance/instance';
 import { Theme } from '../../../../app/theme/theme';
+import { RequestDto } from '../../../../internal/core/dto/request-dto';
 import { Severity } from '../../../../internal/core/enum/severity';
 import EventRegisterModal from '../EventRegisterModal';
 import FinishExecutionModal from '../FinishExecutionModal';
@@ -32,7 +33,7 @@ function Sheet(props: {
     centerApplicatorLoad: number;
   };
   onFinishPressed: () => void;
-  onEventRegister:(promise:Promise<void>)=>Promise<void>
+  onEventRegister:(requestDto:RequestDto,callback:()=>void)=>void
   appliedDoses: number;
   sheetHeight: number;
   blockHeight: number;
