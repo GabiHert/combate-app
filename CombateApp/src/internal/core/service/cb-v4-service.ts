@@ -1,5 +1,6 @@
 import { CONSTANTS } from '../../config/config';
 import { ResponseDto } from '../dto/response-dto';
+import { StatusEnum } from '../enum/status';
 import { BluetoothErrorType } from '../error/error-type';
 import { ResponseDtoParser } from '../parser/response-dto-parser';
 import { PBluetooth } from '../port/bluetooth-port';
@@ -24,14 +25,24 @@ export class CbV4Service implements PCbService {
       await this._bluetooth.write(request.toProtocol());
 
       let timeoutMs = CONSTANTS.APPLICATION.DOSE_TIMEOUT_MS;
-      if (request.getRequestDto().dose?.amount) timeoutMs *= request.getRequestDto().dose.amount;
-      const protocol = await timeout(
+      let protocol = await timeout(
         timeoutMs,
-        this._bluetooth.read(timeoutMs+CONSTANTS.APPLICATION.BLUETOOTH_READ_TIMEOUT_MS),
+        this._bluetooth.read(timeoutMs),
         new BluetoothErrorType('Request timeout exceeded')
       );
 
-      const responseDto = this._responseDtoParser.parseV4(protocol);
+      let responseDto = this._responseDtoParser.parseV4(protocol);
+      
+      if(responseDto.status.name == StatusEnum.B.name){
+        if (request.getRequestDto().dose?.amount) timeoutMs *= request.getRequestDto().dose.amount;
+        protocol = await timeout(
+            timeoutMs,
+            this._bluetooth.read(timeoutMs+CONSTANTS.APPLICATION.BLUETOOTH_READ_TIMEOUT_MS),
+            new BluetoothErrorType('Request timeout exceeded')
+          );
+
+        responseDto = this._responseDtoParser.parseV4(protocol);
+      }
 
       this._logger.info({ event: 'CbV4Service.request', details: 'Process finished', responseDto });
 
