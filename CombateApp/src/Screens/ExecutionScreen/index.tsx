@@ -248,8 +248,7 @@ function ExecutionScreen(props: { navigation: any }) {
         const applicatorsAmount =
         Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount;
       addAppliedDosesCallback(preset.DOSE_AMOUNT * applicatorsAmount);
-      console.log(preset.DOSE_AMOUNT)
-      console.log(applicatorsAmount)
+
       }
       promises.current.push(process)
 
