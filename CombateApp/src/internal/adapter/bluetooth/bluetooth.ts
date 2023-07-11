@@ -165,16 +165,25 @@ export class ABluetooth implements PBluetooth {
       }
 
       const getMessage = async () => {
-        let str = undefined;
+        let str = undefined
+        while(!str){
         let dataAvailable = await this._device.available();
         while (!dataAvailable) dataAvailable = await this._device.available();
-        while (!str) {
           const data = await this._device.read();
           if (data) {
-            str = data.toString();
-            return str;
+            const aux = data.toString();
+            let dataStr = ""
+            for (let i = 0; i < aux.length; i++) {
+              if(aux.charCodeAt(i) != 45){
+                dataStr += aux[i]
+              }               
+            }
+            if (dataStr){
+              str = dataStr;
+            }
           }
         }
+        return str
       };
 
       const message = await timeout(
