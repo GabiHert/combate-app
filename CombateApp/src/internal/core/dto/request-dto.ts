@@ -1,9 +1,9 @@
 import { IDoseRequest } from '../../interface/dose-request';
 import { IRequestDtoArgs } from '../../interface/request-dto-args';
+import { RequestType } from '../enum/request-type';
 
 export class RequestDto {
   event: string;
-  dose?: IDoseRequest;
   client: string;
   applicatorsAmount:number
   project: string;
@@ -17,6 +17,10 @@ export class RequestDto {
   streetsAmount: number;
   linesSpacing: number;
   alert?: string;
+  name?:string;
+  dose?: IDoseRequest;
+  requestType?:RequestType;
+  
   constructor(args: IRequestDtoArgs) {
     this.applicatorsAmount = args.applicatorsAmount
     this.alert = args.alert;
@@ -33,5 +37,7 @@ export class RequestDto {
     this.weather = args.weather;
     this.streetsAmount = args.streetsAmount;
     this.linesSpacing = args.linesSpacing;
+    this.name = args.name;
+    this.requestType = args.requestType;
   }
 }

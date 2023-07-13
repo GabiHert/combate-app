@@ -47,7 +47,8 @@ export const CONSTANTS = {
     { name: 'Sub-bosque 2', id: '2' },
     { name: 'Sub-bosque 3', id: '3' },
   ],
-  REQUEST: { HEADER: 'INF' },
+  REQUEST_V4: { HEADER: 'INF' },
+  REQUEST_V5: { HEADER: 'INF5' },
   ERRORS: {
     MAX_VELOCITY:"",
     PERMISSIONS: {
@@ -74,6 +75,20 @@ export const CONSTANTS = {
       DOSE_AMOUNT_GREATER_THAN_10:'Número de doses deve ser menor ou igual a 10.',
       LINE_SPACING_NOT_DEFINED: 'Espaçamento de linhas deve ser informado.',
       LINE_SPACING_GREATER_THAN_0: 'Espaçamento de linhas deve ser maior do que 10.',
+    },
+    REQUEST_V5: {
+      DOSE_AMOUNT_BELLOW_ZERO: 'Quantidade de doses deve ser maior do que zero.',
+      DOSE_NOT_DEFINED: 'Informações de dose devem ser informadas.',
+      NOT_DEFINED: 'Dados invalidos.',
+      DOSE_AMOUNT_NOT_DEFINED: 'Quantidade de doses deve ser informada.',
+      DOSE_AMOUNT_GREATER_THAN_10:'Número de doses deve ser menor ou igual a 10.',
+      LINE_SPACING_NOT_DEFINED: 'Espaçamento de linhas deve ser informado.',
+      LINE_SPACING_GREATER_THAN_0: 'Espaçamento de linhas deve ser maior do que 10.',
+      LEFT_APPLICATOR_NOT_DEFINED: 'Dosador estado do dosador esquerdo não identificado.',
+      CENTER_APPLICATOR_NOT_DEFINED: 'Dosador estado do dosador central não identificado.',
+      RIGHT_APPLICATOR_NOT_DEFINED: 'Dosador estado do dosador direito não identificado.',
+      NAME_GREATER_THAN_8:"Nome do CB deve ter no máximo 8 caracteres.",
+      REQUEST_TYPE_NOT_DEFINED:"Tipo de requirição deve ser especificado.",
     },
     BLUETOOTH_APP: {
       DEVICE_NOT_AVAILABLE: 'Dispositivo não disponível',

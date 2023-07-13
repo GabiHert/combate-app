@@ -85,7 +85,7 @@ describe('request-v4 unit test', () => {
     requestV4.setRequestDto(requestDto);
     loggerMocked.clear();
     const result = requestV4.toProtocol();
-    let protocol = CONSTANTS.REQUEST.HEADER + 'NNNxxxxxxx';
+    let protocol = CONSTANTS.REQUEST_V4.HEADER + 'NNNxxxxxxx';
     protocol += checkSumBuilder.build(protocol) + '\r\n';
     expect(result).toBe(protocol);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -98,7 +98,7 @@ describe('request-v4 unit test', () => {
     requestV4.setRequestDto(requestDto);
     loggerMocked.clear();
     const result = requestV4.toProtocol();
-    let protocol = CONSTANTS.REQUEST.HEADER + 'N0Nxxxxxxx';
+    let protocol = CONSTANTS.REQUEST_V4.HEADER + 'N0Nxxxxxxx';
     protocol += checkSumBuilder.build(protocol) + '\r\n';
     expect(result).toBe(protocol);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -111,7 +111,7 @@ describe('request-v4 unit test', () => {
     requestV4.setRequestDto(requestDto);
     loggerMocked.clear();
     const result = requestV4.toProtocol();
-    let protocol = CONSTANTS.REQUEST.HEADER + 'N5Nxxxxxxx';
+    let protocol = CONSTANTS.REQUEST_V4.HEADER + 'N5Nxxxxxxx';
     protocol += checkSumBuilder.build(protocol) + '\r\n';
     expect(result).toBe(protocol);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);

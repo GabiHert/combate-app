@@ -128,7 +128,7 @@ export class RequestV4 implements PRequest {
       doseAmount = 'N';
     }
     let protocol = [
-      CONSTANTS.REQUEST.HEADER,
+      CONSTANTS.REQUEST_V4.HEADER,
       'N',
       doseAmount,
       'N',

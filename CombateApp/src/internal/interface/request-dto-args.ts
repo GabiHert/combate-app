@@ -1,7 +1,7 @@
+import { RequestType } from '../core/enum/request-type';
 import { IDoseRequest } from './dose-request';
 
 export interface IRequestDtoArgs {
-  dose?: IDoseRequest;
   event: string;
   client: string;
   project: string;
@@ -13,7 +13,10 @@ export interface IRequestDtoArgs {
   deviceName: string;
   maxVelocity: number;
   weather: string;
-  streetsAmount: number;
-  alert?: string;
   linesSpacing: number;
+  streetsAmount: number;
+  name?:string;
+  dose?: IDoseRequest;
+  alert?: string;
+  requestType?:RequestType;
 }
