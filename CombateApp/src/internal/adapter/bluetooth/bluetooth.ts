@@ -197,7 +197,7 @@ export class ABluetooth implements PBluetooth {
         details: 'Process finished',
         message: message,
       });
-
+      console.log(message)
       return message;
     } catch (err) {
       this._logger.error({

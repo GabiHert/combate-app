@@ -4,13 +4,13 @@ import { IConfigsProps, IPreExecutionConfigProps } from '../interface/config-pro
 
 export const CONSTANTS = {
   CONFIG_LOGIN:{
-    USER:"123",
+    USER:"adm1",
     PASSWORD:"123"
   },
   APPLICATION: {
     VERSION: '0.0.0',
     BLUETOOTH_WRITE_RETRIES: 5,
-    BLUETOOTH_READ_TIMEOUT_MS: 15000,
+    BLUETOOTH_READ_TIMEOUT_MS: 3000,
     DOSE_TIMEOUT_MS: 7000,
   },
   MAX_DOSES: 10,
@@ -49,7 +49,7 @@ export const CONSTANTS = {
   ],
   REQUEST: { HEADER: 'INF' },
   ERRORS: {
-    MAX_VELOCITY:"",
+    MAX_VELOCITY:"Velocidade máxima permitida atingida.",
     PERMISSIONS: {
       WRITE_STORAGE_PERMISSION: 'Acesso de escrita em arquivos negado',
       BLUETOOTH_CONNECT: 'Acesso de conexão Bluetooth negado',

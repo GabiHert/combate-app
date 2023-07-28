@@ -16,7 +16,7 @@ export class ErrorHandlerService implements PErrorHandlerService{
 
           if(err.notify){
             ShowToast({
-              title:"Erro "+err.errorCode,
+              title:"Erro "+err.name+" - "+err.errorCode,
               message:err.message,
               durationMs:err.permanent?undefined:3000,
               severity:SeverityEnum.ERROR,

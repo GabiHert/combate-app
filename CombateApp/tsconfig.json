@@ -6,7 +6,8 @@
 "strict": false,
     /* Completeness */
     "skipLibCheck": true      ,
-    "types":["node","jest"]                           /* Skip type checking all .d.ts files. */
+    "types":["node","jest"]              ,             /* Skip type checking all .d.ts files. */
+    "sourceMap": true
   },
 
 }

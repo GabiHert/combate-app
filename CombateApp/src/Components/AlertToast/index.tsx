@@ -81,7 +81,7 @@ export function ShowToast(props: {
   }
   Toast.show({
     id: id,
-    duration: props.durationMs ? props.durationMs : undefined,
+    duration: props.durationMs ? props.durationMs : null,
     placement: 'top',
     onCloseComplete: () => {
       if (props.alertSounding) alert.stop();

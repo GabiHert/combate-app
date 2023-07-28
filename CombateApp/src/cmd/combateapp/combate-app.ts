@@ -4,7 +4,7 @@ import { RequestDto } from '../../internal/core/dto/request-dto';
 import { ResponseDto } from '../../internal/core/dto/response-dto';
 import { EventEnum } from '../../internal/core/enum/event';
 import { ProtocolVersion, ProtocolVersionEnum } from '../../internal/core/enum/protocol-version';
-import { DoseProcessTimeOut, GenericErrorType, GpsErrorType, MaxVelocityErrorType, PermissionsErrorType, ValidationErrorType } from '../../internal/core/error/error-type';
+import { MaxVelocityErrorType, PermissionsErrorType } from '../../internal/core/error/error-type';
 import { CbServiceFactory } from '../../internal/core/factory/cb-service-factory';
 import { RequestFactory } from '../../internal/core/factory/request-factory';
 import { PCbService } from '../../internal/core/port/cb-service-port';
@@ -18,8 +18,12 @@ export class CombateApp implements PCombateApp {
   private _protocolVersion: ProtocolVersion;
   private _cbService: PCbService;
   private _filePath: string;
-  private _lastRequestTime;
+  private _lastRequestTime:number;
+  private _velocityExceededRecord:Array<number>;
   private _systematicMetersBetweenDose: number;
+  private _distanceRan:number;
+  private _velocityRecord:Array<number>
+  
 
 
   constructor(
@@ -28,7 +32,11 @@ export class CombateApp implements PCombateApp {
     private readonly _csvTableService: PCsvTableService,
     private readonly _requestFactory: RequestFactory,
     private readonly _protocolRules: ProtocolRules
-  ) {}
+  ) {
+    this._velocityExceededRecord = []
+    this._velocityRecord = []
+    this._distanceRan = 0
+  }
 
   private async _syncProtocolVersion(requestDto: RequestDto): Promise<void> {
     const request = this._requestFactory.factory(requestDto, ProtocolVersionEnum.V4);
@@ -99,16 +107,16 @@ export class CombateApp implements PCombateApp {
         await this._syncProtocolVersion(requestDto);
         this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
       }
-
+      
       const request = this._requestFactory.factory(requestDto, this._protocolVersion);
 
       const responseDto = await this._cbService.request(request, this._doseCallback);
 
-      this._lastRequestTime = new Date().getTime();
-
       await this._csvTableService.insert(this._filePath,requestDto, responseDto);
 
       await this._appRules(responseDto, requestDto);
+
+      this._lastRequestTime = new Date().getTime();
 
       this._logger.info({
         event: 'CombateApp.request',
@@ -134,36 +142,75 @@ export class CombateApp implements PCombateApp {
         requestDto,
         responseDto,
       });
-
-      if (responseDto.errorCode != "000"){
-        const errors = {
-          "001":new ValidationErrorType("Validação requisição [CB]"),
-          "002":new DoseProcessTimeOut("Dose demorando para finalizar [CB]"),
-          "003":new GpsErrorType("GPS demorando para responder [CB]"),
-        }
-        if(errors[responseDto.errorCode]){
-          throw new errors[responseDto.errorCode]
-        }else{
-          throw new GenericErrorType("Código de erro CB não mapeado ("+responseDto.errorCode+")")
-        }
-      }
-
+    
       const velocity = Number(responseDto.gps.speed);
-
-      if (velocity >= requestDto.maxVelocity) {
-        throw new MaxVelocityErrorType(CONSTANTS.ERRORS.MAX_VELOCITY) 
+      console.log("velocity :"+velocity )
+      this._velocityRecord.push(velocity)
+      if(velocity < requestDto.maxVelocity){
+        console.log("RESET" )
+        this._velocityExceededRecord = []
+      }else{
+        console.log("PUSH")
+        this._velocityExceededRecord.push(velocity)
       }
 
-      const elapsedTimeH =( this._lastRequestTime - new Date().getTime())/3600000;
-  
-      const distanceM = (velocity * elapsedTimeH)/1000
+      if (this._velocityRecord.length >= 4){
+        let sum =0
+        this._velocityRecord.forEach((v)=>{
+          sum+=v;
+        })
+        const average = sum/this._velocityRecord.length
 
-      if (distanceM >= this._systematicMetersBetweenDose) {
-        const systematicRequestDto = requestDto;
-        systematicRequestDto.dose.amount = 1;
-        systematicRequestDto.event = EventEnum.Systematic.name;
-        await this.request(systematicRequestDto);
+        const aux = this._velocityRecord
+        aux.reverse()
+        aux.pop()
+        aux.reverse()
+        this._velocityRecord = aux
+        
+        const velocityKmH = average;
+        const velocityMS = velocityKmH * (1000 / 3600); 
+        const elapsedTimeS = (new Date().getTime() - this._lastRequestTime) / 1000;
+        const distanceM = velocityMS * elapsedTimeS;
+
+        console.log("velocityKm/h :"+average)
+        console.log("velocityM/s :"+velocityMS)
+        console.log("elapsedTimeS :"+ elapsedTimeS)
+        console.log("distanceM :"+distanceM )
+
+        this._distanceRan += distanceM
+        console.log("distance: "+distanceM)
+        console.log("distanceRan: "+this._distanceRan)
+        console.log("systematic: "+this._systematicMetersBetweenDose)
+        if (this._distanceRan >= this._systematicMetersBetweenDose) {
+          console.log("SHOULD DOSE")
+          const systematicRequestDto = requestDto;
+          systematicRequestDto.dose.amount = 1;
+          systematicRequestDto.event = EventEnum.Systematic.name;
+
+          const request = this._requestFactory.factory(systematicRequestDto, this._protocolVersion);
+          const responseDto = await this._cbService.request(request, this._doseCallback);
+          await this._csvTableService.insert(this._filePath,requestDto, responseDto);
+          
+          this._distanceRan = 0;
+          console.log("PASSED")
+        }
       }
+      console.log("PASSED2")
+
+      
+      if (this._velocityExceededRecord.length>=4){
+        let sum =0
+        this._velocityExceededRecord.forEach((v)=>{
+          sum+=v;
+        })
+        const average = sum/this._velocityExceededRecord.length
+        this._velocityExceededRecord = []
+        
+        if (average >= requestDto.maxVelocity) {
+          throw new MaxVelocityErrorType(CONSTANTS.ERRORS.MAX_VELOCITY) 
+        }
+      }
+
 
       this._logger.info({
         event: 'CombateApp._appRules',

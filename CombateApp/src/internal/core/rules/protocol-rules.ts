@@ -22,14 +22,6 @@ export class ProtocolRules {
         protocol,
       });
 
-      if (protocol.length < 23) {
-        this._logger.warn({
-          event: 'ProtocolRules.V4',
-          details: 'Process warn',
-          warn: 'protocol length different from expected',
-        });
-        throw new ValidationErrorType('Protocol length does not mach rules');
-      }
       const protocolSplited = protocol.split(',');
       if (protocolSplited[0].length != 11) {
         this._logger.warn({
