@@ -1,4 +1,4 @@
-import { Theme } from '../../../app/theme/theme';
+import { Theme } from '../../../../view/app/theme/theme';
 
 enum Severities {
   WARN = 'warning',

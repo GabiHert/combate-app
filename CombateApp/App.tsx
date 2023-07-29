@@ -4,11 +4,11 @@ import { NativeBaseProvider } from 'native-base';
 import * as React from 'react';
 import { useWindowDimensions } from 'react-native';
 import 'react-native-get-random-values';
-import { appConfig } from './src/app/config/app-config';
-import ConfigScreen from './src/Screens/ConfigScreen';
-import ExecutionScreen from './src/Screens/ExecutionScreen';
-import HomeScreen from './src/Screens/HomeScreen';
-import PreExecutionScreen from './src/Screens/PreExecutionScreen';
+import { appConfig } from './view/app/config/app-config';
+import ConfigScreen from './view/Screens/ConfigScreen';
+import ExecutionScreen from './view/Screens/ExecutionScreen';
+import HomeScreen from './view/Screens/HomeScreen';
+import PreExecutionScreen from './view/Screens/PreExecutionScreen';
 
 const Stack = createNativeStackNavigator();
 
