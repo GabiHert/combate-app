@@ -92,8 +92,9 @@ export class CsvTableService implements PCsvTableService {
         requestDto,
       });
 
-      const date = dateTimeFormatter.date(responseDto.gps.dateUTC);
-      const time = dateTimeFormatter.time(responseDto.gps.dateUTC);
+      const dateNow = new Date()
+      const date = dateTimeFormatter.date(dateNow);
+      const time = dateTimeFormatter.time(dateNow);
 
       let doseAmount = 0;
       if(requestDto.dose&&requestDto.dose.amount){

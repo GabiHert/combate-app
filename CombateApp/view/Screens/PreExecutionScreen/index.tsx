@@ -2,29 +2,28 @@ import {
   Box,
   Button,
   Divider,
-  FormControl,
-  HStack,
-  IconButton,
+  FormControl, IconButton,
   ScrollView,
   VStack
 } from 'native-base';
 import React, { useCallback, useState } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { appConfig } from '../../app/config/app-config';
-import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
 import { Weather, weatherItems } from '../../../src/internal/core/enum/weather';
 import { IPreExecutionConfigProps } from '../../../src/internal/interface/config-props';
 import { IPreExecutionFormResult } from '../../../src/internal/interface/pre-execution-form-result';
+import { appConfig } from '../../app/config/app-config';
+import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
 
+import { useFocusEffect } from '@react-navigation/native';
+import { CONSTANTS } from '../../../src/internal/config/config';
+import { SeverityEnum } from '../../../src/internal/core/enum/severity';
+import { dateTimeFormatter } from '../../../src/internal/core/utils/date-time-formatter';
+import { IItem } from '../../../src/internal/interface/item';
 import { Instance } from '../../app/instance/instance';
 import { Theme } from '../../app/theme/theme';
 import { ShowToast } from '../../Components/AlertToast';
 import FormInput from '../../Components/FormInput';
 import SelectInput from '../../Components/SelectInput';
-import { CONSTANTS } from '../../../src/internal/config/config';
-import { SeverityEnum } from '../../../src/internal/core/enum/severity';
-import { dateTimeFormatter } from '../../../src/internal/core/utils/date-time-formatter';
-import { IItem } from '../../../src/internal/interface/item';
 
 function PreExecutionScreen(props: { navigation: any }) {
   const [activity, setActivity] = useState<string>(
@@ -53,9 +52,7 @@ function PreExecutionScreen(props: { navigation: any }) {
   const [farm, setFarm] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().farm
   );
-  const [plot, setPlot] = useState<string>(
-    Instance.GetInstance().preExecutionConfigCache.getCache().plot
-  );
+  const [plot, setPlot] = useState<string>("");
   const [tractorName, setTractorName] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().tractorName
   );
@@ -63,7 +60,6 @@ function PreExecutionScreen(props: { navigation: any }) {
     Instance.GetInstance().preExecutionConfigCache.getCache().streetsAmount
   );
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
-  const [isSearching, setIsSearching] = useState<boolean>(false);
 
   const [deviceName, setDeviceName] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().deviceName
@@ -72,6 +68,7 @@ function PreExecutionScreen(props: { navigation: any }) {
   const [weather, setWeather] = useState<Weather>(
     new Weather(Instance.GetInstance().preExecutionConfigCache.getCache().weather)
   );
+  
   const [validationResult, setValidationResult] = useState<IPreExecutionFormResult>({
     applicatorsAmount: { errorMessage: undefined },
     clientName: { errorMessage: undefined },
@@ -91,16 +88,21 @@ function PreExecutionScreen(props: { navigation: any }) {
 
   const searchDevicesCallback = useCallback(async () => {
     try {
-      setIsSearching(true);
       await Instance.GetInstance().bluetoothApp.init();
       const data = await Instance.GetInstance().bluetoothApp.getBondedDevices();
       setDevices(data);
     } catch (err) {
       await Instance.GetInstance().errorHandler.handle(err);
     }
-    setIsSearching(false);
   }, [devices]);
 
+  useFocusEffect(() => {
+    const interval = setInterval(async() => {
+     await searchDevicesCallback()
+    }, 3000);
+    return () => clearInterval(interval);
+   });
+   
   const onNextPressed = useCallback(async () => {
     const data: IPreExecutionConfigProps = {
       applicatorsAmount,
@@ -147,6 +149,8 @@ function PreExecutionScreen(props: { navigation: any }) {
         fileName = fileName.replace(/\//g, '-');
         fileName = fileName.replace(/\:/g, '-');
 
+        Instance.GetInstance().errorHandler.begin(fileName)
+
         await Instance.GetInstance().combateApp.begin(
           fileName,
           configCache.SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE
@@ -157,6 +161,10 @@ function PreExecutionScreen(props: { navigation: any }) {
         await Instance.GetInstance().errorHandler.handle(err);
       }
     } else {
+      if (!deviceConnected){
+        result.deviceName = {errorMessage:"Bluetooth não conectado."}
+        result.valid = false
+      }
       setValidationResult(result);
       ShowToast({
         durationMs: 2000,
@@ -270,7 +278,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             title="Talhão"
             onItemSelected={setPlot}
             items={mapStringToItemArray(Instance.GetInstance().configCache.getCache().PLOTS)}
-            defaultValue={Instance.GetInstance().preExecutionConfigCache.getCache().plot}
+            defaultValue={""}
             errorMessage={validationResult.plot.errorMessage}
             placeholder={''}
           />
@@ -362,11 +370,11 @@ function PreExecutionScreen(props: { navigation: any }) {
           <SelectInput
             onItemSelected={setDeviceName}
             title="Selecione o dipositivo Bluetooth"
-            placeholder="CB5"
+            placeholder="CB"
+            defaultValue={deviceName}
             items={devices}
             errorMessage={validationResult.deviceName.errorMessage}
           />
-          <HStack>
             <Button
               isLoading={isConnecting}
               isLoadingText="Conectando"
@@ -375,20 +383,7 @@ function PreExecutionScreen(props: { navigation: any }) {
               onPress={connectToBluetoothCallback}
             >
               Conectar
-            </Button>
-
-            <Box width={2} />
-
-            <Button
-              isLoading={isSearching}
-              isLoadingText="Pesquisando"
-              _pressed={{ opacity: 0.8 }}
-              background={Theme().color.b300}
-              onPress={searchDevicesCallback}
-            >
-              Pesquisar
-            </Button>
-          </HStack>
+            </Button>            
         </VStack>
         <Box w="20%" h="60px" />
       </ScrollView>

@@ -228,6 +228,9 @@ function ExecutionScreen(props: { navigation: any }) {
           });
           const responseDto = await Instance.GetInstance().combateApp.request(requestDto);
           setVelocity(responseDto.gps.speed);
+          const applicatorsAmount =
+          Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount;
+        addAppliedDosesCallback(preset.DOSE_AMOUNT * applicatorsAmount);
         } catch (err) {
           await Instance.GetInstance().errorHandler.handle(err)
 
@@ -245,10 +248,6 @@ function ExecutionScreen(props: { navigation: any }) {
 
       async function process(){
         await processDose(preset,callback)
-        const applicatorsAmount =
-        Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount;
-      addAppliedDosesCallback(preset.DOSE_AMOUNT * applicatorsAmount);
-
       }
       promises.current.push(process)
 
