@@ -4,6 +4,7 @@ import { RequestDto } from '../../internal/core/dto/request-dto';
 import { ResponseDto } from '../../internal/core/dto/response-dto';
 import { EventEnum } from '../../internal/core/enum/event';
 import { ProtocolVersion, ProtocolVersionEnum } from '../../internal/core/enum/protocol-version';
+import { PError } from '../../internal/core/error/error-port';
 import { MaxVelocityErrorType, PermissionsErrorType } from '../../internal/core/error/error-type';
 import { CbServiceFactory } from '../../internal/core/factory/cb-service-factory';
 import { RequestFactory } from '../../internal/core/factory/request-factory';
@@ -23,7 +24,8 @@ export class CombateApp implements PCombateApp {
   private _systematicMetersBetweenDose: number;
   private _distanceRan:number;
   private _velocityRecord:Array<number>
-  
+  private _requestDto:RequestDto;
+  private _responseDto:ResponseDto;
 
 
   constructor(
@@ -39,6 +41,7 @@ export class CombateApp implements PCombateApp {
   }
 
   private async _syncProtocolVersion(requestDto: RequestDto): Promise<void> {
+    this._requestDto = requestDto;
     const request = this._requestFactory.factory(requestDto, ProtocolVersionEnum.V4);
     const cbV4Service = this._cbServiceFactory.factory(ProtocolVersionEnum.V4);
     const responseDto = await cbV4Service.request(request);
@@ -103,6 +106,8 @@ export class CombateApp implements PCombateApp {
         requestDto,
       });
 
+      this._requestDto = requestDto;
+
       if (!this._cbService || !this._protocolVersion) {
         await this._syncProtocolVersion(requestDto);
         this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
@@ -112,6 +117,8 @@ export class CombateApp implements PCombateApp {
 
       const responseDto = await this._cbService.request(request, this._doseCallback);
 
+      this._responseDto = responseDto;
+      
       await this._csvTableService.insert(this._filePath,requestDto, responseDto);
 
       await this._appRules(responseDto, requestDto);
@@ -130,6 +137,10 @@ export class CombateApp implements PCombateApp {
         details: 'Process error',
         error: err.message,
       });
+      if (err instanceof PError){
+          err.requestDto = this._requestDto
+          err.responseDto = this._responseDto
+      } 
       throw err;
     }
   }
@@ -142,15 +153,16 @@ export class CombateApp implements PCombateApp {
         requestDto,
         responseDto,
       });
+
+      this._requestDto = requestDto;
+      this._responseDto = responseDto;
     
       const velocity = Number(responseDto.gps.speed);
-      console.log("velocity :"+velocity )
       this._velocityRecord.push(velocity)
+      
       if(velocity < requestDto.maxVelocity){
-        console.log("RESET" )
         this._velocityExceededRecord = []
       }else{
-        console.log("PUSH")
         this._velocityExceededRecord.push(velocity)
       }
 
@@ -172,30 +184,24 @@ export class CombateApp implements PCombateApp {
         const elapsedTimeS = (new Date().getTime() - this._lastRequestTime) / 1000;
         const distanceM = velocityMS * elapsedTimeS;
 
-        console.log("velocityKm/h :"+average)
-        console.log("velocityM/s :"+velocityMS)
-        console.log("elapsedTimeS :"+ elapsedTimeS)
-        console.log("distanceM :"+distanceM )
-
         this._distanceRan += distanceM
-        console.log("distance: "+distanceM)
-        console.log("distanceRan: "+this._distanceRan)
-        console.log("systematic: "+this._systematicMetersBetweenDose)
+      
         if (this._distanceRan >= this._systematicMetersBetweenDose) {
-          console.log("SHOULD DOSE")
           const systematicRequestDto = requestDto;
           systematicRequestDto.dose.amount = 1;
           systematicRequestDto.event = EventEnum.Systematic.name;
+          this._requestDto = systematicRequestDto;
 
           const request = this._requestFactory.factory(systematicRequestDto, this._protocolVersion);
+
           const responseDto = await this._cbService.request(request, this._doseCallback);
+          this._responseDto = responseDto
+
           await this._csvTableService.insert(this._filePath,requestDto, responseDto);
           
           this._distanceRan = 0;
-          console.log("PASSED")
         }
       }
-      console.log("PASSED2")
 
       
       if (this._velocityExceededRecord.length>=4){
@@ -222,6 +228,12 @@ export class CombateApp implements PCombateApp {
         details: 'Process error',
         error: err.message,
       });
+
+      if(err instanceof PError){
+        err.requestDto =this._requestDto;
+        err.responseDto = this._responseDto;
+      }
+
       throw err;
     }
   }

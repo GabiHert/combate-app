@@ -1,3 +1,4 @@
+import { RequestDto } from "../dto/request-dto";
 import { ResponseDto } from "../dto/response-dto";
 
 export class PError extends Error {
@@ -7,9 +8,11 @@ export class PError extends Error {
   readonly notify:boolean;
   readonly sound:boolean;
   readonly permanent:boolean
-  readonly responseDto?:ResponseDto
+   responseDto?:ResponseDto
+   requestDto?:RequestDto
   constructor(name:string,message: string, errorCode: string,
-              notify:boolean,sound:boolean,permanent:boolean,responseDto?:ResponseDto) {
+              notify:boolean,sound:boolean,permanent:boolean,
+              responseDto?:ResponseDto,requestDto?:RequestDto) {
     super(message);
     this.responseDto=responseDto;
     this.message = message;
@@ -18,5 +21,6 @@ export class PError extends Error {
     this.permanent = permanent;
     this.sound = sound;
     this.name = name;
+    this.requestDto = requestDto;
   }
 }

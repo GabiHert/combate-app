@@ -76,6 +76,6 @@ export class Instance {
       repository,
       DEFAULT_PRE_EXECUTION_CONFIG
     );
-   this.errorHandler= new ErrorHandlerService(this.logger,this.bluetoothApp);
+   this.errorHandler= new ErrorHandlerService(this.logger,this.bluetoothApp,csvTableService);
   }
 }
