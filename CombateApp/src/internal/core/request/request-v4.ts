@@ -141,8 +141,7 @@ export class RequestV4 implements PRequest {
       'x',
     ].join('');
 
-    protocol += this._checkSumBuilder.build(protocol) + '\r\n';
-
+    protocol += this._checkSumBuilder.build(protocol.substring(3)) + '\r\n';
     this._logger.info({
       event: 'RequestV4.toProtocol',
       details: 'Process finished',

@@ -1,4 +1,4 @@
-import { Instance } from '../../app/instance/instance';
+import { Instance } from '../../../view/app/instance/instance';
 import { CONSTANTS } from '../../internal/config/config';
 import { Poison } from '../../internal/core/enum/poison';
 import { WeatherEnum } from '../../internal/core/enum/weather';

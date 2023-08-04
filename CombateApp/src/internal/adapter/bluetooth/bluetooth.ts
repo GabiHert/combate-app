@@ -1,5 +1,5 @@
 import RNBluetoothClassic, { BluetoothDevice } from 'react-native-bluetooth-classic';
-import { Instance } from '../../../app/instance/instance';
+import { Instance } from '../../../../view/app/instance/instance';
 import { CONSTANTS } from '../../config/config';
 import { BluetoothErrorType } from '../../core/error/error-type';
 import { PBluetooth } from '../../core/port/bluetooth-port';
@@ -197,7 +197,7 @@ export class ABluetooth implements PBluetooth {
         details: 'Process finished',
         message: message,
       });
-
+      console.log(message)
       return message;
     } catch (err) {
       this._logger.error({
