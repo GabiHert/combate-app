@@ -1,5 +1,5 @@
-import { IItem } from '../../../src/internal/interface/item';
-import { TMapString } from '../../../src/internal/types/map-string';
+import { IItem } from "../../../src/internal/interface/item";
+import { TMapString } from "../../../src/internal/types/map-string";
 
 export function itemArrayToMapString(itemArray: Array<IItem>): TMapString {
   let map: TMapString;

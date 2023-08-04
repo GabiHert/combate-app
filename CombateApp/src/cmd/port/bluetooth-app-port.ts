@@ -1,4 +1,4 @@
-import { IItem } from '../../internal/interface/item';
+import { IItem } from "../../internal/interface/item";
 
 export interface PBluetoothApp {
   /**

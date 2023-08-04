@@ -1,4 +1,4 @@
-import { IDoseRequest } from './dose-request';
+import { IDoseRequest } from "./dose-request";
 
 export interface IRequestDtoArgs {
   dose?: IDoseRequest;
@@ -7,7 +7,7 @@ export interface IRequestDtoArgs {
   project: string;
   plot: string;
   tractorName: string;
-  applicatorsAmount:number;
+  applicatorsAmount: number;
   poisonType: string;
   doseWeightG: number;
   deviceName: string;

@@ -6,5 +6,8 @@
     "source.organizeImports": true
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "[c]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  }
 }

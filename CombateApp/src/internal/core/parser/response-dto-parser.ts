@@ -1,15 +1,22 @@
-import gpsSentenceParser from '@drivetech/node-nmea';
-import { IGpsData } from '../../interface/gps-data';
-import { ResponseDto } from '../dto/response-dto';
-import { Status } from '../enum/status';
-import { PLogger } from '../port/logger-port';
-import { ProtocolRules } from '../rules/protocol-rules';
+import gpsSentenceParser from "@drivetech/node-nmea";
+import { IGpsData } from "../../interface/gps-data";
+import { ResponseDto } from "../dto/response-dto";
+import { Status } from "../enum/status";
+import { PLogger } from "../port/logger-port";
+import { ProtocolRules } from "../rules/protocol-rules";
 export class ResponseDtoParser {
-  constructor(private readonly _logger: PLogger, private _protocolRules: ProtocolRules) {}
+  constructor(
+    private readonly _logger: PLogger,
+    private _protocolRules: ProtocolRules
+  ) {}
 
   parseV4(protocol: string): ResponseDto {
     try {
-      this._logger.info({ event: 'ResponseBuilder.buildV4', details: 'Process started', protocol });
+      this._logger.info({
+        event: "ResponseBuilder.buildV4",
+        details: "Process started",
+        protocol,
+      });
 
       this._protocolRules.V4(protocol);
 
@@ -17,18 +24,18 @@ export class ResponseDtoParser {
       sentence = sentence.substring(0, sentence.length - 1);
       const status = new Status(protocol[3]);
       const errorCode = protocol.substring(4, 7);
-      const commaSeparated = sentence.split(',');
+      const commaSeparated = sentence.split(",");
 
       //Adds "*" to checkSum. Ex: A30 --> A*30
       const gprmcCs =
         commaSeparated[commaSeparated.length - 1][0] +
-        '*' +
+        "*" +
         commaSeparated[commaSeparated.length - 1][1] +
         commaSeparated[commaSeparated.length - 1][2];
 
       commaSeparated[commaSeparated.length - 1] = gprmcCs;
 
-      const gprmc = '$GPRMC' + commaSeparated.join(',');
+      const gprmc = "$GPRMC" + commaSeparated.join(",");
       const data = gpsSentenceParser.parse(gprmc);
 
       let gpsData: IGpsData;
@@ -43,21 +50,21 @@ export class ResponseDtoParser {
           speed,
           dateUTC: date,
         };
-      } else gpsData = { status: 'V' };
+      } else gpsData = { status: "V" };
 
-      const responseDto = new ResponseDto(gpsData, status, errorCode,"4");
+      const responseDto = new ResponseDto(gpsData, status, errorCode, "4");
 
       this._logger.info({
-        event: 'ResponseBuilder.buildV4',
-        details: 'Process finished',
+        event: "ResponseBuilder.buildV4",
+        details: "Process finished",
         responseDto,
       });
 
       return responseDto;
     } catch (err) {
       this._logger.error({
-        event: 'ResponseBuilder.buildV4',
-        details: 'Process error',
+        event: "ResponseBuilder.buildV4",
+        details: "Process error",
         error: err.message,
       });
 
@@ -67,16 +74,20 @@ export class ResponseDtoParser {
 
   parseV5(protocol: string): ResponseDto {
     try {
-      this._logger.info({ event: 'ResponseBuilder.buildV5', details: 'Process started', protocol });
+      this._logger.info({
+        event: "ResponseBuilder.buildV5",
+        details: "Process started",
+        protocol,
+      });
 
-     //todo: this._protocolRules.V5(protocol);
+      //todo: this._protocolRules.V5(protocol);
 
       let sentence = protocol.substring(11);
       sentence = sentence.substring(0, sentence.length - 1);
       const status = new Status(protocol[3]);
       const errorCode = protocol.substring(4, 7);
 
-      const gprmc = '$GPRMC' + sentence;
+      const gprmc = "$GPRMC" + sentence;
       const data = gpsSentenceParser.parse(gprmc);
 
       let gpsData: IGpsData;
@@ -91,21 +102,26 @@ export class ResponseDtoParser {
           speed,
           dateUTC: date,
         };
-      } else gpsData = { status: 'V' };
+      } else gpsData = { status: "V" };
 
-      const responseDto = new ResponseDto(gpsData, status, errorCode,protocol[1]);
+      const responseDto = new ResponseDto(
+        gpsData,
+        status,
+        errorCode,
+        protocol[1]
+      );
 
       this._logger.info({
-        event: 'ResponseBuilder.buildV5',
-        details: 'Process finished',
+        event: "ResponseBuilder.buildV5",
+        details: "Process finished",
         responseDto,
       });
 
       return responseDto;
     } catch (err) {
       this._logger.error({
-        event: 'ResponseBuilder.buildV5',
-        details: 'Process error',
+        event: "ResponseBuilder.buildV5",
+        details: "Process error",
         error: err.message,
       });
 

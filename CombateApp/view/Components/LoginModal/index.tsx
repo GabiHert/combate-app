@@ -1,7 +1,7 @@
-import { Button, FormControl, Modal } from 'native-base';
-import { memo, useCallback, useState } from 'react';
-import { Theme } from '../../../view/app/theme/theme';
-import FormInput from '../FormInput';
+import { Button, FormControl, Modal } from "native-base";
+import { memo, useCallback, useState } from "react";
+import { Theme } from "../../../view/app/theme/theme";
+import FormInput from "../FormInput";
 
 function LoginModal(props: {
   isOpen: boolean;
@@ -34,10 +34,10 @@ function LoginModal(props: {
     }
   }, [user, password, setIsValid, setValidationError]);
 
-  const onCloseCallback = useCallback(()=>{
+  const onCloseCallback = useCallback(() => {
     setIsValid(true);
     props.onClose();
-  },[])
+  }, []);
   return (
     <Modal isOpen={props.isOpen} onClose={onCloseCallback}>
       <Modal.Content maxWidth="400px">
@@ -45,7 +45,12 @@ function LoginModal(props: {
         <Modal.Header>Configurações</Modal.Header>
         <Modal.Body>
           <FormControl>
-            <FormInput title="Usuário" isInvalid={!isValid} w="100%" onChangeText={onChangeUser} />
+            <FormInput
+              title="Usuário"
+              isInvalid={!isValid}
+              w="100%"
+              onChangeText={onChangeUser}
+            />
           </FormControl>
           <FormControl mt="3">
             <FormInput
@@ -58,7 +63,12 @@ function LoginModal(props: {
           </FormControl>
         </Modal.Body>
         <Modal.Footer
-          _text={{ color: Theme().color.sError, position: 'absolute', left: 12, right: 0 }}
+          _text={{
+            color: Theme().color.sError,
+            position: "absolute",
+            left: 12,
+            right: 0,
+          }}
         >
           <Button
             _pressed={{ opacity: 0.8 }}

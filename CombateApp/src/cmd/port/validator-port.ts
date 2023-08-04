@@ -1,6 +1,9 @@
-import { IConfigFormResult } from '../../internal/interface/config-form-result';
-import { IConfigsProps, IPreExecutionConfigProps } from '../../internal/interface/config-props';
-import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-form-result';
+import { IConfigFormResult } from "../../internal/interface/config-form-result";
+import {
+  IConfigsProps,
+  IPreExecutionConfigProps,
+} from "../../internal/interface/config-props";
+import { IPreExecutionFormResult } from "../../internal/interface/pre-execution-form-result";
 
 export interface PValidator {
   /**
@@ -8,7 +11,9 @@ export interface PValidator {
    * @param data configuration to be validated
    * @return an error message to each invalid field
    */
-  validatePreExecutionForm(data: IPreExecutionConfigProps): IPreExecutionFormResult;
+  validatePreExecutionForm(
+    data: IPreExecutionConfigProps
+  ): IPreExecutionFormResult;
 
   /**
    *

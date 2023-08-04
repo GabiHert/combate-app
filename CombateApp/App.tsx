@@ -1,14 +1,14 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NativeBaseProvider } from 'native-base';
-import * as React from 'react';
-import { useWindowDimensions } from 'react-native';
-import 'react-native-get-random-values';
-import { appConfig } from './view/app/config/app-config';
-import ConfigScreen from './view/Screens/ConfigScreen';
-import ExecutionScreen from './view/Screens/ExecutionScreen';
-import HomeScreen from './view/Screens/HomeScreen';
-import PreExecutionScreen from './view/Screens/PreExecutionScreen';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NativeBaseProvider } from "native-base";
+import * as React from "react";
+import { useWindowDimensions } from "react-native";
+import "react-native-get-random-values";
+import { appConfig } from "./view/app/config/app-config";
+import ConfigScreen from "./view/Screens/ConfigScreen";
+import ExecutionScreen from "./view/Screens/ExecutionScreen";
+import HomeScreen from "./view/Screens/HomeScreen";
+import PreExecutionScreen from "./view/Screens/PreExecutionScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +25,10 @@ export default function App() {
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="ExecutionScreen" component={ExecutionScreen} />
           <Stack.Screen name="ConfigScreen" component={ConfigScreen} />
-          <Stack.Screen name="PreExecutionScreen" component={PreExecutionScreen} />
+          <Stack.Screen
+            name="PreExecutionScreen"
+            component={PreExecutionScreen}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>

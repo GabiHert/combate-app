@@ -1,4 +1,4 @@
-import { TMapString } from '../types/map-string';
+import { TMapString } from "../types/map-string";
 
 export interface IConfigsProps {
   APPLICATION: {

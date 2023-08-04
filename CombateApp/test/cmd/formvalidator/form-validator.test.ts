@@ -1,18 +1,18 @@
-import { v4 } from 'uuid';
-import { Validator } from '../../../src/cmd/formvalidator/form-validator';
-import { CONSTANTS } from '../../../src/internal/config/config';
-import { PoisonEnum } from '../../../src/internal/core/enum/poison';
-import { WeatherEnum } from '../../../src/internal/core/enum/weather';
-import { IConfigFormResult } from '../../../src/internal/interface/config-form-result';
+import { v4 } from "uuid";
+import { Validator } from "../../../src/cmd/formvalidator/form-validator";
+import { CONSTANTS } from "../../../src/internal/config/config";
+import { PoisonEnum } from "../../../src/internal/core/enum/poison";
+import { WeatherEnum } from "../../../src/internal/core/enum/weather";
+import { IConfigFormResult } from "../../../src/internal/interface/config-form-result";
 import {
-    IConfigsProps,
-    IPreExecutionConfigProps
-} from '../../../src/internal/interface/config-props';
-import { IPreExecutionFormResult } from '../../../src/internal/interface/pre-execution-form-result';
-import { ConfigMock } from '../../mock/config-mock';
-import { LoggerMock } from '../../mock/logger-mock';
+  IConfigsProps,
+  IPreExecutionConfigProps,
+} from "../../../src/internal/interface/config-props";
+import { IPreExecutionFormResult } from "../../../src/internal/interface/pre-execution-form-result";
+import { ConfigMock } from "../../mock/config-mock";
+import { LoggerMock } from "../../mock/logger-mock";
 
-describe('FormValidator unit tests', () => {
+describe("FormValidator unit tests", () => {
   const loggerMocked = new LoggerMock();
   const configMocked = new ConfigMock();
   const formValidator = new Validator(loggerMocked, configMocked);
@@ -38,21 +38,21 @@ describe('FormValidator unit tests', () => {
       },
       EVENTS: {},
       FARMS: {},
-      FILE_PATH: '',
+      FILE_PATH: "",
       PLOTS: {},
-      POISON_TYPE: '',
+      POISON_TYPE: "",
       PRESETS: {
-        P1: { DOSE_AMOUNT: 0, NAME: '' },
-        P2: { DOSE_AMOUNT: 0, NAME: '' },
-        P3: { DOSE_AMOUNT: 0, NAME: '' },
-        P4: { DOSE_AMOUNT: 0, NAME: '' },
-        P5: { DOSE_AMOUNT: 0, NAME: '' },
-        P6: { DOSE_AMOUNT: 0, NAME: '' },
+        P1: { DOSE_AMOUNT: 0, NAME: "" },
+        P2: { DOSE_AMOUNT: 0, NAME: "" },
+        P3: { DOSE_AMOUNT: 0, NAME: "" },
+        P4: { DOSE_AMOUNT: 0, NAME: "" },
+        P5: { DOSE_AMOUNT: 0, NAME: "" },
+        P6: { DOSE_AMOUNT: 0, NAME: "" },
       },
     };
     loggerMocked.clear();
     preExecutionFormData = {
-      activity: '',
+      activity: "",
       applicatorsAmount: 1,
       deviceName: v4(),
       clientName: v4(),
@@ -94,16 +94,16 @@ describe('FormValidator unit tests', () => {
       },
       EVENTS: { 1: v4() },
       FARMS: { 1: v4() },
-      FILE_PATH: 'teste/teste',
+      FILE_PATH: "teste/teste",
       PLOTS: { 1: v4() },
       POISON_TYPE: PoisonEnum.FP.name,
       PRESETS: {
-        P1: { DOSE_AMOUNT: 10, NAME: 'teste' },
-        P2: { DOSE_AMOUNT: 2, NAME: 'teste' },
-        P3: { DOSE_AMOUNT: 4, NAME: 'teste' },
-        P4: { DOSE_AMOUNT: 5, NAME: 'teste' },
-        P5: { DOSE_AMOUNT: 6, NAME: 'teste' },
-        P6: { DOSE_AMOUNT: 7, NAME: 'teste' },
+        P1: { DOSE_AMOUNT: 10, NAME: "teste" },
+        P2: { DOSE_AMOUNT: 2, NAME: "teste" },
+        P3: { DOSE_AMOUNT: 4, NAME: "teste" },
+        P4: { DOSE_AMOUNT: 5, NAME: "teste" },
+        P5: { DOSE_AMOUNT: 6, NAME: "teste" },
+        P6: { DOSE_AMOUNT: 7, NAME: "teste" },
       },
       LINE_SPACING: 1,
       STOP_REASONS_EVENTS: { 1: v4() },
@@ -141,7 +141,7 @@ describe('FormValidator unit tests', () => {
 
   // BEGIN validatePreExecutionForm UNIT TEST
 
-  it('should indicate that all preExecutionFormData fields are valid', () => {
+  it("should indicate that all preExecutionFormData fields are valid", () => {
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     expect(result).toEqual(preExecutionFormResult);
@@ -150,7 +150,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(0);
   });
 
-  it('should indicate an error when preExecutionFormData.clientName is undefined', () => {
+  it("should indicate an error when preExecutionFormData.clientName is undefined", () => {
     delete preExecutionFormData.clientName;
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
@@ -164,8 +164,8 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.clientName is empty', () => {
-    preExecutionFormData.clientName = '';
+  it("should indicate an error when preExecutionFormData.clientName is empty", () => {
+    preExecutionFormData.clientName = "";
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.clientName.errorMessage =
@@ -178,7 +178,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.projectName is undefined', () => {
+  it("should indicate an error when preExecutionFormData.projectName is undefined", () => {
     preExecutionFormData.projectName = undefined;
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
@@ -192,8 +192,8 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.projectName is empty', () => {
-    preExecutionFormData.projectName = '';
+  it("should indicate an error when preExecutionFormData.projectName is empty", () => {
+    preExecutionFormData.projectName = "";
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.projectName.errorMessage =
@@ -206,8 +206,8 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.deviceName is empty', () => {
-    preExecutionFormData.deviceName = '';
+  it("should indicate an error when preExecutionFormData.deviceName is empty", () => {
+    preExecutionFormData.deviceName = "";
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.projectName.errorMessage =
@@ -220,8 +220,8 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.farm is empty', () => {
-    preExecutionFormData.farm = '';
+  it("should indicate an error when preExecutionFormData.farm is empty", () => {
+    preExecutionFormData.farm = "";
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.farm.errorMessage =
@@ -234,7 +234,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.farm is undefined', () => {
+  it("should indicate an error when preExecutionFormData.farm is undefined", () => {
     preExecutionFormData.farm = undefined;
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
@@ -248,8 +248,8 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.plot is empty', () => {
-    preExecutionFormData.plot = '';
+  it("should indicate an error when preExecutionFormData.plot is empty", () => {
+    preExecutionFormData.plot = "";
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.plot.errorMessage =
@@ -262,7 +262,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.plot is undefined', () => {
+  it("should indicate an error when preExecutionFormData.plot is undefined", () => {
     preExecutionFormData.plot = undefined;
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
@@ -276,7 +276,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.streetsAmount is zero', () => {
+  it("should indicate an error when preExecutionFormData.streetsAmount is zero", () => {
     preExecutionFormData.streetsAmount = 0;
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
@@ -290,7 +290,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.streetsAmount is undefined', () => {
+  it("should indicate an error when preExecutionFormData.streetsAmount is undefined", () => {
     preExecutionFormData.streetsAmount = undefined;
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
@@ -304,7 +304,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.streetsAmount is 4', () => {
+  it("should indicate an error when preExecutionFormData.streetsAmount is 4", () => {
     preExecutionFormData.streetsAmount = 4;
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
@@ -318,7 +318,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.streetsAmount is > 5', () => {
+  it("should indicate an error when preExecutionFormData.streetsAmount is > 5", () => {
     preExecutionFormData.streetsAmount = 6;
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
@@ -332,10 +332,11 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that fields are valid when preExecutionFormData.streetsAmount is 1,2,3 or 5', () => {
+  it("should indicate that fields are valid when preExecutionFormData.streetsAmount is 1,2,3 or 5", () => {
     [1, 2, 3, 5].forEach((v) => {
       preExecutionFormData.streetsAmount = v;
-      const result = formValidator.validatePreExecutionForm(preExecutionFormData);
+      const result =
+        formValidator.validatePreExecutionForm(preExecutionFormData);
 
       expect(result).toEqual(preExecutionFormResult);
       expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -344,7 +345,7 @@ describe('FormValidator unit tests', () => {
     });
   });
 
-  it('should indicate an error when preExecutionFormData.weather is undefined', () => {
+  it("should indicate an error when preExecutionFormData.weather is undefined", () => {
     preExecutionFormData.weather = undefined;
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
@@ -358,8 +359,8 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.weather is empty', () => {
-    preExecutionFormData.weather = '';
+  it("should indicate an error when preExecutionFormData.weather is empty", () => {
+    preExecutionFormData.weather = "";
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.weather.errorMessage =
@@ -372,10 +373,11 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that fields are valid when preExecutionFormData.weather is one of WeatherEnum.name', () => {
+  it("should indicate that fields are valid when preExecutionFormData.weather is one of WeatherEnum.name", () => {
     Object.keys(WeatherEnum).forEach((weather) => {
       preExecutionFormData.weather = WeatherEnum[weather].name;
-      const result = formValidator.validatePreExecutionForm(preExecutionFormData);
+      const result =
+        formValidator.validatePreExecutionForm(preExecutionFormData);
 
       expect(result).toEqual(preExecutionFormResult);
       expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -384,8 +386,8 @@ describe('FormValidator unit tests', () => {
     });
   });
 
-  it('should indicate an error when preExecutionFormData.tractorName is empty', () => {
-    preExecutionFormData.tractorName = '';
+  it("should indicate an error when preExecutionFormData.tractorName is empty", () => {
+    preExecutionFormData.tractorName = "";
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
     preExecutionFormResult.tractorName.errorMessage =
@@ -398,7 +400,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.tractorName is undefined', () => {
+  it("should indicate an error when preExecutionFormData.tractorName is undefined", () => {
     preExecutionFormData.tractorName = undefined;
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
@@ -412,7 +414,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.rightApplicatorLoad is undefined', () => {
+  it("should indicate an error when preExecutionFormData.rightApplicatorLoad is undefined", () => {
     preExecutionFormData.rightApplicatorLoad = undefined;
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
@@ -426,7 +428,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.centerApplicatorLoad is undefined', () => {
+  it("should indicate an error when preExecutionFormData.centerApplicatorLoad is undefined", () => {
     preExecutionFormData.centerApplicatorLoad = undefined;
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
@@ -440,7 +442,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate an error when preExecutionFormData.leftApplicatorLoad is undefined', () => {
+  it("should indicate an error when preExecutionFormData.leftApplicatorLoad is undefined", () => {
     preExecutionFormData.leftApplicatorLoad = undefined;
     const result = formValidator.validatePreExecutionForm(preExecutionFormData);
 
@@ -457,7 +459,7 @@ describe('FormValidator unit tests', () => {
   // END validatePreExecutionForm UNIT TEST
   // START validateConfigForm UNIT TEST
 
-  it('should indicate that all configFormData fields are valid', () => {
+  it("should indicate that all configFormData fields are valid", () => {
     const result = formValidator.validateConfigForm(configFormData);
 
     expect(result).toEqual(configFormResult);
@@ -466,7 +468,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(0);
   });
 
-  it('should indicate that input is invalid when RIGHT_TANK_MAX_LOAD is 0', () => {
+  it("should indicate that input is invalid when RIGHT_TANK_MAX_LOAD is 0", () => {
     configFormData.APPLICATION.RIGHT_TANK_MAX_LOAD = 0;
     const result = formValidator.validateConfigForm(configFormData);
     configFormResult.rightTankMaxLoad.errorMessage =
@@ -478,7 +480,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when CENTER_TANK_MAX_LOAD is 0', () => {
+  it("should indicate that input is invalid when CENTER_TANK_MAX_LOAD is 0", () => {
     configFormData.APPLICATION.CENTER_TANK_MAX_LOAD = 0;
     const result = formValidator.validateConfigForm(configFormData);
     configFormResult.centerTankMaxLoad.errorMessage =
@@ -490,7 +492,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when LEFT_TANK_MAX_LOAD is 0', () => {
+  it("should indicate that input is invalid when LEFT_TANK_MAX_LOAD is 0", () => {
     configFormData.APPLICATION.LEFT_TANK_MAX_LOAD = 0;
     const result = formValidator.validateConfigForm(configFormData);
     configFormResult.leftTankMaxLoad.errorMessage =
@@ -502,7 +504,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when RIGHT_TANK_MAX_LOAD is undefined', () => {
+  it("should indicate that input is invalid when RIGHT_TANK_MAX_LOAD is undefined", () => {
     configFormData.APPLICATION.RIGHT_TANK_MAX_LOAD = undefined;
     const result = formValidator.validateConfigForm(configFormData);
     configFormResult.rightTankMaxLoad.errorMessage =
@@ -514,7 +516,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when CENTER_TANK_MAX_LOAD is undefined', () => {
+  it("should indicate that input is invalid when CENTER_TANK_MAX_LOAD is undefined", () => {
     configFormData.APPLICATION.CENTER_TANK_MAX_LOAD = undefined;
     const result = formValidator.validateConfigForm(configFormData);
     configFormResult.centerTankMaxLoad.errorMessage =
@@ -526,7 +528,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when LEFT_TANK_MAX_LOAD is undefined', () => {
+  it("should indicate that input is invalid when LEFT_TANK_MAX_LOAD is undefined", () => {
     configFormData.APPLICATION.LEFT_TANK_MAX_LOAD = undefined;
     const result = formValidator.validateConfigForm(configFormData);
     configFormResult.leftTankMaxLoad.errorMessage =
@@ -538,13 +540,13 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when PRESETS is undefined', () => {
+  it("should indicate that input is invalid when PRESETS is undefined", () => {
     configFormData.PRESETS = undefined;
     const result = formValidator.validateConfigForm(configFormData);
     for (let i = 0; i < 6; i++) {
-      configFormResult['preset' + (i + 1).toString() + 'Name'].errorMessage =
+      configFormResult["preset" + (i + 1).toString() + "Name"].errorMessage =
         CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET;
-      configFormResult['preset' + (i + 1).toString() + 'Dose'].errorMessage =
+      configFormResult["preset" + (i + 1).toString() + "Dose"].errorMessage =
         CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET;
     }
     configFormResult.valid = false;
@@ -554,10 +556,11 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when PRESETS.NAME is undefined', () => {
+  it("should indicate that input is invalid when PRESETS.NAME is undefined", () => {
     configFormData.PRESETS.P1.NAME = undefined;
     const result = formValidator.validateConfigForm(configFormData);
-    configFormResult.preset1Name.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_NAME;
+    configFormResult.preset1Name.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_NAME;
     configFormResult.valid = false;
     expect(result).toEqual(configFormResult);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -565,10 +568,11 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when PRESETS.NAME is empty', () => {
-    configFormData.PRESETS.P1.NAME = '';
+  it("should indicate that input is invalid when PRESETS.NAME is empty", () => {
+    configFormData.PRESETS.P1.NAME = "";
     const result = formValidator.validateConfigForm(configFormData);
-    configFormResult.preset1Name.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_NAME;
+    configFormResult.preset1Name.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_NAME;
     configFormResult.valid = false;
     expect(result).toEqual(configFormResult);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -576,10 +580,11 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when PRESETS.DOSE_AMOUNT is undefined', () => {
+  it("should indicate that input is invalid when PRESETS.DOSE_AMOUNT is undefined", () => {
     configFormData.PRESETS.P1.DOSE_AMOUNT = undefined;
     const result = formValidator.validateConfigForm(configFormData);
-    configFormResult.preset1Dose.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_VALUE;
+    configFormResult.preset1Dose.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_VALUE;
     configFormResult.valid = false;
     expect(result).toEqual(configFormResult);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -587,10 +592,11 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when PRESETS.DOSE_AMOUNT is < 1', () => {
+  it("should indicate that input is invalid when PRESETS.DOSE_AMOUNT is < 1", () => {
     configFormData.PRESETS.P1.DOSE_AMOUNT = 0;
     const result = formValidator.validateConfigForm(configFormData);
-    configFormResult.preset1Dose.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_VALUE;
+    configFormResult.preset1Dose.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_VALUE;
     configFormResult.valid = false;
     expect(result).toEqual(configFormResult);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -598,7 +604,7 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when STOP_REASONS_EVENTS is undefined', () => {
+  it("should indicate that input is invalid when STOP_REASONS_EVENTS is undefined", () => {
     configFormData.STOP_REASONS_EVENTS = undefined;
     const result = formValidator.validateConfigForm(configFormData);
     configFormResult.stopReasonEvent.errorMessage =
@@ -609,8 +615,8 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.errorCalled).toBe(0);
     expect(loggerMocked.warnCalled).toBe(1);
   });
-  it('should indicate that input is invalid when STOP_REASONS_EVENTS attribute is empty ', () => {
-    configFormData.STOP_REASONS_EVENTS.T = '';
+  it("should indicate that input is invalid when STOP_REASONS_EVENTS attribute is empty ", () => {
+    configFormData.STOP_REASONS_EVENTS.T = "";
     const result = formValidator.validateConfigForm(configFormData);
     configFormResult.stopReasonEvent.errorMessage =
       CONSTANTS.ERRORS.CONFIG_FORM.INVALID_STOP_REASONS_EVENTS;
@@ -621,10 +627,11 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when PLOTS is undefined', () => {
+  it("should indicate that input is invalid when PLOTS is undefined", () => {
     configFormData.PLOTS = undefined;
     const result = formValidator.validateConfigForm(configFormData);
-    configFormResult.plots.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
+    configFormResult.plots.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
     configFormResult.valid = false;
     expect(result).toEqual(configFormResult);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -632,10 +639,11 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when PLOTS attribute is empty ', () => {
-    configFormData.PLOTS.T = '';
+  it("should indicate that input is invalid when PLOTS attribute is empty ", () => {
+    configFormData.PLOTS.T = "";
     const result = formValidator.validateConfigForm(configFormData);
-    configFormResult.plots.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
+    configFormResult.plots.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
     configFormResult.valid = false;
     expect(result).toEqual(configFormResult);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -643,20 +651,22 @@ describe('FormValidator unit tests', () => {
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should indicate that input is invalid when POISON_TYPE is undefined', () => {
+  it("should indicate that input is invalid when POISON_TYPE is undefined", () => {
     configFormData.POISON_TYPE = undefined;
     const result = formValidator.validateConfigForm(configFormData);
-    configFormResult.poisonType.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_POISON_TYPE;
+    configFormResult.poisonType.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_POISON_TYPE;
     configFormResult.valid = false;
     expect(result).toEqual(configFormResult);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
     expect(loggerMocked.errorCalled).toBe(0);
     expect(loggerMocked.warnCalled).toBe(1);
   });
-  it('should indicate that input is invalid when POISON_TYPE attribute is not one of PoisonTypeEnum ', () => {
+  it("should indicate that input is invalid when POISON_TYPE attribute is not one of PoisonTypeEnum ", () => {
     configFormData.POISON_TYPE = v4();
     const result = formValidator.validateConfigForm(configFormData);
-    configFormResult.poisonType.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
+    configFormResult.poisonType.errorMessage =
+      CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
     configFormResult.valid = false;
     expect(result).toEqual(configFormResult);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -666,31 +676,37 @@ describe('FormValidator unit tests', () => {
 
   // BEGIN validateFinishExecutionForm UNIT TEST
 
-  it('should return an error message when reason is undefined ', () => {
+  it("should return an error message when reason is undefined ", () => {
     const result = formValidator.validateFinishExecutionForm(undefined);
-    expect(result).toEqual(CONSTANTS.ERRORS.FINISH_EXECUTION_FORM.INVALID_REASON);
+    expect(result).toEqual(
+      CONSTANTS.ERRORS.FINISH_EXECUTION_FORM.INVALID_REASON
+    );
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
     expect(loggerMocked.errorCalled).toBe(0);
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should return an error message when reason is an empty string ', () => {
-    const result = formValidator.validateFinishExecutionForm('');
-    expect(result).toEqual(CONSTANTS.ERRORS.FINISH_EXECUTION_FORM.INVALID_REASON);
+  it("should return an error message when reason is an empty string ", () => {
+    const result = formValidator.validateFinishExecutionForm("");
+    expect(result).toEqual(
+      CONSTANTS.ERRORS.FINISH_EXECUTION_FORM.INVALID_REASON
+    );
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
     expect(loggerMocked.errorCalled).toBe(0);
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should return an error message when reason is a string different from the cached possible reasons', () => {
+  it("should return an error message when reason is a string different from the cached possible reasons", () => {
     const result = formValidator.validateFinishExecutionForm(v4());
-    expect(result).toEqual(CONSTANTS.ERRORS.FINISH_EXECUTION_FORM.INVALID_REASON);
+    expect(result).toEqual(
+      CONSTANTS.ERRORS.FINISH_EXECUTION_FORM.INVALID_REASON
+    );
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
     expect(loggerMocked.errorCalled).toBe(0);
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should return undefined when reason is one of the cached possible', () => {
+  it("should return undefined when reason is one of the cached possible", () => {
     const result = formValidator.validateFinishExecutionForm(stopReasonEvent);
     expect(result).toEqual(undefined);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
@@ -700,32 +716,40 @@ describe('FormValidator unit tests', () => {
 
   // BEGIN validateUnderForestForm UNIT TEST
 
-  it('should return an error message when underForest is undefined ', () => {
+  it("should return an error message when underForest is undefined ", () => {
     const result = formValidator.validateUnderForestForm(undefined);
-    expect(result).toEqual(CONSTANTS.ERRORS.UNDER_FOREST_FORM.INVALID_UNDER_FOREST);
+    expect(result).toEqual(
+      CONSTANTS.ERRORS.UNDER_FOREST_FORM.INVALID_UNDER_FOREST
+    );
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
     expect(loggerMocked.errorCalled).toBe(0);
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should return an error message when underForest is an empty string ', () => {
-    const result = formValidator.validateUnderForestForm('');
-    expect(result).toEqual(CONSTANTS.ERRORS.UNDER_FOREST_FORM.INVALID_UNDER_FOREST);
+  it("should return an error message when underForest is an empty string ", () => {
+    const result = formValidator.validateUnderForestForm("");
+    expect(result).toEqual(
+      CONSTANTS.ERRORS.UNDER_FOREST_FORM.INVALID_UNDER_FOREST
+    );
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
     expect(loggerMocked.errorCalled).toBe(0);
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should return an error message when underForest is a string different from the cached possible reasons', () => {
+  it("should return an error message when underForest is a string different from the cached possible reasons", () => {
     const result = formValidator.validateUnderForestForm(v4());
-    expect(result).toEqual(CONSTANTS.ERRORS.UNDER_FOREST_FORM.INVALID_UNDER_FOREST);
+    expect(result).toEqual(
+      CONSTANTS.ERRORS.UNDER_FOREST_FORM.INVALID_UNDER_FOREST
+    );
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
     expect(loggerMocked.errorCalled).toBe(0);
     expect(loggerMocked.warnCalled).toBe(1);
   });
 
-  it('should return undefined when underForest is one of the cached', () => {
-    const result = formValidator.validateUnderForestForm(CONSTANTS.UNDER_FOREST_ITEMS[0].name);
+  it("should return undefined when underForest is one of the cached", () => {
+    const result = formValidator.validateUnderForestForm(
+      CONSTANTS.UNDER_FOREST_ITEMS[0].name
+    );
     expect(result).toEqual(undefined);
     expect(loggerMocked.infoCalled).toBeGreaterThan(1);
     expect(loggerMocked.errorCalled).toBe(0);
@@ -733,5 +757,4 @@ describe('FormValidator unit tests', () => {
   });
 });
 
-export { };
-
+export {};

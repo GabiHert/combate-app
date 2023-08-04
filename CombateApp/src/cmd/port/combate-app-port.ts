@@ -1,5 +1,5 @@
-import { RequestDto } from '../../internal/core/dto/request-dto';
-import { ResponseDto } from '../../internal/core/dto/response-dto';
+import { RequestDto } from "../../internal/core/dto/request-dto";
+import { ResponseDto } from "../../internal/core/dto/response-dto";
 
 export interface PCombateApp {
   /**

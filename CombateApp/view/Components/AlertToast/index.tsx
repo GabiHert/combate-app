@@ -1,11 +1,11 @@
-import { Alert, CloseIcon, HStack, IconButton, Text, Toast } from 'native-base';
-import Sound from 'react-native-sound';
-import { Severity } from '../../../src/internal/core/enum/severity';
-import { appConfig } from '../../../view/app/config/app-config';
-import { Theme } from '../../../view/app/theme/theme';
-const alertSound = require('../../app/assets/alert.mp3');
+import { Alert, CloseIcon, HStack, IconButton, Text, Toast } from "native-base";
+import Sound from "react-native-sound";
+import { Severity } from "../../../src/internal/core/enum/severity";
+import { appConfig } from "../../../view/app/config/app-config";
+import { Theme } from "../../../view/app/theme/theme";
+const alertSound = require("../../app/assets/alert.mp3");
 
-Sound.setCategory('Playback');
+Sound.setCategory("Playback");
 const alert = new Sound(alertSound, Sound.MAIN_BUNDLE);
 export function AlertToast(props: {
   title: string;
@@ -15,22 +15,27 @@ export function AlertToast(props: {
 }) {
   return (
     <Alert
-      variant={'top-accent'}
+      variant={"top-accent"}
       borderRadius={5}
       bgColor={props.severity.color}
       status={props.severity.name}
       alignItems="center"
-      justifyContent={'center'}
+      justifyContent={"center"}
       w={appConfig.screen.width - appConfig.screen.width / 5}
     >
       <HStack space={2}>
-        <HStack space={2} flexShrink={1} alignItems="center" justifyContent={'center'}>
-          <Alert.Icon color={'white'} />
+        <HStack
+          space={2}
+          flexShrink={1}
+          alignItems="center"
+          justifyContent={"center"}
+        >
+          <Alert.Icon color={"white"} />
           <Text
-            textAlign={'center'}
+            textAlign={"center"}
             fontSize={Theme().font.size.l(appConfig.screen)}
-            fontWeight={'bold'}
-            color={'black'}
+            fontWeight={"bold"}
+            color={"black"}
           >
             {props.title}
           </Text>
@@ -45,15 +50,15 @@ export function AlertToast(props: {
             }}
             icon={<CloseIcon size="4" />}
             _icon={{
-              color: 'black',
+              color: "black",
             }}
           />
         ) : (
-          ''
+          ""
         )}
       </HStack>
 
-      <Text fontSize={Theme().font.size.s(appConfig.screen)} color={'black'}>
+      <Text fontSize={Theme().font.size.s(appConfig.screen)} color={"black"}>
         {props.message}
       </Text>
     </Alert>
@@ -82,7 +87,7 @@ export function ShowToast(props: {
   Toast.show({
     id: id,
     duration: props.durationMs ? props.durationMs : null,
-    placement: 'top',
+    placement: "top",
     onCloseComplete: () => {
       if (props.alertSounding) alert.stop();
     },

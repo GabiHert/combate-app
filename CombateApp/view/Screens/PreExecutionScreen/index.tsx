@@ -2,28 +2,29 @@ import {
   Box,
   Button,
   Divider,
-  FormControl, IconButton,
+  FormControl,
+  IconButton,
   ScrollView,
-  VStack
-} from 'native-base';
-import React, { useCallback, useState } from 'react';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { Weather, weatherItems } from '../../../src/internal/core/enum/weather';
-import { IPreExecutionConfigProps } from '../../../src/internal/interface/config-props';
-import { IPreExecutionFormResult } from '../../../src/internal/interface/pre-execution-form-result';
-import { appConfig } from '../../app/config/app-config';
-import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
+  VStack,
+} from "native-base";
+import React, { useCallback, useState } from "react";
+import MaterialIcon from "react-native-vector-icons/MaterialIcons";
+import { Weather, weatherItems } from "../../../src/internal/core/enum/weather";
+import { IPreExecutionConfigProps } from "../../../src/internal/interface/config-props";
+import { IPreExecutionFormResult } from "../../../src/internal/interface/pre-execution-form-result";
+import { appConfig } from "../../app/config/app-config";
+import { mapStringToItemArray } from "../../app/parser/map-string-to-item-array";
 
-import { useFocusEffect } from '@react-navigation/native';
-import { CONSTANTS } from '../../../src/internal/config/config';
-import { SeverityEnum } from '../../../src/internal/core/enum/severity';
-import { dateTimeFormatter } from '../../../src/internal/core/utils/date-time-formatter';
-import { IItem } from '../../../src/internal/interface/item';
-import { Instance } from '../../app/instance/instance';
-import { Theme } from '../../app/theme/theme';
-import { ShowToast } from '../../Components/AlertToast';
-import FormInput from '../../Components/FormInput';
-import SelectInput from '../../Components/SelectInput';
+import { useFocusEffect } from "@react-navigation/native";
+import { CONSTANTS } from "../../../src/internal/config/config";
+import { SeverityEnum } from "../../../src/internal/core/enum/severity";
+import { dateTimeFormatter } from "../../../src/internal/core/utils/date-time-formatter";
+import { IItem } from "../../../src/internal/interface/item";
+import { Instance } from "../../app/instance/instance";
+import { Theme } from "../../app/theme/theme";
+import { ShowToast } from "../../Components/AlertToast";
+import FormInput from "../../Components/FormInput";
+import SelectInput from "../../Components/SelectInput";
 
 function PreExecutionScreen(props: { navigation: any }) {
   const [activity, setActivity] = useState<string>(
@@ -33,10 +34,12 @@ function PreExecutionScreen(props: { navigation: any }) {
     Instance.GetInstance().preExecutionConfigCache.getCache().leftApplicatorLoad
   );
   const [centerApplicatorLoad, setCenterApplicatorLoad] = useState<number>(
-    Instance.GetInstance().preExecutionConfigCache.getCache().centerApplicatorLoad
+    Instance.GetInstance().preExecutionConfigCache.getCache()
+      .centerApplicatorLoad
   );
   const [rightApplicatorLoad, setRightApplicatorLoad] = useState<number>(
-    Instance.GetInstance().preExecutionConfigCache.getCache().rightApplicatorLoad
+    Instance.GetInstance().preExecutionConfigCache.getCache()
+      .rightApplicatorLoad
   );
   const [applicatorsAmount, setApplicatorsAmount] = useState<number>(
     Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount
@@ -66,25 +69,28 @@ function PreExecutionScreen(props: { navigation: any }) {
   );
 
   const [weather, setWeather] = useState<Weather>(
-    new Weather(Instance.GetInstance().preExecutionConfigCache.getCache().weather)
+    new Weather(
+      Instance.GetInstance().preExecutionConfigCache.getCache().weather
+    )
   );
-  
-  const [validationResult, setValidationResult] = useState<IPreExecutionFormResult>({
-    applicatorsAmount: { errorMessage: undefined },
-    clientName: { errorMessage: undefined },
-    projectName: { errorMessage: undefined },
-    plot: { errorMessage: undefined },
-    streetsAmount: { errorMessage: undefined },
-    weather: { errorMessage: undefined },
-    tractorName: { errorMessage: undefined },
-    farm: { errorMessage: undefined },
-    rightApplicatorLoad: { errorMessage: undefined },
-    leftApplicatorLoad: { errorMessage: undefined },
-    activity: { errorMessage: undefined },
-    centerApplicatorLoad: { errorMessage: undefined },
-    deviceName: { errorMessage: undefined },
-    valid: true,
-  });
+
+  const [validationResult, setValidationResult] =
+    useState<IPreExecutionFormResult>({
+      applicatorsAmount: { errorMessage: undefined },
+      clientName: { errorMessage: undefined },
+      projectName: { errorMessage: undefined },
+      plot: { errorMessage: undefined },
+      streetsAmount: { errorMessage: undefined },
+      weather: { errorMessage: undefined },
+      tractorName: { errorMessage: undefined },
+      farm: { errorMessage: undefined },
+      rightApplicatorLoad: { errorMessage: undefined },
+      leftApplicatorLoad: { errorMessage: undefined },
+      activity: { errorMessage: undefined },
+      centerApplicatorLoad: { errorMessage: undefined },
+      deviceName: { errorMessage: undefined },
+      valid: true,
+    });
 
   const searchDevicesCallback = useCallback(async () => {
     try {
@@ -97,12 +103,12 @@ function PreExecutionScreen(props: { navigation: any }) {
   }, [devices]);
 
   useFocusEffect(() => {
-    const interval = setInterval(async() => {
-     await searchDevicesCallback()
+    const interval = setInterval(async () => {
+      await searchDevicesCallback();
     }, 3000);
     return () => clearInterval(interval);
-   });
-   
+  });
+
   const onNextPressed = useCallback(async () => {
     const data: IPreExecutionConfigProps = {
       applicatorsAmount,
@@ -120,56 +126,58 @@ function PreExecutionScreen(props: { navigation: any }) {
       deviceName,
     };
 
-    const result = Instance.GetInstance().validator.validatePreExecutionForm(data);
+    const result =
+      Instance.GetInstance().validator.validatePreExecutionForm(data);
 
     if (result.valid && deviceConnected) {
       await Instance.GetInstance().preExecutionConfigCache.update(data);
 
       try {
-        const preExecutionConfigCache = Instance.GetInstance().preExecutionConfigCache.getCache();
+        const preExecutionConfigCache =
+          Instance.GetInstance().preExecutionConfigCache.getCache();
         const configCache = Instance.GetInstance().configCache.getCache();
         const date = new Date();
 
         let fileName =
           preExecutionConfigCache.clientName +
-          '_' +
+          "_" +
           preExecutionConfigCache.projectName +
-          '_' +
+          "_" +
           preExecutionConfigCache.activity +
-          '_' +
+          "_" +
           preExecutionConfigCache.plot +
-          '_' +
+          "_" +
           preExecutionConfigCache.farm +
-          '_' +
+          "_" +
           dateTimeFormatter.date(date) +
-          '_' +
+          "_" +
           dateTimeFormatter.time(date) +
-          '.csv';
+          ".csv";
 
-        fileName = fileName.replace(/\//g, '-');
-        fileName = fileName.replace(/\:/g, '-');
+        fileName = fileName.replace(/\//g, "-");
+        fileName = fileName.replace(/\:/g, "-");
 
-        Instance.GetInstance().errorHandler.begin(fileName)
+        Instance.GetInstance().errorHandler.begin(fileName);
 
         await Instance.GetInstance().combateApp.begin(
           fileName,
           configCache.SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE
         );
 
-        props.navigation.navigate('ExecutionScreen');
+        props.navigation.navigate("ExecutionScreen");
       } catch (err) {
         await Instance.GetInstance().errorHandler.handle(err);
       }
     } else {
-      if (!deviceConnected){
-        result.deviceName = {errorMessage:"Bluetooth não conectado."}
-        result.valid = false
+      if (!deviceConnected) {
+        result.deviceName = { errorMessage: "Bluetooth não conectado." };
+        result.valid = false;
       }
       setValidationResult(result);
       ShowToast({
         durationMs: 2000,
-        title: 'Informações inválidas',
-        message: 'Revise o formulário',
+        title: "Informações inválidas",
+        message: "Revise o formulário",
         severity: SeverityEnum.ERROR,
       });
     }
@@ -191,9 +199,9 @@ function PreExecutionScreen(props: { navigation: any }) {
   const setWeatherCallback = useCallback(
     (value: string) => {
       try {
-      setWeather(new Weather(value));
-      }catch(err){
-        Instance.GetInstance().errorHandler.handle(err)
+        setWeather(new Weather(value));
+      } catch (err) {
+        Instance.GetInstance().errorHandler.handle(err);
       }
     },
     [setWeather]
@@ -226,7 +234,7 @@ function PreExecutionScreen(props: { navigation: any }) {
       setDeviceConnected(true);
       ShowToast({
         durationMs: 3000,
-        title: 'Bluetooth conectado com sucesso',
+        title: "Bluetooth conectado com sucesso",
         severity: SeverityEnum.OK,
       });
     } catch (err) {
@@ -238,13 +246,18 @@ function PreExecutionScreen(props: { navigation: any }) {
   }, [deviceName, devices]);
 
   return (
-    <Box justifyContent={'center'} alignItems={'center'} h="100%">
+    <Box justifyContent={"center"} alignItems={"center"} h="100%">
       <ScrollView w="100%">
-        <VStack space={4} justifyContent={'center'} alignItems={'center'} overflow={'hidden'}>
+        <VStack
+          space={4}
+          justifyContent={"center"}
+          alignItems={"center"}
+          overflow={"hidden"}
+        >
           <FormControl.Label
             mt={5}
             _text={{
-              fontWeight: 'bold',
+              fontWeight: "bold",
               fontSize: Theme().font.size.xl(appConfig.screen),
             }}
           >
@@ -255,7 +268,10 @@ function PreExecutionScreen(props: { navigation: any }) {
             description="Preencha este campo com o nome do cliente"
             errorMessage={validationResult.clientName.errorMessage}
             placeholder="Cliente X"
-            defaultValue={Instance.GetInstance().preExecutionConfigCache.getCache().clientName}
+            defaultValue={
+              Instance.GetInstance().preExecutionConfigCache.getCache()
+                .clientName
+            }
             onChangeText={setClientName}
           />
           <FormInput
@@ -263,38 +279,49 @@ function PreExecutionScreen(props: { navigation: any }) {
             description="Preencha este campo com o nome do projeto"
             errorMessage={validationResult.projectName.errorMessage}
             placeholder="Projeto x"
-            defaultValue={Instance.GetInstance().preExecutionConfigCache.getCache().projectName}
+            defaultValue={
+              Instance.GetInstance().preExecutionConfigCache.getCache()
+                .projectName
+            }
             onChangeText={setProjectName}
           />
           <SelectInput
             title="Fazenda"
             onItemSelected={setFarm}
-            items={mapStringToItemArray(Instance.GetInstance().configCache.getCache().FARMS)}
-            defaultValue={Instance.GetInstance().preExecutionConfigCache.getCache().farm}
+            items={mapStringToItemArray(
+              Instance.GetInstance().configCache.getCache().FARMS
+            )}
+            defaultValue={
+              Instance.GetInstance().preExecutionConfigCache.getCache().farm
+            }
             errorMessage={validationResult.farm.errorMessage}
-            placeholder={''}
+            placeholder={""}
           />
           <SelectInput
             title="Talhão"
             onItemSelected={setPlot}
-            items={mapStringToItemArray(Instance.GetInstance().configCache.getCache().PLOTS)}
+            items={mapStringToItemArray(
+              Instance.GetInstance().configCache.getCache().PLOTS
+            )}
             defaultValue={""}
             errorMessage={validationResult.plot.errorMessage}
-            placeholder={''}
+            placeholder={""}
           />
           <SelectInput
             title="Atividade"
             onItemSelected={setActivity}
             items={CONSTANTS.ACTIVITY_ITEMS}
-            defaultValue={Instance.GetInstance().preExecutionConfigCache.getCache().activity}
+            defaultValue={
+              Instance.GetInstance().preExecutionConfigCache.getCache().activity
+            }
             errorMessage={validationResult.activity.errorMessage}
-            placeholder={''}
+            placeholder={""}
           />
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
             _text={{
-              fontWeight: 'bold',
+              fontWeight: "bold",
               fontSize: Theme().font.size.xl(appConfig.screen),
             }}
           >
@@ -304,14 +331,21 @@ function PreExecutionScreen(props: { navigation: any }) {
             title="Nome do trator"
             description="Preencha este campo com o nome do trator que está sendo utilizado"
             errorMessage={validationResult.tractorName.errorMessage}
-            defaultValue={Instance.GetInstance().preExecutionConfigCache.getCache().tractorName}
+            defaultValue={
+              Instance.GetInstance().preExecutionConfigCache.getCache()
+                .tractorName
+            }
             onChangeText={setTractorName}
           />
-            <SelectInput
+          <SelectInput
             placeholder=""
             onItemSelected={setApplicatorsAmountCallback}
             title="Número de dosadores"
-            items={[{id:"1",name:"1"},{id:"2",name:"2"},{id:"3",name:"3"}]}
+            items={[
+              { id: "1", name: "1" },
+              { id: "2", name: "2" },
+              { id: "3", name: "3" },
+            ]}
             defaultValue={Instance.GetInstance()
               .preExecutionConfigCache.getCache()
               .streetsAmount.toString()}
@@ -321,7 +355,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           <FormControl.Label
             mt={5}
             _text={{
-              fontWeight: 'bold',
+              fontWeight: "bold",
               fontSize: Theme().font.size.xl(appConfig.screen),
             }}
           >
@@ -341,7 +375,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           <FormControl.Label
             mt={5}
             _text={{
-              fontWeight: 'bold',
+              fontWeight: "bold",
               fontSize: Theme().font.size.xl(appConfig.screen),
             }}
           >
@@ -349,8 +383,8 @@ function PreExecutionScreen(props: { navigation: any }) {
           </FormControl.Label>
           <SelectInput
             onItemSelected={setWeatherCallback}
-            placeholder={''}
-            title={'Clima'}
+            placeholder={""}
+            title={"Clima"}
             items={weatherItems}
             errorMessage={validationResult.weather.errorMessage}
             defaultValue={
@@ -361,7 +395,7 @@ function PreExecutionScreen(props: { navigation: any }) {
           <FormControl.Label
             mt={5}
             _text={{
-              fontWeight: 'bold',
+              fontWeight: "bold",
               fontSize: Theme().font.size.xl(appConfig.screen),
             }}
           >
@@ -375,21 +409,21 @@ function PreExecutionScreen(props: { navigation: any }) {
             items={devices}
             errorMessage={validationResult.deviceName.errorMessage}
           />
-            <Button
-              isLoading={isConnecting}
-              isLoadingText="Conectando"
-              _pressed={{ opacity: 0.8 }}
-              background={Theme().color.b300}
-              onPress={connectToBluetoothCallback}
-            >
-              Conectar
-            </Button>            
+          <Button
+            isLoading={isConnecting}
+            isLoadingText="Conectando"
+            _pressed={{ opacity: 0.8 }}
+            background={Theme().color.b300}
+            onPress={connectToBluetoothCallback}
+          >
+            Conectar
+          </Button>
         </VStack>
         <Box w="20%" h="60px" />
       </ScrollView>
 
       <Box
-        position={'absolute'}
+        position={"absolute"}
         bottom={2}
         right={2}
         bgColor={Theme().color.b500}
@@ -399,14 +433,14 @@ function PreExecutionScreen(props: { navigation: any }) {
       />
       <IconButton
         onPress={onNextPressed}
-        position={'absolute'}
+        position={"absolute"}
         bottom={2}
         right={2}
         bgColor={Theme().color.b300}
         borderRadius={20}
         _icon={{
           as: MaterialIcon,
-          name: 'keyboard-arrow-right',
+          name: "keyboard-arrow-right",
           color: Theme().color.b500,
           size: 8,
         }}

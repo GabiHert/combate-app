@@ -1,5 +1,5 @@
-import { FileSystemErrorType } from '../../src/internal/core/error/error-type';
-import { PFileSystem } from '../../src/internal/core/port/file-system-port';
+import { FileSystemErrorType } from "../../src/internal/core/error/error-type";
+import { PFileSystem } from "../../src/internal/core/port/file-system-port";
 
 export class FileSystemMock implements PFileSystem {
   writeCalled: number;
@@ -20,6 +20,6 @@ export class FileSystemMock implements PFileSystem {
     }
   }
   async create(path: string): Promise<void> {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
 }

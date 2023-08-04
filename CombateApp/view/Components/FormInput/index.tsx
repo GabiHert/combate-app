@@ -1,8 +1,8 @@
-import { FormControl, Input, WarningOutlineIcon } from 'native-base';
-import React, { memo, useCallback, useState } from 'react';
-import { KeyboardTypeOptions } from 'react-native';
-import { appConfig } from '../../../view/app/config/app-config';
-import { Theme } from '../../../view/app/theme/theme';
+import { FormControl, Input, WarningOutlineIcon } from "native-base";
+import React, { memo, useCallback, useState } from "react";
+import { KeyboardTypeOptions } from "react-native";
+import { appConfig } from "../../../view/app/config/app-config";
+import { Theme } from "../../../view/app/theme/theme";
 
 function FormInput(props: {
   title: string;
@@ -28,8 +28,11 @@ function FormInput(props: {
 
   return (
     <FormControl
-      width={props.w ? props.w : '60%'}
-      isInvalid={props.isInvalid || (props.errorMessage != undefined && props.errorMessage != '')}
+      width={props.w ? props.w : "60%"}
+      isInvalid={
+        props.isInvalid ||
+        (props.errorMessage != undefined && props.errorMessage != "")
+      }
     >
       <FormControl.Label
         _text={{
@@ -41,7 +44,7 @@ function FormInput(props: {
         {props.title}
       </FormControl.Label>
       <Input
-        type={props.isPassword ? 'password' : 'text'}
+        type={props.isPassword ? "password" : "text"}
         onChangeText={onChangeText}
         keyboardType={props.keyboardType}
         borderRadius={20}
@@ -55,7 +58,9 @@ function FormInput(props: {
           {props.errorMessage}
         </FormControl.ErrorMessage>
       ) : (
-        <FormControl.HelperText _text={{ fontSize: Theme().font.size.s(appConfig.screen) }}>
+        <FormControl.HelperText
+          _text={{ fontSize: Theme().font.size.s(appConfig.screen) }}
+        >
           {props.description}
         </FormControl.HelperText>
       )}

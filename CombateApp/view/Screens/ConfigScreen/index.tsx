@@ -1,23 +1,30 @@
-import { Box, Button, Divider, FormControl, ScrollView, VStack } from 'native-base';
-import { useCallback, useRef, useState } from 'react';
-import { v1 } from 'uuid';
-import { appConfig } from '../../app/config/app-config';
-import { Instance } from '../../app/instance/instance';
-import { itemArrayToMapString } from '../../app/parser/item-array-to-map-string';
-import { mapStringToItemArray } from '../../app/parser/map-string-to-item-array';
-import { Theme } from '../../app/theme/theme';
-import { Validator } from '../../../src/cmd/formvalidator/form-validator';
-import { ShowToast } from '../../Components/AlertToast';
-import FormInput from '../../Components/FormInput';
-import SelectInput from '../../Components/SelectInput';
-import SlideInput from '../../Components/SlideInput';
-import { CONSTANTS } from '../../../src/internal/config/config';
-import { poisonItems } from '../../../src/internal/core/enum/poison';
-import { SeverityEnum } from '../../../src/internal/core/enum/severity';
-import { IConfigFormResult } from '../../../src/internal/interface/config-form-result';
-import { IConfigsProps } from '../../../src/internal/interface/config-props';
-import ItemListInput from './components/ItemListInput';
-import ItemRegisterModal from './components/ItemRegisterModal';
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  ScrollView,
+  VStack,
+} from "native-base";
+import { useCallback, useRef, useState } from "react";
+import { v1 } from "uuid";
+import { Validator } from "../../../src/cmd/formvalidator/form-validator";
+import { CONSTANTS } from "../../../src/internal/config/config";
+import { poisonItems } from "../../../src/internal/core/enum/poison";
+import { SeverityEnum } from "../../../src/internal/core/enum/severity";
+import { IConfigFormResult } from "../../../src/internal/interface/config-form-result";
+import { IConfigsProps } from "../../../src/internal/interface/config-props";
+import { appConfig } from "../../app/config/app-config";
+import { Instance } from "../../app/instance/instance";
+import { itemArrayToMapString } from "../../app/parser/item-array-to-map-string";
+import { mapStringToItemArray } from "../../app/parser/map-string-to-item-array";
+import { Theme } from "../../app/theme/theme";
+import { ShowToast } from "../../Components/AlertToast";
+import FormInput from "../../Components/FormInput";
+import SelectInput from "../../Components/SelectInput";
+import SlideInput from "../../Components/SlideInput";
+import ItemListInput from "./components/ItemListInput";
+import ItemRegisterModal from "./components/ItemRegisterModal";
 
 interface IPreset {
   name: string;
@@ -26,13 +33,15 @@ interface IPreset {
 
 function ConfigScreen(props: { navigation: any; route: any }) {
   const rightTankMaxLoad = useRef<number>(
-    Instance.GetInstance().configCache.getCache().APPLICATION.RIGHT_TANK_MAX_LOAD
+    Instance.GetInstance().configCache.getCache().APPLICATION
+      .RIGHT_TANK_MAX_LOAD
   );
-  function setRightTankMaxLoad(value){
-    rightTankMaxLoad.current = value
+  function setRightTankMaxLoad(value) {
+    rightTankMaxLoad.current = value;
   }
   const centerTankMaxLoad = useRef<number>(
-    Instance.GetInstance().configCache.getCache().APPLICATION.CENTER_TANK_MAX_LOAD
+    Instance.GetInstance().configCache.getCache().APPLICATION
+      .CENTER_TANK_MAX_LOAD
   );
   const leftTankMaxLoad = useRef<number>(
     Instance.GetInstance().configCache.getCache().APPLICATION.LEFT_TANK_MAX_LOAD
@@ -40,71 +49,84 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   const doseWeightG = useRef<number>(
     Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G
   );
-  function setDoseWeightG(value){
-    doseWeightG.current = value
+  function setDoseWeightG(value) {
+    doseWeightG.current = value;
   }
   const metersBetweenDose = useRef(
-    Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE
+    Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE
+      .METERS_BETWEEN_DOSE
   );
-  function setMetersBetweenDose(value){
-    metersBetweenDose.current = value
+  function setMetersBetweenDose(value) {
+    metersBetweenDose.current = value;
   }
-  const filePath = useRef(Instance.GetInstance().configCache.getCache().FILE_PATH);
-  function setFilePath(value){
-    filePath.current = value
+  const filePath = useRef(
+    Instance.GetInstance().configCache.getCache().FILE_PATH
+  );
+  function setFilePath(value) {
+    filePath.current = value;
   }
-  const preset1  = useRef<IPreset>({
-    doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P1.DOSE_AMOUNT,
+  const preset1 = useRef<IPreset>({
+    doseAmount:
+      Instance.GetInstance().configCache.getCache().PRESETS.P1.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME,
   });
-  function setPreset1(value){
-    preset1.current = value
+  function setPreset1(value) {
+    preset1.current = value;
   }
   const preset2 = useRef<IPreset>({
-    doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P2.DOSE_AMOUNT,
+    doseAmount:
+      Instance.GetInstance().configCache.getCache().PRESETS.P2.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME,
   });
-  function setPreset2(value){
-    preset2.current = value
+  function setPreset2(value) {
+    preset2.current = value;
   }
   const preset3 = useRef<IPreset>({
-    doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P3.DOSE_AMOUNT,
+    doseAmount:
+      Instance.GetInstance().configCache.getCache().PRESETS.P3.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P3.NAME,
   });
-  function setPreset3(value){
-    preset3.current = value
+  function setPreset3(value) {
+    preset3.current = value;
   }
   const preset4 = useRef<IPreset>({
-    doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P4.DOSE_AMOUNT,
+    doseAmount:
+      Instance.GetInstance().configCache.getCache().PRESETS.P4.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P4.NAME,
   });
-  function setPreset4(value){
-    preset4.current = value
+  function setPreset4(value) {
+    preset4.current = value;
   }
   const preset5 = useRef<IPreset>({
-    doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P5.DOSE_AMOUNT,
+    doseAmount:
+      Instance.GetInstance().configCache.getCache().PRESETS.P5.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P5.NAME,
   });
-  function setPreset5(value){
-    preset5.current = value
+  function setPreset5(value) {
+    preset5.current = value;
   }
-  const preset6  = useRef<IPreset>({
-    doseAmount: Instance.GetInstance().configCache.getCache().PRESETS.P6.DOSE_AMOUNT,
+  const preset6 = useRef<IPreset>({
+    doseAmount:
+      Instance.GetInstance().configCache.getCache().PRESETS.P6.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P6.NAME,
   });
-  function setPreset6(value){
-    preset6.current = value
+  function setPreset6(value) {
+    preset6.current = value;
   }
-  const maxVelocity  = useRef<number>(Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY);
-  function setMaxVelocity(value){
-    maxVelocity.current = value
+  const maxVelocity = useRef<number>(
+    Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY
+  );
+  function setMaxVelocity(value) {
+    maxVelocity.current = value;
   }
-  const lineSpacing  = useRef<number>(Instance.GetInstance().configCache.getCache().LINE_SPACING);
-  function setLineSpacing(value){
-    lineSpacing.current = value
+  const lineSpacing = useRef<number>(
+    Instance.GetInstance().configCache.getCache().LINE_SPACING
+  );
+  function setLineSpacing(value) {
+    lineSpacing.current = value;
   }
 
-  const [errors,setErrors] = useState<IConfigFormResult>({
+  const [errors, setErrors] = useState<IConfigFormResult>({
     valid: true,
     maxVelocity: { errorMessage: undefined },
     centerTankMaxLoad: { errorMessage: undefined },
@@ -133,30 +155,36 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     rightTankMaxLoad: { errorMessage: undefined },
   });
 
-  const [stopReasons,setStopReasons] = useState<Array<{ id: string; name: string }>>(
-    mapStringToItemArray(Instance.GetInstance().configCache.getCache().STOP_REASONS_EVENTS)
+  const [stopReasons, setStopReasons] = useState<
+    Array<{ id: string; name: string }>
+  >(
+    mapStringToItemArray(
+      Instance.GetInstance().configCache.getCache().STOP_REASONS_EVENTS
+    )
   );
-  const [events,setEvents] = useState<Array<{ id: string; name: string }>>(
+  const [events, setEvents] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(Instance.GetInstance().configCache.getCache().EVENTS)
   );
 
-  const [farms,setFarms] = useState<Array<{ id: string; name: string }>>(
+  const [farms, setFarms] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(Instance.GetInstance().configCache.getCache().FARMS)
   );
 
-  const [plots,setPlots] = useState<Array<{ id: string; name: string }>>(
+  const [plots, setPlots] = useState<Array<{ id: string; name: string }>>(
     mapStringToItemArray(Instance.GetInstance().configCache.getCache().PLOTS)
   );
 
-  const poison = useRef(Instance.GetInstance().configCache.getCache().POISON_TYPE);
-  function setPoison(value){
-    poison.current = value
+  const poison = useRef(
+    Instance.GetInstance().configCache.getCache().POISON_TYPE
+  );
+  function setPoison(value) {
+    poison.current = value;
   }
 
-  const [addReasonModalVisible,setAddReasonModalVisible] = useState(false);
-  const [addEventModalVisible,setAddEventModalVisible] = useState(false);
-  const [addFarmModalVisible,setAddFarmModalVisible]  = useState(false);
-  const [addPlotModalVisible,setAddPlotModalVisible] = useState(false);
+  const [addReasonModalVisible, setAddReasonModalVisible] = useState(false);
+  const [addEventModalVisible, setAddEventModalVisible] = useState(false);
+  const [addFarmModalVisible, setAddFarmModalVisible] = useState(false);
+  const [addPlotModalVisible, setAddPlotModalVisible] = useState(false);
 
   function onRightTankMaxLoadChange(text: string) {
     rightTankMaxLoad.current = Number(text);
@@ -172,7 +200,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     (text: string) => {
       const aux = preset1.current;
       aux.name = text;
-      preset1.current= aux;
+      preset1.current = aux;
     },
     [preset1]
   );
@@ -394,12 +422,30 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           RIGHT_TANK_MAX_LOAD: rightTankMaxLoad.current,
         },
         PRESETS: {
-          P1: { NAME: preset1.current.name, DOSE_AMOUNT: preset1.current.doseAmount },
-          P2: { NAME: preset2.current.name, DOSE_AMOUNT: preset2.current.doseAmount },
-          P3: { NAME: preset3.current.name, DOSE_AMOUNT: preset3.current.doseAmount },
-          P4: { NAME: preset4.current.name, DOSE_AMOUNT: preset4.current.doseAmount },
-          P5: { NAME: preset5.current.name, DOSE_AMOUNT: preset5.current.doseAmount },
-          P6: { NAME: preset6.current.name, DOSE_AMOUNT: preset6.current.doseAmount },
+          P1: {
+            NAME: preset1.current.name,
+            DOSE_AMOUNT: preset1.current.doseAmount,
+          },
+          P2: {
+            NAME: preset2.current.name,
+            DOSE_AMOUNT: preset2.current.doseAmount,
+          },
+          P3: {
+            NAME: preset3.current.name,
+            DOSE_AMOUNT: preset3.current.doseAmount,
+          },
+          P4: {
+            NAME: preset4.current.name,
+            DOSE_AMOUNT: preset4.current.doseAmount,
+          },
+          P5: {
+            NAME: preset5.current.name,
+            DOSE_AMOUNT: preset5.current.doseAmount,
+          },
+          P6: {
+            NAME: preset6.current.name,
+            DOSE_AMOUNT: preset6.current.doseAmount,
+          },
         },
         FILE_PATH: filePath.current,
         POISON_TYPE: poison.current,
@@ -412,9 +458,9 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
       if (!result.valid) {
         ShowToast({
-          title: 'Erro ao salvar alterações',
+          title: "Erro ao salvar alterações",
           severity: SeverityEnum.ERROR,
-          message: 'Revise o formulário',
+          message: "Revise o formulário",
           durationMs: 2000,
         });
       } else {
@@ -446,20 +492,20 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           await Instance.GetInstance().configCache.update(cache);
 
           ShowToast({
-            title: 'Alterações salvas com sucesso',
+            title: "Alterações salvas com sucesso",
             severity: SeverityEnum.OK,
             durationMs: 2000,
           });
         } else {
           ShowToast({
-            title: 'Nenhuma alteração foi detectada',
+            title: "Nenhuma alteração foi detectada",
             severity: SeverityEnum.OK,
             durationMs: 2000,
           });
         }
       }
     } catch (err) {
-     await Instance.GetInstance().errorHandler.handle(err)
+      await Instance.GetInstance().errorHandler.handle(err);
     }
   }, [
     doseWeightG,
@@ -482,7 +528,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   ]);
 
   return (
-    <Box justifyContent={'center'} alignItems={'center'} h="100%">
+    <Box justifyContent={"center"} alignItems={"center"} h="100%">
       <ItemRegisterModal
         title="Adicionar motivo de parada"
         formTitle="Motivo de parada"
@@ -495,9 +541,16 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             return CONSTANTS.ERRORS.STOP_REASON_FORM.INVALID_STOP_REASON;
           }
           let error = undefined;
-          Object.keys(Instance.GetInstance().configCache.getCache().STOP_REASONS_EVENTS).forEach((key) => {
-            if (value == Instance.GetInstance().configCache.getCache().STOP_REASONS_EVENTS[key]){
-              error = CONSTANTS.ERRORS.STOP_REASON_FORM.INVALID_STOP_REASON
+          Object.keys(
+            Instance.GetInstance().configCache.getCache().STOP_REASONS_EVENTS
+          ).forEach((key) => {
+            if (
+              value ==
+              Instance.GetInstance().configCache.getCache().STOP_REASONS_EVENTS[
+                key
+              ]
+            ) {
+              error = CONSTANTS.ERRORS.STOP_REASON_FORM.INVALID_STOP_REASON;
             }
           });
           return error;
@@ -515,9 +568,13 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             return CONSTANTS.ERRORS.EVENT_FORM.INVALID_EVENT;
           }
           let error = undefined;
-          Object.keys(Instance.GetInstance().configCache.getCache().EVENTS).forEach((key) => {
-            if (value == Instance.GetInstance().configCache.getCache().EVENTS[key]){
-              error = CONSTANTS.ERRORS.EVENT_FORM.INVALID_EVENT
+          Object.keys(
+            Instance.GetInstance().configCache.getCache().EVENTS
+          ).forEach((key) => {
+            if (
+              value == Instance.GetInstance().configCache.getCache().EVENTS[key]
+            ) {
+              error = CONSTANTS.ERRORS.EVENT_FORM.INVALID_EVENT;
             }
           });
           return error;
@@ -535,9 +592,13 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             return CONSTANTS.ERRORS.FARM_FORM.INVALID_FARM;
           }
           let error = undefined;
-          Object.keys(Instance.GetInstance().configCache.getCache().FARMS).forEach((key) => {
-            if (value == Instance.GetInstance().configCache.getCache().FARMS[key]){
-              error = CONSTANTS.ERRORS.FARM_FORM.INVALID_FARM
+          Object.keys(
+            Instance.GetInstance().configCache.getCache().FARMS
+          ).forEach((key) => {
+            if (
+              value == Instance.GetInstance().configCache.getCache().FARMS[key]
+            ) {
+              error = CONSTANTS.ERRORS.FARM_FORM.INVALID_FARM;
             }
           });
           return error;
@@ -555,9 +616,13 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             return CONSTANTS.ERRORS.PLOT_FORM.INVALID_PLOT;
           }
           let error = undefined;
-          Object.keys(Instance.GetInstance().configCache.getCache().PLOTS).forEach((key) => {
-            if (value == Instance.GetInstance().configCache.getCache().PLOTS[key]){
-              error = CONSTANTS.ERRORS.PLOT_FORM.INVALID_PLOT
+          Object.keys(
+            Instance.GetInstance().configCache.getCache().PLOTS
+          ).forEach((key) => {
+            if (
+              value == Instance.GetInstance().configCache.getCache().PLOTS[key]
+            ) {
+              error = CONSTANTS.ERRORS.PLOT_FORM.INVALID_PLOT;
             }
           });
           return error;
@@ -565,19 +630,29 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       />
 
       <ScrollView w="100%">
-        <VStack space={4} justifyContent={'center'} alignItems={'center'} overflow={'hidden'}>
+        <VStack
+          space={4}
+          justifyContent={"center"}
+          alignItems={"center"}
+          overflow={"hidden"}
+        >
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
           >
             Informações local
           </FormControl.Label>
           <SlideInput
             onChangeEnd={setLineSpacing}
             step={1}
-            title={'Espaçamento de linhas'}
-            defaultValue={Instance.GetInstance().configCache.getCache().LINE_SPACING}
-            unit={'metros'}
+            title={"Espaçamento de linhas"}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().LINE_SPACING
+            }
+            unit={"metros"}
             disabled={false}
             maxValue={20}
             minValue={1}
@@ -587,7 +662,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
           >
             Capacidade Reservatórios
           </FormControl.Label>
@@ -600,7 +678,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               .configCache.getCache()
               .APPLICATION.RIGHT_TANK_MAX_LOAD.toString()}
             onChangeText={onRightTankMaxLoadChange}
-            keyboardType={'numeric'}
+            keyboardType={"numeric"}
           />
           <FormInput
             title="Reservatório central"
@@ -611,7 +689,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               .configCache.getCache()
               .APPLICATION.CENTER_TANK_MAX_LOAD.toString()}
             onChangeText={onCenterTankMaxLoadChange}
-            keyboardType={'numeric'}
+            keyboardType={"numeric"}
           />
           <FormInput
             title="Reservatório esquerdo"
@@ -622,24 +700,30 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               .configCache.getCache()
               .APPLICATION.LEFT_TANK_MAX_LOAD.toString()}
             onChangeText={onLeftTankMaxLoadChange}
-            keyboardType={'numeric'}
+            keyboardType={"numeric"}
           />
           <Divider w="80%" />
 
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
           >
             Informações Dosagem
           </FormControl.Label>
           <SlideInput
-            defaultValue={Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().APPLICATION
+                .DOSE_WEIGHT_G
+            }
             maxValue={30}
             minValue={5}
             onChangeEnd={setDoseWeightG}
             step={1}
-            title={'Peso dose'}
-            unit={'g'}
+            title={"Peso dose"}
+            unit={"g"}
             disabled={false}
             errorMessage={errors.doseWeightG.errorMessage}
           />
@@ -648,13 +732,18 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             items={poisonItems}
             title="Tipo de veneno"
             placeholder=""
-            defaultValue={Instance.GetInstance().configCache.getCache().POISON_TYPE}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().POISON_TYPE
+            }
             errorMessage={errors.poisonType.errorMessage}
           />
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
           >
             Preset 1
           </FormControl.Label>
@@ -664,14 +753,19 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
             placeholder=""
-            defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME
+            }
             errorMessage={errors.preset1Name.errorMessage}
           />
           <SlideInput
             onChangeEnd={onPreset1DoseChange}
             step={1}
-            title={'Doses'}
-            defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P1.DOSE_AMOUNT}
+            title={"Doses"}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().PRESETS.P1
+                .DOSE_AMOUNT
+            }
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
@@ -681,7 +775,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
           >
             Preset 2
           </FormControl.Label>
@@ -691,14 +788,19 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
             placeholder=""
-            defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME
+            }
             errorMessage={errors.preset2Name.errorMessage}
           />
           <SlideInput
             onChangeEnd={onPreset2DoseChange}
             step={1}
-            title={'Doses'}
-            defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P2.DOSE_AMOUNT}
+            title={"Doses"}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().PRESETS.P2
+                .DOSE_AMOUNT
+            }
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
@@ -707,7 +809,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
           >
             Preset 3
           </FormControl.Label>
@@ -717,14 +822,19 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
             placeholder=""
-            defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P3.NAME}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().PRESETS.P3.NAME
+            }
             errorMessage={errors.preset3Name.errorMessage}
           />
           <SlideInput
             onChangeEnd={onPreset3DoseChange}
             step={1}
-            title={'Doses'}
-            defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P3.DOSE_AMOUNT}
+            title={"Doses"}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().PRESETS.P3
+                .DOSE_AMOUNT
+            }
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
@@ -734,7 +844,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
           >
             Preset 4
           </FormControl.Label>
@@ -744,14 +857,19 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
             placeholder=""
-            defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P4.NAME}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().PRESETS.P4.NAME
+            }
             errorMessage={errors.preset4Name.errorMessage}
           />
           <SlideInput
             onChangeEnd={onPreset4DoseChange}
             step={1}
-            title={'Doses'}
-            defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P4.DOSE_AMOUNT}
+            title={"Doses"}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().PRESETS.P4
+                .DOSE_AMOUNT
+            }
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
@@ -761,7 +879,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
           >
             Preset 5
           </FormControl.Label>
@@ -771,15 +892,20 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
             placeholder=""
-            defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P5.NAME}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().PRESETS.P5.NAME
+            }
             errorMessage={errors.preset5Name.errorMessage}
           />
 
           <SlideInput
             onChangeEnd={onPreset5DoseChange}
             step={1}
-            title={'Doses'}
-            defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P5.DOSE_AMOUNT}
+            title={"Doses"}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().PRESETS.P5
+                .DOSE_AMOUNT
+            }
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
@@ -789,7 +915,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
           >
             Preset 6
           </FormControl.Label>
@@ -799,14 +928,19 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
             placeholder=""
-            defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P6.NAME}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().PRESETS.P6.NAME
+            }
             errorMessage={errors.preset6Name.errorMessage}
           />
           <SlideInput
             onChangeEnd={onPreset6DoseChange}
             step={1}
-            title={'Doses'}
-            defaultValue={Instance.GetInstance().configCache.getCache().PRESETS.P6.DOSE_AMOUNT}
+            title={"Doses"}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().PRESETS.P6
+                .DOSE_AMOUNT
+            }
             disabled={false}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
@@ -816,17 +950,23 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
           >
             Dose Sistemática
           </FormControl.Label>
           <SlideInput
-            onChangeEnd={(value)=>{metersBetweenDose.current = value}}
+            onChangeEnd={(value) => {
+              metersBetweenDose.current = value;
+            }}
             step={1}
-            title={'Metros entre cada dose'}
-            unit={'metros'}
+            title={"Metros entre cada dose"}
+            unit={"metros"}
             defaultValue={
-              Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE
+              Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE
+                .METERS_BETWEEN_DOSE
             }
             disabled={false}
             maxValue={10}
@@ -837,7 +977,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
 
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
           >
             Velocidade
           </FormControl.Label>
@@ -845,9 +988,12 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <SlideInput
             onChangeEnd={setMaxVelocity}
             step={1}
-            title={'Velocidade máxima permitida'}
-            unit={'Km/h'}
-            defaultValue={Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY}
+            title={"Velocidade máxima permitida"}
+            unit={"Km/h"}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().APPLICATION
+                .MAX_VELOCITY
+            }
             disabled={false}
             maxValue={20}
             minValue={1}
@@ -860,7 +1006,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             items={stopReasons}
             onAddItemPress={onAddStopReasonPress}
             onDeleteItemRequested={onDeleteStopReasonRequested}
-            title={'Motivos de parada'}
+            title={"Motivos de parada"}
             errorMessage={errors.stopReasonEvent.errorMessage}
           />
 
@@ -870,41 +1016,50 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             items={events}
             onAddItemPress={onAddEventPress}
             onDeleteItemRequested={onDeleteEventRequested}
-            title={'Tipos de eventos'}
+            title={"Tipos de eventos"}
             errorMessage={errors.events.errorMessage}
           />
 
           <Divider w="80%" />
 
           <ItemListInput
-            items={mapStringToItemArray(Instance.GetInstance().configCache.getCache().FARMS)}
+            items={mapStringToItemArray(
+              Instance.GetInstance().configCache.getCache().FARMS
+            )}
             onAddItemPress={onAddFarmPress}
             onDeleteItemRequested={onDeleteFarmRequested}
-            title={'Fazendas'}
+            title={"Fazendas"}
             errorMessage={errors.farms.errorMessage}
           />
 
           <Divider w="80%" />
 
           <ItemListInput
-            items={mapStringToItemArray(Instance.GetInstance().configCache.getCache().PLOTS)}
+            items={mapStringToItemArray(
+              Instance.GetInstance().configCache.getCache().PLOTS
+            )}
             onAddItemPress={onAddPlotPress}
             onDeleteItemRequested={onDeletePlotRequested}
-            title={'Talhões'}
+            title={"Talhões"}
             errorMessage={errors.plots.errorMessage}
           />
 
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.xl(appConfig.screen) }}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
           >
             Arquivo
           </FormControl.Label>
           <FormInput
             title="Local para salvar o aruivo"
             description="Preencha este campo com o caminho de pastas para salvar o arquivo .csv"
-            defaultValue={Instance.GetInstance().configCache.getCache().FILE_PATH}
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().FILE_PATH
+            }
             onChangeText={setFilePath}
             errorMessage={errors.filePath.errorMessage}
           />
@@ -914,7 +1069,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       </ScrollView>
 
       <Box
-        position={'absolute'}
+        position={"absolute"}
         bottom={2}
         right={2}
         bgColor={Theme().color.b500}
@@ -924,7 +1079,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       />
       <Button
         onPress={onSavePressed}
-        position={'absolute'}
+        position={"absolute"}
         bottom={2}
         right={2}
         bgColor={Theme().color.b300}

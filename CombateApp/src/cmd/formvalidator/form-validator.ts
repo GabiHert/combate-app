@@ -1,23 +1,32 @@
-import { Instance } from '../../../view/app/instance/instance';
-import { CONSTANTS } from '../../internal/config/config';
-import { Poison } from '../../internal/core/enum/poison';
-import { WeatherEnum } from '../../internal/core/enum/weather';
-import { PCache } from '../../internal/core/port/cache-port';
-import { PLogger } from '../../internal/core/port/logger-port';
-import { IConfigFormResult } from '../../internal/interface/config-form-result';
-import { IConfigsProps, IPreExecutionConfigProps } from '../../internal/interface/config-props';
-import { IPreExecutionFormResult } from '../../internal/interface/pre-execution-form-result';
-import { PValidator } from '../port/validator-port';
+import { Instance } from "../../../view/app/instance/instance";
+import { CONSTANTS } from "../../internal/config/config";
+import { Poison } from "../../internal/core/enum/poison";
+import { WeatherEnum } from "../../internal/core/enum/weather";
+import { PCache } from "../../internal/core/port/cache-port";
+import { PLogger } from "../../internal/core/port/logger-port";
+import { IConfigFormResult } from "../../internal/interface/config-form-result";
+import {
+  IConfigsProps,
+  IPreExecutionConfigProps,
+} from "../../internal/interface/config-props";
+import { IPreExecutionFormResult } from "../../internal/interface/pre-execution-form-result";
+import { PValidator } from "../port/validator-port";
 
 export class Validator implements PValidator {
   private static _instance: Validator;
-  static GetInstance(logger: PLogger, config: PCache<IConfigsProps>): Validator {
+  static GetInstance(
+    logger: PLogger,
+    config: PCache<IConfigsProps>
+  ): Validator {
     if (!this._instance) {
       this._instance = new Validator(logger, config);
     }
     return this._instance;
   }
-  constructor(private _logger: PLogger, private readonly _config: PCache<IConfigsProps>) {}
+  constructor(
+    private _logger: PLogger,
+    private readonly _config: PCache<IConfigsProps>
+  ) {}
 
   static BasicStringValidation(str: string): boolean {
     if (!str || str.length == 0) {
@@ -26,7 +35,7 @@ export class Validator implements PValidator {
 
     let onlySpaces = true;
     for (let i = 0; i < str.length; i++) {
-      if (str[i] != ' ') onlySpaces = false;
+      if (str[i] != " ") onlySpaces = false;
     }
 
     if (onlySpaces) {
@@ -37,8 +46,8 @@ export class Validator implements PValidator {
 
   validateStopReasonForm(stopReason: string): string {
     Instance.GetInstance().logger.info({
-      event: 'FormValidator.validateStopReasonForm',
-      details: 'Process started',
+      event: "FormValidator.validateStopReasonForm",
+      details: "Process started",
       stopReason,
     });
 
@@ -48,8 +57,8 @@ export class Validator implements PValidator {
       result = CONSTANTS.ERRORS.STOP_REASON_FORM.INVALID_STOP_REASON;
 
     Instance.GetInstance().logger.info({
-      event: 'FormValidator.validateStopReasonForm',
-      details: 'Process finished',
+      event: "FormValidator.validateStopReasonForm",
+      details: "Process finished",
       result,
     });
 
@@ -57,65 +66,70 @@ export class Validator implements PValidator {
   }
   validatePlotForm(plot: string): string {
     Instance.GetInstance().logger.info({
-      event: 'FormValidator.validatePlotForm',
-      details: 'Process started',
+      event: "FormValidator.validatePlotForm",
+      details: "Process started",
       plot,
     });
 
     let result: string;
-    if (Validator.BasicStringValidation(plot)) result = CONSTANTS.ERRORS.PLOT_FORM.INVALID_PLOT;
+    if (Validator.BasicStringValidation(plot))
+      result = CONSTANTS.ERRORS.PLOT_FORM.INVALID_PLOT;
     Instance.GetInstance().logger.info({
-      event: 'FormValidator.validatePlotForm',
-      details: 'Process finished',
+      event: "FormValidator.validatePlotForm",
+      details: "Process finished",
     });
 
     return result;
   }
   validateFarmForm(farm: string): string {
     Instance.GetInstance().logger.info({
-      event: 'FormValidator.validateFarmForm',
-      details: 'Process started',
+      event: "FormValidator.validateFarmForm",
+      details: "Process started",
       farm,
     });
     let result: string;
-    if (!Validator.BasicStringValidation(farm)) result = CONSTANTS.ERRORS.FARM_FORM.INVALID_FARM;
+    if (!Validator.BasicStringValidation(farm))
+      result = CONSTANTS.ERRORS.FARM_FORM.INVALID_FARM;
     if (result && result.length > 0) {
       Instance.GetInstance().logger.warn({
-        event: 'FormValidator.validateFarmForm',
-        details: 'Process warn - invalid farm',
+        event: "FormValidator.validateFarmForm",
+        details: "Process warn - invalid farm",
       });
     }
 
     Instance.GetInstance().logger.info({
-      event: 'FormValidator.validateFarmForm',
-      details: 'Process finished',
+      event: "FormValidator.validateFarmForm",
+      details: "Process finished",
     });
 
     return result;
   }
   validateEventForm(event: string): string {
     Instance.GetInstance().logger.info({
-      event: 'FormValidator.validateEventForm',
-      details: 'Process started',
+      event: "FormValidator.validateEventForm",
+      details: "Process started",
       Event: event,
     });
     let result: string;
-    if (!Validator.BasicStringValidation(event)) result = CONSTANTS.ERRORS.EVENT_FORM.INVALID_EVENT;
+    if (!Validator.BasicStringValidation(event))
+      result = CONSTANTS.ERRORS.EVENT_FORM.INVALID_EVENT;
     if (result && result.length > 0) {
       Instance.GetInstance().logger.warn({
-        event: 'FormValidator.validateEventForm',
-        details: 'Process warn - invalid event',
+        event: "FormValidator.validateEventForm",
+        details: "Process warn - invalid event",
       });
     }
     Instance.GetInstance().logger.info({
-      event: 'FormValidator.validateEventForm',
-      details: 'Process finished',
+      event: "FormValidator.validateEventForm",
+      details: "Process finished",
     });
 
     return result;
   }
 
-  validatePreExecutionForm(data: IPreExecutionConfigProps): IPreExecutionFormResult {
+  validatePreExecutionForm(
+    data: IPreExecutionConfigProps
+  ): IPreExecutionFormResult {
     let result: IPreExecutionFormResult = {
       applicatorsAmount: { errorMessage: undefined },
       activity: { errorMessage: undefined },
@@ -133,8 +147,8 @@ export class Validator implements PValidator {
       deviceName: { errorMessage: undefined },
     };
     this._logger.info({
-      event: 'FormValidator.validatePreExecutionForm',
-      details: 'Process started',
+      event: "FormValidator.validatePreExecutionForm",
+      details: "Process started",
       data,
     });
     if (!data.clientName || data.clientName.length <= 2) {
@@ -143,8 +157,8 @@ export class Validator implements PValidator {
       result.clientName.errorMessage =
         CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_CLIENT_NAME;
       this._logger.warn({
-        event: 'FormValidator.validatePreExecutionForm',
-        details: 'Process warn - clientName is invalid',
+        event: "FormValidator.validatePreExecutionForm",
+        details: "Process warn - clientName is invalid",
         clientName: data.clientName,
       });
     }
@@ -155,8 +169,8 @@ export class Validator implements PValidator {
       result.projectName.errorMessage =
         CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_PROJECT_NAME;
       this._logger.warn({
-        event: 'FormValidator.validatePreExecutionForm',
-        details: 'Process warn - projectName is invalid',
+        event: "FormValidator.validatePreExecutionForm",
+        details: "Process warn - projectName is invalid",
         projectName: data.projectName,
       });
     }
@@ -167,8 +181,8 @@ export class Validator implements PValidator {
       result.deviceName.errorMessage =
         CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_DEVICE_NAME;
       this._logger.warn({
-        event: 'FormValidator.validatePreExecutionForm',
-        details: 'Process warn - deviceName is invalid',
+        event: "FormValidator.validatePreExecutionForm",
+        details: "Process warn - deviceName is invalid",
         deviceName: data.deviceName,
       });
     }
@@ -176,10 +190,11 @@ export class Validator implements PValidator {
     if (!data.farm || data.farm.length < 2) {
       // farm is invalid
       result.valid = false;
-      result.farm.errorMessage = CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_FARM;
+      result.farm.errorMessage =
+        CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_FARM;
       this._logger.warn({
-        event: 'FormValidator.validatePreExecutionForm',
-        details: 'Process warn - farm is invalid',
+        event: "FormValidator.validatePreExecutionForm",
+        details: "Process warn - farm is invalid",
         farm: data.farm,
       });
     }
@@ -187,10 +202,11 @@ export class Validator implements PValidator {
     if (!data.plot || data.plot.length === 0) {
       // plot is invalid
       result.valid = false;
-      result.plot.errorMessage = CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_PLOT;
+      result.plot.errorMessage =
+        CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_PLOT;
       this._logger.warn({
-        event: 'FormValidator.validatePreExecutionForm',
-        details: 'Process warn - plot is invalid',
+        event: "FormValidator.validatePreExecutionForm",
+        details: "Process warn - plot is invalid",
         plotNumber: data.plot,
       });
     }
@@ -201,8 +217,8 @@ export class Validator implements PValidator {
       result.tractorName.errorMessage =
         CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_TRACTOR_NAME;
       this._logger.warn({
-        event: 'FormValidator.validatePreExecutionForm',
-        details: 'Process warn - tractorName is invalid',
+        event: "FormValidator.validatePreExecutionForm",
+        details: "Process warn - tractorName is invalid",
         tractorName: data.tractorName,
       });
     }
@@ -220,10 +236,11 @@ export class Validator implements PValidator {
     ) {
       // weather is invalid
       result.valid = false;
-      result.weather.errorMessage = CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_WEATHER;
+      result.weather.errorMessage =
+        CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_WEATHER;
       this._logger.warn({
-        event: 'FormValidator.validatePreExecutionForm',
-        details: 'Process warn - weather is invalid',
+        event: "FormValidator.validatePreExecutionForm",
+        details: "Process warn - weather is invalid",
         weather: data.weather,
       });
     }
@@ -264,14 +281,18 @@ export class Validator implements PValidator {
     //   });
     // }
 
-    if (!data.applicatorsAmount || data.applicatorsAmount < 0 || data.applicatorsAmount > 3) {
+    if (
+      !data.applicatorsAmount ||
+      data.applicatorsAmount < 0 ||
+      data.applicatorsAmount > 3
+    ) {
       // applicatorsAmount is invalid
       result.valid = false;
       result.applicatorsAmount.errorMessage =
         CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_APPLICATORS_AMOUNT;
       this._logger.warn({
-        event: 'FormValidator.validatePreExecutionForm',
-        details: 'Process warn - applicatorsAmount is invalid',
+        event: "FormValidator.validatePreExecutionForm",
+        details: "Process warn - applicatorsAmount is invalid",
         leftApplicatorLoad: data.applicatorsAmount,
       });
     }
@@ -279,10 +300,11 @@ export class Validator implements PValidator {
     if (!data.activity) {
       // activity is invalid
       result.valid = false;
-      result.activity.errorMessage = CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_ACTIVITY;
+      result.activity.errorMessage =
+        CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_ACTIVITY;
       this._logger.warn({
-        event: 'FormValidator.validatePreExecutionForm',
-        details: 'Process warn - activity is invalid',
+        event: "FormValidator.validatePreExecutionForm",
+        details: "Process warn - activity is invalid",
         leftApplicatorLoad: data.activity,
       });
     }
@@ -293,14 +315,14 @@ export class Validator implements PValidator {
       result.streetsAmount.errorMessage =
         CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_STREETS_AMOUNT;
       this._logger.warn({
-        event: 'FormValidator.validatePreExecutionForm',
-        details: 'Process warn - streetsAmount is invalid',
+        event: "FormValidator.validatePreExecutionForm",
+        details: "Process warn - streetsAmount is invalid",
         streetsAmount: data.streetsAmount,
       });
     }
     this._logger.info({
-      event: 'FormValidator.validatePreExecutionForm',
-      details: 'Process finished',
+      event: "FormValidator.validatePreExecutionForm",
+      details: "Process finished",
       result,
     });
 
@@ -308,8 +330,8 @@ export class Validator implements PValidator {
   }
   validateConfigForm(data: IConfigsProps): IConfigFormResult {
     this._logger.info({
-      event: 'FormValidator.validateConfigForm',
-      details: 'Process started',
+      event: "FormValidator.validateConfigForm",
+      details: "Process started",
       data,
     });
 
@@ -345,48 +367,62 @@ export class Validator implements PValidator {
     if (!data.APPLICATION) {
       result.valid = false;
     } else {
-      if (!data.APPLICATION.LEFT_TANK_MAX_LOAD || data.APPLICATION.LEFT_TANK_MAX_LOAD < 1) {
+      if (
+        !data.APPLICATION.LEFT_TANK_MAX_LOAD ||
+        data.APPLICATION.LEFT_TANK_MAX_LOAD < 1
+      ) {
         result.valid = false;
         result.leftTankMaxLoad.errorMessage =
           CONSTANTS.ERRORS.CONFIG_FORM.INVALID_LEFT_TANK_MAX_LOAD;
         this._logger.warn({
-          event: 'FormValidator.validateConfigForm',
-          details: 'Process warn - Invalid LEFT_TANK_MAX_LOAD',
+          event: "FormValidator.validateConfigForm",
+          details: "Process warn - Invalid LEFT_TANK_MAX_LOAD",
         });
       }
-      if (!data.APPLICATION.CENTER_TANK_MAX_LOAD || data.APPLICATION.CENTER_TANK_MAX_LOAD < 1) {
+      if (
+        !data.APPLICATION.CENTER_TANK_MAX_LOAD ||
+        data.APPLICATION.CENTER_TANK_MAX_LOAD < 1
+      ) {
         result.valid = false;
         result.centerTankMaxLoad.errorMessage =
           CONSTANTS.ERRORS.CONFIG_FORM.INVALID_CENTER_TANK_MAX_LOAD;
         this._logger.warn({
-          event: 'FormValidator.validateConfigForm',
-          details: 'Process warn - Invalid CENTER_TANK_MAX_LOAD',
+          event: "FormValidator.validateConfigForm",
+          details: "Process warn - Invalid CENTER_TANK_MAX_LOAD",
         });
       }
-      if (!data.APPLICATION.RIGHT_TANK_MAX_LOAD || data.APPLICATION.RIGHT_TANK_MAX_LOAD < 1) {
+      if (
+        !data.APPLICATION.RIGHT_TANK_MAX_LOAD ||
+        data.APPLICATION.RIGHT_TANK_MAX_LOAD < 1
+      ) {
         result.valid = false;
         result.rightTankMaxLoad.errorMessage =
           CONSTANTS.ERRORS.CONFIG_FORM.INVALID_RIGHT_TANK_MAX_LOAD;
         this._logger.warn({
-          event: 'FormValidator.validateConfigForm',
-          details: 'Process warn - Invalid RIGHT_TANK_MAX_LOAD',
+          event: "FormValidator.validateConfigForm",
+          details: "Process warn - Invalid RIGHT_TANK_MAX_LOAD",
         });
       }
-      if (!data.APPLICATION.DOSE_WEIGHT_G || data.APPLICATION.DOSE_WEIGHT_G < 5) {
+      if (
+        !data.APPLICATION.DOSE_WEIGHT_G ||
+        data.APPLICATION.DOSE_WEIGHT_G < 5
+      ) {
         result.valid = false;
-        result.doseWeightG.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_DOSE_WEIGHT_G;
+        result.doseWeightG.errorMessage =
+          CONSTANTS.ERRORS.CONFIG_FORM.INVALID_DOSE_WEIGHT_G;
         this._logger.warn({
-          event: 'FormValidator.validateConfigForm',
-          details: 'Process warn - Invalid DOSE_WEIGHT_G',
+          event: "FormValidator.validateConfigForm",
+          details: "Process warn - Invalid DOSE_WEIGHT_G",
         });
       }
 
       if (!data.APPLICATION.MAX_VELOCITY || data.APPLICATION.MAX_VELOCITY < 1) {
         result.valid = false;
-        result.maxVelocity.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_MAX_VELOCITY;
+        result.maxVelocity.errorMessage =
+          CONSTANTS.ERRORS.CONFIG_FORM.INVALID_MAX_VELOCITY;
         this._logger.warn({
-          event: 'FormValidator.validateConfigForm',
-          details: 'Process warn - Invalid MAX_VELOCITY',
+          event: "FormValidator.validateConfigForm",
+          details: "Process warn - Invalid MAX_VELOCITY",
         });
       }
     }
@@ -400,8 +436,8 @@ export class Validator implements PValidator {
         result.metersBetweenDose.errorMessage =
           CONSTANTS.ERRORS.CONFIG_FORM.INVALID_METERS_BETWEEN_DOSE;
         this._logger.warn({
-          event: 'FormValidator.validateConfigForm',
-          details: 'Process warn - Invalid INVALID_METERS_BETWEEN_DOSE',
+          event: "FormValidator.validateConfigForm",
+          details: "Process warn - Invalid INVALID_METERS_BETWEEN_DOSE",
         });
       }
     }
@@ -409,34 +445,37 @@ export class Validator implements PValidator {
     if (!data.PRESETS || Object.keys(data.PRESETS).length < 6) {
       result.valid = false;
       this._logger.warn({
-        event: 'FormValidator.validateConfigForm',
-        details: 'Process warn - Invalid PRESETS',
+        event: "FormValidator.validateConfigForm",
+        details: "Process warn - Invalid PRESETS",
       });
       for (let i = 0; i < 6; i++) {
-        result['preset' + (i + 1) + 'Name'].errorMessage =
+        result["preset" + (i + 1) + "Name"].errorMessage =
           CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET;
-        result['preset' + (i + 1) + 'Dose'].errorMessage =
+        result["preset" + (i + 1) + "Dose"].errorMessage =
           CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET;
       }
     } else {
       for (const key in data.PRESETS) {
         if (!data.PRESETS[key].NAME || data.PRESETS[key].NAME.length === 0) {
           result.valid = false;
-          result['preset' + key[1] + 'Name'].errorMessage =
+          result["preset" + key[1] + "Name"].errorMessage =
             CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_NAME;
           this._logger.warn({
-            event: 'FormValidator.validateConfigForm',
-            details: 'Process warn - Invalid PRESET.NAME',
+            event: "FormValidator.validateConfigForm",
+            details: "Process warn - Invalid PRESET.NAME",
           });
         }
-        if (!data.PRESETS[key].DOSE_AMOUNT || data.PRESETS[key].DOSE_AMOUNT < 1) {
+        if (
+          !data.PRESETS[key].DOSE_AMOUNT ||
+          data.PRESETS[key].DOSE_AMOUNT < 1
+        ) {
           result.valid = false;
-          result['preset' + key[1] + 'Dose'].errorMessage =
+          result["preset" + key[1] + "Dose"].errorMessage =
             CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PRESET_VALUE;
 
           this._logger.warn({
-            event: 'FormValidator.validateConfigForm',
-            details: 'Process warn - Invalid PRESET.DOSE_AMOUNT',
+            event: "FormValidator.validateConfigForm",
+            details: "Process warn - Invalid PRESET.DOSE_AMOUNT",
           });
         }
       }
@@ -447,8 +486,8 @@ export class Validator implements PValidator {
       result.stopReasonEvent.errorMessage =
         CONSTANTS.ERRORS.CONFIG_FORM.INVALID_STOP_REASONS_EVENTS;
       this._logger.warn({
-        event: 'FormValidator.validateConfigForm',
-        details: 'Process warn - Invalid STOP_REASON_EVENTS',
+        event: "FormValidator.validateConfigForm",
+        details: "Process warn - Invalid STOP_REASON_EVENTS",
       });
     } else {
       for (const key in data.STOP_REASONS_EVENTS) {
@@ -457,8 +496,8 @@ export class Validator implements PValidator {
           result.stopReasonEvent.errorMessage =
             CONSTANTS.ERRORS.CONFIG_FORM.INVALID_STOP_REASONS_EVENTS;
           this._logger.warn({
-            event: 'FormValidator.validateConfigForm',
-            details: 'Process warn - Invalid STOP_REASON_EVENTS attribute',
+            event: "FormValidator.validateConfigForm",
+            details: "Process warn - Invalid STOP_REASON_EVENTS attribute",
           });
         }
       }
@@ -468,18 +507,19 @@ export class Validator implements PValidator {
       result.valid = false;
       result.farms.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_FARMS;
       this._logger.warn({
-        event: 'FormValidator.validateConfigForm',
-        details: 'Process warn - Invalid FARMS',
+        event: "FormValidator.validateConfigForm",
+        details: "Process warn - Invalid FARMS",
         data: data.FARMS,
       });
     } else {
       for (const key in data.FARMS) {
         if (!data.FARMS[key] || data.FARMS[key].length === 0) {
           result.valid = false;
-          result.farms.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_FARMS;
+          result.farms.errorMessage =
+            CONSTANTS.ERRORS.CONFIG_FORM.INVALID_FARMS;
           this._logger.warn({
-            event: 'FormValidator.validateConfigForm',
-            details: 'Process warn - Invalid FARMS attribute',
+            event: "FormValidator.validateConfigForm",
+            details: "Process warn - Invalid FARMS attribute",
           });
         }
       }
@@ -489,17 +529,18 @@ export class Validator implements PValidator {
       result.valid = false;
       result.plots.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
       this._logger.warn({
-        event: 'FormValidator.validateConfigForm',
-        details: 'Process warn - Invalid PLOTS',
+        event: "FormValidator.validateConfigForm",
+        details: "Process warn - Invalid PLOTS",
       });
     } else {
       for (const key in data.PLOTS) {
         if (!data.PLOTS[key] || data.PLOTS[key].length === 0) {
           result.valid = false;
-          result.plots.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
+          result.plots.errorMessage =
+            CONSTANTS.ERRORS.CONFIG_FORM.INVALID_PLOTS;
           this._logger.warn({
-            event: 'FormValidator.validateConfigForm',
-            details: 'Process warn - Invalid PLOTS attribute',
+            event: "FormValidator.validateConfigForm",
+            details: "Process warn - Invalid PLOTS attribute",
           });
         }
       }
@@ -507,42 +548,43 @@ export class Validator implements PValidator {
 
     if (!data.FILE_PATH || data.FILE_PATH.length < 3) {
       result.valid = false;
-      result.filePath.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_FILE_PATH;
+      result.filePath.errorMessage =
+        CONSTANTS.ERRORS.CONFIG_FORM.INVALID_FILE_PATH;
       this._logger.warn({
-        event: 'FormValidator.validateConfigForm',
-        details: 'Process warn - Invalid FILE_PATH',
+        event: "FormValidator.validateConfigForm",
+        details: "Process warn - Invalid FILE_PATH",
       });
     }
 
-
     let isValidPoisonType = true;
-    try{
+    try {
       new Poison(data.POISON_TYPE);
-    }catch{
+    } catch {
       isValidPoisonType = false;
     }
 
     if (!data.POISON_TYPE || !isValidPoisonType) {
       result.valid = false;
-      result.poisonType.errorMessage = CONSTANTS.ERRORS.CONFIG_FORM.INVALID_POISON_TYPE;
+      result.poisonType.errorMessage =
+        CONSTANTS.ERRORS.CONFIG_FORM.INVALID_POISON_TYPE;
       this._logger.warn({
-        event: 'FormValidator.validateConfigForm',
-        details: 'Process warn - Invalid POISON_TYPE',
+        event: "FormValidator.validateConfigForm",
+        details: "Process warn - Invalid POISON_TYPE",
         poisonType: data.POISON_TYPE,
       });
     }
 
     this._logger.info({
-      event: 'FormValidator.validateConfigForm',
-      details: 'Process started',
+      event: "FormValidator.validateConfigForm",
+      details: "Process started",
       result,
     });
     return result;
   }
   validateFinishExecutionForm(reason: string): string {
     this._logger.info({
-      event: 'FormValidator.validateFinishExecutionForm',
-      details: 'Process started',
+      event: "FormValidator.validateFinishExecutionForm",
+      details: "Process started",
       reason,
     });
     const keys = Object.keys(this._config.getCache().STOP_REASONS_EVENTS);
@@ -552,27 +594,27 @@ export class Validator implements PValidator {
     });
     if (!reason || reason.length < 1 || !values.includes(reason)) {
       this._logger.warn({
-        event: 'FormValidator.validateFinishExecutionForm',
-        details: 'Process warn - reason is invalid',
+        event: "FormValidator.validateFinishExecutionForm",
+        details: "Process warn - reason is invalid",
       });
       this._logger.info({
-        event: 'FormValidator.validateFinishExecutionForm',
-        details: 'Process finished',
+        event: "FormValidator.validateFinishExecutionForm",
+        details: "Process finished",
       });
       return CONSTANTS.ERRORS.FINISH_EXECUTION_FORM.INVALID_REASON;
     }
 
     this._logger.info({
-      event: 'FormValidator.validateFinishExecutionForm',
-      details: 'Process finished',
+      event: "FormValidator.validateFinishExecutionForm",
+      details: "Process finished",
     });
     return;
   }
 
   validateUnderForestForm(underForest: string): string {
     this._logger.info({
-      event: 'FormValidator.validateUnderForestForm',
-      details: 'Process started',
+      event: "FormValidator.validateUnderForestForm",
+      details: "Process started",
       underForest,
     });
 
@@ -580,21 +622,25 @@ export class Validator implements PValidator {
     CONSTANTS.UNDER_FOREST_ITEMS.forEach((key) => {
       names.push(key.name);
     });
-    if (!underForest || underForest.length < 1 || !names.includes(underForest)) {
+    if (
+      !underForest ||
+      underForest.length < 1 ||
+      !names.includes(underForest)
+    ) {
       this._logger.warn({
-        event: 'FormValidator.validateUnderForestForm',
-        details: 'Process warn - underForest is invalid',
+        event: "FormValidator.validateUnderForestForm",
+        details: "Process warn - underForest is invalid",
       });
       this._logger.info({
-        event: 'FormValidator.validateUnderForestForm',
-        details: 'Process finished',
+        event: "FormValidator.validateUnderForestForm",
+        details: "Process finished",
       });
       return CONSTANTS.ERRORS.FINISH_EXECUTION_FORM.INVALID_REASON;
     }
 
     this._logger.info({
-      event: 'FormValidator.validateUnderForestForm',
-      details: 'Process finished',
+      event: "FormValidator.validateUnderForestForm",
+      details: "Process finished",
     });
     return;
   }

@@ -1,4 +1,4 @@
-import { PLogger } from '../../src/internal/core/port/logger-port';
+import { PLogger } from "../../src/internal/core/port/logger-port";
 
 export class LoggerMock implements PLogger {
   infoCalled: number;

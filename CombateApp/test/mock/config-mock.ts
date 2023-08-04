@@ -1,5 +1,5 @@
-import { PCache } from '../../src/internal/core/port/cache-port';
-import { IConfigsProps } from '../../src/internal/interface/config-props';
+import { PCache } from "../../src/internal/core/port/cache-port";
+import { IConfigsProps } from "../../src/internal/interface/config-props";
 
 export class ConfigMock implements PCache {
   [x: string]: {};
@@ -8,9 +8,9 @@ export class ConfigMock implements PCache {
     return this.cache;
   }
   update(config: IConfigsProps): Promise<void> {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
   updateCache(): Promise<void> {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
 }

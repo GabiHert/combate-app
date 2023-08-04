@@ -1,5 +1,5 @@
-import { BluetoothErrorType } from '../../src/internal/core/error/error-type';
-import { PBluetooth } from '../../src/internal/core/port/bluetooth-port';
+import { BluetoothErrorType } from "../../src/internal/core/error/error-type";
+import { PBluetooth } from "../../src/internal/core/port/bluetooth-port";
 
 export class BluetoothMock implements PBluetooth {
   isBluetoothEnabledCalled: number;
@@ -24,7 +24,7 @@ export class BluetoothMock implements PBluetooth {
     this.setDeviceCalled = 0;
     this.setDeviceError = undefined;
     this.readCalled = 0;
-    this.readResult = () => '';
+    this.readResult = () => "";
     this.readDelay = 0;
     this.writeCalled = 0;
     this.writeDelay = 0;
@@ -40,7 +40,8 @@ export class BluetoothMock implements PBluetooth {
   }
   async getBondedDevices() {
     this.getBondedDevicesCalled++;
-    if (this.getBondedDevicesError) throw new BluetoothErrorType(this.getBondedDevicesError);
+    if (this.getBondedDevicesError)
+      throw new BluetoothErrorType(this.getBondedDevicesError);
 
     return [];
   }
