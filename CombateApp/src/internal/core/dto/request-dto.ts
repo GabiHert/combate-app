@@ -1,11 +1,11 @@
-import { IDoseRequest } from '../../interface/dose-request';
-import { IRequestDtoArgs } from '../../interface/request-dto-args';
+import { IDoseRequest } from "../../interface/dose-request";
+import { IRequestDtoArgs } from "../../interface/request-dto-args";
 
 export class RequestDto {
   event: string;
   dose?: IDoseRequest;
   client: string;
-  applicatorsAmount:number
+  applicatorsAmount: number;
   project: string;
   plot: string;
   tractorName: string;
@@ -18,7 +18,7 @@ export class RequestDto {
   linesSpacing: number;
   alert?: string;
   constructor(args: IRequestDtoArgs) {
-    this.applicatorsAmount = args.applicatorsAmount
+    this.applicatorsAmount = args.applicatorsAmount;
     this.alert = args.alert;
     this.event = args.event;
     this.dose = args.dose;

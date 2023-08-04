@@ -80,7 +80,7 @@ export class ResponseDtoParser {
         protocol,
       });
 
-      //todo: this._protocolRules.V5(protocol);
+      this._protocolRules.V5(protocol);
 
       let sentence = protocol.substring(11);
       sentence = sentence.substring(0, sentence.length - 1);
@@ -104,11 +104,18 @@ export class ResponseDtoParser {
         };
       } else gpsData = { status: "V" };
 
+      const leftApplicator = protocol[5] == "1";
+      const centerApplicator = protocol[6] == "1";
+      const rightApplicator = protocol[7] == "1";
+
       const responseDto = new ResponseDto(
         gpsData,
         status,
         errorCode,
-        protocol[1]
+        protocol[1],
+        centerApplicator,
+        leftApplicator,
+        rightApplicator
       );
 
       this._logger.info({

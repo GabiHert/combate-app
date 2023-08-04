@@ -2,10 +2,12 @@ import { CONSTANTS } from "../../config/config";
 import { ResponseDto } from "../dto/response-dto";
 import { StatusEnum } from "../enum/status";
 import {
+  ApplicatorNotConnectedErrorType,
   BluetoothErrorType,
   DoseProcessTimeOut as DoseProcessTimeOutErrorType,
   GenericErrorType,
   GpsErrorType,
+  RenameErrorType,
   ValidationErrorType,
 } from "../error/error-type";
 import { ResponseDtoParser } from "../parser/response-dto-parser";
@@ -62,7 +64,10 @@ export class CbV5Service implements PCbService {
           "001": new ValidationErrorType("Validação protocolo falhou [CB]"),
           "002": new DoseProcessTimeOutErrorType("Dose lenta ou travada [CB]"),
           "003": new GpsErrorType("GPS sem sinal ou sem resposta [CB]"),
-          //todo:"005" e "006"
+          "009": new ApplicatorNotConnectedErrorType(
+            "Dosador desconectado [CB]"
+          ),
+          "010": new RenameErrorType("Não foi possível renomear [CB]"),
         };
         if (errors[responseDto.errorCode]) {
           throw errors[responseDto.errorCode];
