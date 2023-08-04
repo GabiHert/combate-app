@@ -50,7 +50,8 @@ export const CONSTANTS = {
     { name: "Sub-bosque 2", id: "2" },
     { name: "Sub-bosque 3", id: "3" },
   ],
-  REQUEST: { HEADER: "INF" },
+  REQUEST_V4: { HEADER: "INF" },
+  REQUEST_V5: { HEADER: "INF5" },
   ERRORS: {
     MAX_VELOCITY: "Velocidade máxima permitida atingida.",
     PERMISSIONS: {

@@ -178,8 +178,7 @@ export class RequestV5 implements PRequest {
     const newId = "";
 
     let protocol = [
-      CONSTANTS.REQUEST.HEADER,
-      "5",
+      CONSTANTS.REQUEST_V5.HEADER,
       doseAmount,
       leftApplicatorActive,
       centerApplicatorActive,
@@ -189,7 +188,7 @@ export class RequestV5 implements PRequest {
       "x",
     ].join("");
 
-    protocol += this._checkSumBuilder.build(protocol.substring(3)) + "\r\n";
+    protocol += this._checkSumBuilder.build(protocol.substring(4)) + "\r\n";
     this._logger.info({
       event: "RequestV5.toProtocol",
       details: "Process finished",
