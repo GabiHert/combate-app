@@ -9,7 +9,7 @@ import { PLogger } from '../port/logger-port';
 import { PRequest } from '../port/request-port';
 import { timeout } from '../utils/timeout';
 
-export class CbV4Service implements PCbService {
+export class CbV5Service implements PCbService {
   constructor(
     private readonly _logger: PLogger,
     private _bluetooth: PBluetooth,
@@ -32,7 +32,7 @@ export class CbV4Service implements PCbService {
         new BluetoothErrorType('Request timeout exceeded')
       );
 
-      let responseDto = this._responseDtoParser.parseV4(protocol);
+      let responseDto = this._responseDtoParser.parseV5(protocol);
       
       if(responseDto.status.name == StatusEnum.B.name){
         if (request.getRequestDto().dose?.amount) timeoutMs += (CONSTANTS.APPLICATION.DOSE_TIMEOUT_MS*request.getRequestDto().dose.amount);
@@ -50,6 +50,7 @@ export class CbV4Service implements PCbService {
           "001":new ValidationErrorType("Validação protocolo falhou [CB]"),
           "002":new DoseProcessTimeOutErrorType("Dose lenta ou travada [CB]"),
           "003":new GpsErrorType("GPS sem sinal ou sem resposta [CB]"),
+          //todo:"005" e "006"
         }
         if(errors[responseDto.errorCode]){
           throw errors[responseDto.errorCode]
@@ -57,7 +58,7 @@ export class CbV4Service implements PCbService {
           throw new GenericErrorType("Código de erro CB não mapeado ("+responseDto.errorCode+")")
         }
       
-    } 
+    }
 
     this._logger.info({ event: 'CbV4Service.request', details: 'Process finished', responseDto });
       return responseDto;

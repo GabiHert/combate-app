@@ -75,6 +75,16 @@ export const CONSTANTS = {
       LINE_SPACING_NOT_DEFINED: 'Espaçamento de linhas deve ser informado.',
       LINE_SPACING_GREATER_THAN_0: 'Espaçamento de linhas deve ser maior do que 10.',
     },
+
+    REQUEST_V5: {
+      DOSE_AMOUNT_BELLOW_ZERO: 'Quantidade de doses deve ser maior do que zero.',
+      DOSE_NOT_DEFINED: 'Informações de dose devem ser informadas.',
+      NOT_DEFINED: 'Dados invalidos.',
+      DOSE_AMOUNT_NOT_DEFINED: 'Quantidade de doses deve ser informada.',
+      DOSE_AMOUNT_GREATER_THAN_10:'Número de doses deve ser menor ou igual a 10.',
+      LINE_SPACING_NOT_DEFINED: 'Espaçamento de linhas deve ser informado.',
+      LINE_SPACING_GREATER_THAN_0: 'Espaçamento de linhas deve ser maior do que 10.',
+    },
     BLUETOOTH_APP: {
       DEVICE_NOT_AVAILABLE: 'Dispositivo não disponível',
       EMPTY_DEVICE_LIST: 'Lista de dispositivos vazia',

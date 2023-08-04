@@ -45,7 +45,7 @@ export class ResponseDtoParser {
         };
       } else gpsData = { status: 'V' };
 
-      const responseDto = new ResponseDto(gpsData, status, errorCode);
+      const responseDto = new ResponseDto(gpsData, status, errorCode,"4");
 
       this._logger.info({
         event: 'ResponseBuilder.buildV4',
@@ -57,6 +57,54 @@ export class ResponseDtoParser {
     } catch (err) {
       this._logger.error({
         event: 'ResponseBuilder.buildV4',
+        details: 'Process error',
+        error: err.message,
+      });
+
+      throw err;
+    }
+  }
+
+  parseV5(protocol: string): ResponseDto {
+    try {
+      this._logger.info({ event: 'ResponseBuilder.buildV5', details: 'Process started', protocol });
+
+     //todo: this._protocolRules.V5(protocol);
+
+      let sentence = protocol.substring(11);
+      sentence = sentence.substring(0, sentence.length - 1);
+      const status = new Status(protocol[3]);
+      const errorCode = protocol.substring(4, 7);
+
+      const gprmc = '$GPRMC' + sentence;
+      const data = gpsSentenceParser.parse(gprmc);
+
+      let gpsData: IGpsData;
+      if (data.valid) {
+        const speed = Math.trunc(data.speed.knots * 1.852).toString();
+
+        const date = <Date>data.datetime;
+        gpsData = {
+          status: data.mode[0],
+          latitude: data.loc.geojson.coordinates[1],
+          longitude: data.loc.geojson.coordinates[0],
+          speed,
+          dateUTC: date,
+        };
+      } else gpsData = { status: 'V' };
+
+      const responseDto = new ResponseDto(gpsData, status, errorCode,protocol[1]);
+
+      this._logger.info({
+        event: 'ResponseBuilder.buildV5',
+        details: 'Process finished',
+        responseDto,
+      });
+
+      return responseDto;
+    } catch (err) {
+      this._logger.error({
+        event: 'ResponseBuilder.buildV5',
         details: 'Process error',
         error: err.message,
       });

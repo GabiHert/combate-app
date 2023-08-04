@@ -12,6 +12,9 @@ export class ProtocolRules {
   ) {}
 
   getProtocolVersion(response: ResponseDto): ProtocolVersion {
+   if (response.version == "5"){
+    return ProtocolVersionEnum.V5
+   }
     return ProtocolVersionEnum.V4;
   }
   V4(protocol: string) {

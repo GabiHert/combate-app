@@ -14,6 +14,11 @@ export class CbServiceFactory {
   private [ProtocolVersionEnum.V4.name]() {
     return new CbV4Service(this._logger, this._bluetooth, this._responseDtoParser);
   }
+
+  private [ProtocolVersionEnum.V5.name]() {
+    return new CbV4Service(this._logger, this._bluetooth, this._responseDtoParser);//todo: return new CbV5Service
+  }
+
   factory(version: ProtocolVersion): PCbService {
     this._logger.info({ event: 'CbServiceFactory.factory', details: 'Process started', version });
 

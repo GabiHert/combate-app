@@ -41,6 +41,7 @@ export class CombateApp implements PCombateApp {
   }
 
   private async _syncProtocolVersion(requestDto: RequestDto): Promise<void> {
+    try{
     this._requestDto = requestDto;
     const request = this._requestFactory.factory(requestDto, ProtocolVersionEnum.V4);
     const cbV4Service = this._cbServiceFactory.factory(ProtocolVersionEnum.V4);
@@ -48,6 +49,15 @@ export class CombateApp implements PCombateApp {
     this._lastRequestTime = new Date().getTime();
     this._protocolVersion = this._protocolRules.getProtocolVersion(responseDto);
     this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
+  }catch(err){
+    this._requestDto = requestDto;
+    const request = this._requestFactory.factory(requestDto, ProtocolVersionEnum.V5);
+    const cbV5Service = this._cbServiceFactory.factory(ProtocolVersionEnum.V5);
+    const responseDto = await cbV5Service.request(request);
+    this._lastRequestTime = new Date().getTime();
+    this._protocolVersion = this._protocolRules.getProtocolVersion(responseDto);
+    this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
+  }
   }
 
   async permissions() {
