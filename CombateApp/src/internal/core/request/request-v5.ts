@@ -86,36 +86,37 @@ export class RequestV5 implements PRequest {
           );
         }
 
-        if (
-          this._requestDto.dose.amount > 0 &&
-          !this._requestDto.dose.centerApplicator &&
-          !this._requestDto.dose.leftApplicator &&
-          !this._requestDto.dose.rightApplicator
-        ) {
-          this._logger.warn({
-            event: "RequestV5.validate",
-            details: "Process warn",
-            warn: "applicator should be specified",
-          });
-          throw new ValidationErrorType(
-            CONSTANTS.ERRORS.REQUEST_V5.APPLICATOR_NOT_SPECIFIER
-          );
-        }
+        if (this._requestDto.dose.amount > 0) {
+          if (
+            !this._requestDto.dose.centerApplicator &&
+            !this._requestDto.dose.leftApplicator &&
+            !this._requestDto.dose.rightApplicator
+          ) {
+            this._logger.warn({
+              event: "RequestV5.validate",
+              details: "Process warn",
+              warn: "applicator should be specified",
+            });
+            throw new ValidationErrorType(
+              CONSTANTS.ERRORS.REQUEST_V5.APPLICATOR_NOT_SPECIFIER
+            );
+          }
 
-        if (
-          this._requestDto.applicatorsAmount !=
-          Number(this._requestDto.dose.centerApplicator) +
-            Number(this._requestDto.dose.leftApplicator) +
-            Number(this._requestDto.dose.rightApplicator)
-        ) {
-          this._logger.warn({
-            event: "RequestV5.validate",
-            details: "Process warn",
-            warn: "applicatorsAmount and selectedApplicators does not match",
-          });
-          throw new ValidationErrorType(
-            CONSTANTS.ERRORS.REQUEST_V5.APPLICATORS_AMOUNT_AND_SELECTED_DOES_NOT_MATCH
-          );
+          if (
+            this._requestDto.applicatorsAmount !=
+            Number(this._requestDto.dose.centerApplicator) +
+              Number(this._requestDto.dose.leftApplicator) +
+              Number(this._requestDto.dose.rightApplicator)
+          ) {
+            this._logger.warn({
+              event: "RequestV5.validate",
+              details: "Process warn",
+              warn: "applicatorsAmount and selectedApplicators does not match",
+            });
+            throw new ValidationErrorType(
+              CONSTANTS.ERRORS.REQUEST_V5.APPLICATORS_AMOUNT_AND_SELECTED_DOES_NOT_MATCH
+            );
+          }
         }
       }
 
@@ -172,10 +173,10 @@ export class RequestV5 implements PRequest {
       doseAmount = "N";
     }
 
-    const centerApplicatorActive = "";
-    const leftApplicatorActive = "";
-    const rightApplicatorActive = "";
-    const newId = "";
+    const centerApplicatorActive = "1";
+    const leftApplicatorActive = "1";
+    const rightApplicatorActive = "1";
+    const newId = String.fromCharCode(0);
 
     let protocol = [
       CONSTANTS.REQUEST_V5.HEADER,

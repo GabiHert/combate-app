@@ -158,9 +158,6 @@ function ExecutionScreen(props: { navigation: any }) {
               .tractorName,
           weather:
             Instance.GetInstance().preExecutionConfigCache.getCache().weather,
-          dose: {
-            amount: 0,
-          },
         });
         const responseDto = await Instance.GetInstance().combateApp.request(
           requestDto

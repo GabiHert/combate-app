@@ -1,6 +1,6 @@
 enum ProtocolVersions {
-  V4 = 'V4',
-  V5 = 'V5',
+  V4 = "V4",
+  V5 = "V5",
 }
 
 class ProtocolVersionEnum_ {
@@ -8,7 +8,7 @@ class ProtocolVersionEnum_ {
     name: ProtocolVersions.V4,
   };
   readonly V5: { name: string } = {
-    name: ProtocolVersions.V4,
+    name: ProtocolVersions.V5,
   };
 }
 
@@ -21,9 +21,9 @@ export class ProtocolVersion {
       case ProtocolVersionEnum.V4.name:
         this.name = ProtocolVersionEnum.V4.name;
         break;
-        case ProtocolVersionEnum.V5.name:
-          this.name = ProtocolVersionEnum.V5.name;
-          break;
+      case ProtocolVersionEnum.V5.name:
+        this.name = ProtocolVersionEnum.V5.name;
+        break;
       default:
         throw new Error(`Unknown protocol version ${version}`);
     }

@@ -210,7 +210,8 @@ export class ProtocolRules {
       }
 
       const cs = this._checkSumBuilder.build(protocol.substring(1, 9));
-      if (cs != protocol[10]) {
+
+      if (cs != protocol[9]) {
         this._logger.warn({
           event: "ProtocolRules.V5",
           details: "Process warn",

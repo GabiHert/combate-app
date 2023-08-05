@@ -82,10 +82,10 @@ export class ResponseDtoParser {
 
       this._protocolRules.V5(protocol);
 
-      let sentence = protocol.substring(11);
+      let sentence = protocol.substring(10);
       sentence = sentence.substring(0, sentence.length - 1);
-      const status = new Status(protocol[3]);
-      const errorCode = protocol.substring(4, 7);
+      const status = new Status(protocol[2]);
+      const errorCode = protocol.substring(3, 6);
 
       const gprmc = "$GPRMC" + sentence;
       const data = gpsSentenceParser.parse(gprmc);

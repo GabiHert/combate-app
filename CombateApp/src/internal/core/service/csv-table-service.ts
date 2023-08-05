@@ -1,16 +1,16 @@
-import { RequestDto } from '../dto/request-dto';
-import { ResponseDto } from '../dto/response-dto';
-import { PCsvTableService } from '../port/csv-table-service-port';
-import { PFileSystem } from '../port/file-system-port';
-import { PLogger } from '../port/logger-port';
-import { dateTimeFormatter } from '../utils/date-time-formatter';
+import { RequestDto } from "../dto/request-dto";
+import { ResponseDto } from "../dto/response-dto";
+import { PCsvTableService } from "../port/csv-table-service-port";
+import { PFileSystem } from "../port/file-system-port";
+import { PLogger } from "../port/logger-port";
+import { dateTimeFormatter } from "../utils/date-time-formatter";
 interface Fields {
   Cliente: string;
   Projeto: string;
   Talhao: string;
   Maquina: string;
   CB: string;
-  Dosadores:string;
+  Dosadores: string;
   DosesTotais: string;
   TipoIsca: string;
   PesoG: string;
@@ -28,28 +28,28 @@ interface Fields {
   VelocidadeKmH: string;
 }
 export class CsvTableService implements PCsvTableService {
-  constructor(private readonly _logger: PLogger, private readonly _fileSystem: PFileSystem) {
-    
-  }
+  constructor(
+    private readonly _logger: PLogger,
+    private readonly _fileSystem: PFileSystem
+  ) {}
   async begin(path: string): Promise<void> {
     try {
       this._logger.info({
-        event: 'CsvTableService.insert',
-        details: 'Process started',
+        event: "CsvTableService.insert",
+        details: "Process started",
         path,
-        
       });
 
-      const fields :Fields= {
+      const fields: Fields = {
         Cliente: "",
         Projeto: "",
         Talhao: "",
         Maquina: "",
         CB: "",
-        Dosadores:"",
+        Dosadores: "",
         DosesTotais: "",
         TipoIsca: "",
-        PesoG:"",
+        PesoG: "",
         VelocidadeMaxima: "",
         Clima: "",
         Ruas: "",
@@ -57,63 +57,68 @@ export class CsvTableService implements PCsvTableService {
         Data: "",
         Hora: "",
         Erro: "",
-        Alerta:"" ,
+        Alerta: "",
         Evento: "",
-        Latitude:"",
+        Latitude: "",
         Longitude: "",
         VelocidadeKmH: "",
       };
-      
-      let data = []
-      Object.keys(fields).forEach((key)=>{
-          data.push(key)    
-       })
 
-       data.push('\n');
+      let data = [];
+      Object.keys(fields).forEach((key) => {
+        data.push(key);
+      });
 
-      await this._fileSystem.write(data.join(","),path)
-      
-      this._logger.info({ event: 'CsvTableService.insert', details: 'Process finished' });
+      data.push("\n");
+
+      await this._fileSystem.write(data.join(","), path);
+
+      this._logger.info({
+        event: "CsvTableService.insert",
+        details: "Process finished",
+      });
     } catch (err) {
       this._logger.error({
-        event: 'CsvTableService.insert',
-        details: 'Process error',
+        event: "CsvTableService.insert",
+        details: "Process error",
         error: err.message,
       });
 
       throw err;
-    }  }
-  async insert(path:string,requestDto: RequestDto, responseDto: ResponseDto):Promise<void> {
+    }
+  }
+  async insert(
+    path: string,
+    requestDto: RequestDto,
+    responseDto: ResponseDto
+  ): Promise<void> {
     try {
       this._logger.info({
-        event: 'CsvTableService.insert',
-        details: 'Process started',
+        event: "CsvTableService.insert",
+        details: "Process started",
         responseDto,
         requestDto,
       });
 
-
-      const dateNow = new Date()
+      const dateNow = new Date();
       const date = dateTimeFormatter.date(dateNow);
       const time = dateTimeFormatter.time(dateNow);
 
-      let doseAmount = 0;
-      if(requestDto.dose&&requestDto.dose.amount){
+      let doseAmount: number = 0;
+      if (requestDto.dose && requestDto.dose.amount > 0) {
         doseAmount = requestDto.dose.amount * requestDto.applicatorsAmount;
-      }else{
-        requestDto.dose = {amount:0}
       }
-
-      const fields :Fields= {
+      console.log(doseAmount);
+      const fields: Fields = {
         Cliente: requestDto.client,
         Projeto: requestDto.project,
         Talhao: requestDto.plot,
         Maquina: requestDto.tractorName,
         CB: requestDto.deviceName,
         Dosadores: requestDto.applicatorsAmount.toString(),
-        DosesTotais: doseAmount.toString(),
+        DosesTotais: !doseAmount ? "0" : doseAmount.toString(),
         TipoIsca: requestDto.poisonType,
-        PesoG:requestDto.doseWeightG.toString(),
+        PesoG: requestDto.doseWeightG.toString(),
         VelocidadeMaxima: requestDto.maxVelocity.toString(),
         Clima: requestDto.weather,
         Ruas: requestDto.streetsAmount.toString(),
@@ -121,27 +126,34 @@ export class CsvTableService implements PCsvTableService {
         Data: date,
         Hora: time,
         Erro: responseDto.errorCode,
-        Alerta:requestDto.alert ,
+        Alerta: requestDto.alert,
         Evento: requestDto.event,
-        Latitude:responseDto.gps.latitude.toString(),
-        Longitude: responseDto.gps.latitude.toString(),
+        Latitude: responseDto.gps.latitude
+          ? responseDto.gps.latitude.toString()
+          : "",
+        Longitude: responseDto.gps.longitude
+          ? responseDto.gps.longitude.toString()
+          : "",
         VelocidadeKmH: responseDto.gps.speed,
       };
-      
-      let data = []
-      Object.keys(fields).forEach((key)=>{
-        data.push(fields[key])  
-       })
 
-       data.push('\n')
+      let data = [];
+      Object.keys(fields).forEach((key) => {
+        data.push(fields[key]);
+      });
 
-      await this._fileSystem.write(data.join(","),path)
-      
-      this._logger.info({ event: 'CsvTableService.insert', details: 'Process finished' });
+      data.push("\n");
+
+      await this._fileSystem.write(data.join(","), path);
+
+      this._logger.info({
+        event: "CsvTableService.insert",
+        details: "Process finished",
+      });
     } catch (err) {
       this._logger.error({
-        event: 'CsvTableService.insert',
-        details: 'Process error',
+        event: "CsvTableService.insert",
+        details: "Process error",
         error: err.message,
       });
 
@@ -152,18 +164,21 @@ export class CsvTableService implements PCsvTableService {
   async create(path: string): Promise<void> {
     try {
       this._logger.info({
-        event: 'CsvTableService.create',
-        details: 'Process started',
+        event: "CsvTableService.create",
+        details: "Process started",
         path,
       });
 
       await this._fileSystem.create(path);
 
-      this._logger.info({ event: 'CsvTableService.create', details: 'Process finished' });
+      this._logger.info({
+        event: "CsvTableService.create",
+        details: "Process finished",
+      });
     } catch (err) {
       this._logger.error({
-        event: 'CsvTableService.create',
-        details: 'Process error',
+        event: "CsvTableService.create",
+        details: "Process error",
         error: err.message,
       });
 
