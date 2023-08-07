@@ -40,6 +40,8 @@ function ExecutionScreen(props: { navigation: any }) {
     startRequestTime.current = value;
   }
 
+  const statusBarLoadPercentageEnabled = useRef(false);
+
   const leftApplicatorLoad = useRef(
     Instance.GetInstance().preExecutionConfigCache.getCache().leftApplicatorLoad
   );
@@ -159,6 +161,7 @@ function ExecutionScreen(props: { navigation: any }) {
             rightApplicatorLoad.current
           ),
         });
+        statusBarLoadPercentageEnabled.current = true;
       } else {
         const applicatorsAmount =
           Instance.GetInstance().preExecutionConfigCache.getCache()
@@ -423,7 +426,7 @@ function ExecutionScreen(props: { navigation: any }) {
         <StatusBar
           velocity={velocity}
           applicatorsLoadPercentage={applicatorsLoadPercentage}
-          loadPercentageEnabled={false}
+          loadPercentageEnabled={statusBarLoadPercentageEnabled.current}
         />
       </Box>
 

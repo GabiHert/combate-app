@@ -1,9 +1,9 @@
-import { Box, Center, HStack } from 'native-base';
-import React, { memo } from 'react';
-import { SeverityEnum } from '../../../../../src/internal/core/enum/severity';
-import { appConfig } from '../../../../app/config/app-config';
-import { Theme } from '../../../../app/theme/theme';
-import { IApplicatorsPercentage } from '../Sheet';
+import { Box, Center, HStack } from "native-base";
+import React, { memo } from "react";
+import { SeverityEnum } from "../../../../../src/internal/core/enum/severity";
+import { appConfig } from "../../../../app/config/app-config";
+import { Theme } from "../../../../app/theme/theme";
+import { IApplicatorsPercentage } from "../Sheet";
 
 function StatusBar(props: {
   velocity: string;
@@ -11,12 +11,22 @@ function StatusBar(props: {
   loadPercentageEnabled: boolean;
 }) {
   return (
-    <HStack bgColor={Theme().color.b400} width="98%" borderRadius={50} pl={8} pr={8} height="95%">
-      <HStack w={'80%'} space={3}>
+    <HStack
+      bgColor={Theme().color.b400}
+      width="98%"
+      borderRadius={50}
+      pl={8}
+      pr={8}
+      height="95%"
+    >
+      <HStack w={"80%"} space={3}>
         <Center
-          width={'28%'}
+          width={"28%"}
           height="100%"
-          _text={{ color: 'white', fontSize: Theme().font.size.m(appConfig.screen) }}
+          _text={{
+            color: "white",
+            fontSize: Theme().font.size.m(appConfig.screen),
+          }}
         >
           Esquerdo
           <Center
@@ -27,22 +37,25 @@ function StatusBar(props: {
                 ? props.applicatorsLoadPercentage.left.severity.color
                 : SeverityEnum.WARN.color
             }
-            height={'60%'}
+            height={"60%"}
             _text={{
               fontSize: Theme().font.size.xl(appConfig.screen),
-              color: 'white',
-              textAlign: 'center',
+              color: "white",
+              textAlign: "center",
             }}
           >
             {props.loadPercentageEnabled
-              ? props.applicatorsLoadPercentage.left.percentage.toString() + '%'
-              : ' '}
+              ? props.applicatorsLoadPercentage.left.percentage.toString() + "%"
+              : " "}
           </Center>
         </Center>
         <Center
-          width={'28%'}
+          width={"28%"}
           height="100%"
-          _text={{ color: 'white', fontSize: Theme().font.size.m(appConfig.screen) }}
+          _text={{
+            color: "white",
+            fontSize: Theme().font.size.m(appConfig.screen),
+          }}
         >
           Central
           <Center
@@ -53,22 +66,26 @@ function StatusBar(props: {
                 ? props.applicatorsLoadPercentage.center.severity.color
                 : SeverityEnum.WARN.color
             }
-            height={'60%'}
+            height={"60%"}
             _text={{
               fontSize: Theme().font.size.xl(appConfig.screen),
-              color: 'white',
-              textAlign: 'center',
+              color: "white",
+              textAlign: "center",
             }}
           >
             {props.loadPercentageEnabled
-              ? props.applicatorsLoadPercentage.center.percentage.toString() + '%'
-              : ' '}
+              ? props.applicatorsLoadPercentage.center.percentage.toString() +
+                "%"
+              : " "}
           </Center>
         </Center>
         <Center
-          width={'28%'}
+          width={"28%"}
           height="100%"
-          _text={{ color: 'white', fontSize: Theme().font.size.m(appConfig.screen) }}
+          _text={{
+            color: "white",
+            fontSize: Theme().font.size.m(appConfig.screen),
+          }}
         >
           Direito
           <Center
@@ -79,34 +96,38 @@ function StatusBar(props: {
                 ? props.applicatorsLoadPercentage.center.severity.color
                 : SeverityEnum.WARN.color
             }
-            height={'60%'}
+            height={"60%"}
             _text={{
               fontSize: Theme().font.size.xl(appConfig.screen),
-              color: 'white',
-              textAlign: 'center',
+              color: "white",
+              textAlign: "center",
             }}
           >
             {props.loadPercentageEnabled
-              ? props.applicatorsLoadPercentage.right.percentage.toString() + '%'
-              : ' '}
+              ? props.applicatorsLoadPercentage.right.percentage.toString() +
+                "%"
+              : " "}
           </Center>
         </Center>
       </HStack>
 
-      <Box w={'20%'}>
+      <Box w={"20%"}>
         <Center
-          width={'100%'}
+          width={"100%"}
           height="100%"
-          _text={{ color: 'white', fontSize: Theme().font.size.s(appConfig.screen) }}
+          _text={{
+            color: "white",
+            fontSize: Theme().font.size.s(appConfig.screen),
+          }}
         >
           Velocidade
           <Center
             width="100%"
-            height={'70%'}
+            height={"70%"}
             _text={{
               fontSize: Theme().font.size.xxxl(appConfig.screen),
-              color: 'white',
-              textAlign: 'center',
+              color: "white",
+              textAlign: "center",
             }}
           >
             {props.velocity}
