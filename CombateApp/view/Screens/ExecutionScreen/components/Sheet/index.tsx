@@ -1,13 +1,21 @@
-import { useFocusEffect } from '@react-navigation/native';
-import { Box, Button, Center, Stack, Text, VStack, WarningOutlineIcon } from 'native-base';
-import React, { memo, useCallback, useState } from 'react';
-import { RequestDto } from '../../../../../src/internal/core/dto/request-dto';
-import { Severity } from '../../../../../src/internal/core/enum/severity';
-import { appConfig } from '../../../../app/config/app-config';
-import { Instance } from '../../../../app/instance/instance';
-import { Theme } from '../../../../app/theme/theme';
-import EventRegisterModal from '../EventRegisterModal';
-import FinishExecutionModal from '../FinishExecutionModal';
+import { useFocusEffect } from "@react-navigation/native";
+import {
+  Box,
+  Button,
+  Center,
+  Stack,
+  Text,
+  VStack,
+  WarningOutlineIcon,
+} from "native-base";
+import React, { memo, useCallback, useState } from "react";
+import { RequestDto } from "../../../../../src/internal/core/dto/request-dto";
+import { Severity } from "../../../../../src/internal/core/enum/severity";
+import { appConfig } from "../../../../app/config/app-config";
+import { Instance } from "../../../../app/instance/instance";
+import { Theme } from "../../../../app/theme/theme";
+import EventRegisterModal from "../EventRegisterModal";
+import FinishExecutionModal from "../FinishExecutionModal";
 
 export interface IApplicatorsPercentage {
   left: { percentage: number; severity: Severity };
@@ -22,18 +30,15 @@ function formatDate(date: Date): string {
   const hours = date.getHours();
   const minutes = date.getMinutes();
 
-  return `${day < 10 ? '0' + day : day}/${month < 10 ? '0' + month : month}/${year} ${
-    hours < 10 ? '0' + hours : hours
-  }:${minutes < 10 ? '0' + minutes : minutes}`;
+  return `${day < 10 ? "0" + day : day}/${
+    month < 10 ? "0" + month : month
+  }/${year} ${hours < 10 ? "0" + hours : hours}:${
+    minutes < 10 ? "0" + minutes : minutes
+  }`;
 }
 function Sheet(props: {
-  applicatorsLoad: {
-    leftApplicatorLoad: number;
-    rightApplicatorLoad: number;
-    centerApplicatorLoad: number;
-  };
   onFinishPressed: () => void;
-  onEventRegister:(requestDto:RequestDto,callback:()=>void)=>void
+  onEventRegister: (requestDto: RequestDto, callback: () => void) => void;
   appliedDoses: number;
   sheetHeight: number;
   blockHeight: number;
@@ -42,7 +47,8 @@ function Sheet(props: {
   const [executionTimeMinutes, setExecutionTimeMinutes] = useState<number>(0);
   const [executionTimeHours, setExecutionTimeHours] = useState<number>(0);
   const [eventRegisterVisible, setEventRegisterVisible] = useState(false);
-  const [finishExecutionModalVisible, setFinishExecutionModalVisible] = useState(false);
+  const [finishExecutionModalVisible, setFinishExecutionModalVisible] =
+    useState(false);
   const [date, setDate] = useState(new Date());
 
   useFocusEffect(() => {
@@ -63,7 +69,7 @@ function Sheet(props: {
     (hours: number, minutes: number) => {
       const formatted =
         (hours < 10 ? `0${hours}` : hours.toString()) +
-        ':' +
+        ":" +
         (minutes < 10 ? `0${minutes}` : minutes.toString());
       return formatted;
     },
@@ -92,7 +98,11 @@ function Sheet(props: {
   }, []);
   return (
     <VStack height={props.sheetHeight - 30} alignItems="center" space={4}>
-      <EventRegisterModal isOpen={eventRegisterVisible} onClose={onEventRegisterClose}  onEventRegister={props.onEventRegister} />
+      <EventRegisterModal
+        isOpen={eventRegisterVisible}
+        onClose={onEventRegisterClose}
+        onEventRegister={props.onEventRegister}
+      />
       <FinishExecutionModal
         isOpen={finishExecutionModalVisible}
         onClose={onFinishExecutionModalClose}
@@ -107,7 +117,7 @@ function Sheet(props: {
         paddingLeft={2}
         paddingRight={2}
       >
-        <Stack direction={'row'} space={3}>
+        <Stack direction={"row"} space={3}>
           <Box
             background={Theme().color.b200}
             width="40%"
@@ -119,7 +129,10 @@ function Sheet(props: {
             _text={{ fontSize: Theme().font.size.m(appConfig.screen) }}
           >
             Tempo em execução
-            <Text fontSize={Theme().font.size.xxxl(appConfig.screen)} fontWeight="bold">
+            <Text
+              fontSize={Theme().font.size.xxxl(appConfig.screen)}
+              fontWeight="bold"
+            >
               {formatExecutionTime(executionTimeHours, executionTimeMinutes)}
             </Text>
           </Box>
@@ -133,7 +146,10 @@ function Sheet(props: {
             _text={{ fontSize: Theme().font.size.m(appConfig.screen) }}
           >
             Data
-            <Text fontSize={Theme().font.size.l(appConfig.screen)} fontWeight="bold">
+            <Text
+              fontSize={Theme().font.size.l(appConfig.screen)}
+              fontWeight="bold"
+            >
               {formatDate(date)}
             </Text>
           </Box>
@@ -146,7 +162,7 @@ function Sheet(props: {
         paddingLeft={2}
         paddingRight={2}
       >
-        <Stack direction={'row'} space={3}>
+        <Stack direction={"row"} space={3}>
           <Box
             background={Theme().color.b200}
             width="40%"
@@ -158,21 +174,39 @@ function Sheet(props: {
             _text={{ fontSize: Theme().font.size.m(appConfig.screen) }}
           >
             Total aplicado
-            <Stack direction={'row'} alignItems="baseline" justifyContent="center">
-              <Text fontSize={Theme().font.size.xl(appConfig.screen)} fontWeight="bold">
+            <Stack
+              direction={"row"}
+              alignItems="baseline"
+              justifyContent="center"
+            >
+              <Text
+                fontSize={Theme().font.size.xl(appConfig.screen)}
+                fontWeight="bold"
+              >
                 {props.appliedDoses}
               </Text>
-              <Text fontSize={Theme().font.size.s(appConfig.screen)}>Doses</Text>
+              <Text fontSize={Theme().font.size.s(appConfig.screen)}>
+                Doses
+              </Text>
             </Stack>
-            <Stack direction={'row'} alignItems="baseline" justifyContent="center">
-              <Text fontSize={Theme().font.size.xl(appConfig.screen)} fontWeight="bold">
+            <Stack
+              direction={"row"}
+              alignItems="baseline"
+              justifyContent="center"
+            >
+              <Text
+                fontSize={Theme().font.size.xl(appConfig.screen)}
+                fontWeight="bold"
+              >
                 {!(
                   props.appliedDoses *
-                  Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G
+                  Instance.GetInstance().configCache.getCache().APPLICATION
+                    .DOSE_WEIGHT_G
                 )
                   ? 0
                   : props.appliedDoses *
-                    Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G}
+                    Instance.GetInstance().configCache.getCache().APPLICATION
+                      .DOSE_WEIGHT_G}
               </Text>
               <Text fontSize={Theme().font.size.s(appConfig.screen)}>g</Text>
             </Stack>
@@ -181,7 +215,7 @@ function Sheet(props: {
           <Button
             background={Theme().color.sWarning}
             width="50%"
-            height={'100%'}
+            height={"100%"}
             onPress={onEventRegisterPress}
             _pressed={{ opacity: 0.8 }}
             borderRadius={20}
@@ -192,14 +226,17 @@ function Sheet(props: {
               <Text mb={2} fontSize={Theme().font.size.l(appConfig.screen)}>
                 Sinalizar Evento
               </Text>
-              <WarningOutlineIcon size={Theme().font.size.xxxl(appConfig.screen)} color={'black'} />
+              <WarningOutlineIcon
+                size={Theme().font.size.xxxl(appConfig.screen)}
+                color={"black"}
+              />
             </Center>
           </Button>
         </Stack>
       </Box>
       <Button
-        alignItems={'center'}
-        justifyContent={'center'}
+        alignItems={"center"}
+        justifyContent={"center"}
         borderRadius={10}
         onPress={onSheetFinishPressed}
         width="50%"

@@ -23,7 +23,6 @@ import { ProtocolRules } from "../../internal/core/rules/protocol-rules";
 import { PCombateApp } from "../port/combate-app-port";
 
 export class CombateApp implements PCombateApp {
-  private _doseCallback: (done: number, target: number) => void;
   private _protocolVersion: ProtocolVersion;
   private _cbService: PCbService;
   private _filePath: string;
@@ -116,21 +115,18 @@ export class CombateApp implements PCombateApp {
 
   async begin(
     filePath: string,
-    systematicMetersBetweenDose: number,
-    doseCallback?: (done: number, target: number) => void
+    systematicMetersBetweenDose: number
   ): Promise<void> {
     this._logger.info({
       event: "CombateApp.begin",
       details: "Process started",
       filePath,
       systematicMetersBetweenDose,
-      doseCallback: doseCallback != undefined,
     });
     this._protocolVersion = undefined;
     this._cbService = undefined;
     this._filePath = filePath;
     this._systematicMetersBetweenDose = systematicMetersBetweenDose;
-    this._doseCallback = doseCallback;
     await this._csvTableService.begin(this._filePath);
     this._logger.info({
       event: "CombateApp.begin",
@@ -138,7 +134,10 @@ export class CombateApp implements PCombateApp {
     });
   }
 
-  async request(requestDto: RequestDto): Promise<ResponseDto> {
+  async request(
+    requestDto: RequestDto,
+    doseCallback: (requestDto: RequestDto, responseDto: ResponseDto) => void
+  ): Promise<ResponseDto> {
     try {
       this._logger.info({
         event: "CombateApp.request",
@@ -158,10 +157,7 @@ export class CombateApp implements PCombateApp {
         this._protocolVersion
       );
 
-      const responseDto = await this._cbService.request(
-        request,
-        this._doseCallback
-      );
+      const responseDto = await this._cbService.request(request, doseCallback);
 
       this._responseDto = responseDto;
 
@@ -171,7 +167,7 @@ export class CombateApp implements PCombateApp {
         responseDto
       );
 
-      await this._appRules(responseDto, requestDto);
+      await this._appRules(responseDto, requestDto, doseCallback);
 
       this._lastRequestTime = new Date().getTime();
 
@@ -195,7 +191,11 @@ export class CombateApp implements PCombateApp {
     }
   }
 
-  private async _appRules(responseDto: ResponseDto, requestDto: RequestDto) {
+  private async _appRules(
+    responseDto: ResponseDto,
+    requestDto: RequestDto,
+    doseCallback: (requestDto: RequestDto, responseDto: ResponseDto) => void
+  ) {
     try {
       this._logger.info({
         event: "CombateApp._appRules",
@@ -250,7 +250,7 @@ export class CombateApp implements PCombateApp {
 
           const responseDto = await this._cbService.request(
             request,
-            this._doseCallback
+            doseCallback
           );
           this._responseDto = responseDto;
 

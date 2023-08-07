@@ -6,6 +6,7 @@ import { BackHandler } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { CONSTANTS } from "../../../src/internal/config/config";
 import { RequestDto } from "../../../src/internal/core/dto/request-dto";
+import { ResponseDto } from "../../../src/internal/core/dto/response-dto";
 import { EventEnum } from "../../../src/internal/core/enum/event";
 import { ProtocolVersionEnum } from "../../../src/internal/core/enum/protocol-version";
 import {
@@ -39,13 +40,13 @@ function ExecutionScreen(props: { navigation: any }) {
     startRequestTime.current = value;
   }
 
-  const [leftApplicatorLoad, setLeftApplicatorLoad] = useState(
+  const leftApplicatorLoad = useRef(
     Instance.GetInstance().preExecutionConfigCache.getCache().leftApplicatorLoad
   );
   const [leftApplicatorActive, setLeftApplicatorActive] = useState(false);
   const [leftApplicatorAvailable, setLeftApplicatorAvailable] = useState(false);
 
-  const [rightApplicatorLoad, setRightApplicatorLoad] = useState(
+  const rightApplicatorLoad = useRef(
     Instance.GetInstance().preExecutionConfigCache.getCache()
       .rightApplicatorLoad
   );
@@ -53,7 +54,7 @@ function ExecutionScreen(props: { navigation: any }) {
   const [rightApplicatorAvailable, setRightApplicatorAvailable] =
     useState(false);
 
-  const [centerApplicatorLoad, setCenterApplicatorLoad] = useState(
+  const centerApplicatorLoad = useRef(
     Instance.GetInstance().preExecutionConfigCache.getCache()
       .centerApplicatorLoad
   );
@@ -66,17 +67,17 @@ function ExecutionScreen(props: { navigation: any }) {
       center: calculateApplicatorsLoadPercentage(
         Instance.GetInstance().configCache.getCache().APPLICATION
           .CENTER_TANK_MAX_LOAD,
-        centerApplicatorLoad
+        centerApplicatorLoad.current
       ),
       left: calculateApplicatorsLoadPercentage(
         Instance.GetInstance().configCache.getCache().APPLICATION
           .LEFT_TANK_MAX_LOAD,
-        leftApplicatorLoad
+        leftApplicatorLoad.current
       ),
       right: calculateApplicatorsLoadPercentage(
         Instance.GetInstance().configCache.getCache().APPLICATION
           .RIGHT_TANK_MAX_LOAD,
-        rightApplicatorLoad
+        rightApplicatorLoad.current
       ),
     });
 
@@ -123,6 +124,51 @@ function ExecutionScreen(props: { navigation: any }) {
     return () => backHandler.remove();
   });
 
+  const doseCallback = useCallback(
+    (requestDto: RequestDto, responseDto: ResponseDto) => {
+      if (responseDto.version == ProtocolVersionEnum.V5.name) {
+        const appliedKg =
+          requestDto.dose.amount * requestDto.doseWeightG * 1000;
+        if (requestDto.dose.centerApplicator) {
+          centerApplicatorLoad.current =
+            centerApplicatorLoad.current - appliedKg;
+        }
+
+        if (requestDto.dose.leftApplicator) {
+          leftApplicatorLoad.current = leftApplicatorLoad.current - appliedKg;
+        }
+
+        if (requestDto.dose.rightApplicator) {
+          rightApplicatorLoad.current = rightApplicatorLoad.current - appliedKg;
+        }
+
+        setApplicatorsLoadPercentage({
+          center: calculateApplicatorsLoadPercentage(
+            Instance.GetInstance().configCache.getCache().APPLICATION
+              .CENTER_TANK_MAX_LOAD,
+            centerApplicatorLoad.current
+          ),
+          left: calculateApplicatorsLoadPercentage(
+            Instance.GetInstance().configCache.getCache().APPLICATION
+              .LEFT_TANK_MAX_LOAD,
+            leftApplicatorLoad.current
+          ),
+          right: calculateApplicatorsLoadPercentage(
+            Instance.GetInstance().configCache.getCache().APPLICATION
+              .RIGHT_TANK_MAX_LOAD,
+            rightApplicatorLoad.current
+          ),
+        });
+      } else {
+        const applicatorsAmount =
+          Instance.GetInstance().preExecutionConfigCache.getCache()
+            .applicatorsAmount;
+        addAppliedDosesCallback(requestDto.dose.amount * applicatorsAmount);
+      }
+    },
+    []
+  );
+
   useFocusEffect(() => {
     async function trackPoint() {
       try {
@@ -161,19 +207,20 @@ function ExecutionScreen(props: { navigation: any }) {
             Instance.GetInstance().preExecutionConfigCache.getCache().weather,
         });
         const responseDto = await Instance.GetInstance().combateApp.request(
-          requestDto
+          requestDto,
+          doseCallback
         );
         setVelocity(responseDto.gps.speed);
 
         const cache = Instance.GetInstance().preExecutionConfigCache.getCache();
         if (
-          cache.leftApplicatorLoad != leftApplicatorLoad ||
-          cache.centerApplicatorLoad != centerApplicatorLoad ||
-          cache.rightApplicatorLoad != rightApplicatorLoad
+          cache.leftApplicatorLoad != leftApplicatorLoad.current ||
+          cache.centerApplicatorLoad != centerApplicatorLoad.current ||
+          cache.rightApplicatorLoad != rightApplicatorLoad.current
         ) {
-          cache.leftApplicatorLoad = leftApplicatorLoad;
-          cache.rightApplicatorLoad = rightApplicatorLoad;
-          cache.centerApplicatorLoad = centerApplicatorLoad;
+          cache.leftApplicatorLoad = leftApplicatorLoad.current;
+          cache.rightApplicatorLoad = rightApplicatorLoad.current;
+          cache.centerApplicatorLoad = centerApplicatorLoad.current;
           await Instance.GetInstance().preExecutionConfigCache.update(cache);
         }
       } catch (err) {
@@ -285,7 +332,8 @@ function ExecutionScreen(props: { navigation: any }) {
           },
         });
         const responseDto = await Instance.GetInstance().combateApp.request(
-          requestDto
+          requestDto,
+          doseCallback
         );
         setVelocity(responseDto.gps.speed);
         if (responseDto.version == ProtocolVersionEnum.V5.name) {
@@ -317,13 +365,6 @@ function ExecutionScreen(props: { navigation: any }) {
           if (centerApplicatorAvailable && !centerApplicatorActive) {
             setCenterApplicatorActive(true);
           }
-
-          //todo: set new applicators load
-        } else {
-          const applicatorsAmount =
-            Instance.GetInstance().preExecutionConfigCache.getCache()
-              .applicatorsAmount;
-          addAppliedDosesCallback(preset.DOSE_AMOUNT * applicatorsAmount);
         }
       } catch (err) {
         await Instance.GetInstance().errorHandler.handle(err);
@@ -353,7 +394,10 @@ function ExecutionScreen(props: { navigation: any }) {
       async function process() {
         setRequestOnProgress(true);
         try {
-          await Instance.GetInstance().combateApp.request(requestDto);
+          await Instance.GetInstance().combateApp.request(
+            requestDto,
+            doseCallback
+          );
         } catch (err) {
           await Instance.GetInstance().errorHandler.handle(err);
         } finally {
@@ -451,11 +495,6 @@ function ExecutionScreen(props: { navigation: any }) {
             onFinishButtonPress();
           }}
           appliedDoses={appliedDoses}
-          applicatorsLoad={{
-            centerApplicatorLoad: centerApplicatorLoad,
-            leftApplicatorLoad: leftApplicatorLoad,
-            rightApplicatorLoad: rightApplicatorLoad,
-          }}
         />
       </BottomSheet>
     </GestureHandlerRootView>

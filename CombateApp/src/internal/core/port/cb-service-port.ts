@@ -1,5 +1,6 @@
-import { ResponseDto } from '../dto/response-dto';
-import { PRequest } from './request-port';
+import { RequestDto } from "../dto/request-dto";
+import { ResponseDto } from "../dto/response-dto";
+import { PRequest } from "./request-port";
 
 export interface PCbService {
   /**
@@ -9,6 +10,6 @@ export interface PCbService {
    */
   request(
     request: PRequest,
-    callback?: (done: number, target: number) => void
+    callback?: (requestDto: RequestDto, responseDto: ResponseDto) => void
   ): Promise<ResponseDto>;
 }

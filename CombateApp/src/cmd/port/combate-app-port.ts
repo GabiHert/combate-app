@@ -6,7 +6,10 @@ export interface PCombateApp {
    * Requests CB to start a task
    * @param requestDto request to be decoded and sent
    */
-  request(requestDto: RequestDto): Promise<ResponseDto>;
+  request(
+    requestDto: RequestDto,
+    doseCallback: (requestDto: RequestDto, responseDto: ResponseDto) => void
+  ): Promise<ResponseDto>;
   /**
    * Starts the combateApp with it`s basic information
    * this method must be called before `request`
@@ -14,11 +17,7 @@ export interface PCombateApp {
    * @param systematicMetersBetweenDose
    * @param doseCallback callback function to be executed after each dose
    */
-  begin(
-    filePath: string,
-    systematicMetersBetweenDose: number,
-    doseCallback?: (done: number, target: number) => void
-  ): Promise<void>;
+  begin(filePath: string, systematicMetersBetweenDose: number): Promise<void>;
 
   permissions(): Promise<void>;
 }

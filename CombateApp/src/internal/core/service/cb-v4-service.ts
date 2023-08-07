@@ -1,4 +1,5 @@
 import { CONSTANTS } from "../../config/config";
+import { RequestDto } from "../dto/request-dto";
 import { ResponseDto } from "../dto/response-dto";
 import { StatusEnum } from "../enum/status";
 import {
@@ -23,7 +24,7 @@ export class CbV4Service implements PCbService {
   ) {}
   async request(
     request: PRequest,
-    callback?: (done: number, target: number) => void
+    doseCallback: (requestDto: RequestDto, responseDto: ResponseDto) => void
   ): Promise<ResponseDto> {
     try {
       this._logger.info({
