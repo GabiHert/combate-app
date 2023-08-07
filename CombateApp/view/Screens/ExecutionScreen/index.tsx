@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { CONSTANTS } from "../../../src/internal/config/config";
 import { RequestDto } from "../../../src/internal/core/dto/request-dto";
 import { EventEnum } from "../../../src/internal/core/enum/event";
+import { ProtocolVersionEnum } from "../../../src/internal/core/enum/protocol-version";
 import {
   Severity,
   SeverityEnum,
@@ -277,16 +278,53 @@ function ExecutionScreen(props: { navigation: any }) {
             Instance.GetInstance().preExecutionConfigCache.getCache().weather,
           dose: {
             amount: preset.DOSE_AMOUNT,
+            centerApplicator:
+              centerApplicatorActive && centerApplicatorAvailable,
+            leftApplicator: leftApplicatorActive && leftApplicatorAvailable,
+            rightApplicator: rightApplicatorActive && rightApplicatorAvailable,
           },
         });
         const responseDto = await Instance.GetInstance().combateApp.request(
           requestDto
         );
         setVelocity(responseDto.gps.speed);
-        const applicatorsAmount =
-          Instance.GetInstance().preExecutionConfigCache.getCache()
-            .applicatorsAmount;
-        addAppliedDosesCallback(preset.DOSE_AMOUNT * applicatorsAmount);
+        if (responseDto.version == ProtocolVersionEnum.V5.name) {
+          if (responseDto.centerApplicator != centerApplicatorAvailable) {
+            setCenterApplicatorAvailable(responseDto.centerApplicator);
+          }
+
+          if (responseDto.leftApplicator != leftApplicatorAvailable) {
+            setLeftApplicatorAvailable(responseDto.leftApplicator);
+          }
+
+          if (responseDto.rightApplicator != rightApplicatorAvailable) {
+            setRightApplicatorAvailable(responseDto.rightApplicator);
+          }
+
+          let applicatorsAmount =
+            Number(leftApplicatorActive) +
+            Number(rightApplicatorActive) +
+            Number(centerApplicatorActive);
+
+          addAppliedDosesCallback(preset.DOSE_AMOUNT * applicatorsAmount);
+
+          if (leftApplicatorAvailable && !leftApplicatorActive) {
+            setLeftApplicatorActive(true);
+          }
+          if (rightApplicatorAvailable && !rightApplicatorActive) {
+            setRightApplicatorActive(true);
+          }
+          if (centerApplicatorAvailable && !centerApplicatorActive) {
+            setCenterApplicatorActive(true);
+          }
+
+          //todo: set new applicators load
+        } else {
+          const applicatorsAmount =
+            Instance.GetInstance().preExecutionConfigCache.getCache()
+              .applicatorsAmount;
+          addAppliedDosesCallback(preset.DOSE_AMOUNT * applicatorsAmount);
+        }
       } catch (err) {
         await Instance.GetInstance().errorHandler.handle(err);
       } finally {
