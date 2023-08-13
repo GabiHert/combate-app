@@ -1,5 +1,4 @@
 import { PermissionsAndroid } from "react-native";
-import { ShowToast } from "../../../view/Components/AlertToast";
 import { CONSTANTS } from "../../internal/config/config";
 import { RequestDto } from "../../internal/core/dto/request-dto";
 import { ResponseDto } from "../../internal/core/dto/response-dto";
@@ -8,7 +7,6 @@ import {
   ProtocolVersion,
   ProtocolVersionEnum,
 } from "../../internal/core/enum/protocol-version";
-import { SeverityEnum } from "../../internal/core/enum/severity";
 import { PError } from "../../internal/core/error/error-port";
 import {
   MaxVelocityErrorType,
@@ -76,13 +74,6 @@ export class CombateApp implements PCombateApp {
         this._protocolRules.getProtocolVersion(responseDto);
       this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
     }
-
-    ShowToast({
-      durationMs: 3000,
-      severity: SeverityEnum.WARN,
-      message: "Protocolo " + this._protocolVersion.name,
-      title: "Versão CB identificada",
-    });
   }
 
   async permissions() {
@@ -136,7 +127,10 @@ export class CombateApp implements PCombateApp {
 
   async request(
     requestDto: RequestDto,
-    doseCallback: (requestDto: RequestDto, responseDto: ResponseDto) => void
+    doseCallback: (
+      requestDto: RequestDto,
+      responseDto: ResponseDto
+    ) => Promise<void>
   ): Promise<ResponseDto> {
     try {
       this._logger.info({
@@ -194,7 +188,10 @@ export class CombateApp implements PCombateApp {
   private async _appRules(
     responseDto: ResponseDto,
     requestDto: RequestDto,
-    doseCallback: (requestDto: RequestDto, responseDto: ResponseDto) => void
+    doseCallback: (
+      requestDto: RequestDto,
+      responseDto: ResponseDto
+    ) => Promise<void>
   ) {
     try {
       this._logger.info({

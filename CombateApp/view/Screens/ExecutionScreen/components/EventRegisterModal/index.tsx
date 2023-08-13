@@ -61,7 +61,10 @@ function EventRegisterModal(props: {
           weather:
             Instance.GetInstance().preExecutionConfigCache.getCache().weather,
         });
-        await Instance.GetInstance().combateApp.request(requestDto);
+        await Instance.GetInstance().combateApp.request(
+          requestDto,
+          async () => {}
+        );
       }
     } catch (err) {
       await Instance.GetInstance().errorHandler.handle(err);

@@ -10,6 +10,9 @@ export interface PCbService {
    */
   request(
     request: PRequest,
-    callback?: (requestDto: RequestDto, responseDto: ResponseDto) => void
+    callback?: (
+      requestDto: RequestDto,
+      responseDto: ResponseDto
+    ) => Promise<void>
   ): Promise<ResponseDto>;
 }

@@ -26,7 +26,10 @@ export class CbV5Service implements PCbService {
   ) {}
   async request(
     request: PRequest,
-    doseCallback: (requestDto: RequestDto, responseDto: ResponseDto) => void
+    doseCallback: (
+      requestDto: RequestDto,
+      responseDto: ResponseDto
+    ) => Promise<void>
   ): Promise<ResponseDto> {
     try {
       this._logger.info({
@@ -80,7 +83,7 @@ export class CbV5Service implements PCbService {
       }
 
       if (request.getRequestDto().dose) {
-        doseCallback(request.getRequestDto(), responseDto);
+        await doseCallback(request.getRequestDto(), responseDto);
       }
 
       this._logger.info({

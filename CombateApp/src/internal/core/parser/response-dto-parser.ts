@@ -104,9 +104,9 @@ export class ResponseDtoParser {
         };
       } else gpsData = { status: "V" };
 
-      const leftApplicator = protocol[5] == "1";
-      const centerApplicator = protocol[6] == "1";
-      const rightApplicator = protocol[7] == "1";
+      const leftApplicator = protocol[6] == "1";
+      const centerApplicator = protocol[7] == "1";
+      const rightApplicator = protocol[8] == "1";
 
       const responseDto = new ResponseDto(
         gpsData,

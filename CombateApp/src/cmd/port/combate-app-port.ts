@@ -8,7 +8,10 @@ export interface PCombateApp {
    */
   request(
     requestDto: RequestDto,
-    doseCallback: (requestDto: RequestDto, responseDto: ResponseDto) => void
+    doseCallback: (
+      requestDto: RequestDto,
+      responseDto: ResponseDto
+    ) => Promise<void>
   ): Promise<ResponseDto>;
   /**
    * Starts the combateApp with it`s basic information

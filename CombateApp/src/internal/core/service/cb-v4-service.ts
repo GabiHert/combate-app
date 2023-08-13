@@ -24,7 +24,10 @@ export class CbV4Service implements PCbService {
   ) {}
   async request(
     request: PRequest,
-    doseCallback: (requestDto: RequestDto, responseDto: ResponseDto) => void
+    doseCallback: (
+      requestDto: RequestDto,
+      responseDto: ResponseDto
+    ) => Promise<void>
   ): Promise<ResponseDto> {
     try {
       this._logger.info({
@@ -71,6 +74,10 @@ export class CbV4Service implements PCbService {
             "Código de erro CB não mapeado (" + responseDto.errorCode + ")"
           );
         }
+      }
+
+      if (request.getRequestDto().dose) {
+        await doseCallback(request.getRequestDto(), responseDto);
       }
 
       this._logger.info({

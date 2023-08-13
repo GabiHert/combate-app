@@ -1,6 +1,6 @@
 enum ProtocolVersions {
-  V4 = "V4",
-  V5 = "V5",
+  V4 = "4",
+  V5 = "5",
 }
 
 class ProtocolVersionEnum_ {
