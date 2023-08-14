@@ -7,13 +7,13 @@ import {
 
 export const CONSTANTS = {
   CONFIG_LOGIN: {
-    USER: "adm1",
-    PASSWORD: "123",
+    USER: " ",
+    PASSWORD: " ",
   },
   APPLICATION: {
     VERSION: "2.0.0",
     BLUETOOTH_WRITE_RETRIES: 5,
-    BLUETOOTH_READ_TIMEOUT_MS: 5000,
+    BLUETOOTH_READ_TIMEOUT_MS: 20000,
     DOSE_TIMEOUT_MS: 7000,
   },
   MAX_DOSES: 10,
@@ -81,6 +81,7 @@ export const CONSTANTS = {
       LINE_SPACING_NOT_DEFINED: "Espaçamento de linhas deve ser informado.",
       LINE_SPACING_GREATER_THAN_0:
         "Espaçamento de linhas deve ser maior do que 10.",
+      NEW_ID_GREATER_THAN_200_OR_LESS_THAN_0: "Novo id deve ser entre 1 e 99",
     },
 
     REQUEST_V5: {
