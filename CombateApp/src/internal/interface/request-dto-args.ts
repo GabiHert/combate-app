@@ -16,4 +16,5 @@ export interface IRequestDtoArgs {
   streetsAmount: number;
   alert?: string;
   linesSpacing: number;
+  newId?: number;
 }

@@ -1,3 +1,4 @@
+import { useFocusEffect } from "@react-navigation/native";
 import {
   Box,
   Button,
@@ -10,10 +11,14 @@ import { useCallback, useRef, useState } from "react";
 import { v1 } from "uuid";
 import { Validator } from "../../../src/cmd/formvalidator/form-validator";
 import { CONSTANTS } from "../../../src/internal/config/config";
+import { RequestDto } from "../../../src/internal/core/dto/request-dto";
+import { EventEnum } from "../../../src/internal/core/enum/event";
 import { poisonItems } from "../../../src/internal/core/enum/poison";
+import { ProtocolVersionEnum } from "../../../src/internal/core/enum/protocol-version";
 import { SeverityEnum } from "../../../src/internal/core/enum/severity";
 import { IConfigFormResult } from "../../../src/internal/interface/config-form-result";
 import { IConfigsProps } from "../../../src/internal/interface/config-props";
+import { IItem } from "../../../src/internal/interface/item";
 import { appConfig } from "../../app/config/app-config";
 import { Instance } from "../../app/instance/instance";
 import { itemArrayToMapString } from "../../app/parser/item-array-to-map-string";
@@ -195,6 +200,137 @@ function ConfigScreen(props: { navigation: any; route: any }) {
   function onCenterTankMaxLoadChange(text: string) {
     centerTankMaxLoad.current = Number(text);
   }
+
+  const deviceName = useRef(
+    Instance.GetInstance().preExecutionConfigCache.getCache().deviceName
+  );
+  function setDeviceName(name: string) {
+    deviceName.current = name;
+  }
+
+  const [isConnecting, setIsConnecting] = useState<boolean>(false);
+  const [devices, setDevices] = useState<Array<IItem>>([]);
+  const deviceConnected = useRef(false);
+  const newIdError = useState("");
+  const searchDevicesCallback = useCallback(async () => {
+    try {
+      await Instance.GetInstance().bluetoothApp.init();
+      const data = await Instance.GetInstance().bluetoothApp.getBondedDevices();
+      setDevices(data);
+    } catch (err) {
+      await Instance.GetInstance().errorHandler.handle(err);
+    }
+  }, [devices]);
+
+  useFocusEffect(() => {
+    const interval = setInterval(async () => {
+      await searchDevicesCallback();
+    }, 3000);
+    return () => clearInterval(interval);
+  });
+  const connectToBluetoothCallback = useCallback(async () => {
+    setIsConnecting(true);
+    try {
+      let deviceId: string;
+      if (!devices.length) await searchDevicesCallback();
+      devices.forEach((device) => {
+        if (device.name == deviceName.current) {
+          deviceId = device.id;
+        }
+      });
+      await Instance.GetInstance().bluetoothApp.selectDevice(deviceId);
+      deviceConnected.current = true;
+      ShowToast({
+        durationMs: 3000,
+        title: "Bluetooth conectado com sucesso",
+        severity: SeverityEnum.OK,
+      });
+    } catch (err) {
+      await Instance.GetInstance().errorHandler.handle(err);
+      deviceConnected.current = false;
+    }
+
+    setIsConnecting(false);
+  }, [deviceName, devices]);
+
+  const newId = useRef("");
+  function setNewId(value: string) {
+    newId.current = value;
+  }
+
+  const isRenaming = useState(false);
+  const renameCallback = useCallback(async () => {
+    try {
+      if (!deviceConnected.current) {
+        ShowToast({
+          durationMs: 5000,
+          severity: SeverityEnum.WARN,
+          title: "CB deve estar conectado para renomear",
+          message: "Selecione um CB e conecte antes de renomear",
+        });
+        return;
+      }
+
+      isRenaming[1](true);
+
+      const requestDto = new RequestDto({
+        applicatorsAmount:
+          Instance.GetInstance().preExecutionConfigCache.getCache()
+            .applicatorsAmount,
+        client:
+          Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
+        deviceName:
+          Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
+        doseWeightG:
+          Instance.GetInstance().configCache.getCache().APPLICATION
+            .DOSE_WEIGHT_G,
+        event: EventEnum.TrackPoint.name,
+        maxVelocity:
+          Instance.GetInstance().configCache.getCache().APPLICATION
+            .MAX_VELOCITY,
+        linesSpacing:
+          Instance.GetInstance().configCache.getCache().LINE_SPACING,
+        plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
+        poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
+        project:
+          Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
+        streetsAmount:
+          Instance.GetInstance().preExecutionConfigCache.getCache()
+            .streetsAmount,
+        tractorName:
+          Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
+        weather:
+          Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+      });
+      const responseDto = await Instance.GetInstance().combateApp.request(
+        requestDto
+      );
+
+      if (responseDto.version == ProtocolVersionEnum.V5.name) {
+        const id = Number(newId.current);
+        requestDto.newId = Math.trunc(id);
+        await Instance.GetInstance().combateApp.request(requestDto);
+
+        ShowToast({
+          durationMs: 5000,
+          severity: SeverityEnum.OK,
+          title: "CB renomeado com sucesso",
+          message: "Novo nome: CB5_" + requestDto.newId.toString(),
+        });
+      } else {
+        ShowToast({
+          durationMs: 5000,
+          severity: SeverityEnum.OK,
+          title: "CB4 não podem ser renomeados",
+          message: "Somente CB acima da versão 5 podem ser renomeados",
+        });
+      }
+    } catch (err) {
+      await Instance.GetInstance().errorHandler.handle(err);
+    } finally {
+      isRenaming[1](false);
+    }
+  }, [isRenaming[0]]);
 
   const onPreset1NameChange = useCallback(
     (text: string) => {
@@ -1052,17 +1188,42 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               fontSize: Theme().font.size.xl(appConfig.screen),
             }}
           >
-            Arquivo
+            Renomear CB
           </FormControl.Label>
-          <FormInput
-            title="Local para salvar o aruivo"
-            description="Preencha este campo com o caminho de pastas para salvar o arquivo .csv"
-            defaultValue={
-              Instance.GetInstance().configCache.getCache().FILE_PATH
-            }
-            onChangeText={setFilePath}
-            errorMessage={errors.filePath.errorMessage}
+          <SelectInput
+            onItemSelected={setDeviceName}
+            title="Selecione o dipositivo Bluetooth"
+            placeholder="CB"
+            defaultValue={deviceName.current}
+            items={devices}
           />
+          <Button
+            isLoading={isConnecting}
+            isLoadingText="Conectando"
+            _pressed={{ opacity: 0.8 }}
+            background={Theme().color.b300}
+            onPress={connectToBluetoothCallback}
+          >
+            Conectar
+          </Button>
+
+          <FormInput
+            title="Novo id"
+            description="Preencha com o novo Id do CB. Somente números"
+            onChangeText={setNewId}
+            keyboardType={"numeric"}
+            errorMessage={newIdError[0]}
+          />
+
+          <Button
+            isLoading={isRenaming[0]}
+            isLoadingText="Renomeando"
+            _pressed={{ opacity: 0.8 }}
+            background={Theme().color.b300}
+            onPress={renameCallback}
+          >
+            Renomear
+          </Button>
         </VStack>
 
         <Box w="20%" h="70px" />

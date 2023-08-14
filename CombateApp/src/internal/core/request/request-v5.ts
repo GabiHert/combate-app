@@ -142,6 +142,19 @@ export class RequestV5 implements PRequest {
         );
       }
 
+      if (this._requestDto.newId) {
+        if (this._requestDto.newId < 0 || this._requestDto.newId > 200) {
+          this._logger.warn({
+            event: "RequestV5.validate",
+            details: "Process warn",
+            warn: "new id should be > 0 and < 200",
+          });
+          throw new ValidationErrorType(
+            CONSTANTS.ERRORS.REQUEST_V4.NEW_ID_GREATER_THAN_200_OR_LESS_THAN_0
+          );
+        }
+      }
+
       this._logger.info({
         event: "RequestV5.validate",
         details: "Process finished",
@@ -162,6 +175,9 @@ export class RequestV5 implements PRequest {
       request: this._requestDto,
     });
     let doseAmount: string;
+    let centerApplicatorActive = "0";
+    let leftApplicatorActive = "0";
+    let rightApplicatorActive = "0";
 
     if (this._requestDto.dose && this._requestDto.dose.amount) {
       if (this._requestDto.dose.amount == 10) {
@@ -169,14 +185,21 @@ export class RequestV5 implements PRequest {
       } else {
         doseAmount = this._requestDto.dose.amount.toString();
       }
+
+      centerApplicatorActive = this._requestDto.dose.centerApplicator
+        ? "1"
+        : "0";
+
+      rightApplicatorActive = this._requestDto.dose.rightApplicator ? "1" : "0";
+
+      leftApplicatorActive = this._requestDto.dose.leftApplicator ? "1" : "0";
     } else {
       doseAmount = "N";
     }
 
-    const centerApplicatorActive = "1";
-    const leftApplicatorActive = "1";
-    const rightApplicatorActive = "1";
-    const newId = String.fromCharCode(0);
+    const newId = this._requestDto.newId
+      ? this._requestDto.newId.toPrecision(0)
+      : "0";
 
     let protocol = [
       CONSTANTS.REQUEST_V5.HEADER,
@@ -184,8 +207,8 @@ export class RequestV5 implements PRequest {
       leftApplicatorActive,
       centerApplicatorActive,
       rightApplicatorActive,
-      newId,
-      "x",
+      newId[0],
+      newId[1],
       "x",
     ].join("");
 

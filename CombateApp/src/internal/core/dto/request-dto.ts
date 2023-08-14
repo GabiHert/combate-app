@@ -17,6 +17,7 @@ export class RequestDto {
   streetsAmount: number;
   linesSpacing: number;
   alert?: string;
+  newId?: number;
   constructor(args: IRequestDtoArgs) {
     this.applicatorsAmount = args.applicatorsAmount;
     this.alert = args.alert;
@@ -33,5 +34,6 @@ export class RequestDto {
     this.weather = args.weather;
     this.streetsAmount = args.streetsAmount;
     this.linesSpacing = args.linesSpacing;
+    this.newId = args.newId;
   }
 }
