@@ -8,7 +8,7 @@ export interface PCombateApp {
    */
   request(
     requestDto: RequestDto,
-    doseCallback: (
+    doseCallback?: (
       requestDto: RequestDto,
       responseDto: ResponseDto
     ) => Promise<void>

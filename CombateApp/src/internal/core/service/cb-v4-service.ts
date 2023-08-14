@@ -42,7 +42,7 @@ export class CbV4Service implements PCbService {
       let protocol = await timeout(
         timeoutMs,
         this._bluetooth.read(timeoutMs),
-        new BluetoothErrorType("Request timeout exceeded")
+        new BluetoothErrorType("Bluetooth sem resposta")
       );
 
       let responseDto = this._responseDtoParser.parseV4(protocol);
@@ -55,7 +55,7 @@ export class CbV4Service implements PCbService {
         protocol = await timeout(
           timeoutMs,
           this._bluetooth.read(timeoutMs),
-          new BluetoothErrorType("Request timeout exceeded")
+          new BluetoothErrorType("Bluetooth sem resposta")
         );
 
         responseDto = this._responseDtoParser.parseV4(protocol);
