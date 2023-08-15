@@ -199,7 +199,7 @@ export class RequestV5 implements PRequest {
 
     const newId = this._requestDto.newId
       ? this._requestDto.newId.toPrecision(0)
-      : "0";
+      : "N";
 
     let protocol = [
       CONSTANTS.REQUEST_V5.HEADER,
