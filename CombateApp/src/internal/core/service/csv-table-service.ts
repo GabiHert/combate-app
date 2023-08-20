@@ -108,7 +108,6 @@ export class CsvTableService implements PCsvTableService {
       if (requestDto.dose && requestDto.dose.amount > 0) {
         doseAmount = requestDto.dose.amount * requestDto.applicatorsAmount;
       }
-      console.log(doseAmount);
       const fields: Fields = {
         Cliente: requestDto.client,
         Projeto: requestDto.project,

@@ -6,10 +6,18 @@ import {
 } from "../interface/config-props";
 
 export const CONSTANTS = {
-  CONFIG_LOGIN: {
-    USER: " ",
-    PASSWORD: " ",
-  },
+  USERS: [
+    {
+      LEVEL: 1,
+      USER: "adm1",
+      PASSWORD: " ",
+    },
+    {
+      LEVEL: 2,
+      USER: "adm2",
+      PASSWORD: " ",
+    },
+  ],
   APPLICATION: {
     VERSION: "2.0.0",
     BLUETOOTH_WRITE_RETRIES: 5,

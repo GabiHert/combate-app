@@ -12,6 +12,7 @@ function FormInput(props: {
   isInvalid?: boolean;
   w?: string | number;
   isPassword?: boolean;
+  disabled?: boolean;
   keyboardType?: KeyboardTypeOptions;
   onChangeText?: (value: string) => void;
   defaultValue?: string;
@@ -52,6 +53,7 @@ function FormInput(props: {
         placeholder={props.placeholder}
         _invalid={{ borderColor: Theme().color.sError, borderWidth: 2 }}
         borderWidth={2}
+        isDisabled={props.disabled}
       />
       {props.errorMessage ? (
         <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon />}>

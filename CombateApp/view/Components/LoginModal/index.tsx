@@ -1,15 +1,28 @@
 import { Button, FormControl, Modal } from "native-base";
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
+import { CONSTANTS } from "../../../src/internal/config/config";
 import { Theme } from "../../../view/app/theme/theme";
+import { userToItemArray } from "../../app/parser/user-to-item-array";
 import FormInput from "../FormInput";
+import SelectInput from "../SelectInput";
 
 function LoginModal(props: {
   isOpen: boolean;
   onClose: () => void;
-  loginValidator: (props: { user: string; password: string }) => boolean;
+  loginValidator: (props: {
+    user: { PASSWORD: string; USER: string };
+    password: string;
+  }) => boolean;
 }) {
-  const [user, setUser] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const user = useRef<{ USER: string; PASSWORD: string }>(CONSTANTS.USERS[0]);
+  function setUser(v: { USER: string; PASSWORD: string }) {
+    user.current = v;
+  }
+
+  const password = useRef<string>();
+  function setPassword(v: string) {
+    password.current = v;
+  }
   const [validationError, setValidationError] = useState<string>();
   const [isValid, setIsValid] = useState<boolean>(true);
 
@@ -20,14 +33,25 @@ function LoginModal(props: {
     [setPassword, password]
   );
   const onChangeUser = useCallback(
-    (text: string) => {
-      setUser(text);
+    (id: string) => {
+      let user: (typeof CONSTANTS.USERS)[0];
+      CONSTANTS.USERS.forEach((u) => {
+        if (u.USER == id) {
+          user = u;
+          return;
+        }
+      });
+      setUser(user);
     },
     [setUser, user]
   );
 
   const onLogin = useCallback(() => {
-    const isValid = props.loginValidator({ user, password });
+    const data = {
+      user: user.current,
+      password: password.current,
+    };
+    const isValid = props.loginValidator(data);
     setIsValid(isValid);
     if (isValid) {
       onCloseCallback();
@@ -39,17 +63,18 @@ function LoginModal(props: {
     props.onClose();
   }, []);
   return (
-    <Modal isOpen={props.isOpen} onClose={onCloseCallback}>
+    <Modal isOpen={true} onClose={onCloseCallback}>
       <Modal.Content maxWidth="400px">
         <Modal.CloseButton />
         <Modal.Header>Configurações</Modal.Header>
         <Modal.Body>
           <FormControl>
-            <FormInput
-              title="Usuário"
-              isInvalid={!isValid}
+            <SelectInput
+              onItemSelected={onChangeUser}
+              title={"Usuário"}
               w="100%"
-              onChangeText={onChangeUser}
+              placeholder={user.current.USER}
+              items={userToItemArray(CONSTANTS.USERS)}
             />
           </FormControl>
           <FormControl mt="3">

@@ -12,6 +12,7 @@ function SelectInput(props: {
   onItemSelected: (value: string) => void;
   w?: string | number;
   h?: string | number;
+  disabled?: boolean;
   isRequired?: boolean;
   defaultValue?: string;
 }) {
@@ -36,6 +37,7 @@ function SelectInput(props: {
         onValueChange={props.onItemSelected}
         defaultValue={props.defaultValue}
         placeholder={props.placeholder}
+        isDisabled={props.disabled}
         mt="1"
       >
         {props.items

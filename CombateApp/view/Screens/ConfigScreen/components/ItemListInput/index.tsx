@@ -1,33 +1,41 @@
 import {
   AddIcon,
-  Box,
   DeleteIcon,
   Divider,
   FormControl,
   HStack,
   IconButton,
   Text,
-  TextArea,
   WarningOutlineIcon,
-} from 'native-base';
-import { memo } from 'react';
-import { appConfig } from '../../../../app/config/app-config';
-import { Theme } from '../../../../app/theme/theme';
+} from "native-base";
+import React, { memo } from "react";
+import { appConfig } from "../../../../app/config/app-config";
+import { Theme } from "../../../../app/theme/theme";
 
 function ItemListInput(props: {
+  id: number;
   items: Array<{ id: string; name: string }>;
   onAddItemPress: () => void;
   onDeleteItemRequested: (id: string) => void;
   title: string;
   errorMessage?: string;
+  disabled?: boolean;
 }) {
   return (
     <>
-      <HStack w={'50%'} space={2} alignItems={'center'} justifyContent={'center'}>
-        <FormControl isInvalid={props.errorMessage && props.errorMessage != ''}>
+      <HStack
+        w={"50%"}
+        space={2}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
+        <FormControl
+          isInvalid={props.errorMessage && props.errorMessage != ""}
+          isDisabled={props.disabled}
+        >
           <FormControl.Label
             _text={{
-              fontWeight: 'bold',
+              fontWeight: "bold",
               fontSize: Theme().font.size.l(appConfig.screen),
             }}
           >
@@ -39,7 +47,8 @@ function ItemListInput(props: {
         </FormControl>
 
         <IconButton
-          position={'absolute'}
+          disabled={props.disabled}
+          position={"absolute"}
           right={-20}
           onPress={props.onAddItemPress}
           icon={<AddIcon />}
@@ -56,13 +65,18 @@ function ItemListInput(props: {
       {props.items.length > 0
         ? props.items.map((item) => {
             return (
-              <>
-                <Divider key={item.id} w="50%" />
-                <HStack space={2} alignItems={'center'} justifyContent={'center'}>
-                  <Text p={5} w={'50%'}>
+              <React.Fragment key={item.id}>
+                <Divider w="50%" />
+                <HStack
+                  space={2}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                >
+                  <Text p={5} w={"50%"}>
                     {item.name}
                   </Text>
                   <IconButton
+                    disabled={props.disabled}
                     icon={<DeleteIcon />}
                     size={Theme().font.size.l(appConfig.screen)}
                     _icon={{ color: Theme().color.sError }}
@@ -73,10 +87,10 @@ function ItemListInput(props: {
                     }}
                   />
                 </HStack>
-              </>
+              </React.Fragment>
             );
           })
-        : ''}
+        : ""}
 
       <Divider w="50%" />
     </>

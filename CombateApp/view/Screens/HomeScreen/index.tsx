@@ -33,19 +33,18 @@ function HomeScreen(props: { navigation: any; route: any }) {
   }, []);
 
   function loginValidator(loginProps: {
-    user: string;
+    user: { USER: string; PASSWORD: string; LEVEL: number };
     password: string;
   }): boolean {
     let valid = true;
-    if (
-      loginProps.user != CONSTANTS.CONFIG_LOGIN.USER ||
-      loginProps.password != CONSTANTS.CONFIG_LOGIN.PASSWORD
-    ) {
+    if (loginProps.password != loginProps.user.PASSWORD) {
       valid = false;
     }
 
     if (valid) {
-      props.navigation.navigate("ConfigScreen");
+      props.navigation.navigate("ConfigScreen", {
+        level: loginProps.user.LEVEL,
+      });
     }
     return valid;
   }

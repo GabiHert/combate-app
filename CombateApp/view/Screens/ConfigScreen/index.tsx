@@ -36,7 +36,8 @@ interface IPreset {
   doseAmount: number;
 }
 
-function ConfigScreen(props: { navigation: any; route: any }) {
+function ConfigScreen(props: { navigation: any; route: any; level: number }) {
+  const { level } = props.route.params;
   const rightTankMaxLoad = useRef<number>(
     Instance.GetInstance().configCache.getCache().APPLICATION
       .RIGHT_TANK_MAX_LOAD
@@ -186,6 +187,14 @@ function ConfigScreen(props: { navigation: any; route: any }) {
     poison.current = value;
   }
 
+  function level1(level: number): boolean {
+    return level > 1;
+  }
+
+  function level2(level: number): boolean {
+    return level > 2;
+  }
+
   const [addReasonModalVisible, setAddReasonModalVisible] = useState(false);
   const [addEventModalVisible, setAddEventModalVisible] = useState(false);
   const [addFarmModalVisible, setAddFarmModalVisible] = useState(false);
@@ -270,9 +279,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
         });
         return;
       }
-
       isRenaming[1](true);
-
       const requestDto = new RequestDto({
         applicatorsAmount:
           Instance.GetInstance().preExecutionConfigCache.getCache()
@@ -305,12 +312,10 @@ function ConfigScreen(props: { navigation: any; route: any }) {
       const responseDto = await Instance.GetInstance().combateApp.request(
         requestDto
       );
-
       if (responseDto.version == ProtocolVersionEnum.V5.name) {
         const id = Number(newId.current);
         requestDto.newId = Math.trunc(id);
         await Instance.GetInstance().combateApp.request(requestDto);
-
         ShowToast({
           durationMs: 5000,
           severity: SeverityEnum.OK,
@@ -789,7 +794,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               Instance.GetInstance().configCache.getCache().LINE_SPACING
             }
             unit={"metros"}
-            disabled={false}
+            disabled={level2(level)}
             maxValue={20}
             minValue={1}
             errorMessage={errors.lineSpacing.errorMessage}
@@ -815,6 +820,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               .APPLICATION.RIGHT_TANK_MAX_LOAD.toString()}
             onChangeText={onRightTankMaxLoadChange}
             keyboardType={"numeric"}
+            disabled={level2(level)}
           />
           <FormInput
             title="Reservatório central"
@@ -826,6 +832,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               .APPLICATION.CENTER_TANK_MAX_LOAD.toString()}
             onChangeText={onCenterTankMaxLoadChange}
             keyboardType={"numeric"}
+            disabled={level2(level)}
           />
           <FormInput
             title="Reservatório esquerdo"
@@ -837,6 +844,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               .APPLICATION.LEFT_TANK_MAX_LOAD.toString()}
             onChangeText={onLeftTankMaxLoadChange}
             keyboardType={"numeric"}
+            disabled={level2(level)}
           />
           <Divider w="80%" />
 
@@ -860,7 +868,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             step={1}
             title={"Peso dose"}
             unit={"g"}
-            disabled={false}
+            disabled={level2(level)}
             errorMessage={errors.doseWeightG.errorMessage}
           />
           <SelectInput
@@ -902,7 +910,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               Instance.GetInstance().configCache.getCache().PRESETS.P1
                 .DOSE_AMOUNT
             }
-            disabled={false}
+            disabled={level2(level)}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
             errorMessage={errors.preset1Dose.errorMessage}
@@ -937,7 +945,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               Instance.GetInstance().configCache.getCache().PRESETS.P2
                 .DOSE_AMOUNT
             }
-            disabled={false}
+            disabled={level2(level)}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
             errorMessage={errors.preset2Dose.errorMessage}
@@ -971,7 +979,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               Instance.GetInstance().configCache.getCache().PRESETS.P3
                 .DOSE_AMOUNT
             }
-            disabled={false}
+            disabled={level2(level)}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
             errorMessage={errors.preset3Dose.errorMessage}
@@ -1006,7 +1014,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               Instance.GetInstance().configCache.getCache().PRESETS.P4
                 .DOSE_AMOUNT
             }
-            disabled={false}
+            disabled={level2(level)}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
             errorMessage={errors.preset4Dose.errorMessage}
@@ -1042,7 +1050,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               Instance.GetInstance().configCache.getCache().PRESETS.P5
                 .DOSE_AMOUNT
             }
-            disabled={false}
+            disabled={level2(level)}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
             errorMessage={errors.preset5Dose.errorMessage}
@@ -1077,7 +1085,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               Instance.GetInstance().configCache.getCache().PRESETS.P6
                 .DOSE_AMOUNT
             }
-            disabled={false}
+            disabled={level2(level)}
             maxValue={CONSTANTS.MAX_DOSES}
             minValue={CONSTANTS.MIN_DOSES}
             errorMessage={errors.preset6Dose.errorMessage}
@@ -1104,7 +1112,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE
                 .METERS_BETWEEN_DOSE
             }
-            disabled={false}
+            disabled={level2(level)}
             maxValue={10}
             minValue={2}
             errorMessage={errors.metersBetweenDose.errorMessage}
@@ -1130,7 +1138,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
               Instance.GetInstance().configCache.getCache().APPLICATION
                 .MAX_VELOCITY
             }
-            disabled={false}
+            disabled={level2(level)}
             maxValue={20}
             minValue={1}
             errorMessage={errors.maxVelocity.errorMessage}
@@ -1139,26 +1147,31 @@ function ConfigScreen(props: { navigation: any; route: any }) {
           <Divider w="80%" />
 
           <ItemListInput
+            id={1}
             items={stopReasons}
             onAddItemPress={onAddStopReasonPress}
             onDeleteItemRequested={onDeleteStopReasonRequested}
             title={"Motivos de parada"}
             errorMessage={errors.stopReasonEvent.errorMessage}
+            disabled={level2(level)}
           />
 
           <Divider w="80%" />
 
           <ItemListInput
+            id={2}
             items={events}
             onAddItemPress={onAddEventPress}
             onDeleteItemRequested={onDeleteEventRequested}
             title={"Tipos de eventos"}
             errorMessage={errors.events.errorMessage}
+            disabled={level2(level)}
           />
 
           <Divider w="80%" />
 
           <ItemListInput
+            id={3}
             items={mapStringToItemArray(
               Instance.GetInstance().configCache.getCache().FARMS
             )}
@@ -1166,11 +1179,13 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onDeleteItemRequested={onDeleteFarmRequested}
             title={"Fazendas"}
             errorMessage={errors.farms.errorMessage}
+            disabled={level2(level)}
           />
 
           <Divider w="80%" />
 
           <ItemListInput
+            id={4}
             items={mapStringToItemArray(
               Instance.GetInstance().configCache.getCache().PLOTS
             )}
@@ -1178,6 +1193,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onDeleteItemRequested={onDeletePlotRequested}
             title={"Talhões"}
             errorMessage={errors.plots.errorMessage}
+            disabled={level2(level)}
           />
 
           <Divider w="80%" />
@@ -1196,6 +1212,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             placeholder="CB"
             defaultValue={deviceName.current}
             items={devices}
+            disabled={level1(level)}
           />
           <Button
             isLoading={isConnecting}
@@ -1203,6 +1220,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             _pressed={{ opacity: 0.8 }}
             background={Theme().color.b300}
             onPress={connectToBluetoothCallback}
+            disabled={level1(level)}
           >
             Conectar
           </Button>
@@ -1213,6 +1231,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             onChangeText={setNewId}
             keyboardType={"numeric"}
             errorMessage={newIdError[0]}
+            disabled={level1(level)}
           />
 
           <Button
@@ -1221,6 +1240,7 @@ function ConfigScreen(props: { navigation: any; route: any }) {
             _pressed={{ opacity: 0.8 }}
             background={Theme().color.b300}
             onPress={renameCallback}
+            disabled={level1(level)}
           >
             Renomear
           </Button>
