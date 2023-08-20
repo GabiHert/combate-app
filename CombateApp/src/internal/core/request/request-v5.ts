@@ -143,7 +143,11 @@ export class RequestV5 implements PRequest {
       }
 
       if (this._requestDto.newId) {
-        if (this._requestDto.newId < 0 || this._requestDto.newId > 200) {
+        if (
+          this._requestDto.newId < 0 ||
+          this._requestDto.newId > 99 ||
+          this._requestDto.newId % 1 !== 0
+        ) {
           this._logger.warn({
             event: "RequestV5.validate",
             details: "Process warn",
@@ -198,8 +202,8 @@ export class RequestV5 implements PRequest {
     }
 
     const newId = this._requestDto.newId
-      ? this._requestDto.newId.toPrecision(0)
-      : "N";
+      ? this._requestDto.newId.toPrecision(0).padStart(2, "0")
+      : "NN";
 
     let protocol = [
       CONSTANTS.REQUEST_V5.HEADER,

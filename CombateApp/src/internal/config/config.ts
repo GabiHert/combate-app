@@ -89,7 +89,8 @@ export const CONSTANTS = {
       LINE_SPACING_NOT_DEFINED: "Espaçamento de linhas deve ser informado.",
       LINE_SPACING_GREATER_THAN_0:
         "Espaçamento de linhas deve ser maior do que 10.",
-      NEW_ID_GREATER_THAN_200_OR_LESS_THAN_0: "Novo id deve ser entre 1 e 99",
+      NEW_ID_GREATER_THAN_200_OR_LESS_THAN_0:
+        "Novo id deve ser um numero inteiro entre 1 e 99",
     },
 
     REQUEST_V5: {

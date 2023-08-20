@@ -63,7 +63,7 @@ function LoginModal(props: {
     props.onClose();
   }, []);
   return (
-    <Modal isOpen={true} onClose={onCloseCallback}>
+    <Modal isOpen={props.isOpen} onClose={onCloseCallback}>
       <Modal.Content maxWidth="400px">
         <Modal.CloseButton />
         <Modal.Header>Configurações</Modal.Header>
