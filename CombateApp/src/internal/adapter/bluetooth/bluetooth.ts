@@ -201,6 +201,8 @@ export class ABluetooth implements PBluetooth {
         new BluetoothErrorType(CONSTANTS.ERRORS.A_BLUETOOTH.READ_TIMEOUT)
       );
 
+      console.log(message);
+
       this._logger.info({
         event: "ABluetooth.read",
         details: "Process finished",

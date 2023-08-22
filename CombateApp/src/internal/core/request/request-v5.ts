@@ -201,10 +201,11 @@ export class RequestV5 implements PRequest {
       doseAmount = "N";
     }
 
-    const newId = this._requestDto.newId
-      ? this._requestDto.newId.toPrecision(0).padStart(2, "0")
-      : "NN";
-
+    let newId = "NN";
+    if (this._requestDto.newId) {
+      const aux = this._requestDto.newId.toString();
+      newId = aux.padStart(2, "0");
+    }
     let protocol = [
       CONSTANTS.REQUEST_V5.HEADER,
       doseAmount,

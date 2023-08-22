@@ -8,10 +8,7 @@ import {
   ProtocolVersionEnum,
 } from "../../internal/core/enum/protocol-version";
 import { PError } from "../../internal/core/error/error-port";
-import {
-  MaxVelocityErrorType,
-  PermissionsErrorType,
-} from "../../internal/core/error/error-type";
+import { MaxVelocityErrorType } from "../../internal/core/error/error-type";
 import { CbServiceFactory } from "../../internal/core/factory/cb-service-factory";
 import { RequestFactory } from "../../internal/core/factory/request-factory";
 import { PCbService } from "../../internal/core/port/cb-service-port";
@@ -45,10 +42,10 @@ export class CombateApp implements PCombateApp {
   }
 
   private async _syncProtocolVersion(requestDto: RequestDto): Promise<void> {
+    const requestDtoCpy = { ...requestDto };
     try {
-      this._requestDto = requestDto;
       const request = this._requestFactory.factory(
-        requestDto,
+        requestDtoCpy,
         ProtocolVersionEnum.V4
       );
       const cbV4Service = this._cbServiceFactory.factory(
@@ -60,9 +57,9 @@ export class CombateApp implements PCombateApp {
         this._protocolRules.getProtocolVersion(responseDto);
       this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
     } catch (err) {
-      this._requestDto = requestDto;
+      requestDtoCpy.newId = undefined;
       const request = this._requestFactory.factory(
-        requestDto,
+        requestDtoCpy,
         ProtocolVersionEnum.V5
       );
       const cbV5Service = this._cbServiceFactory.factory(
@@ -82,7 +79,7 @@ export class CombateApp implements PCombateApp {
       details: "Process started",
     });
 
-    let granted = await PermissionsAndroid.request(
+    await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
       {
         title: "Pernissão para escrita de arquivos",
@@ -92,11 +89,28 @@ export class CombateApp implements PCombateApp {
         buttonPositive: "OK",
       }
     );
-    if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-      throw new PermissionsErrorType(
-        CONSTANTS.ERRORS.PERMISSIONS.WRITE_STORAGE_PERMISSION
-      );
-    }
+
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+      {
+        title: "Permissão para buscar dispositivos bluetooth ",
+        message:
+          "O aplicativo necessita desta autorização para buscar dispositivos bluetooth.",
+        buttonNegative: "Negar",
+        buttonPositive: "OK",
+      }
+    );
+
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+      {
+        title: "Permissão para conexão com dispositivos bluetooth ",
+        message:
+          "O aplicativo necessita desta autorização para realizar a conexão bluetooth.",
+        buttonNegative: "Negar",
+        buttonPositive: "OK",
+      }
+    );
 
     this._logger.info({
       event: "CombateApp.permissions",

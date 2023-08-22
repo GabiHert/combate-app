@@ -209,9 +209,9 @@ export class ProtocolRules {
         );
       }
 
-      const cs = this._checkSumBuilder.build(protocol.substring(1, 9));
+      const cs = this._checkSumBuilder.build(protocol.substring(2, 9));
 
-      if (cs != protocol[9]) {
+      if (cs.charCodeAt(0) != protocol.charCodeAt(9)) {
         this._logger.warn({
           event: "ProtocolRules.V5",
           details: "Process warn",

@@ -308,6 +308,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
         weather:
           Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+        newId: Number(newId.current),
       });
       const responseDto = await Instance.GetInstance().combateApp.request(
         requestDto
