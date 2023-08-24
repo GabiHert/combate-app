@@ -54,7 +54,7 @@ export class Instance {
   }
 
   private constructor() {
-    this.logger = new ALogger(false);
+    this.logger = new ALogger(true);
 
     const bluetooth = new ABluetooth(this.logger);
     const fileSystem = new AFileSystem(this.logger);

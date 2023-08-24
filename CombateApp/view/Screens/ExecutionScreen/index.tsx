@@ -135,9 +135,11 @@ function ExecutionScreen(props: { navigation: any }) {
 
   const onSelectedApplicatorChange = useCallback(async () => {
     const amount =
-      Number(centerApplicatorActive.current) +
-      Number(leftApplicatorActive.current) +
-      Number(rightApplicatorActive.current);
+      Number(
+        centerApplicatorActive.current && centerApplicatorAvailable.current
+      ) +
+      Number(leftApplicatorActive.current && leftApplicatorAvailable.current) +
+      Number(rightApplicatorActive.current && rightApplicatorAvailable.current);
 
     applicatorsAmount.current = amount;
     // const cache = Instance.GetInstance().preExecutionConfigCache.getCache();
@@ -445,9 +447,13 @@ function ExecutionScreen(props: { navigation: any }) {
             Instance.GetInstance().preExecutionConfigCache.getCache().weather,
           dose: {
             amount: preset.DOSE_AMOUNT,
-            centerApplicator: centerApplicatorActive.current,
-            leftApplicator: leftApplicatorActive.current,
-            rightApplicator: rightApplicatorActive.current,
+            centerApplicator:
+              centerApplicatorActive.current &&
+              centerApplicatorAvailable.current,
+            leftApplicator:
+              leftApplicatorActive.current && leftApplicatorAvailable.current,
+            rightApplicator:
+              rightApplicatorActive.current && leftApplicatorAvailable.current,
           },
         });
 

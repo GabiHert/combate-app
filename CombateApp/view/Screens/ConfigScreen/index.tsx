@@ -308,7 +308,6 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
         weather:
           Instance.GetInstance().preExecutionConfigCache.getCache().weather,
-        newId: Number(newId.current),
       });
       const responseDto = await Instance.GetInstance().combateApp.request(
         requestDto
@@ -316,7 +315,9 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
       if (responseDto.version == ProtocolVersionEnum.V5.name) {
         const id = Number(newId.current);
         requestDto.newId = Math.trunc(id);
-        await Instance.GetInstance().combateApp.request(requestDto);
+        const responseDto = await Instance.GetInstance().combateApp.request(
+          requestDto
+        );
         ShowToast({
           durationMs: 5000,
           severity: SeverityEnum.OK,

@@ -96,9 +96,13 @@ export class ResponseDtoParser {
 
         const date = <Date>data.datetime;
         gpsData = {
-          status: data.mode[0],
-          latitude: data.loc.geojson.coordinates[1],
-          longitude: data.loc.geojson.coordinates[0],
+          status: data?.mode ? data?.mode[0] : "A",
+          latitude: data?.loc?.geojson?.coordinates
+            ? data?.loc?.geojson?.coordinates[1]
+            : "",
+          longitude: data?.loc?.geojson?.coordinates
+            ? data?.loc?.geojson?.coordinates[0]
+            : "",
           speed,
           dateUTC: date,
         };

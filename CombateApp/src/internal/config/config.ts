@@ -96,8 +96,7 @@ export const CONSTANTS = {
     REQUEST_V5: {
       APPLICATORS_AMOUNT_AND_SELECTED_DOES_NOT_MATCH:
         "Quantidade de aplicadores selecionados incoerente.",
-      APPLICATOR_NOT_SPECIFIER:
-        "Aplicadores devem ser especificados para realizar a dose.",
+      APPLICATOR_NOT_SPECIFIER: "Nenhum aplicador selecionado para dose.",
       DOSE_AMOUNT_BELLOW_ZERO:
         "Quantidade de doses deve ser maior do que zero.",
       DOSE_NOT_DEFINED: "Informações de dose devem ser informadas.",

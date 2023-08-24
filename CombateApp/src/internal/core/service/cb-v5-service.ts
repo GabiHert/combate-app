@@ -33,7 +33,7 @@ export class CbV5Service implements PCbService {
   ): Promise<ResponseDto> {
     try {
       this._logger.info({
-        event: "CbV4Service.request",
+        event: "CbV5Service.request",
         details: "Process started",
         request,
       });
@@ -87,14 +87,14 @@ export class CbV5Service implements PCbService {
       }
 
       this._logger.info({
-        event: "CbV4Service.request",
+        event: "CbV5Service.request",
         details: "Process finished",
         responseDto,
       });
       return responseDto;
     } catch (err) {
       this._logger.error({
-        event: "CbV4Service.request",
+        event: "CbV5Service.request",
         details: "Process error",
         error: err.message,
       });
