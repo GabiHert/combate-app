@@ -8,18 +8,18 @@ import {
 export const CONSTANTS = {
   USERS: [
     {
-      LEVEL: 1,
-      USER: "adm1",
-      PASSWORD: " ",
-    },
-    {
       LEVEL: 2,
       USER: "adm2",
       PASSWORD: " ",
     },
+    {
+      LEVEL: 1,
+      USER: "adm1",
+      PASSWORD: " ",
+    },
   ],
   APPLICATION: {
-    VERSION: "2.0.0",
+    VERSION: "2.0.1",
     BLUETOOTH_WRITE_RETRIES: 5,
     BLUETOOTH_READ_TIMEOUT_MS: 20000,
     DOSE_TIMEOUT_MS: 7000,

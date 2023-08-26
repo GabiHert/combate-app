@@ -25,7 +25,6 @@ export class CombateApp implements PCombateApp {
   private _velocityExceededRecord: Array<number>;
   private _systematicMetersBetweenDose: number;
   private _distanceRan: number;
-  private _velocityRecord: Array<number>;
   private _requestDto: RequestDto;
   private _responseDto: ResponseDto;
 
@@ -37,7 +36,6 @@ export class CombateApp implements PCombateApp {
     private readonly _protocolRules: ProtocolRules
   ) {
     this._velocityExceededRecord = [];
-    this._velocityRecord = [];
     this._distanceRan = 0;
   }
 
@@ -184,7 +182,7 @@ export class CombateApp implements PCombateApp {
         details: "Process finished",
         responseDto,
       });
-      return responseDto;
+      return this._responseDto;
     } catch (err) {
       this._logger.error({
         event: "CombateApp.request",
@@ -219,60 +217,55 @@ export class CombateApp implements PCombateApp {
       this._responseDto = responseDto;
 
       const velocity = Number(responseDto.gps.speed);
-      this._velocityRecord.push(velocity);
+
+      const velocityMS = velocity * (1000 / 3600);
+      const elapsedTimeS =
+        (new Date().getTime() - this._lastRequestTime) / 1000;
+      const distanceM = velocityMS * elapsedTimeS;
+
+      this._distanceRan += distanceM;
+
+      // console.log("_______________");
+      // console.log("ran: " + this._distanceRan);
+      // console.log(this._systematicMetersBetweenDose);
+      // console.log("_______________");
+
+      if (this._requestDto.dose && this._requestDto.dose.amount > 0) {
+        this._distanceRan = 0;
+      } else if (this._distanceRan >= this._systematicMetersBetweenDose) {
+        this._requestDto.dose = {
+          amount: 1,
+          centerApplicator: this._responseDto.centerApplicator,
+          leftApplicator: this._responseDto.leftApplicator,
+          rightApplicator: this._responseDto.rightApplicator,
+        };
+        this._requestDto.event = EventEnum.Systematic.name;
+        const request = this._requestFactory.factory(
+          this._requestDto,
+          this._protocolVersion
+        );
+        this._distanceRan = 0;
+
+        const responseDto = await this._cbService.request(
+          request,
+          doseCallback
+        );
+
+        this._lastRequestTime = new Date().getTime();
+
+        this._responseDto = responseDto;
+
+        await this._csvTableService.insert(
+          this._filePath,
+          requestDto,
+          responseDto
+        );
+      }
 
       if (velocity < requestDto.maxVelocity) {
         this._velocityExceededRecord = [];
       } else {
         this._velocityExceededRecord.push(velocity);
-      }
-
-      if (this._velocityRecord.length >= 4) {
-        let sum = 0;
-        this._velocityRecord.forEach((v) => {
-          sum += v;
-        });
-        const average = sum / this._velocityRecord.length;
-
-        const aux = this._velocityRecord;
-        aux.reverse();
-        aux.pop();
-        aux.reverse();
-        this._velocityRecord = aux;
-
-        const velocityKmH = average;
-        const velocityMS = velocityKmH * (1000 / 3600);
-        const elapsedTimeS =
-          (new Date().getTime() - this._lastRequestTime) / 1000;
-        const distanceM = velocityMS * elapsedTimeS;
-
-        this._distanceRan += distanceM;
-
-        if (this._distanceRan >= this._systematicMetersBetweenDose) {
-          const systematicRequestDto = requestDto;
-          systematicRequestDto.dose.amount = 1;
-          systematicRequestDto.event = EventEnum.Systematic.name;
-          this._requestDto = systematicRequestDto;
-
-          const request = this._requestFactory.factory(
-            systematicRequestDto,
-            this._protocolVersion
-          );
-
-          const responseDto = await this._cbService.request(
-            request,
-            doseCallback
-          );
-          this._responseDto = responseDto;
-
-          await this._csvTableService.insert(
-            this._filePath,
-            requestDto,
-            responseDto
-          );
-
-          this._distanceRan = 0;
-        }
       }
 
       if (this._velocityExceededRecord.length >= 4) {

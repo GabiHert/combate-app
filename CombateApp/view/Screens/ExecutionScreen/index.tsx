@@ -142,9 +142,6 @@ function ExecutionScreen(props: { navigation: any }) {
       Number(rightApplicatorActive.current && rightApplicatorAvailable.current);
 
     applicatorsAmount.current = amount;
-    // const cache = Instance.GetInstance().preExecutionConfigCache.getCache();
-    // cache.applicatorsAmount = applicatorsAmount;
-    // await Instance.GetInstance().preExecutionConfigCache.update(cache);
   }, [centerApplicatorActive, leftApplicatorActive, rightApplicatorActive]);
 
   function getLoadPercentageStatusSeverity(loadPercentage: number): Severity {
