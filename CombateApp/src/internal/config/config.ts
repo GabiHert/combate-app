@@ -27,7 +27,6 @@ export const CONSTANTS = {
   MAX_DOSES: 10,
   MIN_DOSES: 1,
   FINISHED_WORK_REASON_NAME: "Fim Operação",
-  REQUEST_INTERVAL_MS: 3000,
   ACTIVITY_ITEMS: [
     { id: "0", name: "Manutenção" },
     { id: "1", name: "Pré-Plantio" },

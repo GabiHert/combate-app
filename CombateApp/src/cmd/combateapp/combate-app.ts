@@ -129,7 +129,7 @@ export class CombateApp implements PCombateApp {
     this._protocolVersion = undefined;
     this._cbService = undefined;
     this._filePath = filePath;
-    this._systematicMetersBetweenDose = systematicMetersBetweenDose;
+    this._systematicMetersBetweenDose = systematicMetersBetweenDose - 1;
     await this._csvTableService.begin(this._filePath);
     this._logger.info({
       event: "CombateApp.begin",
@@ -218,21 +218,18 @@ export class CombateApp implements PCombateApp {
 
       const velocity = Number(responseDto.gps.speed);
 
-      const velocityMS = velocity * (1000 / 3600);
+      const velocityMS = velocity / 3.6;
       const elapsedTimeS =
         (new Date().getTime() - this._lastRequestTime) / 1000;
       const distanceM = velocityMS * elapsedTimeS;
 
       this._distanceRan += distanceM;
 
-      // console.log("_______________");
-      // console.log("ran: " + this._distanceRan);
-      // console.log(this._systematicMetersBetweenDose);
-      // console.log("_______________");
+      const metersBetweenDose = this._systematicMetersBetweenDose - velocityMS;
 
       if (this._requestDto.dose && this._requestDto.dose.amount > 0) {
         this._distanceRan = 0;
-      } else if (this._distanceRan >= this._systematicMetersBetweenDose) {
+      } else if (this._distanceRan >= metersBetweenDose) {
         this._requestDto.dose = {
           amount: 1,
           centerApplicator: this._responseDto.centerApplicator,

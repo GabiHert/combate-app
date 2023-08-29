@@ -4,7 +4,6 @@ import { Box, Button, Center, Heading, Spinner } from "native-base";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BackHandler } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { CONSTANTS } from "../../../src/internal/config/config";
 import { RequestDto } from "../../../src/internal/core/dto/request-dto";
 import { ResponseDto } from "../../../src/internal/core/dto/response-dto";
 import { EventEnum } from "../../../src/internal/core/enum/event";
@@ -33,11 +32,13 @@ function ExecutionScreen(props: { navigation: any }) {
   let handleSheetChanges: any;
   const [velocity, setVelocity] = useState<string>(" ");
   const requestOnProgress = useRef<boolean>(false);
+
   function setRequestOnProgress(value: boolean) {
     requestOnProgress.current = value;
   }
 
   const startRequestTime = useRef<number>(0);
+
   function setStartRequestTime(value: number) {
     startRequestTime.current = value;
   }
@@ -73,6 +74,7 @@ function ExecutionScreen(props: { navigation: any }) {
     leftApplicatorActive.current = v;
     setLeftApplicatorActiveState(v);
   }
+
   function setLeftApplicatorAvailable(v: boolean) {
     leftApplicatorAvailable.current = v;
     setLeftApplicatorAvailableState(v);
@@ -182,6 +184,7 @@ function ExecutionScreen(props: { navigation: any }) {
       onSelectedApplicatorChange();
     }
   }
+
   useFocusEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -373,16 +376,11 @@ function ExecutionScreen(props: { navigation: any }) {
 
     const interval = setInterval(() => {
       const length = promises.current.length;
-      if (!requestOnProgress.current && length == 0) {
-        if (
-          new Date().getTime() >
-          startRequestTime.current + CONSTANTS.REQUEST_INTERVAL_MS
-        ) {
-          setStartRequestTime(new Date().getTime());
-          promises.current.push(trackPoint);
-        }
+      if (length < 2) {
+        setStartRequestTime(new Date().getTime());
+        promises.current.push(trackPoint);
       }
-    }, 1000);
+    });
     return () => clearInterval(interval);
   });
 
@@ -395,7 +393,7 @@ function ExecutionScreen(props: { navigation: any }) {
         promises.current = reverted.reverse();
         await promiseFunc();
       }
-    }, 500);
+    });
 
     return () => clearInterval(interval);
   }, []);
@@ -499,6 +497,7 @@ function ExecutionScreen(props: { navigation: any }) {
       async function process() {
         await processDose(preset, callback);
       }
+
       promises.current.push(process);
     },
     []
