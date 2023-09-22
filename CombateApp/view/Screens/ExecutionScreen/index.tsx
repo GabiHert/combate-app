@@ -22,8 +22,13 @@ import PoisonAmountSelector from "./components/PoisonAmountSelector";
 import Sheet, { IApplicatorsPercentage } from "./components/Sheet";
 import StatusBar from "./components/StatusBar";
 
+interface Process {
+  process: () => Promise<void>;
+  type: string;
+}
+
 function ExecutionScreen(props: { navigation: any }) {
-  const promises = useRef<Array<() => Promise<void>>>([]);
+  const promises = useRef<Array<Process>>([]);
   const bottomSheetRef: React.RefObject<BottomSheet> = React.createRef();
   const sheetHeight = appConfig.screen.height / 2 - 30;
   const blockHeight = sheetHeight / 3;
@@ -135,15 +140,13 @@ function ExecutionScreen(props: { navigation: any }) {
 
   const [protocolVersion, setProtocolVersion] = useState<string>(undefined);
 
-  const onSelectedApplicatorChange = useCallback(async () => {
-    const amount =
+  const updateApplicatorsAmount = useCallback(async () => {
+    applicatorsAmount.current =
       Number(
         centerApplicatorActive.current && centerApplicatorAvailable.current
       ) +
       Number(leftApplicatorActive.current && leftApplicatorAvailable.current) +
       Number(rightApplicatorActive.current && rightApplicatorAvailable.current);
-
-    applicatorsAmount.current = amount;
   }, [centerApplicatorActive, leftApplicatorActive, rightApplicatorActive]);
 
   function getLoadPercentageStatusSeverity(loadPercentage: number): Severity {
@@ -181,7 +184,7 @@ function ExecutionScreen(props: { navigation: any }) {
         setRightApplicatorAvailable(responseDto.rightApplicator);
       }
 
-      onSelectedApplicatorChange();
+      updateApplicatorsAmount();
     }
   }
 
@@ -195,6 +198,8 @@ function ExecutionScreen(props: { navigation: any }) {
 
   const doseCallback = useCallback(
     async (requestDto: RequestDto, responseDto: ResponseDto) => {
+      addAppliedDosesCallback(requestDto.dose);
+
       if (responseDto.version == ProtocolVersionEnum.V5.name) {
         const appliedKg =
           (requestDto.dose.amount * requestDto.doseWeightG) / 1000;
@@ -271,11 +276,9 @@ function ExecutionScreen(props: { navigation: any }) {
           setRightApplicatorActive(true);
         }
 
-        if (rightApplicatorAvailable.current) {
+        if (leftApplicatorActive.current) {
           setLeftApplicatorActive(true);
         }
-
-        onSelectedApplicatorChange();
       } else {
         if (applicatorsAmount.current == 1) {
           requestDto.dose.centerApplicator = true;
@@ -292,7 +295,6 @@ function ExecutionScreen(props: { navigation: any }) {
           requestDto.dose.leftApplicator = true;
           requestDto.dose.rightApplicator = true;
         }
-        addAppliedDosesCallback(requestDto.dose);
       }
     },
     []
@@ -348,6 +350,15 @@ function ExecutionScreen(props: { navigation: any }) {
           responseDto.version == ProtocolVersionEnum.V5.name &&
           !applicatorsLoadPercentage
         ) {
+          if (leftApplicatorAvailable && !leftApplicatorActive) {
+            setLeftApplicatorActive(true);
+          }
+          if (rightApplicatorAvailable && !rightApplicatorActive) {
+            setRightApplicatorActive(true);
+          }
+          if (centerApplicatorAvailable && !centerApplicatorActive) {
+            setCenterApplicatorActive(true);
+          }
           setLoadPercentageEnabled(true);
           setApplicatorsLoadPercentage({
             center: calculateApplicatorsLoadPercentage(
@@ -366,6 +377,8 @@ function ExecutionScreen(props: { navigation: any }) {
               rightApplicatorLoad.current
             ),
           });
+
+          await updateApplicatorsAmount();
         }
       } catch (err) {
         await Instance.GetInstance().errorHandler.handle(err);
@@ -378,7 +391,10 @@ function ExecutionScreen(props: { navigation: any }) {
       const length = promises.current.length;
       if (length < 2) {
         setStartRequestTime(new Date().getTime());
-        promises.current.push(trackPoint);
+        promises.current.push({
+          type: EventEnum.TrackPoint.name,
+          process: trackPoint,
+        });
       }
     });
     return () => clearInterval(interval);
@@ -389,9 +405,9 @@ function ExecutionScreen(props: { navigation: any }) {
       const length = promises.current.length;
       if (!requestOnProgress.current && length > 0) {
         const reverted = promises.current.reverse();
-        const promiseFunc = reverted.pop();
+        const promise = reverted.pop();
         promises.current = reverted.reverse();
-        await promiseFunc();
+        await promise.process();
       }
     });
 
@@ -448,7 +464,7 @@ function ExecutionScreen(props: { navigation: any }) {
             leftApplicator:
               leftApplicatorActive.current && leftApplicatorAvailable.current,
             rightApplicator:
-              rightApplicatorActive.current && leftApplicatorAvailable.current,
+              rightApplicatorActive.current && rightApplicatorAvailable.current,
           },
         });
 
@@ -459,8 +475,6 @@ function ExecutionScreen(props: { navigation: any }) {
         setVelocity(responseDto.gps.speed);
 
         updateApplicatorsStatus(responseDto);
-
-        addAppliedDosesCallback(requestDto.dose);
 
         if (leftApplicatorAvailable && !leftApplicatorActive) {
           setLeftApplicatorActive(true);
@@ -498,7 +512,15 @@ function ExecutionScreen(props: { navigation: any }) {
         await processDose(preset, callback);
       }
 
-      promises.current.push(process);
+      for (let i = 0; i < promises.current.length; i++) {
+        if (promises.current[i].type == EventEnum.TrackPoint.name) {
+          promises.current.splice(i, 1);
+        }
+      }
+      promises.current.push({
+        process: process,
+        type: EventEnum.Systematic.name,
+      });
     },
     []
   );
@@ -520,7 +542,10 @@ function ExecutionScreen(props: { navigation: any }) {
         }
       }
 
-      promises.current.push(process);
+      promises.current.push({
+        process: process,
+        type: EventEnum.Obstacle.name,
+      });
     },
 
     [processDose]
@@ -563,7 +588,7 @@ function ExecutionScreen(props: { navigation: any }) {
               onLeftApplicatorSelected={setLeftApplicatorActive}
               onCenterApplicatorSelected={setCenterApplicatorActive}
               onRightApplicatorSelected={setRightApplicatorActive}
-              changeCallback={onSelectedApplicatorChange}
+              changeCallback={updateApplicatorsAmount}
             />
           </Box>
 

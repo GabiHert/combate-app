@@ -7,6 +7,7 @@ import { PRequest } from "../port/request-port";
 
 export class RequestV5 implements PRequest {
   private _requestDto: RequestDto;
+
   constructor(
     private readonly _logger: PLogger,
     private _checkSumBuilder: CheckSumBuilder
@@ -172,6 +173,7 @@ export class RequestV5 implements PRequest {
       throw err;
     }
   }
+
   toProtocol(): string {
     this._logger.info({
       event: "RequestV5.toProtocol",

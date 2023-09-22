@@ -24,6 +24,7 @@ export class CbV5Service implements PCbService {
     private _bluetooth: PBluetooth,
     private _responseDtoParser: ResponseDtoParser
   ) {}
+
   async request(
     request: PRequest,
     doseCallback: (
