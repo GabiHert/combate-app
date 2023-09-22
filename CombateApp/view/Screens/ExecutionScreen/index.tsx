@@ -42,12 +42,6 @@ function ExecutionScreen(props: { navigation: any }) {
     requestOnProgress.current = value;
   }
 
-  const startRequestTime = useRef<number>(0);
-
-  function setStartRequestTime(value: number) {
-    startRequestTime.current = value;
-  }
-
   const leftApplicatorLoad = useRef(
     Instance.GetInstance().preExecutionConfigCache.getCache().leftApplicatorLoad
   );
@@ -390,7 +384,6 @@ function ExecutionScreen(props: { navigation: any }) {
     const interval = setInterval(() => {
       const length = promises.current.length;
       if (length < 2) {
-        setStartRequestTime(new Date().getTime());
         promises.current.push({
           type: EventEnum.TrackPoint.name,
           process: trackPoint,
