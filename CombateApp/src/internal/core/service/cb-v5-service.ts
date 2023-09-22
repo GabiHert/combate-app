@@ -61,7 +61,7 @@ export class CbV5Service implements PCbService {
           new BluetoothErrorType("Bluetooth sem resposta")
         );
 
-        responseDto = this._responseDtoParser.parseV4(protocol);
+        responseDto = this._responseDtoParser.parseV5(protocol);
       }
 
       if (responseDto.status.name == StatusEnum.E.name) {
