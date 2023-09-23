@@ -22,56 +22,6 @@ function EventRegisterModal(props: {
     [setEvent]
   );
 
-  const register = useCallback(async () => {
-    try {
-      const errorMessage =
-        Instance.GetInstance().validator.validateEventForm(event);
-      setEventError(errorMessage);
-      if (!errorMessage) {
-        const requestDto = new RequestDto({
-          applicatorsAmount:
-            Instance.GetInstance().preExecutionConfigCache.getCache()
-              .applicatorsAmount,
-          client:
-            Instance.GetInstance().preExecutionConfigCache.getCache()
-              .clientName,
-          deviceName:
-            Instance.GetInstance().preExecutionConfigCache.getCache()
-              .deviceName,
-          doseWeightG:
-            Instance.GetInstance().configCache.getCache().APPLICATION
-              .DOSE_WEIGHT_G,
-          event,
-          maxVelocity:
-            Instance.GetInstance().configCache.getCache().APPLICATION
-              .MAX_VELOCITY,
-          linesSpacing:
-            Instance.GetInstance().configCache.getCache().LINE_SPACING,
-          plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
-          poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
-          project:
-            Instance.GetInstance().preExecutionConfigCache.getCache()
-              .projectName,
-          streetsAmount:
-            Instance.GetInstance().preExecutionConfigCache.getCache()
-              .streetsAmount,
-          tractorName:
-            Instance.GetInstance().preExecutionConfigCache.getCache()
-              .tractorName,
-          weather:
-            Instance.GetInstance().preExecutionConfigCache.getCache().weather,
-        });
-        await Instance.GetInstance().combateApp.request(
-          requestDto,
-          async () => {}
-        );
-      }
-    } catch (err) {
-      await Instance.GetInstance().errorHandler.handle(err);
-    } finally {
-    }
-  }, [event, registerEventInProgress]);
-
   const onClose = useCallback(() => {
     setEventError("");
     props.onClose();
@@ -108,6 +58,9 @@ function EventRegisterModal(props: {
           Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
         weather:
           Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+        systematicMetersBetweenDose:
+          Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE
+            .METERS_BETWEEN_DOSE,
       },
       () => {
         props.onClose();

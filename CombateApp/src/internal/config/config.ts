@@ -19,7 +19,7 @@ export const CONSTANTS = {
     },
   ],
   APPLICATION: {
-    VERSION: "2.0.4",
+    VERSION: "2.1.0",
     BLUETOOTH_WRITE_RETRIES: 5,
     BLUETOOTH_READ_TIMEOUT_MS: 15000,
     DOSE_TIMEOUT_MS: 7000,
@@ -57,7 +57,6 @@ export const CONSTANTS = {
     { name: "Sub-bosque 2", id: "2" },
     { name: "Sub-bosque 3", id: "3" },
   ],
-  REQUEST_V4: { HEADER: "INF" },
   REQUEST_V5: { HEADER: "INF5" },
   ERRORS: {
     MAX_VELOCITY: "Velocidade máxima permitida atingida.",
@@ -77,22 +76,12 @@ export const CONSTANTS = {
     STOP_REASON_FORM: {
       INVALID_STOP_REASON: "ERROR",
     },
-    REQUEST_V4: {
-      DOSE_AMOUNT_BELLOW_ZERO:
-        "Quantidade de doses deve ser maior do que zero.",
-      DOSE_NOT_DEFINED: "Informações de dose devem ser informadas.",
-      NOT_DEFINED: "Dados invalidos.",
-      DOSE_AMOUNT_NOT_DEFINED: "Quantidade de doses deve ser informada.",
-      DOSE_AMOUNT_GREATER_THAN_10:
-        "Número de doses deve ser menor ou igual a 10.",
-      LINE_SPACING_NOT_DEFINED: "Espaçamento de linhas deve ser informado.",
-      LINE_SPACING_GREATER_THAN_0:
-        "Espaçamento de linhas deve ser maior do que 10.",
-      NEW_ID_GREATER_THAN_200_OR_LESS_THAN_0:
-        "Novo id deve ser um numero inteiro entre 1 e 99",
-    },
 
     REQUEST_V5: {
+      SYSTEMATIC_METERS_BETWEEN_DOSE_GREATER_THAN_10:
+        "Metros entre dose não pode ser maior que 10.",
+      NEW_ID_GREATER_THAN_100_OR_LESS_THAN_0:
+        "Novo id deve ser um numero inteiro entre 1 e 99",
       APPLICATORS_AMOUNT_AND_SELECTED_DOES_NOT_MATCH:
         "Quantidade de aplicadores selecionados incoerente.",
       APPLICATOR_NOT_SPECIFIER: "Nenhum aplicador selecionado para dose.",

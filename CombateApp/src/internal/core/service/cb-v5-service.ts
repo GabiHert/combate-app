@@ -50,21 +50,7 @@ export class CbV5Service implements PCbService {
 
       let responseDto = this._responseDtoParser.parseV5(protocol);
 
-      if (responseDto.status.name == StatusEnum.B.name) {
-        if (request.getRequestDto().dose?.amount)
-          timeoutMs +=
-            CONSTANTS.APPLICATION.DOSE_TIMEOUT_MS *
-            request.getRequestDto().dose.amount;
-        protocol = await timeout(
-          timeoutMs,
-          this._bluetooth.read(timeoutMs),
-          new BluetoothErrorType("Bluetooth sem resposta")
-        );
-
-        responseDto = this._responseDtoParser.parseV5(protocol);
-      }
-
-      if (responseDto.status.name == StatusEnum.E.name) {
+      if (responseDto.status == StatusEnum.E.name) {
         const errors = {
           "001": new ValidationErrorType("Validação protocolo falhou [CB]"),
           "002": new DoseProcessTimeOutErrorType("Dose lenta ou travada [CB]"),
@@ -83,7 +69,7 @@ export class CbV5Service implements PCbService {
         }
       }
 
-      if (request.getRequestDto().dose) {
+      if (request.getRequestDto().dose || responseDto.status != "N") {
         await doseCallback(request.getRequestDto(), responseDto);
       }
 

@@ -18,6 +18,7 @@ export class RequestDto {
   linesSpacing: number;
   alert?: string;
   newId?: number;
+  systematicMetersBetweenDose?: number;
   constructor(args: IRequestDtoArgs) {
     this.applicatorsAmount = args.applicatorsAmount;
     this.alert = args.alert;
@@ -35,5 +36,6 @@ export class RequestDto {
     this.streetsAmount = args.streetsAmount;
     this.linesSpacing = args.linesSpacing;
     this.newId = args.newId;
+    this.systematicMetersBetweenDose = args.systematicMetersBetweenDose;
   }
 }

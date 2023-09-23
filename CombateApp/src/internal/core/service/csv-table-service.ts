@@ -4,6 +4,7 @@ import { PCsvTableService } from "../port/csv-table-service-port";
 import { PFileSystem } from "../port/file-system-port";
 import { PLogger } from "../port/logger-port";
 import { dateTimeFormatter } from "../utils/date-time-formatter";
+
 interface Fields {
   Cliente: string;
   Projeto: string;
@@ -107,6 +108,13 @@ export class CsvTableService implements PCsvTableService {
       let doseAmount: number = 0;
       if (requestDto.dose && requestDto.dose.amount > 0) {
         doseAmount = requestDto.dose.amount * requestDto.applicatorsAmount;
+      }
+      if (responseDto.status != "N" && responseDto.status != "E") {
+        let aux = Number(responseDto.status);
+        if (aux == 0) {
+          aux = 10;
+        }
+        doseAmount += aux;
       }
       const fields: Fields = {
         Cliente: requestDto.client,

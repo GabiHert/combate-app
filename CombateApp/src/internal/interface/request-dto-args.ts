@@ -17,4 +17,5 @@ export interface IRequestDtoArgs {
   alert?: string;
   linesSpacing: number;
   newId?: number;
+  systematicMetersBetweenDose: number;
 }

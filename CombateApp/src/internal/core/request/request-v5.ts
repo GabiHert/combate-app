@@ -128,7 +128,7 @@ export class RequestV5 implements PRequest {
           warn: "linesSpacing must be specified",
         });
         throw new ValidationErrorType(
-          CONSTANTS.ERRORS.REQUEST_V4.LINE_SPACING_NOT_DEFINED
+          CONSTANTS.ERRORS.REQUEST_V5.LINE_SPACING_NOT_DEFINED
         );
       }
 
@@ -139,7 +139,18 @@ export class RequestV5 implements PRequest {
           warn: "linesSpacing should be grater than 0",
         });
         throw new ValidationErrorType(
-          CONSTANTS.ERRORS.REQUEST_V4.LINE_SPACING_GREATER_THAN_0
+          CONSTANTS.ERRORS.REQUEST_V5.LINE_SPACING_GREATER_THAN_0
+        );
+      }
+
+      if (this._requestDto.systematicMetersBetweenDose > 10) {
+        this._logger.warn({
+          event: "RequestV5.validate",
+          details: "Process warn",
+          warn: "systematicMetersBetweenDose should be < 10",
+        });
+        throw new ValidationErrorType(
+          CONSTANTS.ERRORS.REQUEST_V5.SYSTEMATIC_METERS_BETWEEN_DOSE_GREATER_THAN_10
         );
       }
 
@@ -152,10 +163,10 @@ export class RequestV5 implements PRequest {
           this._logger.warn({
             event: "RequestV5.validate",
             details: "Process warn",
-            warn: "new id should be > 0 and < 200",
+            warn: "new id should be > 0 and < 100",
           });
           throw new ValidationErrorType(
-            CONSTANTS.ERRORS.REQUEST_V4.NEW_ID_GREATER_THAN_200_OR_LESS_THAN_0
+            CONSTANTS.ERRORS.REQUEST_V5.NEW_ID_GREATER_THAN_100_OR_LESS_THAN_0
           );
         }
       }
@@ -186,7 +197,7 @@ export class RequestV5 implements PRequest {
     let rightApplicatorActive = "0";
 
     if (this._requestDto.dose && this._requestDto.dose.amount) {
-      if (this._requestDto.dose.amount == 10) {
+      if (this._requestDto.dose.amount >= 10) {
         doseAmount = "0";
       } else {
         doseAmount = this._requestDto.dose.amount.toString();
@@ -203,6 +214,16 @@ export class RequestV5 implements PRequest {
       doseAmount = "N";
     }
 
+    let systematicMetersBetweenDose = "";
+    if (!this._requestDto.systematicMetersBetweenDose) {
+      systematicMetersBetweenDose = "N";
+    } else if (this._requestDto.systematicMetersBetweenDose >= 10) {
+      systematicMetersBetweenDose = "0";
+    } else {
+      systematicMetersBetweenDose =
+        this._requestDto.systematicMetersBetweenDose.toString();
+    }
+
     let newId = "NN";
     if (this._requestDto.newId) {
       const aux = this._requestDto.newId.toString();
@@ -216,7 +237,7 @@ export class RequestV5 implements PRequest {
       rightApplicatorActive,
       newId[0],
       newId[1],
-      "x",
+      systematicMetersBetweenDose,
     ].join("");
 
     protocol += this._checkSumBuilder.build(protocol.substring(4)) + "\r\n";

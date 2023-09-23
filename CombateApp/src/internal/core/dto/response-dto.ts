@@ -1,10 +1,9 @@
 import { IGpsData } from "../../interface/gps-data";
-import { Status } from "../enum/status";
 
 export class ResponseDto {
   readonly gps: IGpsData;
   readonly version: string;
-  readonly status: Status;
+  readonly status: string;
   readonly errorCode: string;
   readonly leftApplicator?: boolean;
   readonly centerApplicator?: boolean;
@@ -12,7 +11,7 @@ export class ResponseDto {
 
   constructor(
     gps: IGpsData,
-    status: Status,
+    status: string,
     errorCode: string,
     version: string,
     centerApplicator?: boolean,

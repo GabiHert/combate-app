@@ -126,8 +126,6 @@ function ExecutionScreen(props: { navigation: any }) {
 
       appliedDosesRef.current += dose.amount * applicatorsAmount;
       setAppliedDoses(appliedDosesRef.current);
-
-      leftApplicatorLoad;
     },
     [appliedDoses]
   );
@@ -192,103 +190,117 @@ function ExecutionScreen(props: { navigation: any }) {
 
   const doseCallback = useCallback(
     async (requestDto: RequestDto, responseDto: ResponseDto) => {
-      addAppliedDosesCallback(requestDto.dose);
+      let systematicDoses = 0;
+      if (responseDto.status != "N") {
+        let aux = Number(responseDto.status);
+        if (aux == 0) {
+          aux = 10;
+        }
+        systematicDoses += aux;
+        systematicDoses = (systematicDoses * requestDto.doseWeightG) / 1000;
+        addAppliedDosesCallback({
+          amount: aux,
+          centerApplicator: responseDto.centerApplicator,
+          leftApplicator: responseDto.leftApplicator,
+          rightApplicator: responseDto.rightApplicator,
+        });
+      }
 
-      if (responseDto.version == ProtocolVersionEnum.V5.name) {
-        const appliedKg =
-          (requestDto.dose.amount * requestDto.doseWeightG) / 1000;
-        if (
-          requestDto.dose.centerApplicator &&
-          centerApplicatorLoad.current > 0
-        ) {
+      let appliedKg = 0;
+      if (requestDto.dose) {
+        addAppliedDosesCallback(requestDto.dose);
+        appliedKg = (requestDto.dose.amount * requestDto.doseWeightG) / 1000;
+      }
+
+      if (responseDto.centerApplicator && centerApplicatorLoad.current > 0) {
+        if (requestDto.dose && requestDto.dose.centerApplicator) {
           centerApplicatorLoad.current =
             centerApplicatorLoad.current - appliedKg;
-          if (centerApplicatorLoad.current <= 0) {
-            centerApplicatorLoad.current = 0;
-            ShowToast({
-              durationMs: 5000,
-              severity: SeverityEnum.WARN,
-              closeButton: false,
-              title: "Reservatório central possivelmente vazio!",
-            });
-          }
+        }
+        if (systematicDoses > 0) {
+          centerApplicatorLoad.current =
+            centerApplicatorLoad.current - systematicDoses;
         }
 
-        if (requestDto.dose.leftApplicator && leftApplicatorLoad.current > 0) {
+        if (centerApplicatorLoad.current <= 0) {
+          centerApplicatorLoad.current = 0;
+          ShowToast({
+            durationMs: 5000,
+            severity: SeverityEnum.WARN,
+            closeButton: false,
+            title: "Reservatório central possivelmente vazio!",
+          });
+        }
+      }
+
+      if (responseDto.leftApplicator && leftApplicatorLoad.current > 0) {
+        if (requestDto.dose && requestDto.dose.leftApplicator) {
           leftApplicatorLoad.current = leftApplicatorLoad.current - appliedKg;
-
-          if (leftApplicatorLoad.current <= 0) {
-            leftApplicatorLoad.current = 0;
-            ShowToast({
-              durationMs: 5000,
-              severity: SeverityEnum.WARN,
-              closeButton: false,
-              title: "Reservatório esquerdo possivelmente vazio!",
-            });
-          }
+        }
+        if (systematicDoses > 0) {
+          leftApplicatorLoad.current =
+            leftApplicatorLoad.current - systematicDoses;
         }
 
-        if (
-          requestDto.dose.rightApplicator &&
-          rightApplicatorLoad.current > 0
-        ) {
+        if (leftApplicatorLoad.current <= 0) {
+          leftApplicatorLoad.current = 0;
+          ShowToast({
+            durationMs: 5000,
+            severity: SeverityEnum.WARN,
+            closeButton: false,
+            title: "Reservatório esquerdo possivelmente vazio!",
+          });
+        }
+      }
+
+      if (responseDto.rightApplicator && rightApplicatorLoad.current > 0) {
+        if (requestDto.dose && requestDto.dose.rightApplicator) {
           rightApplicatorLoad.current = rightApplicatorLoad.current - appliedKg;
-          if (rightApplicatorLoad.current <= 0) {
-            rightApplicatorLoad.current = 0;
-            ShowToast({
-              durationMs: 5000,
-              severity: SeverityEnum.WARN,
-              closeButton: false,
-              title: "Reservatório direito possivelmente vazio!",
-            });
-          }
+        }
+        if (systematicDoses > 0) {
+          rightApplicatorLoad.current =
+            rightApplicatorLoad.current - systematicDoses;
         }
 
-        setApplicatorsLoadPercentage({
-          center: calculateApplicatorsLoadPercentage(
-            Instance.GetInstance().configCache.getCache().APPLICATION
-              .CENTER_TANK_MAX_LOAD,
-            centerApplicatorLoad.current
-          ),
-          left: calculateApplicatorsLoadPercentage(
-            Instance.GetInstance().configCache.getCache().APPLICATION
-              .LEFT_TANK_MAX_LOAD,
-            leftApplicatorLoad.current
-          ),
-          right: calculateApplicatorsLoadPercentage(
-            Instance.GetInstance().configCache.getCache().APPLICATION
-              .RIGHT_TANK_MAX_LOAD,
-            rightApplicatorLoad.current
-          ),
-        });
+        if (rightApplicatorLoad.current <= 0) {
+          rightApplicatorLoad.current = 0;
+          ShowToast({
+            durationMs: 5000,
+            severity: SeverityEnum.WARN,
+            closeButton: false,
+            title: "Reservatório direito possivelmente vazio!",
+          });
+        }
+      }
 
-        if (centerApplicatorAvailable.current) {
-          setCenterApplicatorActive(true);
-        }
+      setApplicatorsLoadPercentage({
+        center: calculateApplicatorsLoadPercentage(
+          Instance.GetInstance().configCache.getCache().APPLICATION
+            .CENTER_TANK_MAX_LOAD,
+          centerApplicatorLoad.current
+        ),
+        left: calculateApplicatorsLoadPercentage(
+          Instance.GetInstance().configCache.getCache().APPLICATION
+            .LEFT_TANK_MAX_LOAD,
+          leftApplicatorLoad.current
+        ),
+        right: calculateApplicatorsLoadPercentage(
+          Instance.GetInstance().configCache.getCache().APPLICATION
+            .RIGHT_TANK_MAX_LOAD,
+          rightApplicatorLoad.current
+        ),
+      });
 
-        if (rightApplicatorAvailable.current) {
-          setRightApplicatorActive(true);
-        }
+      if (centerApplicatorAvailable.current) {
+        setCenterApplicatorActive(true);
+      }
 
-        if (leftApplicatorActive.current) {
-          setLeftApplicatorActive(true);
-        }
-      } else {
-        if (applicatorsAmount.current == 1) {
-          requestDto.dose.centerApplicator = true;
-          requestDto.dose.leftApplicator = false;
-          requestDto.dose.rightApplicator = false;
-        }
-        if (applicatorsAmount.current == 2) {
-          requestDto.dose.centerApplicator = true;
-          requestDto.dose.leftApplicator = true;
-          requestDto.dose.rightApplicator = false;
-        }
-        if (applicatorsAmount.current == 3) {
-          requestDto.dose.centerApplicator = true;
-          requestDto.dose.leftApplicator = true;
-          requestDto.dose.rightApplicator = true;
-        }
+      if (rightApplicatorAvailable.current) {
+        setRightApplicatorActive(true);
+      }
+
+      if (leftApplicatorActive.current) {
+        setLeftApplicatorActive(true);
       }
     },
     []
@@ -328,6 +340,9 @@ function ExecutionScreen(props: { navigation: any }) {
               .tractorName,
           weather:
             Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+          systematicMetersBetweenDose:
+            Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE
+              .METERS_BETWEEN_DOSE,
         });
         const responseDto = await Instance.GetInstance().combateApp.request(
           requestDto,
@@ -336,14 +351,9 @@ function ExecutionScreen(props: { navigation: any }) {
         setVelocity(responseDto.gps.speed);
         updateApplicatorsStatus(responseDto);
 
-        if (!protocolVersion) {
-          setProtocolVersion(responseDto.version);
-        }
+        setProtocolVersion(responseDto.version);
 
-        if (
-          responseDto.version == ProtocolVersionEnum.V5.name &&
-          !applicatorsLoadPercentage
-        ) {
+        if (!applicatorsLoadPercentage) {
           if (leftApplicatorAvailable && !leftApplicatorActive) {
             setLeftApplicatorActive(true);
           }
@@ -389,7 +399,7 @@ function ExecutionScreen(props: { navigation: any }) {
           process: trackPoint,
         });
       }
-    });
+    }, 5000);
     return () => clearInterval(interval);
   });
 
@@ -449,6 +459,9 @@ function ExecutionScreen(props: { navigation: any }) {
               .tractorName,
           weather:
             Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+          systematicMetersBetweenDose:
+            Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE
+              .METERS_BETWEEN_DOSE,
           dose: {
             amount: preset.DOSE_AMOUNT,
             centerApplicator:
