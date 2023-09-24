@@ -53,7 +53,11 @@ export class ProtocolRules {
         );
       }
 
-      if (protocol[2] != StatusEnum.E.name && isNaN(Number(protocol[2]))) {
+      if (
+        protocol[2] != StatusEnum.E.name &&
+        protocol[2] != "N" &&
+        isNaN(Number(protocol[2]))
+      ) {
         this._logger.warn({
           event: "ProtocolRules.V5",
           details: "Process warn",
