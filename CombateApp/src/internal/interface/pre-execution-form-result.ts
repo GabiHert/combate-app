@@ -1,6 +1,5 @@
 export interface IPreExecutionFormResult {
   clientName: { errorMessage: string };
-  applicatorsAmount: { errorMessage: string };
   projectName: { errorMessage: string };
   farm: { errorMessage: string };
   plot: { errorMessage: string };

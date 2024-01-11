@@ -14,6 +14,7 @@ const Stack = createNativeStackNavigator();
 
 //Instance.GetInstance().configCache.update(DEFAULT_CONFIG);
 //Instance.GetInstance().preExecutionConfigCache.update(DEFAULT_PRE_EXECUTION_CONFIG);
+
 export default function App() {
   appConfig.screen = {
     ...useWindowDimensions(),

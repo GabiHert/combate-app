@@ -5,6 +5,7 @@ export interface PCombateApp {
   /**
    * Requests CB to start a task
    * @param requestDto request to be decoded and sent
+   * @param doseCallback
    */
   request(
     requestDto: RequestDto,

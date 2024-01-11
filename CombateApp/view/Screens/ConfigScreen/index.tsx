@@ -14,7 +14,6 @@ import { CONSTANTS } from "../../../src/internal/config/config";
 import { RequestDto } from "../../../src/internal/core/dto/request-dto";
 import { EventEnum } from "../../../src/internal/core/enum/event";
 import { poisonItems } from "../../../src/internal/core/enum/poison";
-import { ProtocolVersionEnum } from "../../../src/internal/core/enum/protocol-version";
 import { SeverityEnum } from "../../../src/internal/core/enum/severity";
 import { IConfigFormResult } from "../../../src/internal/interface/config-form-result";
 import { IConfigsProps } from "../../../src/internal/interface/config-props";
@@ -281,9 +280,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
       }
       isRenaming[1](true);
       const requestDto = new RequestDto({
-        applicatorsAmount:
-          Instance.GetInstance().preExecutionConfigCache.getCache()
-            .applicatorsAmount,
+        systematicMetersBetweenDose: metersBetweenDose.current,
         client:
           Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
         deviceName:
@@ -309,29 +306,18 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
         weather:
           Instance.GetInstance().preExecutionConfigCache.getCache().weather,
       });
+
+      const id = Number(newId.current);
+      requestDto.newId = Math.trunc(id);
       const responseDto = await Instance.GetInstance().combateApp.request(
         requestDto
       );
-      if (responseDto.version == ProtocolVersionEnum.V5.name) {
-        const id = Number(newId.current);
-        requestDto.newId = Math.trunc(id);
-        const responseDto = await Instance.GetInstance().combateApp.request(
-          requestDto
-        );
-        ShowToast({
-          durationMs: 5000,
-          severity: SeverityEnum.OK,
-          title: "CB renomeado com sucesso",
-          message: "Novo nome: CB5_" + requestDto.newId.toString(),
-        });
-      } else {
-        ShowToast({
-          durationMs: 5000,
-          severity: SeverityEnum.OK,
-          title: "CB4 não podem ser renomeados",
-          message: "Somente CB acima da versão 5 podem ser renomeados",
-        });
-      }
+      ShowToast({
+        durationMs: 5000,
+        severity: SeverityEnum.OK,
+        title: "CB renomeado com sucesso",
+        message: "Novo nome: CB5_" + requestDto.newId.toString(),
+      });
     } catch (err) {
       await Instance.GetInstance().errorHandler.handle(err);
     } finally {

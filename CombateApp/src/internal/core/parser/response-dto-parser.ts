@@ -54,7 +54,6 @@ export class ResponseDtoParser {
         gpsData,
         status,
         errorCode,
-        protocol[1],
         centerApplicator,
         leftApplicator,
         rightApplicator

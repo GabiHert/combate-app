@@ -42,9 +42,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     Instance.GetInstance().preExecutionConfigCache.getCache()
       .rightApplicatorLoad
   );
-  const [applicatorsAmount, setApplicatorsAmount] = useState<number>(
-    Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount
-  );
+
   const [devices, setDevices] = useState<Array<IItem>>([]);
   const [deviceConnected, setDeviceConnected] = useState(false);
   const [clientName, setClientName] = useState<string>(
@@ -77,7 +75,6 @@ function PreExecutionScreen(props: { navigation: any }) {
 
   const [validationResult, setValidationResult] =
     useState<IPreExecutionFormResult>({
-      applicatorsAmount: { errorMessage: undefined },
       clientName: { errorMessage: undefined },
       projectName: { errorMessage: undefined },
       plot: { errorMessage: undefined },
@@ -112,7 +109,6 @@ function PreExecutionScreen(props: { navigation: any }) {
 
   const onNextPressed = useCallback(async () => {
     const data: IPreExecutionConfigProps = {
-      applicatorsAmount,
       activity,
       clientName,
       projectName,
@@ -194,7 +190,6 @@ function PreExecutionScreen(props: { navigation: any }) {
     rightApplicatorLoad,
     centerApplicatorLoad,
     activity,
-    applicatorsAmount,
   ]);
 
   const setWeatherCallback = useCallback(
@@ -215,12 +210,6 @@ function PreExecutionScreen(props: { navigation: any }) {
     [setStreetsAmount]
   );
 
-  const setApplicatorsAmountCallback = useCallback(
-    (value: string) => {
-      setApplicatorsAmount(Number(value));
-    },
-    [setApplicatorsAmount]
-  );
   const connectToBluetoothCallback = useCallback(async () => {
     setIsConnecting(true);
     try {
@@ -337,20 +326,6 @@ function PreExecutionScreen(props: { navigation: any }) {
                 .tractorName
             }
             onChangeText={setTractorName}
-          />
-          <SelectInput
-            placeholder=""
-            onItemSelected={setApplicatorsAmountCallback}
-            title="Número de dosadores"
-            items={[
-              { id: "1", name: "1" },
-              { id: "2", name: "2" },
-              { id: "3", name: "3" },
-            ]}
-            defaultValue={Instance.GetInstance()
-              .preExecutionConfigCache.getCache()
-              .streetsAmount.toString()}
-            errorMessage={validationResult.streetsAmount.errorMessage}
           />
 
           <SlideInput

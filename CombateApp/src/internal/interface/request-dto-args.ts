@@ -7,7 +7,6 @@ export interface IRequestDtoArgs {
   project: string;
   plot: string;
   tractorName: string;
-  applicatorsAmount: number;
   poisonType: string;
   doseWeightG: number;
   deviceName: string;

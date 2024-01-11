@@ -105,9 +105,14 @@ export class CsvTableService implements PCsvTableService {
       const date = dateTimeFormatter.date(dateNow);
       const time = dateTimeFormatter.time(dateNow);
 
+      const applicatorsAmount =
+        (requestDto.dose.centerApplicator ? 1 : 0) +
+        (requestDto.dose.centerApplicator ? 1 : 0) +
+        (requestDto.dose.centerApplicator ? 1 : 0);
+
       let doseAmount: number = 0;
       if (requestDto.dose && requestDto.dose.amount > 0) {
-        doseAmount = requestDto.dose.amount * requestDto.applicatorsAmount;
+        doseAmount = requestDto.dose.amount * applicatorsAmount;
       }
       if (responseDto.status != "N" && responseDto.status != "E") {
         let aux = Number(responseDto.status);
@@ -116,13 +121,14 @@ export class CsvTableService implements PCsvTableService {
         }
         doseAmount += aux;
       }
+
       const fields: Fields = {
         Cliente: requestDto.client,
         Projeto: requestDto.project,
         Talhao: requestDto.plot,
         Maquina: requestDto.tractorName,
         CB: requestDto.deviceName,
-        Dosadores: requestDto.applicatorsAmount.toString(),
+        Dosadores: applicatorsAmount.toString(),
         DosesTotais: !doseAmount ? "0" : doseAmount.toString(),
         TipoIsca: requestDto.poisonType,
         PesoG: requestDto.doseWeightG.toString(),

@@ -32,7 +32,6 @@ export interface IConfigsProps {
 }
 
 export interface IPreExecutionConfigProps {
-  applicatorsAmount: number;
   clientName: string;
   projectName: string;
   farm: string;

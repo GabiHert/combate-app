@@ -1,13 +1,12 @@
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useFocusEffect } from "@react-navigation/native";
-import { Box, Button, Center, Heading, Spinner } from "native-base";
+import { Box } from "native-base";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BackHandler } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RequestDto } from "../../../src/internal/core/dto/request-dto";
 import { ResponseDto } from "../../../src/internal/core/dto/response-dto";
 import { EventEnum } from "../../../src/internal/core/enum/event";
-import { ProtocolVersionEnum } from "../../../src/internal/core/enum/protocol-version";
 import {
   Severity,
   SeverityEnum,
@@ -46,9 +45,7 @@ function ExecutionScreen(props: { navigation: any }) {
     Instance.GetInstance().preExecutionConfigCache.getCache().leftApplicatorLoad
   );
 
-  const applicatorsAmount = useRef(
-    Instance.GetInstance().preExecutionConfigCache.getCache().applicatorsAmount
-  );
+  const applicatorsAmount = useRef(0);
   const leftApplicatorActive = useRef(true);
   const leftApplicatorAvailable = useRef(false);
   const rightApplicatorActive = useRef(true);
@@ -112,9 +109,6 @@ function ExecutionScreen(props: { navigation: any }) {
   const [applicatorsLoadPercentage, setApplicatorsLoadPercentage] =
     useState<IApplicatorsPercentage>(undefined);
 
-  const [loadPercentageEnabled, setLoadPercentageEnabled] =
-    useState<boolean>(false);
-
   const appliedDosesRef = useRef(0);
   const [appliedDoses, setAppliedDoses] = useState<number>(0);
   const addAppliedDosesCallback = useCallback(
@@ -129,8 +123,6 @@ function ExecutionScreen(props: { navigation: any }) {
     },
     [appliedDoses]
   );
-
-  const [protocolVersion, setProtocolVersion] = useState<string>(undefined);
 
   const updateApplicatorsAmount = useCallback(async () => {
     applicatorsAmount.current =
@@ -162,22 +154,20 @@ function ExecutionScreen(props: { navigation: any }) {
     return { severity, percentage };
   }
 
-  function updateApplicatorsStatus(responseDto: ResponseDto) {
-    if (responseDto.version == ProtocolVersionEnum.V5.name) {
-      if (responseDto.centerApplicator != centerApplicatorAvailable.current) {
-        setCenterApplicatorAvailable(responseDto.centerApplicator);
-      }
-
-      if (responseDto.leftApplicator != leftApplicatorAvailable.current) {
-        setLeftApplicatorAvailable(responseDto.leftApplicator);
-      }
-
-      if (responseDto.rightApplicator != rightApplicatorAvailable.current) {
-        setRightApplicatorAvailable(responseDto.rightApplicator);
-      }
-
-      updateApplicatorsAmount();
+  async function updateApplicatorsStatus(responseDto: ResponseDto) {
+    if (responseDto.centerApplicator != centerApplicatorAvailable.current) {
+      setCenterApplicatorAvailable(responseDto.centerApplicator);
     }
+
+    if (responseDto.leftApplicator != leftApplicatorAvailable.current) {
+      setLeftApplicatorAvailable(responseDto.leftApplicator);
+    }
+
+    if (responseDto.rightApplicator != rightApplicatorAvailable.current) {
+      setRightApplicatorAvailable(responseDto.rightApplicator);
+    }
+
+    await updateApplicatorsAmount();
   }
 
   useFocusEffect(() => {
@@ -311,7 +301,6 @@ function ExecutionScreen(props: { navigation: any }) {
       try {
         setRequestOnProgress(true);
         const requestDto = new RequestDto({
-          applicatorsAmount: applicatorsAmount.current,
           client:
             Instance.GetInstance().preExecutionConfigCache.getCache()
               .clientName,
@@ -349,9 +338,7 @@ function ExecutionScreen(props: { navigation: any }) {
           doseCallback
         );
         setVelocity(responseDto.gps.speed);
-        updateApplicatorsStatus(responseDto);
-
-        setProtocolVersion(responseDto.version);
+        await updateApplicatorsStatus(responseDto);
 
         if (!applicatorsLoadPercentage) {
           if (leftApplicatorAvailable && !leftApplicatorActive) {
@@ -363,7 +350,7 @@ function ExecutionScreen(props: { navigation: any }) {
           if (centerApplicatorAvailable && !centerApplicatorActive) {
             setCenterApplicatorActive(true);
           }
-          setLoadPercentageEnabled(true);
+
           setApplicatorsLoadPercentage({
             center: calculateApplicatorsLoadPercentage(
               Instance.GetInstance().configCache.getCache().APPLICATION
@@ -430,7 +417,6 @@ function ExecutionScreen(props: { navigation: any }) {
 
       try {
         const requestDto = new RequestDto({
-          applicatorsAmount: applicatorsAmount.current,
           client:
             Instance.GetInstance().preExecutionConfigCache.getCache()
               .clientName,
@@ -480,7 +466,7 @@ function ExecutionScreen(props: { navigation: any }) {
         );
         setVelocity(responseDto.gps.speed);
 
-        updateApplicatorsStatus(responseDto);
+        await updateApplicatorsStatus(responseDto);
 
         if (leftApplicatorAvailable && !leftApplicatorActive) {
           setLeftApplicatorActive(true);
@@ -499,7 +485,6 @@ function ExecutionScreen(props: { navigation: any }) {
       }
     },
     [
-      protocolVersion,
       leftApplicatorActive,
       rightApplicatorActive,
       centerApplicatorActive,
@@ -559,112 +544,91 @@ function ExecutionScreen(props: { navigation: any }) {
 
   return (
     <>
-      {protocolVersion ? (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <Box
-            height={"15%"}
-            alignItems="center"
-            justifyContent="center"
-            width="100%"
-          >
-            <StatusBar
-              velocity={velocity}
-              applicatorsLoadPercentage={applicatorsLoadPercentage}
-              loadPercentageEnabled={loadPercentageEnabled}
-            />
-          </Box>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Box
+          height={"15%"}
+          alignItems="center"
+          justifyContent="center"
+          width="100%"
+        >
+          <StatusBar
+            velocity={velocity}
+            applicatorsLoadPercentage={applicatorsLoadPercentage}
+          />
+        </Box>
 
-          <Box height={"60%"} width={"100%"}>
-            <PoisonAmountSelector onPresetPressed={onPresetPressed} />
-          </Box>
+        <Box height={"60%"} width={"100%"}>
+          <PoisonAmountSelector onPresetPressed={onPresetPressed} />
+        </Box>
 
-          <Box
-            alignItems="center"
-            justifyContent="center"
-            width="100%"
-            height="15%"
-          >
-            <ApplicatorSelector
-              leftApplicatorActive={leftApplicatorActiveState}
-              leftApplicatorAvailable={leftApplicatorAvailableState}
-              rightApplicatorActive={rightApplicatorActiveState}
-              rightApplicatorAvailable={rightApplicatorAvailableState}
-              centerApplicatorActive={centerApplicatorActiveState}
-              centerApplicatorAvailable={centerApplicatorAvailableState}
-              onLeftApplicatorSelected={setLeftApplicatorActive}
-              onCenterApplicatorSelected={setCenterApplicatorActive}
-              onRightApplicatorSelected={setRightApplicatorActive}
-              changeCallback={updateApplicatorsAmount}
-            />
-          </Box>
+        <Box
+          alignItems="center"
+          justifyContent="center"
+          width="100%"
+          height="15%"
+        >
+          <ApplicatorSelector
+            leftApplicatorActive={leftApplicatorActiveState}
+            leftApplicatorAvailable={leftApplicatorAvailableState}
+            rightApplicatorActive={rightApplicatorActiveState}
+            rightApplicatorAvailable={rightApplicatorAvailableState}
+            centerApplicatorActive={centerApplicatorActiveState}
+            centerApplicatorAvailable={centerApplicatorAvailableState}
+            onLeftApplicatorSelected={setLeftApplicatorActive}
+            onCenterApplicatorSelected={setCenterApplicatorActive}
+            onRightApplicatorSelected={setRightApplicatorActive}
+            changeCallback={updateApplicatorsAmount}
+          />
+        </Box>
 
-          <BottomSheet
-            ref={bottomSheetRef}
-            index={0}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}
-            handleComponent={() => (
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={0}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}
+          handleComponent={() => (
+            <Box
+              style={{
+                paddingBottom: 0,
+                height: 0,
+                alignSelf: "center",
+              }}
+            >
               <Box
                 style={{
-                  paddingBottom: 0,
-                  height: 0,
-                  alignSelf: "center",
+                  width: 70,
+                  height: 5,
+                  borderRadius: 3,
+                  backgroundColor: "white",
+                  marginTop: 9,
                 }}
-              >
-                <Box
-                  style={{
-                    width: 70,
-                    height: 5,
-                    borderRadius: 3,
-                    backgroundColor: "white",
-                    marginTop: 9,
-                  }}
-                />
-              </Box>
-            )}
-            backgroundStyle={{ backgroundColor: Theme().color.b400 }}
-            style={{
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 9,
-              },
-              shadowOpacity: 0.5,
-              shadowRadius: 12.35,
-              elevation: 19,
+              />
+            </Box>
+          )}
+          backgroundStyle={{ backgroundColor: Theme().color.b400 }}
+          style={{
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 9,
+            },
+            shadowOpacity: 0.5,
+            shadowRadius: 12.35,
+            elevation: 19,
+          }}
+        >
+          <Sheet
+            blockHeight={blockHeight}
+            sheetHeight={sheetHeight}
+            spaceBetweenBlocksHeight={spaceBetweenBlocksHeight}
+            onEventRegister={onEventRegister}
+            onFinishPressed={() => {
+              onFinishButtonPress();
             }}
-          >
-            <Sheet
-              blockHeight={blockHeight}
-              sheetHeight={sheetHeight}
-              spaceBetweenBlocksHeight={spaceBetweenBlocksHeight}
-              onEventRegister={onEventRegister}
-              onFinishPressed={() => {
-                onFinishButtonPress();
-              }}
-              appliedDoses={appliedDoses}
-            />
-          </BottomSheet>
-        </GestureHandlerRootView>
-      ) : (
-        <Center backgroundColor={Theme().color.b400} height="100%">
-          <Spinner color={Theme().color.b200} size="lg" />
-          <Heading color={Theme().color.b300} fontSize="md">
-            Sincronizando versão CB...
-          </Heading>
-          <Button
-            alignSelf="center"
-            position="absolute"
-            bottom={10}
-            backgroundColor={Theme().color.sError}
-            onPressOut={() => {
-              props.navigation.goBack();
-            }}
-          >
-            Cancelar
-          </Button>
-        </Center>
-      )}
+            appliedDoses={appliedDoses}
+          />
+        </BottomSheet>
+      </GestureHandlerRootView>
     </>
   );
 }

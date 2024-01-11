@@ -2,7 +2,6 @@ import { IGpsData } from "../../interface/gps-data";
 
 export class ResponseDto {
   readonly gps: IGpsData;
-  readonly version: string;
   readonly status: string;
   readonly errorCode: string;
   readonly leftApplicator?: boolean;
@@ -13,7 +12,6 @@ export class ResponseDto {
     gps: IGpsData,
     status: string,
     errorCode: string,
-    version: string,
     centerApplicator?: boolean,
     leftApplicator?: boolean,
     rightApplicator?: boolean
@@ -22,7 +20,6 @@ export class ResponseDto {
     this.rightApplicator = rightApplicator;
     this.leftApplicator = leftApplicator;
     this.gps = gps;
-    this.version = version;
     this.errorCode = errorCode;
     this.status = status;
   }

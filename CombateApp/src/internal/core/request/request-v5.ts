@@ -102,22 +102,6 @@ export class RequestV5 implements PRequest {
               CONSTANTS.ERRORS.REQUEST_V5.APPLICATOR_NOT_SPECIFIER
             );
           }
-
-          if (
-            this._requestDto.applicatorsAmount !=
-            Number(this._requestDto.dose.centerApplicator) +
-              Number(this._requestDto.dose.leftApplicator) +
-              Number(this._requestDto.dose.rightApplicator)
-          ) {
-            this._logger.warn({
-              event: "RequestV5.validate",
-              details: "Process warn",
-              warn: "applicatorsAmount and selectedApplicators does not match",
-            });
-            throw new ValidationErrorType(
-              CONSTANTS.ERRORS.REQUEST_V5.APPLICATORS_AMOUNT_AND_SELECTED_DOES_NOT_MATCH
-            );
-          }
         }
       }
 

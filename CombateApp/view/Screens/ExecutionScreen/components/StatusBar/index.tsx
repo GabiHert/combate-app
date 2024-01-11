@@ -7,7 +7,6 @@ import { IApplicatorsPercentage } from "../Sheet";
 function StatusBar(props: {
   velocity: string;
   applicatorsLoadPercentage: IApplicatorsPercentage;
-  loadPercentageEnabled: boolean;
 }) {
   return (
     <HStack
@@ -18,104 +17,102 @@ function StatusBar(props: {
       pr={8}
       height="95%"
     >
-      {props.loadPercentageEnabled ? (
-        <>
-          <HStack w={"80%"} space={3}>
+      <>
+        <HStack w={"80%"} space={3}>
+          <Center
+            width={"28%"}
+            height="100%"
+            _text={{
+              color: "white",
+              fontSize: Theme().font.size.m(appConfig.screen),
+            }}
+          >
+            Esquerdo
             <Center
-              width={"28%"}
-              height="100%"
+              width="100%"
+              borderRadius={50}
+              bgColor={
+                props.applicatorsLoadPercentage
+                  ? props.applicatorsLoadPercentage.left.severity.color
+                  : Theme().color.b400
+              }
+              height={"60%"}
               _text={{
+                fontSize: Theme().font.size.xl(appConfig.screen),
                 color: "white",
-                fontSize: Theme().font.size.m(appConfig.screen),
+                textAlign: "center",
               }}
             >
-              Esquerdo
-              <Center
-                width="100%"
-                borderRadius={50}
-                bgColor={
-                  props.loadPercentageEnabled && props.applicatorsLoadPercentage
-                    ? props.applicatorsLoadPercentage.left.severity.color
-                    : Theme().color.b400
-                }
-                height={"60%"}
-                _text={{
-                  fontSize: Theme().font.size.xl(appConfig.screen),
-                  color: "white",
-                  textAlign: "center",
-                }}
-              >
-                {props.loadPercentageEnabled && props.applicatorsLoadPercentage
-                  ? props.applicatorsLoadPercentage.left.percentage.toString() +
-                    "%"
-                  : " "}
-              </Center>
+              {props.applicatorsLoadPercentage
+                ? props.applicatorsLoadPercentage.left.percentage.toString() +
+                  "%"
+                : " "}
             </Center>
+          </Center>
+          <Center
+            width={"28%"}
+            height="100%"
+            _text={{
+              color: "white",
+              fontSize: Theme().font.size.m(appConfig.screen),
+            }}
+          >
+            Central
             <Center
-              width={"28%"}
-              height="100%"
+              width="100%"
+              borderRadius={50}
+              bgColor={
+                props.applicatorsLoadPercentage
+                  ? props.applicatorsLoadPercentage.center.severity.color
+                  : Theme().color.b400
+              }
+              height={"60%"}
               _text={{
+                fontSize: Theme().font.size.xl(appConfig.screen),
                 color: "white",
-                fontSize: Theme().font.size.m(appConfig.screen),
+                textAlign: "center",
               }}
             >
-              Central
-              <Center
-                width="100%"
-                borderRadius={50}
-                bgColor={
-                  props.loadPercentageEnabled && props.applicatorsLoadPercentage
-                    ? props.applicatorsLoadPercentage.center.severity.color
-                    : Theme().color.b400
-                }
-                height={"60%"}
-                _text={{
-                  fontSize: Theme().font.size.xl(appConfig.screen),
-                  color: "white",
-                  textAlign: "center",
-                }}
-              >
-                {props.loadPercentageEnabled && props.applicatorsLoadPercentage
-                  ? props.applicatorsLoadPercentage.center.percentage.toString() +
-                    "%"
-                  : " "}
-              </Center>
+              {props.applicatorsLoadPercentage
+                ? props.applicatorsLoadPercentage.center.percentage.toString() +
+                  "%"
+                : " "}
             </Center>
+          </Center>
+          <Center
+            width={"28%"}
+            height="100%"
+            _text={{
+              color: "white",
+              fontSize: Theme().font.size.m(appConfig.screen),
+            }}
+          >
+            Direito
             <Center
-              width={"28%"}
-              height="100%"
+              width="100%"
+              borderRadius={50}
+              bgColor={
+                props.applicatorsLoadPercentage
+                  ? props.applicatorsLoadPercentage.center.severity.color
+                  : Theme().color.b400
+              }
+              height={"60%"}
               _text={{
+                fontSize: Theme().font.size.xl(appConfig.screen),
                 color: "white",
-                fontSize: Theme().font.size.m(appConfig.screen),
+                textAlign: "center",
               }}
             >
-              Direito
-              <Center
-                width="100%"
-                borderRadius={50}
-                bgColor={
-                  props.loadPercentageEnabled && props.applicatorsLoadPercentage
-                    ? props.applicatorsLoadPercentage.center.severity.color
-                    : Theme().color.b400
-                }
-                height={"60%"}
-                _text={{
-                  fontSize: Theme().font.size.xl(appConfig.screen),
-                  color: "white",
-                  textAlign: "center",
-                }}
-              >
-                {props.loadPercentageEnabled && props.applicatorsLoadPercentage
-                  ? props.applicatorsLoadPercentage.right.percentage.toString() +
-                    "%"
-                  : " "}
-              </Center>
+              {props.applicatorsLoadPercentage
+                ? props.applicatorsLoadPercentage.right.percentage.toString() +
+                  "%"
+                : " "}
             </Center>
-          </HStack>
-        </>
-      ) : null}
+          </Center>
+        </HStack>
+      </>
 
-      <Box w={props.loadPercentageEnabled ? "20%" : "100%"}>
+      <Box w={"20%"}>
         <Center
           width={"100%"}
           height="100%"

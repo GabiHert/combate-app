@@ -2,13 +2,8 @@ import { PermissionsAndroid } from "react-native";
 import { CONSTANTS } from "../../internal/config/config";
 import { RequestDto } from "../../internal/core/dto/request-dto";
 import { ResponseDto } from "../../internal/core/dto/response-dto";
-import {
-  ProtocolVersion,
-  ProtocolVersionEnum,
-} from "../../internal/core/enum/protocol-version";
 import { PError } from "../../internal/core/error/error-port";
 import { MaxVelocityErrorType } from "../../internal/core/error/error-type";
-import { CbServiceFactory } from "../../internal/core/factory/cb-service-factory";
 import { RequestFactory } from "../../internal/core/factory/request-factory";
 import { PCbService } from "../../internal/core/port/cb-service-port";
 import { PCsvTableService } from "../../internal/core/port/csv-table-service-port";
@@ -17,8 +12,6 @@ import { ProtocolRules } from "../../internal/core/rules/protocol-rules";
 import { PCombateApp } from "../port/combate-app-port";
 
 export class CombateApp implements PCombateApp {
-  private _protocolVersion: ProtocolVersion;
-  private _cbService: PCbService;
   private _filePath: string;
   private _velocityExceededRecord: Array<number>;
   private _requestDto: RequestDto;
@@ -26,31 +19,12 @@ export class CombateApp implements PCombateApp {
 
   constructor(
     private readonly _logger: PLogger,
-    private readonly _cbServiceFactory: CbServiceFactory,
+    private readonly _cbService: PCbService,
     private readonly _csvTableService: PCsvTableService,
     private readonly _requestFactory: RequestFactory,
     private readonly _protocolRules: ProtocolRules
   ) {
     this._velocityExceededRecord = [];
-  }
-
-  private async _syncProtocolVersion(
-    requestDto: RequestDto,
-    doseCallback: (
-      requestDto: RequestDto,
-      responseDto: ResponseDto
-    ) => Promise<void>
-  ): Promise<void> {
-    const requestDtoCpy = { ...requestDto };
-    requestDtoCpy.newId = undefined;
-    const request = this._requestFactory.factory(
-      requestDtoCpy,
-      ProtocolVersionEnum.V5
-    );
-    const cbV5Service = this._cbServiceFactory.factory(ProtocolVersionEnum.V5);
-    const responseDto = await cbV5Service.request(request, doseCallback);
-    this._protocolVersion = this._protocolRules.getProtocolVersion(responseDto);
-    this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
   }
 
   async permissions() {
@@ -104,8 +78,6 @@ export class CombateApp implements PCombateApp {
       details: "Process started",
       filePath,
     });
-    this._protocolVersion = undefined;
-    this._cbService = undefined;
     this._filePath = filePath;
     await this._csvTableService.begin(this._filePath);
     this._logger.info({
@@ -130,15 +102,7 @@ export class CombateApp implements PCombateApp {
 
       this._requestDto = requestDto;
 
-      if (!this._cbService || !this._protocolVersion) {
-        await this._syncProtocolVersion(requestDto, doseCallback);
-        this._cbService = this._cbServiceFactory.factory(this._protocolVersion);
-      }
-
-      const request = this._requestFactory.factory(
-        requestDto,
-        this._protocolVersion
-      );
+      const request = this._requestFactory.factory(requestDto);
 
       const responseDto = await this._cbService.request(request, doseCallback);
 

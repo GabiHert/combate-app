@@ -31,9 +31,6 @@ function EventRegisterModal(props: {
     setRegisterEventInProgress(true);
     props.onEventRegister(
       {
-        applicatorsAmount:
-          Instance.GetInstance().preExecutionConfigCache.getCache()
-            .applicatorsAmount,
         client:
           Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
         deviceName:

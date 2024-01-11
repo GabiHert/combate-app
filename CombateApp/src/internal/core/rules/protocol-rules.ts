@@ -1,6 +1,4 @@
 import { CheckSumBuilder } from "../builder/check-sum-builder";
-import { ResponseDto } from "../dto/response-dto";
-import { ProtocolVersion, ProtocolVersionEnum } from "../enum/protocol-version";
 import { StatusEnum } from "../enum/status";
 import { ValidationErrorType } from "../error/error-type";
 import { PLogger } from "../port/logger-port";
@@ -11,10 +9,6 @@ export class ProtocolRules {
     private readonly _checkSumBuilder: CheckSumBuilder
   ) {}
 
-  getProtocolVersion(response: ResponseDto): ProtocolVersion {
-    return ProtocolVersionEnum.V5;
-  }
-
   V5(protocol: string) {
     try {
       this._logger.info({
@@ -23,8 +17,9 @@ export class ProtocolRules {
         protocol,
       });
 
-      const protocolSplited = protocol.split(",");
-      if (protocolSplited[0].length != 10) {
+      const protocolSplitted = protocol.split(",");
+
+      if (protocolSplitted[0].length != 10) {
         this._logger.warn({
           event: "ProtocolRules.V5",
           details: "Process warn",

@@ -5,7 +5,6 @@ export class RequestDto {
   event: string;
   dose?: IDoseRequest;
   client: string;
-  applicatorsAmount: number;
   project: string;
   plot: string;
   tractorName: string;
@@ -20,7 +19,6 @@ export class RequestDto {
   newId?: number;
   systematicMetersBetweenDose?: number;
   constructor(args: IRequestDtoArgs) {
-    this.applicatorsAmount = args.applicatorsAmount;
     this.alert = args.alert;
     this.event = args.event;
     this.dose = args.dose;

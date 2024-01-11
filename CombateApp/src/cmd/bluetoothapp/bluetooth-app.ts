@@ -121,6 +121,6 @@ export class BluetoothApp implements PBluetoothApp {
   }
 
   get deviceId() {
-    return this.deviceId;
+    return this._deviceId;
   }
 }

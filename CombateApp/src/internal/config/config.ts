@@ -19,7 +19,7 @@ export const CONSTANTS = {
     },
   ],
   APPLICATION: {
-    VERSION: "2.1.0",
+    VERSION: "2.1.1",
     BLUETOOTH_WRITE_RETRIES: 5,
     BLUETOOTH_READ_TIMEOUT_MS: 15000,
     DOSE_TIMEOUT_MS: 7000,
@@ -192,7 +192,6 @@ export const DEFAULT_CONFIG: IConfigsProps = {
 };
 
 export const DEFAULT_PRE_EXECUTION_CONFIG: IPreExecutionConfigProps = {
-  applicatorsAmount: 1,
   activity: "Teste",
   farm: "teste",
   clientName: "teste",
