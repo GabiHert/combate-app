@@ -105,10 +105,10 @@ export class CsvTableService implements PCsvTableService {
       const date = dateTimeFormatter.date(dateNow);
       const time = dateTimeFormatter.time(dateNow);
 
-      const applicatorsAmount =
+      const applicatorsAmount = requestDto.dose?
         (requestDto.dose.centerApplicator ? 1 : 0) +
         (requestDto.dose.centerApplicator ? 1 : 0) +
-        (requestDto.dose.centerApplicator ? 1 : 0);
+        (requestDto.dose.centerApplicator ? 1 : 0):0;
 
       let doseAmount: number = 0;
       if (requestDto.dose && requestDto.dose.amount > 0) {

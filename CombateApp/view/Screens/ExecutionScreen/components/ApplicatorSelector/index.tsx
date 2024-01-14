@@ -16,7 +16,6 @@ function ApplicatorSelector(props: {
   onLeftApplicatorSelected: (state: boolean) => void;
   onRightApplicatorSelected: (state: boolean) => void;
   onCenterApplicatorSelected: (state: boolean) => void;
-  changeCallback: () => Promise<void>;
 }) {
   const [leftApplicatorActive, setLeftApplicatorActive] = useState<boolean>(
     props.leftApplicatorActive
@@ -35,7 +34,6 @@ function ApplicatorSelector(props: {
   });
   async function onLeftApplicatorPress() {
     if (props.leftApplicatorAvailable) {
-      await props.changeCallback();
       showToast({
         durationMs: 5000,
         title: "Somente dosador esquerdo selecionado",
@@ -51,8 +49,6 @@ function ApplicatorSelector(props: {
   }
 
   async function onRightApplicatorPress() {
-    await props.changeCallback();
-
     if (props.rightApplicatorAvailable) {
       showToast({
         durationMs: 5000,
@@ -69,8 +65,6 @@ function ApplicatorSelector(props: {
   }
 
   async function onCenterApplicatorPress() {
-    await props.changeCallback();
-
     if (props.centerApplicatorAvailable) {
       showToast({
         durationMs: 5000,

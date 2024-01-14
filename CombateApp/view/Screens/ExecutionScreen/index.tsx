@@ -45,7 +45,6 @@ function ExecutionScreen(props: { navigation: any }) {
     Instance.GetInstance().preExecutionConfigCache.getCache().leftApplicatorLoad
   );
 
-  const applicatorsAmount = useRef(0);
   const leftApplicatorActive = useRef(true);
   const leftApplicatorAvailable = useRef(false);
   const rightApplicatorActive = useRef(true);
@@ -124,15 +123,6 @@ function ExecutionScreen(props: { navigation: any }) {
     [appliedDoses]
   );
 
-  const updateApplicatorsAmount = useCallback(async () => {
-    applicatorsAmount.current =
-      Number(
-        centerApplicatorActive.current && centerApplicatorAvailable.current
-      ) +
-      Number(leftApplicatorActive.current && leftApplicatorAvailable.current) +
-      Number(rightApplicatorActive.current && rightApplicatorAvailable.current);
-  }, [centerApplicatorActive, leftApplicatorActive, rightApplicatorActive]);
-
   function getLoadPercentageStatusSeverity(loadPercentage: number): Severity {
     if (loadPercentage <= 33.33) {
       return SeverityEnum.ERROR;
@@ -154,7 +144,7 @@ function ExecutionScreen(props: { navigation: any }) {
     return { severity, percentage };
   }
 
-  async function updateApplicatorsStatus(responseDto: ResponseDto) {
+  function updateApplicatorsStatus(responseDto: ResponseDto) {
     if (responseDto.centerApplicator != centerApplicatorAvailable.current) {
       setCenterApplicatorAvailable(responseDto.centerApplicator);
     }
@@ -166,8 +156,6 @@ function ExecutionScreen(props: { navigation: any }) {
     if (responseDto.rightApplicator != rightApplicatorAvailable.current) {
       setRightApplicatorAvailable(responseDto.rightApplicator);
     }
-
-    await updateApplicatorsAmount();
   }
 
   useFocusEffect(() => {
@@ -202,6 +190,7 @@ function ExecutionScreen(props: { navigation: any }) {
         appliedKg = (requestDto.dose.amount * requestDto.doseWeightG) / 1000;
       }
 
+      // Subtracts dose amount
       if (responseDto.centerApplicator && centerApplicatorLoad.current > 0) {
         if (requestDto.dose && requestDto.dose.centerApplicator) {
           centerApplicatorLoad.current =
@@ -223,6 +212,7 @@ function ExecutionScreen(props: { navigation: any }) {
         }
       }
 
+      // Subtracts dose amount
       if (responseDto.leftApplicator && leftApplicatorLoad.current > 0) {
         if (requestDto.dose && requestDto.dose.leftApplicator) {
           leftApplicatorLoad.current = leftApplicatorLoad.current - appliedKg;
@@ -243,6 +233,7 @@ function ExecutionScreen(props: { navigation: any }) {
         }
       }
 
+      // Subtracts dose amount
       if (responseDto.rightApplicator && rightApplicatorLoad.current > 0) {
         if (requestDto.dose && requestDto.dose.rightApplicator) {
           rightApplicatorLoad.current = rightApplicatorLoad.current - appliedKg;
@@ -281,6 +272,7 @@ function ExecutionScreen(props: { navigation: any }) {
         ),
       });
 
+      // Resets applicator selection
       if (centerApplicatorAvailable.current) {
         setCenterApplicatorActive(true);
       }
@@ -289,7 +281,7 @@ function ExecutionScreen(props: { navigation: any }) {
         setRightApplicatorActive(true);
       }
 
-      if (leftApplicatorActive.current) {
+      if (leftApplicatorAvailable.current) {
         setLeftApplicatorActive(true);
       }
     },
@@ -338,7 +330,7 @@ function ExecutionScreen(props: { navigation: any }) {
           doseCallback
         );
         setVelocity(responseDto.gps.speed);
-        await updateApplicatorsStatus(responseDto);
+        updateApplicatorsStatus(responseDto);
 
         if (!applicatorsLoadPercentage) {
           if (leftApplicatorAvailable && !leftApplicatorActive) {
@@ -368,8 +360,6 @@ function ExecutionScreen(props: { navigation: any }) {
               rightApplicatorLoad.current
             ),
           });
-
-          await updateApplicatorsAmount();
         }
       } catch (err) {
         await Instance.GetInstance().errorHandler.handle(err);
@@ -466,7 +456,7 @@ function ExecutionScreen(props: { navigation: any }) {
         );
         setVelocity(responseDto.gps.speed);
 
-        await updateApplicatorsStatus(responseDto);
+        updateApplicatorsStatus(responseDto);
 
         if (leftApplicatorAvailable && !leftApplicatorActive) {
           setLeftApplicatorActive(true);
@@ -577,7 +567,6 @@ function ExecutionScreen(props: { navigation: any }) {
             onLeftApplicatorSelected={setLeftApplicatorActive}
             onCenterApplicatorSelected={setCenterApplicatorActive}
             onRightApplicatorSelected={setRightApplicatorActive}
-            changeCallback={updateApplicatorsAmount}
           />
         </Box>
 
