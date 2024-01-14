@@ -44,7 +44,7 @@ export class ResponseDtoParser {
           speed,
           dateUTC: date,
         };
-      } else gpsData = { status: "V" };
+      } else gpsData = { status: "V", speed: "?" };
 
       const leftApplicator = protocol[6] == "1";
       const centerApplicator = protocol[7] == "1";
