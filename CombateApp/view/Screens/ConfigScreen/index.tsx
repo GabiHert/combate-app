@@ -54,8 +54,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const doseWeightG = useRef<number>(
     Instance.GetInstance().configCache.getCache().APPLICATION.DOSE_WEIGHT_G
   );
-  function setDoseWeightG(value) {
-    doseWeightG.current = value;
+  function setDoseWeightG(value: string) {
+    doseWeightG.current = Number(value.split(" ")[0]);
   }
   const metersBetweenDose = useRef(
     Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE
@@ -67,9 +67,6 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const filePath = useRef(
     Instance.GetInstance().configCache.getCache().FILE_PATH
   );
-  function setFilePath(value) {
-    filePath.current = value;
-  }
   const preset1 = useRef<IPreset>({
     doseAmount:
       Instance.GetInstance().configCache.getCache().PRESETS.P1.DOSE_AMOUNT,
@@ -122,13 +119,13 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY
   );
   function setMaxVelocity(value) {
-    maxVelocity.current = value;
+    maxVelocity.current = Number(value);
   }
   const lineSpacing = useRef<number>(
     Instance.GetInstance().configCache.getCache().LINE_SPACING
   );
-  function setLineSpacing(value) {
-    lineSpacing.current = value;
+  function setLineSpacing(value: string) {
+    lineSpacing.current = Number(value.split(" ")[0]);
   }
 
   const [errors, setErrors] = useState<IConfigFormResult>({
@@ -280,6 +277,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
       }
       isRenaming[1](true);
       const requestDto = new RequestDto({
+        activity:
+          Instance.GetInstance().preExecutionConfigCache.getCache().activity,
         systematicMetersBetweenDose: metersBetweenDose.current,
         client:
           Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
@@ -774,18 +773,18 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           >
             Informações local
           </FormControl.Label>
-          <SlideInput
-            onChangeEnd={setLineSpacing}
-            step={1}
-            title={"Espaçamento de linhas"}
-            defaultValue={
-              Instance.GetInstance().configCache.getCache().LINE_SPACING
-            }
-            unit={"metros"}
+          <SelectInput
+            onItemSelected={setLineSpacing}
+            placeholder={Instance.GetInstance()
+              .configCache.getCache()
+              .LINE_SPACING.toString()}
+            title="Espaçamento de linhas"
+            defaultValue={Instance.GetInstance()
+              .configCache.getCache()
+              .LINE_SPACING.toString()}
             disabled={level2(level)}
-            maxValue={20}
-            minValue={1}
             errorMessage={errors.lineSpacing.errorMessage}
+            items={CONSTANTS.CONFIG_SCREEN.LINE_SPACING_ITEMS}
           />
           <Divider w="80%" />
 
@@ -845,20 +844,20 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           >
             Informações Dosagem
           </FormControl.Label>
-          <SlideInput
-            defaultValue={
-              Instance.GetInstance().configCache.getCache().APPLICATION
-                .DOSE_WEIGHT_G
-            }
-            maxValue={30}
-            minValue={5}
-            onChangeEnd={setDoseWeightG}
-            step={1}
-            title={"Peso dose"}
-            unit={"g"}
+          <SelectInput
+            onItemSelected={setDoseWeightG}
+            placeholder={Instance.GetInstance()
+              .configCache.getCache()
+              .APPLICATION.DOSE_WEIGHT_G.toString()}
+            title="Peso dose"
+            defaultValue={Instance.GetInstance()
+              .configCache.getCache()
+              .APPLICATION.DOSE_WEIGHT_G.toString()}
+            items={CONSTANTS.CONFIG_SCREEN.DOSE_WEIGHT}
             disabled={level2(level)}
             errorMessage={errors.doseWeightG.errorMessage}
           />
+
           <SelectInput
             onItemSelected={setPoison}
             items={poisonItems}

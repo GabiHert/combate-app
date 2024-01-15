@@ -6,8 +6,10 @@ import { PLogger } from "../port/logger-port";
 import { dateTimeFormatter } from "../utils/date-time-formatter";
 
 interface Fields {
+  Id: string;
   Cliente: string;
   Projeto: string;
+  Atividade: string;
   Talhao: string;
   Maquina: string;
   CB: string;
@@ -29,10 +31,13 @@ interface Fields {
   VelocidadeKmH: string;
 }
 export class CsvTableService implements PCsvTableService {
+  private _id: number = 0;
+
   constructor(
     private readonly _logger: PLogger,
     private readonly _fileSystem: PFileSystem
   ) {}
+
   async begin(path: string): Promise<void> {
     try {
       this._logger.info({
@@ -42,7 +47,9 @@ export class CsvTableService implements PCsvTableService {
       });
 
       const fields: Fields = {
+        Id: "",
         Cliente: "",
+        Atividade: "",
         Projeto: "",
         Talhao: "",
         Maquina: "",
@@ -105,26 +112,29 @@ export class CsvTableService implements PCsvTableService {
       const date = dateTimeFormatter.date(dateNow);
       const time = dateTimeFormatter.time(dateNow);
 
-      const applicatorsAmount = requestDto.dose?
-        (requestDto.dose.centerApplicator ? 1 : 0) +
-        (requestDto.dose.centerApplicator ? 1 : 0) +
-        (requestDto.dose.centerApplicator ? 1 : 0):0;
+      let applicatorsAmount = 0;
+      if (requestDto.dose) {
+        applicatorsAmount =
+          (requestDto.dose.centerApplicator ? 1 : 0) +
+          (requestDto.dose.centerApplicator ? 1 : 0) +
+          (requestDto.dose.centerApplicator ? 1 : 0);
+      }
 
       let doseAmount: number = 0;
-      if (requestDto.dose && requestDto.dose.amount > 0) {
-        doseAmount = requestDto.dose.amount * applicatorsAmount;
-      }
+
       if (responseDto.status != "N" && responseDto.status != "E") {
         let aux = Number(responseDto.status);
         if (aux == 0) {
           aux = 10;
         }
-        doseAmount += aux;
+        doseAmount == aux * applicatorsAmount;
       }
 
       const fields: Fields = {
+        Id: this._id.toString(),
         Cliente: requestDto.client,
         Projeto: requestDto.project,
+        Atividade: requestDto.activity,
         Talhao: requestDto.plot,
         Maquina: requestDto.tractorName,
         CB: requestDto.deviceName,
@@ -159,6 +169,7 @@ export class CsvTableService implements PCsvTableService {
 
       await this._fileSystem.write(data.join(","), path);
 
+      this._id++;
       this._logger.info({
         event: "CsvTableService.insert",
         details: "Process finished",

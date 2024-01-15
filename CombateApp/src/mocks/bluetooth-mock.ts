@@ -4,6 +4,7 @@ import { CheckSumBuilder } from "../internal/core/builder/check-sum-builder";
 import { PBluetooth } from "../internal/core/port/bluetooth-port";
 
 export class BluetoothMock implements PBluetooth {
+  private doses: string = "N";
   getBondedDevices(): Promise<Array<BluetoothDevice>> {
     return Promise.resolve([{} as BluetoothDevice]);
   }
@@ -17,7 +18,7 @@ export class BluetoothMock implements PBluetooth {
   }
 
   read(timeoutMs: number): Promise<string> {
-    let response = "N000111";
+    let response = this.doses + "000111";
     const builder = new CheckSumBuilder(new ALogger(false));
     const cs = builder.build(response);
     const gps =
@@ -31,6 +32,7 @@ export class BluetoothMock implements PBluetooth {
   }
 
   write(data: string): Promise<void> {
+    this.doses = data[4];
     return Promise.resolve(undefined);
   }
 }

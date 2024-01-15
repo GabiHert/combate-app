@@ -13,6 +13,7 @@ export interface IRequestDtoArgs {
   maxVelocity: number;
   weather: string;
   streetsAmount: number;
+  activity: string;
   alert?: string;
   linesSpacing: number;
   newId?: number;

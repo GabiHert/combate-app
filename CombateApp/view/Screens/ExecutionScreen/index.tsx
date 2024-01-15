@@ -169,6 +169,8 @@ function ExecutionScreen(props: { navigation: any }) {
   const doseCallback = useCallback(
     async (requestDto: RequestDto, responseDto: ResponseDto) => {
       let systematicDoses = 0;
+      let appliedKg = 0;
+
       if (responseDto.status != "N") {
         let aux = Number(responseDto.status);
         if (aux == 0) {
@@ -182,12 +184,9 @@ function ExecutionScreen(props: { navigation: any }) {
           leftApplicator: responseDto.leftApplicator,
           rightApplicator: responseDto.rightApplicator,
         });
-      }
-
-      let appliedKg = 0;
-      if (requestDto.dose) {
-        addAppliedDosesCallback(requestDto.dose);
-        appliedKg = (requestDto.dose.amount * requestDto.doseWeightG) / 1000;
+        if (requestDto.dose) {
+          appliedKg = (requestDto.dose.amount * requestDto.doseWeightG) / 1000;
+        }
       }
 
       // Subtracts dose amount
@@ -293,6 +292,8 @@ function ExecutionScreen(props: { navigation: any }) {
       try {
         setRequestOnProgress(true);
         const requestDto = new RequestDto({
+          activity:
+            Instance.GetInstance().preExecutionConfigCache.getCache().activity,
           client:
             Instance.GetInstance().preExecutionConfigCache.getCache()
               .clientName,
@@ -407,6 +408,8 @@ function ExecutionScreen(props: { navigation: any }) {
 
       try {
         const requestDto = new RequestDto({
+          activity:
+            Instance.GetInstance().preExecutionConfigCache.getCache().activity,
           client:
             Instance.GetInstance().preExecutionConfigCache.getCache()
               .clientName,
