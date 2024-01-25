@@ -779,9 +779,11 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           </FormControl.Label>
           <SelectInput
             onItemSelected={setLineSpacing}
-            placeholder={Instance.GetInstance()
-              .configCache.getCache()
-              .LINE_SPACING.toString()}
+            placeholder={
+              Instance.GetInstance()
+                .configCache.getCache()
+                .LINE_SPACING.toString() + " metros"
+            }
             title="Espaçamento de linhas"
             defaultValue={Instance.GetInstance()
               .configCache.getCache()
@@ -850,9 +852,11 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           </FormControl.Label>
           <SelectInput
             onItemSelected={setDoseWeightG}
-            placeholder={Instance.GetInstance()
-              .configCache.getCache()
-              .APPLICATION.DOSE_WEIGHT_G.toString()}
+            placeholder={
+              Instance.GetInstance()
+                .configCache.getCache()
+                .APPLICATION.DOSE_WEIGHT_G.toString() + " gramas"
+            }
             title="Peso dose"
             defaultValue={Instance.GetInstance()
               .configCache.getCache()
@@ -896,9 +900,11 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
 
           <SelectInput
             onItemSelected={onPreset1DoseChange}
-            placeholder={Instance.GetInstance()
-              .configCache.getCache()
-              .PRESETS.P1.DOSE_AMOUNT.toString()}
+            placeholder={
+              Instance.GetInstance()
+                .configCache.getCache()
+                .PRESETS.P1.DOSE_AMOUNT.toString() + " doses"
+            }
             title="Doses"
             defaultValue={Instance.GetInstance()
               .configCache.getCache()
@@ -931,9 +937,11 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           />
           <SelectInput
             onItemSelected={onPreset2DoseChange}
-            placeholder={Instance.GetInstance()
-              .configCache.getCache()
-              .PRESETS.P2.DOSE_AMOUNT.toString()}
+            placeholder={
+              Instance.GetInstance()
+                .configCache.getCache()
+                .PRESETS.P2.DOSE_AMOUNT.toString() + " doses"
+            }
             title="Doses"
             defaultValue={Instance.GetInstance()
               .configCache.getCache()
@@ -966,9 +974,11 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
 
           <SelectInput
             onItemSelected={onPreset3DoseChange}
-            placeholder={Instance.GetInstance()
-              .configCache.getCache()
-              .PRESETS.P3.DOSE_AMOUNT.toString()}
+            placeholder={
+              Instance.GetInstance()
+                .configCache.getCache()
+                .PRESETS.P3.DOSE_AMOUNT.toString() + " doses"
+            }
             title="Doses"
             defaultValue={Instance.GetInstance()
               .configCache.getCache()
@@ -1001,9 +1011,11 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           />
           <SelectInput
             onItemSelected={onPreset4DoseChange}
-            placeholder={Instance.GetInstance()
-              .configCache.getCache()
-              .PRESETS.P4.DOSE_AMOUNT.toString()}
+            placeholder={
+              Instance.GetInstance()
+                .configCache.getCache()
+                .PRESETS.P4.DOSE_AMOUNT.toString() + " doses"
+            }
             title="Doses"
             defaultValue={Instance.GetInstance()
               .configCache.getCache()
@@ -1037,9 +1049,11 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
 
           <SelectInput
             onItemSelected={onPreset4DoseChange}
-            placeholder={Instance.GetInstance()
-              .configCache.getCache()
-              .PRESETS.P5.DOSE_AMOUNT.toString()}
+            placeholder={
+              Instance.GetInstance()
+                .configCache.getCache()
+                .PRESETS.P5.DOSE_AMOUNT.toString() + " doses"
+            }
             title="Doses"
             defaultValue={Instance.GetInstance()
               .configCache.getCache()
@@ -1072,9 +1086,11 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           />
           <SelectInput
             onItemSelected={onPreset6DoseChange}
-            placeholder={Instance.GetInstance()
-              .configCache.getCache()
-              .PRESETS.P6.DOSE_AMOUNT.toString()}
+            placeholder={
+              Instance.GetInstance()
+                .configCache.getCache()
+                .PRESETS.P6.DOSE_AMOUNT.toString() + " doses"
+            }
             title="Doses"
             defaultValue={Instance.GetInstance()
               .configCache.getCache()
