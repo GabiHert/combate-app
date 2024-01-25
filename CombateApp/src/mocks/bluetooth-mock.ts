@@ -22,7 +22,7 @@ export class BluetoothMock implements PBluetooth {
     const builder = new CheckSumBuilder(new ALogger(false));
     const cs = builder.build(response);
     const gps =
-      ",210230,A,3855.4487,N,09446.0071,W,0.0,076.2,130495,003.8,E*69";
+      ",203522.00,A,5109.0262308,N,11401.8407342,W,2.504,133.4,130522,0.0,E,D*2B";
     response = "&5" + response + cs + gps + "\r\n";
     return Promise.resolve(response);
   }

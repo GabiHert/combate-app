@@ -26,7 +26,6 @@ import { Theme } from "../../app/theme/theme";
 import { ShowToast } from "../../Components/AlertToast";
 import FormInput from "../../Components/FormInput";
 import SelectInput from "../../Components/SelectInput";
-import SlideInput from "../../Components/SlideInput";
 import ItemListInput from "./components/ItemListInput";
 import ItemRegisterModal from "./components/ItemRegisterModal";
 
@@ -118,8 +117,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const maxVelocity = useRef<number>(
     Instance.GetInstance().configCache.getCache().APPLICATION.MAX_VELOCITY
   );
-  function setMaxVelocity(value) {
-    maxVelocity.current = Number(value);
+  function setMaxVelocity(value: string) {
+    maxVelocity.current = Number(value.split(" ")[0]);
   }
   const lineSpacing = useRef<number>(
     Instance.GetInstance().configCache.getCache().LINE_SPACING
@@ -374,7 +373,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   );
 
   const onPreset1DoseChange = useCallback(
-    (doses: number) => {
+    (dosesStr: string) => {
+      const doses = Number(dosesStr.split(" ")[0]);
       const aux = preset1.current;
       aux.doseAmount = doses;
       setPreset1(aux);
@@ -382,7 +382,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     [preset1]
   );
   const onPreset2DoseChange = useCallback(
-    (doses: number) => {
+    (dosesStr: string) => {
+      const doses = Number(dosesStr.split(" ")[0]);
       const aux = preset2.current;
       aux.doseAmount = doses;
       setPreset2(aux);
@@ -390,7 +391,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     [preset2]
   );
   const onPreset3DoseChange = useCallback(
-    (doses: number) => {
+    (dosesStr: string) => {
+      const doses = Number(dosesStr.split(" ")[0]);
       const aux = preset3.current;
       aux.doseAmount = doses;
       setPreset3(aux);
@@ -398,7 +400,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     [preset3]
   );
   const onPreset4DoseChange = useCallback(
-    (doses: number) => {
+    (dosesStr: string) => {
+      const doses = Number(dosesStr.split(" ")[0]);
       const aux = preset4.current;
       aux.doseAmount = doses;
       setPreset4(aux);
@@ -414,7 +417,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     [preset5]
   );
   const onPreset6DoseChange = useCallback(
-    (doses: number) => {
+    (dosesStr: string) => {
+      const doses = Number(dosesStr.split(" ")[0]);
       const aux = preset6.current;
       aux.doseAmount = doses;
       setPreset6(aux);
@@ -889,18 +893,19 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             }
             errorMessage={errors.preset1Name.errorMessage}
           />
-          <SlideInput
-            onChangeEnd={onPreset1DoseChange}
-            step={1}
-            title={"Doses"}
-            defaultValue={
-              Instance.GetInstance().configCache.getCache().PRESETS.P1
-                .DOSE_AMOUNT
-            }
+
+          <SelectInput
+            onItemSelected={onPreset1DoseChange}
+            placeholder={Instance.GetInstance()
+              .configCache.getCache()
+              .PRESETS.P1.DOSE_AMOUNT.toString()}
+            title="Doses"
+            defaultValue={Instance.GetInstance()
+              .configCache.getCache()
+              .PRESETS.P1.DOSE_AMOUNT.toString()}
             disabled={level2(level)}
-            maxValue={CONSTANTS.MAX_DOSES}
-            minValue={CONSTANTS.MIN_DOSES}
             errorMessage={errors.preset1Dose.errorMessage}
+            items={CONSTANTS.CONFIG_SCREEN.DOSE_AMOUNT_ITEMS}
           />
 
           <Divider w="80%" />
@@ -924,18 +929,18 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             }
             errorMessage={errors.preset2Name.errorMessage}
           />
-          <SlideInput
-            onChangeEnd={onPreset2DoseChange}
-            step={1}
-            title={"Doses"}
-            defaultValue={
-              Instance.GetInstance().configCache.getCache().PRESETS.P2
-                .DOSE_AMOUNT
-            }
+          <SelectInput
+            onItemSelected={onPreset2DoseChange}
+            placeholder={Instance.GetInstance()
+              .configCache.getCache()
+              .PRESETS.P2.DOSE_AMOUNT.toString()}
+            title="Doses"
+            defaultValue={Instance.GetInstance()
+              .configCache.getCache()
+              .PRESETS.P2.DOSE_AMOUNT.toString()}
             disabled={level2(level)}
-            maxValue={CONSTANTS.MAX_DOSES}
-            minValue={CONSTANTS.MIN_DOSES}
             errorMessage={errors.preset2Dose.errorMessage}
+            items={CONSTANTS.CONFIG_SCREEN.DOSE_AMOUNT_ITEMS}
           />
           <Divider w="80%" />
           <FormControl.Label
@@ -958,18 +963,19 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             }
             errorMessage={errors.preset3Name.errorMessage}
           />
-          <SlideInput
-            onChangeEnd={onPreset3DoseChange}
-            step={1}
-            title={"Doses"}
-            defaultValue={
-              Instance.GetInstance().configCache.getCache().PRESETS.P3
-                .DOSE_AMOUNT
-            }
+
+          <SelectInput
+            onItemSelected={onPreset3DoseChange}
+            placeholder={Instance.GetInstance()
+              .configCache.getCache()
+              .PRESETS.P3.DOSE_AMOUNT.toString()}
+            title="Doses"
+            defaultValue={Instance.GetInstance()
+              .configCache.getCache()
+              .PRESETS.P3.DOSE_AMOUNT.toString()}
             disabled={level2(level)}
-            maxValue={CONSTANTS.MAX_DOSES}
-            minValue={CONSTANTS.MIN_DOSES}
             errorMessage={errors.preset3Dose.errorMessage}
+            items={CONSTANTS.CONFIG_SCREEN.DOSE_AMOUNT_ITEMS}
           />
 
           <Divider w="80%" />
@@ -993,18 +999,18 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             }
             errorMessage={errors.preset4Name.errorMessage}
           />
-          <SlideInput
-            onChangeEnd={onPreset4DoseChange}
-            step={1}
-            title={"Doses"}
-            defaultValue={
-              Instance.GetInstance().configCache.getCache().PRESETS.P4
-                .DOSE_AMOUNT
-            }
+          <SelectInput
+            onItemSelected={onPreset4DoseChange}
+            placeholder={Instance.GetInstance()
+              .configCache.getCache()
+              .PRESETS.P4.DOSE_AMOUNT.toString()}
+            title="Doses"
+            defaultValue={Instance.GetInstance()
+              .configCache.getCache()
+              .PRESETS.P4.DOSE_AMOUNT.toString()}
             disabled={level2(level)}
-            maxValue={CONSTANTS.MAX_DOSES}
-            minValue={CONSTANTS.MIN_DOSES}
             errorMessage={errors.preset4Dose.errorMessage}
+            items={CONSTANTS.CONFIG_SCREEN.DOSE_AMOUNT_ITEMS}
           />
 
           <Divider w="80%" />
@@ -1029,18 +1035,18 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             errorMessage={errors.preset5Name.errorMessage}
           />
 
-          <SlideInput
-            onChangeEnd={onPreset5DoseChange}
-            step={1}
-            title={"Doses"}
-            defaultValue={
-              Instance.GetInstance().configCache.getCache().PRESETS.P5
-                .DOSE_AMOUNT
-            }
+          <SelectInput
+            onItemSelected={onPreset4DoseChange}
+            placeholder={Instance.GetInstance()
+              .configCache.getCache()
+              .PRESETS.P5.DOSE_AMOUNT.toString()}
+            title="Doses"
+            defaultValue={Instance.GetInstance()
+              .configCache.getCache()
+              .PRESETS.P5.DOSE_AMOUNT.toString()}
             disabled={level2(level)}
-            maxValue={CONSTANTS.MAX_DOSES}
-            minValue={CONSTANTS.MIN_DOSES}
             errorMessage={errors.preset5Dose.errorMessage}
+            items={CONSTANTS.CONFIG_SCREEN.DOSE_AMOUNT_ITEMS}
           />
 
           <Divider w="80%" />
@@ -1064,20 +1070,19 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             }
             errorMessage={errors.preset6Name.errorMessage}
           />
-          <SlideInput
-            onChangeEnd={onPreset6DoseChange}
-            step={1}
-            title={"Doses"}
-            defaultValue={
-              Instance.GetInstance().configCache.getCache().PRESETS.P6
-                .DOSE_AMOUNT
-            }
+          <SelectInput
+            onItemSelected={onPreset6DoseChange}
+            placeholder={Instance.GetInstance()
+              .configCache.getCache()
+              .PRESETS.P6.DOSE_AMOUNT.toString()}
+            title="Doses"
+            defaultValue={Instance.GetInstance()
+              .configCache.getCache()
+              .PRESETS.P6.DOSE_AMOUNT.toString()}
             disabled={level2(level)}
-            maxValue={CONSTANTS.MAX_DOSES}
-            minValue={CONSTANTS.MIN_DOSES}
             errorMessage={errors.preset6Dose.errorMessage}
+            items={CONSTANTS.CONFIG_SCREEN.DOSE_AMOUNT_ITEMS}
           />
-
           <Divider w="80%" />
           <FormControl.Label
             mt={5}
@@ -1088,21 +1093,23 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           >
             Dose Sistemática
           </FormControl.Label>
-          <SlideInput
-            onChangeEnd={(value) => {
-              metersBetweenDose.current = value;
+
+          <SelectInput
+            onItemSelected={(value: string) => {
+              metersBetweenDose.current = Number(value.split(" ")[0]);
             }}
-            step={1}
-            title={"Metros entre cada dose"}
-            unit={"metros"}
-            defaultValue={
-              Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE
-                .METERS_BETWEEN_DOSE
+            placeholder={
+              Instance.GetInstance()
+                .configCache.getCache()
+                .SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE.toString() + " metros"
             }
+            title={"Metros entre cada dose"}
+            defaultValue={Instance.GetInstance()
+              .configCache.getCache()
+              .SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE.toString()}
             disabled={level2(level)}
-            maxValue={10}
-            minValue={2}
             errorMessage={errors.metersBetweenDose.errorMessage}
+            items={CONSTANTS.CONFIG_SCREEN.METERS_BETWEEN_DOSE_ITEMS}
           />
           <Divider w="80%" />
 
@@ -1116,19 +1123,20 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             Velocidade
           </FormControl.Label>
 
-          <SlideInput
-            onChangeEnd={setMaxVelocity}
-            step={1}
-            title={"Velocidade máxima permitida"}
-            unit={"Km/h"}
-            defaultValue={
-              Instance.GetInstance().configCache.getCache().APPLICATION
-                .MAX_VELOCITY
+          <SelectInput
+            onItemSelected={setMaxVelocity}
+            placeholder={
+              Instance.GetInstance()
+                .configCache.getCache()
+                .APPLICATION.MAX_VELOCITY.toString() + " Km/h"
             }
+            title={"Velocidade máxima permitida"}
+            defaultValue={Instance.GetInstance()
+              .configCache.getCache()
+              .APPLICATION.MAX_VELOCITY.toString()}
             disabled={level2(level)}
-            maxValue={20}
-            minValue={1}
             errorMessage={errors.maxVelocity.errorMessage}
+            items={CONSTANTS.CONFIG_SCREEN.MAX_VELOCITY_ITEMS}
           />
 
           <Divider w="80%" />
