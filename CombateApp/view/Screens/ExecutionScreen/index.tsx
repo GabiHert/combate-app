@@ -395,7 +395,16 @@ function ExecutionScreen(props: { navigation: any }) {
     return () => clearInterval(interval);
   }, []);
 
-  const onFinishButtonPress = useCallback(() => {
+  const onFinishButtonPress = useCallback((event: string) => {
+    appliedDosesRef.current = 0;
+    setAppliedDoses(0);
+    let cache = Instance.GetInstance().preExecutionConfigCache.getCache();
+    cache.centerApplicatorLoad = Number(
+      centerApplicatorLoad.current.toFixed(2)
+    );
+    cache.leftApplicatorLoad = Number(leftApplicatorLoad.current.toFixed(2));
+    cache.rightApplicatorLoad = Number(rightApplicatorLoad.current.toFixed(2));
+    Instance.GetInstance().preExecutionConfigCache.update(cache);
     props.navigation.navigate("HomeScreen");
   }, []);
 
@@ -614,9 +623,7 @@ function ExecutionScreen(props: { navigation: any }) {
             sheetHeight={sheetHeight}
             spaceBetweenBlocksHeight={spaceBetweenBlocksHeight}
             onEventRegister={onEventRegister}
-            onFinishPressed={() => {
-              onFinishButtonPress();
-            }}
+            onFinishPressed={onFinishButtonPress}
             appliedDoses={appliedDoses}
           />
         </BottomSheet>

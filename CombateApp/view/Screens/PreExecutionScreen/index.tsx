@@ -25,7 +25,6 @@ import { Theme } from "../../app/theme/theme";
 import { ShowToast } from "../../Components/AlertToast";
 import FormInput from "../../Components/FormInput";
 import SelectInput from "../../Components/SelectInput";
-import SlideInput from "../../Components/SlideInput";
 
 function PreExecutionScreen(props: { navigation: any }) {
   const [activity, setActivity] = useState<string>(
@@ -328,56 +327,63 @@ function PreExecutionScreen(props: { navigation: any }) {
             onChangeText={setTractorName}
           />
 
-          <SlideInput
-            onChangeEnd={setRightApplicatorLoad}
-            step={0.5}
-            title="Carga reservatório direito"
-            unit="Kg"
-            defaultValue={
-              Instance.GetInstance().preExecutionConfigCache.getCache()
-                .rightApplicatorLoad
+          <SelectInput
+            onItemSelected={(value: string) => {
+              setRightApplicatorLoad(Number(value.split(" ")[0]));
+            }}
+            placeholder={
+              Instance.GetInstance()
+                .preExecutionConfigCache.getCache()
+                .rightApplicatorLoad.toString() + " Kg"
             }
-            disabled={false}
-            maxValue={
+            title="Carga reservatório direito"
+            defaultValue={Instance.GetInstance()
+              .preExecutionConfigCache.getCache()
+              .rightApplicatorLoad.toString()}
+            errorMessage={validationResult.rightApplicatorLoad.errorMessage}
+            items={CONSTANTS.PRE_EXECUTION_SCREEN.APPLICATOR_LOAD_ITEMS(
               Instance.GetInstance().configCache.getCache().APPLICATION
                 .RIGHT_TANK_MAX_LOAD
-            }
-            minValue={1}
-            errorMessage={validationResult.rightApplicatorLoad.errorMessage}
+            )}
           />
-          <SlideInput
-            onChangeEnd={setCenterApplicatorLoad}
-            step={0.5}
-            title="Carga reservatório central"
-            unit="Kg"
-            defaultValue={
-              Instance.GetInstance().preExecutionConfigCache.getCache()
-                .centerApplicatorLoad
+          <SelectInput
+            onItemSelected={(value: string) => {
+              setCenterApplicatorLoad(Number(value.split(" ")[0]));
+            }}
+            placeholder={
+              Instance.GetInstance()
+                .preExecutionConfigCache.getCache()
+                .centerApplicatorLoad.toString() + " Kg"
             }
-            disabled={false}
-            maxValue={
+            title="Carga reservatório central"
+            defaultValue={Instance.GetInstance()
+              .preExecutionConfigCache.getCache()
+              .centerApplicatorLoad.toString()}
+            errorMessage={validationResult.centerApplicatorLoad.errorMessage}
+            items={CONSTANTS.PRE_EXECUTION_SCREEN.APPLICATOR_LOAD_ITEMS(
               Instance.GetInstance().configCache.getCache().APPLICATION
                 .CENTER_TANK_MAX_LOAD
-            }
-            minValue={1}
-            errorMessage={validationResult.centerApplicatorLoad.errorMessage}
+            )}
           />
-          <SlideInput
-            onChangeEnd={setLeftApplicatorLoad}
-            step={0.5}
-            title="Carga reservatório esquerdo"
-            unit="Kg"
-            defaultValue={
-              Instance.GetInstance().preExecutionConfigCache.getCache()
-                .leftApplicatorLoad
+
+          <SelectInput
+            onItemSelected={(value: string) => {
+              setCenterApplicatorLoad(Number(value.split(" ")[0]));
+            }}
+            placeholder={
+              Instance.GetInstance()
+                .preExecutionConfigCache.getCache()
+                .leftApplicatorLoad.toString() + " Kg"
             }
-            disabled={false}
-            maxValue={
+            title="Carga reservatório esquerdo"
+            defaultValue={Instance.GetInstance()
+              .preExecutionConfigCache.getCache()
+              .leftApplicatorLoad.toString()}
+            errorMessage={validationResult.leftApplicatorLoad.errorMessage}
+            items={CONSTANTS.PRE_EXECUTION_SCREEN.APPLICATOR_LOAD_ITEMS(
               Instance.GetInstance().configCache.getCache().APPLICATION
                 .LEFT_TANK_MAX_LOAD
-            }
-            minValue={1}
-            errorMessage={validationResult.leftApplicatorLoad.errorMessage}
+            )}
           />
           <Divider w="80%" />
           <FormControl.Label

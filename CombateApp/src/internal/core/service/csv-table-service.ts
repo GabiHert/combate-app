@@ -46,6 +46,7 @@ export class CsvTableService implements PCsvTableService {
         path,
       });
 
+      this._id = 0;
       const fields: Fields = {
         Id: "",
         Cliente: "",
@@ -177,31 +178,6 @@ export class CsvTableService implements PCsvTableService {
     } catch (err) {
       this._logger.error({
         event: "CsvTableService.insert",
-        details: "Process error",
-        error: err.message,
-      });
-
-      throw err;
-    }
-  }
-
-  async create(path: string): Promise<void> {
-    try {
-      this._logger.info({
-        event: "CsvTableService.create",
-        details: "Process started",
-        path,
-      });
-
-      await this._fileSystem.create(path);
-
-      this._logger.info({
-        event: "CsvTableService.create",
-        details: "Process finished",
-      });
-    } catch (err) {
-      this._logger.error({
-        event: "CsvTableService.create",
         details: "Process error",
         error: err.message,
       });

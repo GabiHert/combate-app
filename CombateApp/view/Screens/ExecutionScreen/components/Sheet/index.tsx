@@ -37,7 +37,7 @@ function formatDate(date: Date): string {
   }`;
 }
 function Sheet(props: {
-  onFinishPressed: () => void;
+  onFinishPressed: (event: string) => void;
   onEventRegister: (requestDto: RequestDto, callback: () => void) => void;
   appliedDoses: number;
   sheetHeight: number;
@@ -92,9 +92,9 @@ function Sheet(props: {
     setFinishExecutionModalVisible(true);
   }, []);
 
-  const onModalFinishPressed = useCallback(() => {
+  const onModalFinishPressed = useCallback((event: string) => {
     onFinishExecutionModalClose();
-    props.onFinishPressed();
+    props.onFinishPressed(event);
   }, []);
   return (
     <VStack height={props.sheetHeight - 30} alignItems="center" space={4}>

@@ -13,7 +13,7 @@ import UnderForestModal from "../UnderForestModal";
 function FinishExecutionModal(props: {
   isOpen: boolean;
   onClose: () => void;
-  onFinishExecutionPress: () => void;
+  onFinishExecutionPress: (event: string) => void;
   onEventRegister: (requestDto: RequestDto, callback: () => void) => void;
 }) {
   const [event, setEvent] = useState<string>();
@@ -31,6 +31,8 @@ function FinishExecutionModal(props: {
 
     props.onEventRegister(
       {
+        activity:
+          Instance.GetInstance().preExecutionConfigCache.getCache().activity,
         client:
           Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
         deviceName:
@@ -69,10 +71,10 @@ function FinishExecutionModal(props: {
 
       setUnderForestModalVisible(false);
       onOkPress(() => {
-        props.onFinishExecutionPress();
+        props.onFinishExecutionPress(event);
       });
     },
-    [setUnderForestModalVisible]
+    [setUnderForestModalVisible, event]
   );
 
   const onFinishPressed = useCallback(() => {
@@ -83,7 +85,7 @@ function FinishExecutionModal(props: {
         setUnderForestModalVisible(true);
       } else {
         onOkPress(() => {
-          props.onFinishExecutionPress();
+          props.onFinishExecutionPress(event);
         });
       }
     } else {

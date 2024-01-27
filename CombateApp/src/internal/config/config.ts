@@ -4,8 +4,20 @@ import {
   IConfigsProps,
   IPreExecutionConfigProps,
 } from "../interface/config-props";
+import { IItem } from "../interface/item";
 
 export const CONSTANTS = {
+  PRE_EXECUTION_SCREEN: {
+    APPLICATOR_LOAD_ITEMS(maxValue: number): Array<IItem> {
+      const items = [];
+      for (let i = 1; i <= maxValue; i++) {
+        items.push({ id: i.toString(), name: i.toString() + " Kg" });
+        if (i < maxValue)
+          items.push({ id: i.toString() + ".5", name: i.toString() + ".5 Kg" });
+      }
+      return items;
+    },
+  },
   CONFIG_SCREEN: {
     LINE_SPACING_ITEMS: [
       { id: "1", name: "1 metro" },

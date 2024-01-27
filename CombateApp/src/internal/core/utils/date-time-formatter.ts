@@ -17,9 +17,9 @@ export class DateTimeFormatter {
 
   time(date: Date): string {
     const hours =
-      date.getDate() > 9
-        ? date.getDate().toString()
-        : "0" + date.getDate().toString();
+      date.getHours() > 9
+        ? date.getHours().toString()
+        : "0" + date.getHours().toString();
     const minutes =
       date.getMinutes() > 9
         ? date.getMinutes().toString()
