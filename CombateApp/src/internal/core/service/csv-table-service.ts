@@ -117,8 +117,8 @@ export class CsvTableService implements PCsvTableService {
       if (requestDto.dose) {
         applicatorsAmount =
           (requestDto.dose.centerApplicator ? 1 : 0) +
-          (requestDto.dose.centerApplicator ? 1 : 0) +
-          (requestDto.dose.centerApplicator ? 1 : 0);
+          (requestDto.dose.leftApplicator ? 1 : 0) +
+          (requestDto.dose.rightApplicator ? 1 : 0);
       }
 
       let doseAmount: number = 0;
