@@ -130,7 +130,8 @@ function FinishExecutionModal(props: {
             w={"100%"}
             h={20}
             title="Descreva o motivo do fim da execução"
-            placeholder=""
+            placeholder={event}
+            defaultValue={event}
             items={mapStringToItemArray(
               Instance.GetInstance().configCache.getCache().STOP_REASONS_EVENTS
             )}

@@ -31,6 +31,8 @@ function EventRegisterModal(props: {
     setRegisterEventInProgress(true);
     props.onEventRegister(
       {
+        activity:
+          Instance.GetInstance().preExecutionConfigCache.getCache().activity,
         client:
           Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
         deviceName:
@@ -94,7 +96,8 @@ function EventRegisterModal(props: {
             w={"100%"}
             h={20}
             title="Selecione tipo de evento que foi encontrado"
-            placeholder=""
+            placeholder={event}
+            defaultValue={event}
             items={mapStringToItemArray(
               Instance.GetInstance().configCache.getCache().EVENTS
             )}
