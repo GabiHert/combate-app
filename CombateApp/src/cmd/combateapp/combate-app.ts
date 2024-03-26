@@ -8,7 +8,6 @@ import { RequestFactory } from "../../internal/core/factory/request-factory";
 import { PCbService } from "../../internal/core/port/cb-service-port";
 import { PCsvTableService } from "../../internal/core/port/csv-table-service-port";
 import { PLogger } from "../../internal/core/port/logger-port";
-import { ProtocolRules } from "../../internal/core/rules/protocol-rules";
 import { PCombateApp } from "../port/combate-app-port";
 
 export class CombateApp implements PCombateApp {
@@ -21,8 +20,7 @@ export class CombateApp implements PCombateApp {
     private readonly _logger: PLogger,
     private readonly _cbService: PCbService,
     private readonly _csvTableService: PCsvTableService,
-    private readonly _requestFactory: RequestFactory,
-    private readonly _protocolRules: ProtocolRules
+    private readonly _requestFactory: RequestFactory
   ) {
     this._velocityExceededRecord = [];
   }

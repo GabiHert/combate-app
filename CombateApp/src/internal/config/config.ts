@@ -1,3 +1,4 @@
+import { EventEnum } from "../core/enum/event";
 import { poisonItems } from "../core/enum/poison";
 import { WeatherEnum } from "../core/enum/weather";
 import {
@@ -167,6 +168,7 @@ export const CONSTANTS = {
     "Tamanho 5": 0,
     "Tamanho 6": 0,
   },
+  EVENTS_TO_EXCLUDE: [EventEnum.TrackPoint.name],
   STREET_AMOUNT_ITEMS: [
     { id: "0", name: "1" },
     { id: "1", name: "2" },
@@ -313,12 +315,12 @@ export const DEFAULT_CONFIG: IConfigsProps = {
 };
 
 export const DEFAULT_PRE_EXECUTION_CONFIG: IPreExecutionConfigProps = {
-  activity: "Teste",
-  farm: "teste",
-  clientName: "teste",
-  plot: "teste",
-  projectName: "teste",
-  tractorName: "teste",
+  activity: "",
+  farm: "",
+  clientName: "",
+  plot: "",
+  projectName: "",
+  tractorName: "",
   weather: WeatherEnum.SECO.name,
   centerApplicatorLoad: 23,
   leftApplicatorLoad: 23,

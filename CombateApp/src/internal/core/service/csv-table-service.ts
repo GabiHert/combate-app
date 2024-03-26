@@ -16,11 +16,11 @@ interface Fields {
   Maquina: string;
   CB: string;
   Dosadores: string;
-  DosesTotais: string;
-  TipoIsca: string;
-  PesoG: string;
-  Dose_Kg: string;
-  VelocidadeMaxima: string;
+  "Doses totais": string;
+  "Tipo de isca": string;
+  "Peso por dose (g)": string;
+  "Total aplicado (Kg)": string;
+  "Velocidade maxima": string;
   Clima: string;
   Ruas: string;
   Linhas: string;
@@ -34,7 +34,7 @@ interface Fields {
   SUP_TS: string;
   Latitude: string;
   Longitude: string;
-  VelocidadeKmH: string;
+  "Velocidade (Km/h)": string;
 }
 export class CsvTableService implements PCsvTableService {
   private _id: number = 0;
@@ -67,17 +67,17 @@ export class CsvTableService implements PCsvTableService {
       const fields: Fields = {
         Id: "",
         Cliente: "",
-        Atividade: "",
         Projeto: "",
+        Atividade: "",
         Talhao: "",
         Maquina: "",
         CB: "",
         Dosadores: "",
-        DosesTotais: "",
-        TipoIsca: "",
-        PesoG: "",
-        Dose_Kg: "",
-        VelocidadeMaxima: "",
+        "Doses totais": "",
+        "Tipo de isca": "",
+        "Peso por dose (g)": "",
+        "Total aplicado (Kg)": "",
+        "Velocidade maxima": "",
         Clima: "",
         Ruas: "",
         Linhas: "",
@@ -91,7 +91,7 @@ export class CsvTableService implements PCsvTableService {
         SUP_TS: "",
         Latitude: "",
         Longitude: "",
-        VelocidadeKmH: "",
+        "Velocidade (Km/h)": "",
       };
 
       let data = [];
@@ -162,12 +162,15 @@ export class CsvTableService implements PCsvTableService {
       }
 
       let T_A: string;
-      let Evento: string;
+      let Evento: string = "";
       if (CONSTANTS.PRESET_NAMES.includes(requestDto.event)) {
         T_A = EventEnum.Local.name;
-        Evento = requestDto.event;
       } else {
         T_A = EventEnum.TrackPoint.name;
+      }
+
+      if (!CONSTANTS.EVENTS_TO_EXCLUDE.includes(requestDto.event)) {
+        Evento = requestDto.event;
       }
 
       const fields = this.buildFields(
@@ -234,11 +237,14 @@ export class CsvTableService implements PCsvTableService {
       Maquina: requestDto.tractorName,
       CB: requestDto.deviceName,
       Dosadores: applicatorsAmount.toString(),
-      DosesTotais: doseAmount.toString(),
-      TipoIsca: requestDto.poisonType,
-      PesoG: requestDto.doseWeightG.toString(),
-      Dose_Kg: ((requestDto.doseWeightG * doseAmount) / 1000).toFixed(2),
-      VelocidadeMaxima: requestDto.maxVelocity.toString(),
+      "Doses totais": doseAmount.toString(),
+      "Tipo de isca": requestDto.poisonType,
+      "Peso por dose (g)": requestDto.doseWeightG.toString(),
+      "Total aplicado (Kg)": (
+        (requestDto.doseWeightG * doseAmount) /
+        1000
+      ).toFixed(2),
+      "Velocidade maxima": requestDto.maxVelocity.toString(),
       Clima: requestDto.weather,
       Ruas: requestDto.streetsAmount.toString(),
       Linhas: requestDto.linesSpacing.toString(),
@@ -256,7 +262,7 @@ export class CsvTableService implements PCsvTableService {
       Longitude: responseDto.gps.longitude
         ? responseDto.gps.longitude.toString()
         : "",
-      VelocidadeKmH: responseDto.gps.speed,
+      "Velocidade (Km/h)": responseDto.gps.speed,
     };
   }
 }
