@@ -1,8 +1,10 @@
+import { BluetoothApp } from "../../../src/cmd/bluetoothapp/bluetooth-app";
 import { CombateApp } from "../../../src/cmd/combateapp/combate-app";
 import { Validator } from "../../../src/cmd/formvalidator/form-validator";
 import { PBluetoothApp } from "../../../src/cmd/port/bluetooth-app-port";
 import { PCombateApp } from "../../../src/cmd/port/combate-app-port";
 import { PValidator } from "../../../src/cmd/port/validator-port";
+import { ABluetooth } from "../../../src/internal/adapter/bluetooth/bluetooth";
 import { AConfigCache } from "../../../src/internal/adapter/cache/config-cache";
 import { APreExecutionConfigCache } from "../../../src/internal/adapter/cache/pre-execution-config-cache";
 import { AFileSystem } from "../../../src/internal/adapter/filesystem/file-system";
@@ -26,8 +28,6 @@ import {
   IConfigsProps,
   IPreExecutionConfigProps,
 } from "../../../src/internal/interface/config-props";
-import { BluetoothAppMock } from "../../../src/mocks/bluetooth-app-mock";
-import { BluetoothMock } from "../../../src/mocks/bluetooth-mock";
 
 export class Instance {
   readonly logger: PLogger;
@@ -54,9 +54,9 @@ export class Instance {
   }
 
   private constructor() {
-    this.logger = new ALogger(true);
+    this.logger = new ALogger(false);
 
-    const bluetooth = new BluetoothMock(); //new ABluetooth(this.logger);
+    const bluetooth = new ABluetooth(this.logger);
     const fileSystem = new AFileSystem(this.logger);
     const csvTableService = new CsvTableService(this.logger, fileSystem);
     const checkSumBuilder = new CheckSumBuilder(this.logger);
@@ -81,7 +81,7 @@ export class Instance {
       repository,
       DEFAULT_CONFIG
     );
-    this.bluetoothApp = new BluetoothAppMock(); //new BluetoothApp(this.logger, bluetooth);
+    this.bluetoothApp = new BluetoothApp(this.logger, bluetooth);
     this.validator = new Validator(this.logger, this.configCache);
     this.preExecutionConfigCache = new APreExecutionConfigCache(
       this.logger,
