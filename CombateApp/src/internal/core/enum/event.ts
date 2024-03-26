@@ -1,9 +1,10 @@
 enum Event_ {
-  Systematic = 'Systematic',
-  TrackPoint = 'TrackPoint',
-  StartTrackPoint = 'StartTrackPoint',
-  EndTrackPoint = 'EndTrackPoint',
-  Obstacle = 'Obstacle',
+  Local = "Local",
+  TrackPoint = "Track",
+  StartTrackPoint = "StartTrack",
+  EndTrackPoint = "EndTrack",
+  Obstacle = "Obstacle",
+  Systematic = "Systematic",
 }
 
 class EventEnum_ {
@@ -11,8 +12,8 @@ class EventEnum_ {
     name: Event_.TrackPoint,
   };
 
-  readonly Systematic: Event = {
-    name: Event_.Systematic,
+  readonly Local: Event = {
+    name: Event_.Local,
   };
 
   readonly StartTrackPoint: Event = {
@@ -23,6 +24,9 @@ class EventEnum_ {
   };
   readonly Obstacle: Event = {
     name: Event_.Obstacle,
+  };
+  readonly Systematic: Event = {
+    name: Event_.Systematic,
   };
 }
 
@@ -38,10 +42,13 @@ export class Event {
       case EventEnum.Obstacle.name:
         this.name = status;
         break;
+      case EventEnum.Systematic.name:
+        this.name = status;
+        break;
       case EventEnum.StartTrackPoint.name:
         this.name = status;
         break;
-      case EventEnum.Systematic.name:
+      case EventEnum.Local.name:
         this.name = status;
         break;
       case EventEnum.TrackPoint.name:

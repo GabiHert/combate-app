@@ -512,7 +512,7 @@ function ExecutionScreen(props: { navigation: any }) {
       }
       promises.current.push({
         process: process,
-        type: EventEnum.Systematic.name,
+        type: EventEnum.Local.name,
       });
     },
     []

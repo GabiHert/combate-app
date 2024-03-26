@@ -129,7 +129,7 @@ export const CONSTANTS = {
     },
   ],
   APPLICATION: {
-    VERSION: "2.1.1",
+    VERSION: "2.1.2",
     BLUETOOTH_WRITE_RETRIES: 5,
     BLUETOOTH_READ_TIMEOUT_MS: 15000,
     DOSE_TIMEOUT_MS: 7000,
@@ -141,6 +141,8 @@ export const CONSTANTS = {
     { id: "2", name: "Pós-Plantio" },
     { id: "3", name: "Pré Corte" },
   ],
+
+  // Keep all names equal
   PRESET_NAME_ITEMS: [
     { id: "0", name: "Tamanho 1" },
     { id: "1", name: "Tamanho 2" },
@@ -149,6 +151,22 @@ export const CONSTANTS = {
     { id: "4", name: "Tamanho 5" },
     { id: "5", name: "Tamanho 6" },
   ],
+  PRESET_NAMES: [
+    "Tamanho 1",
+    "Tamanho 2",
+    "Tamanho 3",
+    "Tamanho 4",
+    "Tamanho 5",
+    "Tamanho 6",
+  ],
+  SUP_TS_PARSE_TABLE: {
+    "Tamanho 1": 0,
+    "Tamanho 2": 0,
+    "Tamanho 3": 0,
+    "Tamanho 4": 0,
+    "Tamanho 5": 0,
+    "Tamanho 6": 0,
+  },
   STREET_AMOUNT_ITEMS: [
     { id: "0", name: "1" },
     { id: "1", name: "2" },
