@@ -225,7 +225,7 @@ export class CsvTableService implements PCsvTableService {
     let SUP_TS = "0";
 
     if (Evento.length > 0) {
-      SUP_TS = CONSTANTS.SUP_TS_PARSE_TABLE[Evento];
+      SUP_TS = CONSTANTS.SUP_TS_PARSE_TABLE[Evento] || "0";
     }
 
     return {
