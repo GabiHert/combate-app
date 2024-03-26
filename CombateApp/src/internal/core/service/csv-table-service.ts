@@ -222,10 +222,10 @@ export class CsvTableService implements PCsvTableService {
   ): Fields {
     const date = new Date();
     const [Hora, TZ] = date.toTimeString().split(" ");
-    let SUP_TS = "0";
+    let SUP_TS = "";
 
     if (Evento.length > 0) {
-      SUP_TS = CONSTANTS.SUP_TS_PARSE_TABLE[Evento] || "0";
+      SUP_TS = CONSTANTS.SUP_TS_PARSE_TABLE[Evento];
     }
 
     return {
