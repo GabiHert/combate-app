@@ -1,29 +1,22 @@
-import { useFocusEffect } from "@react-navigation/native";
-import {
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  ScrollView,
-  VStack,
-} from "native-base";
-import { useCallback, useRef, useState } from "react";
-import { v1 } from "uuid";
-import { Validator } from "../../../src/cmd/formvalidator/form-validator";
-import { CONSTANTS } from "../../../src/internal/config/config";
-import { RequestDto } from "../../../src/internal/core/dto/request-dto";
-import { EventEnum } from "../../../src/internal/core/enum/event";
-import { poisonItems } from "../../../src/internal/core/enum/poison";
-import { SeverityEnum } from "../../../src/internal/core/enum/severity";
-import { IConfigFormResult } from "../../../src/internal/interface/config-form-result";
-import { IConfigsProps } from "../../../src/internal/interface/config-props";
-import { IItem } from "../../../src/internal/interface/item";
-import { appConfig } from "../../app/config/app-config";
-import { Instance } from "../../app/instance/instance";
-import { itemArrayToMapString } from "../../app/parser/item-array-to-map-string";
-import { mapStringToItemArray } from "../../app/parser/map-string-to-item-array";
-import { Theme } from "../../app/theme/theme";
-import { ShowToast } from "../../Components/AlertToast";
+import {useFocusEffect} from "@react-navigation/native";
+import {Box, Button, Divider, FormControl, ScrollView, VStack,} from "native-base";
+import {useCallback, useRef, useState} from "react";
+import {v1} from "uuid";
+import {Validator} from "../../../src/cmd/formvalidator/form-validator";
+import {CONSTANTS} from "../../../src/internal/config/config";
+import {RequestDto} from "../../../src/internal/core/dto/request-dto";
+import {EventEnum} from "../../../src/internal/core/enum/event";
+import {poisonItems} from "../../../src/internal/core/enum/poison";
+import {SeverityEnum} from "../../../src/internal/core/enum/severity";
+import {IConfigFormResult} from "../../../src/internal/interface/config-form-result";
+import {IConfigsProps} from "../../../src/internal/interface/config-props";
+import {IItem} from "../../../src/internal/interface/item";
+import {appConfig} from "../../app/config/app-config";
+import {Instance} from "../../app/instance/instance";
+import {itemArrayToMapString} from "../../app/parser/item-array-to-map-string";
+import {mapStringToItemArray} from "../../app/parser/map-string-to-item-array";
+import {Theme} from "../../app/theme/theme";
+import {ShowToast} from "../../Components/AlertToast";
 import FormInput from "../../Components/FormInput";
 import SelectInput from "../../Components/SelectInput";
 import ItemListInput from "./components/ItemListInput";
@@ -409,7 +402,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     [preset4]
   );
   const onPreset5DoseChange = useCallback(
-    (doses: number) => {
+    (dosesStr: string) => {
+      const doses = Number(dosesStr.split(" ")[0]);
       const aux = preset5.current;
       aux.doseAmount = doses;
       setPreset5(aux);
@@ -1048,7 +1042,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           />
 
           <SelectInput
-            onItemSelected={onPreset4DoseChange}
+            onItemSelected={onPreset5DoseChange}
             placeholder={
               Instance.GetInstance()
                 .configCache.getCache()

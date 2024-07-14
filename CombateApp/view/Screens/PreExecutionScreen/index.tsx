@@ -1,28 +1,20 @@
-import {
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  IconButton,
-  ScrollView,
-  VStack,
-} from "native-base";
-import React, { useCallback, useState } from "react";
+import {Box, Button, Divider, FormControl, IconButton, ScrollView, VStack,} from "native-base";
+import React, {useCallback, useState} from "react";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
-import { Weather, weatherItems } from "../../../src/internal/core/enum/weather";
-import { IPreExecutionConfigProps } from "../../../src/internal/interface/config-props";
-import { IPreExecutionFormResult } from "../../../src/internal/interface/pre-execution-form-result";
-import { appConfig } from "../../app/config/app-config";
-import { mapStringToItemArray } from "../../app/parser/map-string-to-item-array";
+import {Weather, weatherItems} from "../../../src/internal/core/enum/weather";
+import {IPreExecutionConfigProps} from "../../../src/internal/interface/config-props";
+import {IPreExecutionFormResult} from "../../../src/internal/interface/pre-execution-form-result";
+import {appConfig} from "../../app/config/app-config";
+import {mapStringToItemArray} from "../../app/parser/map-string-to-item-array";
 
-import { useFocusEffect } from "@react-navigation/native";
-import { CONSTANTS } from "../../../src/internal/config/config";
-import { SeverityEnum } from "../../../src/internal/core/enum/severity";
-import { dateTimeFormatter } from "../../../src/internal/core/utils/date-time-formatter";
-import { IItem } from "../../../src/internal/interface/item";
-import { Instance } from "../../app/instance/instance";
-import { Theme } from "../../app/theme/theme";
-import { ShowToast } from "../../Components/AlertToast";
+import {useFocusEffect} from "@react-navigation/native";
+import {CONSTANTS} from "../../../src/internal/config/config";
+import {SeverityEnum} from "../../../src/internal/core/enum/severity";
+import {dateTimeFormatter} from "../../../src/internal/core/utils/date-time-formatter";
+import {IItem} from "../../../src/internal/interface/item";
+import {Instance} from "../../app/instance/instance";
+import {Theme} from "../../app/theme/theme";
+import {ShowToast} from "../../Components/AlertToast";
 import FormInput from "../../Components/FormInput";
 import SelectInput from "../../Components/SelectInput";
 
@@ -368,7 +360,7 @@ function PreExecutionScreen(props: { navigation: any }) {
 
           <SelectInput
             onItemSelected={(value: string) => {
-              setCenterApplicatorLoad(Number(value.split(" ")[0]));
+              setLeftApplicatorLoad(Number(value.split(" ")[0]));
             }}
             placeholder={
               Instance.GetInstance()

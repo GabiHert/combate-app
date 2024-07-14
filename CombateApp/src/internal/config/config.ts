@@ -1,11 +1,8 @@
-import { EventEnum } from "../core/enum/event";
-import { poisonItems } from "../core/enum/poison";
-import { WeatherEnum } from "../core/enum/weather";
-import {
-  IConfigsProps,
-  IPreExecutionConfigProps,
-} from "../interface/config-props";
-import { IItem } from "../interface/item";
+import {EventEnum} from "../core/enum/event";
+import {poisonItems} from "../core/enum/poison";
+import {WeatherEnum} from "../core/enum/weather";
+import {IConfigsProps, IPreExecutionConfigProps,} from "../interface/config-props";
+import {IItem} from "../interface/item";
 
 export const CONSTANTS = {
   PRE_EXECUTION_SCREEN: {
@@ -130,7 +127,7 @@ export const CONSTANTS = {
     },
   ],
   APPLICATION: {
-    VERSION: "2.1.5",
+    VERSION: "2.1.6",
     BLUETOOTH_WRITE_RETRIES: 5,
     BLUETOOTH_READ_TIMEOUT_MS: 60000,
     DOSE_TIMEOUT_MS: 7000,
