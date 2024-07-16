@@ -66,3 +66,6 @@ buck-out/
 /ios/Pods/
 /vendor/bundle/
 
+
+# Ignore Gradle build output directory
+build
