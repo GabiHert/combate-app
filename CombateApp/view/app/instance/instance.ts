@@ -58,7 +58,7 @@ export class Instance {
   private constructor() {
     this.logger = new ALogger(false);
 
-    const bluetooth = new BluetoothMock() //new ABluetooth(this.logger);
+    const bluetooth =  new ABluetooth(this.logger);//new BluetoothMock()
     const fileSystem = new AFileSystem(this.logger);
     const csvTableService = new CsvTableService(this.logger, fileSystem);
     const checkSumBuilder = new CheckSumBuilder(this.logger);
@@ -83,7 +83,7 @@ export class Instance {
       repository,
       DEFAULT_CONFIG
     );
-    this.bluetoothApp =  new BluetoothAppMock() //new BluetoothApp(this.logger, bluetooth);
+    this.bluetoothApp =  new BluetoothApp(this.logger, bluetooth);//new BluetoothAppMock()
     this.validator = new Validator(this.logger, this.configCache);
     this.preExecutionConfigCache = new APreExecutionConfigCache(
       this.logger,
