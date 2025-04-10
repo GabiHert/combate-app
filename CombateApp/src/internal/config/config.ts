@@ -193,6 +193,12 @@ export const CONSTANTS = {
     FARM_FORM: {
       INVALID_FARM: "ERROR",
     },
+    MODULES_FORM: {
+      INVALID_MODULES: "ERROR",
+    },
+    PROJECTS_FORM: {
+      INVALID_PROJECTS: "ERROR",
+    },
     EVENT_FORM: {
       INVALID_EVENT: "ERROR",
     },
@@ -239,6 +245,7 @@ export const CONSTANTS = {
       INVALID_PROJECT_NAME: "Nome do projeto deve ser informado.",
       INVALID_FARM: "Fazenda deve ser informada.",
       INVALID_PLOT: "Talhão deve ser informado.",
+      INVALID_MODULES: "Talhão deve ser informado.",
       INVALID_TRACTOR_NAME: "Nome do trator deve ser informado.",
       INVALID_WEATHER: "Clima deve ser informado.",
       INVALID_LEFT_APPLICATOR_LOAD: "ERRO",
@@ -260,8 +267,10 @@ export const CONSTANTS = {
       INVALID_STOP_REASONS_EVENTS: "ERRO",
       INVALID_PLOTS: "ERRO",
       INVALID_FILE_PATH: "ERRO",
+      INVALID_MATRICULA: "ERRO",
       INVALID_POISON_TYPE: "ERRO",
       INVALID_FARMS: "ERRO",
+      INVALID_MODULES: "ERRO",
       INVALID_MAX_VELOCITY: "ERRO",
       INVALID_METERS_BETWEEN_DOSE: "ERRO",
     },
@@ -309,7 +318,11 @@ export const DEFAULT_CONFIG: IConfigsProps = {
   },
   FARMS: {},
   PLOTS: {},
+  MODULES: {},
+  PROJECTS: {},
   FILE_PATH: "CombateApp/Resultados",
+  MATRICULA: 0,
+  ID_EQUIPMENT: "",
   POISON_TYPE: poisonItems[0].name,
   LINE_SPACING: 1,
 };
@@ -317,10 +330,14 @@ export const DEFAULT_CONFIG: IConfigsProps = {
 export const DEFAULT_PRE_EXECUTION_CONFIG: IPreExecutionConfigProps = {
   activity: "",
   farm: "",
+  module: "",
+  newId: "",
   clientName: "",
   plot: "",
   projectName: "",
   tractorName: "",
+  matricula: 0,
+  idEquipment: "",
   weather: WeatherEnum.SECO.name,
   centerApplicatorLoad: 23,
   leftApplicatorLoad: 23,

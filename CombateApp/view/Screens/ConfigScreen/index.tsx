@@ -60,6 +60,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE
       .METERS_BETWEEN_DOSE
   );
+
   function setMetersBetweenDose(value) {
     metersBetweenDose.current = value;
   }
@@ -120,6 +121,21 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   function setMaxVelocity(value: string) {
     maxVelocity.current = Number(value.split(" ")[0]);
   }
+
+  const matricula = useRef(
+    Instance.GetInstance().configCache.getCache().MATRICULA
+  );
+  function setMatricula(value: string) {
+    matricula.current = Number(value);
+  }
+
+  const idEquipment = useRef(
+    Instance.GetInstance().configCache.getCache().ID_EQUIPMENT
+  );
+  function setIdEquipment(value: string) {
+    idEquipment.current = value;
+  }
+
   const lineSpacing = useRef<number>(
     Instance.GetInstance().configCache.getCache().LINE_SPACING
   );
@@ -145,12 +161,16 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     farms: { errorMessage: undefined },
     filePath: { errorMessage: undefined },
     plots: { errorMessage: undefined },
+    modules: { errorMessage: undefined },
+    projects: { errorMessage: undefined },
     poisonType: { errorMessage: undefined },
     preset5Dose: { errorMessage: undefined },
     preset5Name: { errorMessage: undefined },
     preset6Dose: { errorMessage: undefined },
     preset6Name: { errorMessage: undefined },
     lineSpacing: { errorMessage: undefined },
+    matricula: { errorMessage: undefined },
+    idEquipment: { errorMessage: undefined },
     metersBetweenDose: { errorMessage: undefined },
     stopReasonEvent: { errorMessage: undefined },
     rightTankMaxLoad: { errorMessage: undefined },
@@ -175,6 +195,22 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     mapStringToItemArray(Instance.GetInstance().configCache.getCache().PLOTS)
   );
 
+  const [modules, setModules] = useState<Array<{ id: string; name: string }>>(
+    mapStringToItemArray(
+      Instance.GetInstance().configCache.getCache().MODULES
+        ? Instance.GetInstance().configCache.getCache().MODULES
+        : {}
+    )
+  );
+
+  const [projects, setProjects] = useState<Array<{ id: string; name: string }>>(
+    mapStringToItemArray(
+      Instance.GetInstance().configCache.getCache().PROJECTS
+        ? Instance.GetInstance().configCache.getCache().PROJECTS
+        : {}
+    )
+  );
+
   const poison = useRef(
     Instance.GetInstance().configCache.getCache().POISON_TYPE
   );
@@ -193,6 +229,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const [addReasonModalVisible, setAddReasonModalVisible] = useState(false);
   const [addEventModalVisible, setAddEventModalVisible] = useState(false);
   const [addFarmModalVisible, setAddFarmModalVisible] = useState(false);
+  const [addModulesModalVisible, setAddModulesModalVisible] = useState(false);
+  const [addProjectsModalVisible, setAddProjectsModalVisible] = useState(false);
   const [addPlotModalVisible, setAddPlotModalVisible] = useState(false);
 
   function onRightTankMaxLoadChange(text: string) {
@@ -216,6 +254,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const [devices, setDevices] = useState<Array<IItem>>([]);
   const deviceConnected = useRef(false);
   const newIdError = useState("");
+  const matriculaError = useState("");
   const searchDevicesCallback = useCallback(async () => {
     try {
       await Instance.GetInstance().bluetoothApp.init();
@@ -294,7 +333,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           Instance.GetInstance().configCache.getCache().LINE_SPACING,
         plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
         poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
-        project:
+        projectName:
           Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
         streetsAmount:
           Instance.GetInstance().preExecutionConfigCache.getCache()
@@ -303,13 +342,18 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
         weather:
           Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+        module:
+          Instance.GetInstance().preExecutionConfigCache.getCache().module,
+        farm: Instance.GetInstance().preExecutionConfigCache.getCache().farm,
       });
 
       const id = Number(newId.current);
       requestDto.newId = Math.trunc(id);
+
       const responseDto = await Instance.GetInstance().combateApp.request(
         requestDto
       );
+
       ShowToast({
         durationMs: 5000,
         severity: SeverityEnum.OK,
@@ -331,6 +375,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     },
     [preset1]
   );
+
   const onPreset2NameChange = useCallback(
     (text: string) => {
       const aux = preset2.current;
@@ -339,6 +384,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     },
     [preset2]
   );
+
   const onPreset3NameChange = useCallback(
     (text: string) => {
       const aux = preset3.current;
@@ -347,6 +393,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     },
     [preset3]
   );
+
   const onPreset4NameChange = useCallback(
     (text: string) => {
       const aux = preset4.current;
@@ -355,6 +402,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     },
     [preset4]
   );
+
   const onPreset5NameChange = useCallback(
     (text: string) => {
       const aux = preset5.current;
@@ -363,6 +411,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     },
     [preset5]
   );
+
   const onPreset6NameChange = useCallback(
     (text: string) => {
       const aux = preset6.current;
@@ -381,6 +430,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     },
     [preset1]
   );
+
   const onPreset2DoseChange = useCallback(
     (dosesStr: string) => {
       const doses = Number(dosesStr.split(" ")[0]);
@@ -390,6 +440,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     },
     [preset2]
   );
+
   const onPreset3DoseChange = useCallback(
     (dosesStr: string) => {
       const doses = Number(dosesStr.split(" ")[0]);
@@ -399,6 +450,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     },
     [preset3]
   );
+
   const onPreset4DoseChange = useCallback(
     (dosesStr: string) => {
       const doses = Number(dosesStr.split(" ")[0]);
@@ -408,6 +460,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     },
     [preset4]
   );
+
   const onPreset5DoseChange = useCallback(
     (doses: number) => {
       const aux = preset5.current;
@@ -459,6 +512,22 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     setAddFarmModalVisible(true);
   }, []);
 
+  const onAddModulesModalClose = useCallback(() => {
+    setAddModulesModalVisible(false);
+  }, []);
+
+  const onAddProjectsModalClose = useCallback(() => {
+    setAddProjectsModalVisible(false);
+  }, []);
+
+  const onAddModulesPress = useCallback(() => {
+    setAddModulesModalVisible(true);
+  }, []);
+
+  const onAddProjectsPress = useCallback(() => {
+    setAddProjectsModalVisible(true);
+  }, []);
+
   const onAddFarmModalClose = useCallback(() => {
     setAddFarmModalVisible(false);
   }, []);
@@ -466,6 +535,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const onAddFarmRequested = useCallback(
     (name: string) => {
       let cache = Instance.GetInstance().configCache.getCache();
+      console.log("Cache: ", cache);
       const id = v1();
       cache.FARMS[id] = name;
       Instance.GetInstance().configCache.update(cache);
@@ -484,6 +554,58 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     [setFarms, farms]
   );
 
+  const onAddModulesRequested = useCallback(
+    (name: string) => {
+      let cache = Instance.GetInstance().configCache.getCache();
+      const id = v1();
+
+      if (!cache.MODULES) {
+        cache.MODULES = {};
+      }
+
+      cache.MODULES[id] = name;
+      Instance.GetInstance().configCache.update(cache);
+      setModules(mapStringToItemArray(cache.MODULES));
+    },
+    [setModules, modules]
+  );
+
+  const onDeleteModulesRequested = useCallback(
+    async (id: string) => {
+      let cache = Instance.GetInstance().configCache.getCache();
+      delete cache.MODULES[id];
+      Instance.GetInstance().configCache.update(cache);
+      setFarms(mapStringToItemArray(cache.MODULES));
+    },
+    [setModules, modules]
+  );
+
+  const onAddProjectsRequested = useCallback(
+    (name: string) => {
+      let cache = Instance.GetInstance().configCache.getCache();
+      const id = v1();
+
+      if (!cache.PROJECTS) {
+        cache.PROJECTS = {};
+      }
+
+      cache.PROJECTS[id] = name;
+      Instance.GetInstance().configCache.update(cache);
+      setProjects(mapStringToItemArray(cache.PROJECTS));
+    },
+    [setProjects, projects]
+  );
+
+  const onDeleteProjectsRequested = useCallback(
+    async (id: string) => {
+      let cache = Instance.GetInstance().configCache.getCache();
+      delete cache.PROJECTS[id];
+      Instance.GetInstance().configCache.update(cache);
+      setFarms(mapStringToItemArray(cache.PROJECTS));
+    },
+    [setProjects, projects]
+  );
+
   const onAddPlotPress = useCallback(() => {
     setAddPlotModalVisible(true);
   }, []);
@@ -496,6 +618,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     (name: string) => {
       let cache = Instance.GetInstance().configCache.getCache();
       const id = v1();
+      console.log("Cache: ", cache);
       cache.PLOTS[id] = name;
       Instance.GetInstance().configCache.update(cache);
       setPlots(mapStringToItemArray(cache.PLOTS));
@@ -545,6 +668,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
         EVENTS: itemArrayToMapString(events),
         FARMS: itemArrayToMapString(farms),
         PLOTS: itemArrayToMapString(plots),
+        MODULES: itemArrayToMapString(modules),
+        PROJECTS: itemArrayToMapString(projects),
         STOP_REASONS_EVENTS: itemArrayToMapString(stopReasons),
         APPLICATION: {
           MAX_VELOCITY: maxVelocity.current,
@@ -580,6 +705,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           },
         },
         FILE_PATH: filePath.current,
+        MATRICULA: matricula.current,
+        ID_EQUIPMENT: idEquipment.current,
         POISON_TYPE: poison.current,
         LINE_SPACING: lineSpacing.current,
         SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: metersBetweenDose.current },
@@ -620,6 +747,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           cache.LINE_SPACING = lineSpacing.current;
           cache.SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE = metersBetweenDose.current;
           cache.FILE_PATH = filePath.current;
+          cache.MATRICULA = matricula.current;
+          cache.ID_EQUIPMENT = idEquipment.current;
 
           await Instance.GetInstance().configCache.update(cache);
 
@@ -657,6 +786,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     plots,
     errors,
     maxVelocity,
+    matricula,
+    idEquipment,
   ]);
 
   return (
@@ -761,6 +892,62 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
         }}
       />
 
+      <ItemRegisterModal
+        title="Adicionar módulos"
+        formTitle="Nome do módulo"
+        formDescription="Digite nome do módulo a ser adicionado"
+        onAddPressed={onAddModulesRequested}
+        isOpen={addModulesModalVisible}
+        onClose={onAddModulesModalClose}
+        validator={(value) => {
+          if (!Validator.BasicStringValidation(value)) {
+            return CONSTANTS.ERRORS.MODULES_FORM.INVALID_MODULES;
+          }
+          let error = undefined;
+          Object.keys(
+            Instance.GetInstance().configCache.getCache().MODULES
+              ? Instance.GetInstance().configCache.getCache().MODULES
+              : {}
+          ).forEach((key) => {
+            if (
+              value ==
+              Instance.GetInstance().configCache.getCache().MODULES[key]
+            ) {
+              error = CONSTANTS.ERRORS.MODULES_FORM.INVALID_MODULES;
+            }
+          });
+          return error;
+        }}
+      />
+
+      <ItemRegisterModal
+        title="Adicionar projetos"
+        formTitle="Nome do projeto"
+        formDescription="Digite nome do projeto a ser adicionado"
+        onAddPressed={onAddProjectsRequested}
+        isOpen={addProjectsModalVisible}
+        onClose={onAddProjectsModalClose}
+        validator={(value) => {
+          if (!Validator.BasicStringValidation(value)) {
+            return CONSTANTS.ERRORS.PROJECTS_FORM.INVALID_PROJECTS;
+          }
+          let error = undefined;
+          Object.keys(
+            Instance.GetInstance().configCache.getCache().PROJECTS
+              ? Instance.GetInstance().configCache.getCache().PROJECTS
+              : {}
+          ).forEach((key) => {
+            if (
+              value ==
+              Instance.GetInstance().configCache.getCache().PROJECTS[key]
+            ) {
+              error = CONSTANTS.ERRORS.PROJECTS_FORM.INVALID_PROJECTS;
+            }
+          });
+          return error;
+        }}
+      />
+
       <ScrollView w="100%">
         <VStack
           space={4}
@@ -768,6 +955,44 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           alignItems={"center"}
           overflow={"hidden"}
         >
+          <FormControl.Label
+            mt={5}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
+          >
+            Informações do Técnico
+          </FormControl.Label>
+          <FormInput
+            title="Matrícula do técnico"
+            description="Preencha com a nova matrícula do técnico. Somente números"
+            onChangeText={setMatricula}
+            keyboardType={"numeric"}
+            errorMessage={errors.matricula.errorMessage}
+            disabled={level1(level)}
+          />
+          <Divider w="80%" />
+
+          <FormControl.Label
+            mt={5}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
+          >
+            Identificação do equipamento
+          </FormControl.Label>
+          <FormInput
+            title="ID do equipamento"
+            description="Preencha o ID do equipamento."
+            onChangeText={setIdEquipment}
+            keyboardType={"default"}
+            errorMessage={errors.idEquipment.errorMessage}
+            disabled={level1(level)}
+          />
+          <Divider w="80%" />
+
           <FormControl.Label
             mt={5}
             _text={{
@@ -1157,6 +1382,34 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
 
           <Divider w="80%" />
 
+          <FormControl.Label
+            mt={5}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
+          >
+            Equipamento
+          </FormControl.Label>
+
+          <SelectInput
+            onItemSelected={setMaxVelocity}
+            placeholder={
+              Instance.GetInstance()
+                .configCache.getCache()
+                .APPLICATION.MAX_VELOCITY.toString() + " Km/h"
+            }
+            title={"Velocidade máxima permitida"}
+            defaultValue={Instance.GetInstance()
+              .configCache.getCache()
+              .APPLICATION.MAX_VELOCITY.toString()}
+            disabled={level2(level)}
+            errorMessage={errors.maxVelocity.errorMessage}
+            items={CONSTANTS.CONFIG_SCREEN.MAX_VELOCITY_ITEMS}
+          />
+
+          <Divider w="80%" />
+
           <ItemListInput
             id={1}
             items={stopReasons}
@@ -1208,6 +1461,37 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           />
 
           <Divider w="80%" />
+
+          <ItemListInput
+            id={5}
+            items={mapStringToItemArray(
+              Instance.GetInstance().configCache.getCache().MODULES
+                ? Instance.GetInstance().configCache.getCache().MODULES
+                : {}
+            )}
+            onAddItemPress={onAddModulesPress}
+            onDeleteItemRequested={onDeleteModulesRequested}
+            title={"Módulos"}
+            errorMessage={errors.modules.errorMessage}
+            disabled={level2(level)}
+          />
+
+          <ItemListInput
+            id={5}
+            items={mapStringToItemArray(
+              Instance.GetInstance().configCache.getCache().PROJECTS
+                ? Instance.GetInstance().configCache.getCache().PROJECTS
+                : {}
+            )}
+            onAddItemPress={onAddProjectsPress}
+            onDeleteItemRequested={onDeleteProjectsRequested}
+            title={"Projetos"}
+            errorMessage={errors.projects.errorMessage}
+            disabled={level2(level)}
+          />
+
+          <Divider w="80%" />
+
           <FormControl.Label
             mt={5}
             _text={{

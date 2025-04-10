@@ -11,6 +11,10 @@ interface Fields {
   Id: string;
   Cliente: string;
   Projeto: string;
+  Matricula: number;
+  IdEquipamento: string;
+  Fazenda: string;
+  Modulo: string;
   Atividade: string;
   Talhao: string;
   Maquina: string;
@@ -68,6 +72,10 @@ export class CsvTableService implements PCsvTableService {
         Id: "",
         Cliente: "",
         Projeto: "",
+        Matricula: 0,
+        IdEquipamento: "",
+        Fazenda: "",
+        Modulo: "",
         Atividade: "",
         Talhao: "",
         Maquina: "",
@@ -231,7 +239,11 @@ export class CsvTableService implements PCsvTableService {
     return {
       Id: this._id.toString(),
       Cliente: requestDto.client,
-      Projeto: requestDto.project,
+      Projeto: requestDto.projectName,
+      Matricula: requestDto.matricula,
+      IdEquipamento: requestDto.idEquipment,
+      Fazenda: requestDto.farm,
+      Modulo: requestDto.module,
       Atividade: requestDto.activity,
       Talhao: requestDto.plot,
       Maquina: requestDto.tractorName,

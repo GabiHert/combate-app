@@ -22,7 +22,11 @@ export interface IConfigFormResult {
   events: { errorMessage: string };
   farms: { errorMessage: string };
   plots: { errorMessage: string };
+  modules: { errorMessage: string };
+  projects: { errorMessage: string };
   poisonType: { errorMessage: string };
   lineSpacing: { errorMessage: string };
+  matricula: { errorMessage: string };
+  idEquipment: { errorMessage: string };
   filePath: { errorMessage: string };
 }

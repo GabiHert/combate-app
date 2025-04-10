@@ -310,8 +310,14 @@ function ExecutionScreen(props: { navigation: any }) {
           linesSpacing:
             Instance.GetInstance().configCache.getCache().LINE_SPACING,
           plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
+          farm: Instance.GetInstance().preExecutionConfigCache.getCache().farm,
+          module:
+            Instance.GetInstance().preExecutionConfigCache.getCache().module,
+          matricula: Instance.GetInstance().configCache.getCache().MATRICULA,
+          idEquipment:
+            Instance.GetInstance().configCache.getCache().ID_EQUIPMENT,
           poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
-          project:
+          projectName:
             Instance.GetInstance().preExecutionConfigCache.getCache()
               .projectName,
           streetsAmount:
@@ -435,8 +441,14 @@ function ExecutionScreen(props: { navigation: any }) {
           linesSpacing:
             Instance.GetInstance().configCache.getCache().LINE_SPACING,
           plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
+          farm: Instance.GetInstance().preExecutionConfigCache.getCache().farm,
+          module:
+            Instance.GetInstance().preExecutionConfigCache.getCache().module,
+          matricula: Instance.GetInstance().configCache.getCache().MATRICULA,
+          idEquipment:
+            Instance.GetInstance().configCache.getCache().ID_EQUIPMENT,
           poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
-          project:
+          projectName:
             Instance.GetInstance().preExecutionConfigCache.getCache()
               .projectName,
           streetsAmount:

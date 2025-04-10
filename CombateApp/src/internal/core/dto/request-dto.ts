@@ -5,7 +5,7 @@ export class RequestDto {
   event: string;
   dose?: IDoseRequest;
   client: string;
-  project: string;
+  projectName: string;
   activity: string;
   plot: string;
   tractorName: string;
@@ -18,15 +18,21 @@ export class RequestDto {
   linesSpacing: number;
   alert?: string;
   newId?: number;
+  farm?: string;
+  module?: string;
+  idEquipment?: string;
   systematicMetersBetweenDose?: number;
+  matricula?: number;
   constructor(args: IRequestDtoArgs) {
     this.activity = args.activity;
     this.alert = args.alert;
     this.event = args.event;
     this.dose = args.dose;
     this.client = args.client;
-    this.project = args.project;
+    this.projectName = args.projectName;
     this.plot = args.plot;
+    this.module = args.module;
+    this.farm = args.farm;
     this.tractorName = args.tractorName;
     this.poisonType = args.poisonType;
     this.doseWeightG = args.doseWeightG;
@@ -36,6 +42,8 @@ export class RequestDto {
     this.streetsAmount = args.streetsAmount;
     this.linesSpacing = args.linesSpacing;
     this.newId = args.newId;
+    this.idEquipment = args.idEquipment;
+    this.matricula = args.matricula;
     this.systematicMetersBetweenDose = args.systematicMetersBetweenDose;
   }
 }

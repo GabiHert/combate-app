@@ -48,8 +48,13 @@ function EventRegisterModal(props: {
           Instance.GetInstance().configCache.getCache().LINE_SPACING,
         plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
         poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
-        project:
+        projectName:
           Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
+        farm: Instance.GetInstance().preExecutionConfigCache.getCache().farm,
+        module:
+          Instance.GetInstance().preExecutionConfigCache.getCache().module,
+        matricula: Instance.GetInstance().configCache.getCache().MATRICULA,
+        idEquipment: Instance.GetInstance().configCache.getCache().ID_EQUIPMENT,
         streetsAmount:
           Instance.GetInstance().preExecutionConfigCache.getCache()
             .streetsAmount,

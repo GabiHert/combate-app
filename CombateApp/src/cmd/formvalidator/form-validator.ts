@@ -137,6 +137,7 @@ export class Validator implements PValidator {
       projectName: { errorMessage: undefined },
       farm: { errorMessage: undefined },
       plot: { errorMessage: undefined },
+      module: { errorMessage: undefined },
       tractorName: { errorMessage: undefined },
       weather: { errorMessage: undefined },
       leftApplicatorLoad: { errorMessage: undefined },
@@ -207,6 +208,18 @@ export class Validator implements PValidator {
         event: "FormValidator.validatePreExecutionForm",
         details: "Process warn - plot is invalid",
         plotNumber: data.plot,
+      });
+    }
+
+    if (!data.module || data.module.length === 0) {
+      // plot is invalid
+      result.valid = false;
+      result.module.errorMessage =
+        CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_MODULES;
+      this._logger.warn({
+        event: "FormValidator.validatePreExecutionForm",
+        details: "Process warn - module is invalid",
+        plotNumber: data.module,
       });
     }
 
@@ -337,6 +350,10 @@ export class Validator implements PValidator {
       farms: { errorMessage: undefined },
       filePath: { errorMessage: undefined },
       plots: { errorMessage: undefined },
+      modules: { errorMessage: undefined },
+      projects: { errorMessage: undefined },
+      matricula: { errorMessage: undefined },
+      idEquipment: { errorMessage: undefined },
       poisonType: { errorMessage: undefined },
       preset5Dose: { errorMessage: undefined },
       preset5Name: { errorMessage: undefined },
@@ -524,6 +541,28 @@ export class Validator implements PValidator {
           this._logger.warn({
             event: "FormValidator.validateConfigForm",
             details: "Process warn - Invalid PLOTS attribute",
+          });
+        }
+      }
+    }
+
+    if (!data.MODULES) {
+      result.valid = false;
+      result.modules.errorMessage =
+        CONSTANTS.ERRORS.CONFIG_FORM.INVALID_MODULES;
+      this._logger.warn({
+        event: "FormValidator.validateConfigForm",
+        details: "Process warn - Invalid MODULES",
+      });
+    } else {
+      for (const key in data.MODULES) {
+        if (!data.MODULES[key] || data.MODULES[key].length === 0) {
+          result.valid = false;
+          result.plots.errorMessage =
+            CONSTANTS.ERRORS.CONFIG_FORM.INVALID_MODULES;
+          this._logger.warn({
+            event: "FormValidator.validateConfigForm",
+            details: "Process warn - Invalid MODULES attribute",
           });
         }
       }

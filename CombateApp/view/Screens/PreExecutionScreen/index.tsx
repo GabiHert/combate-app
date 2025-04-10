@@ -54,6 +54,9 @@ function PreExecutionScreen(props: { navigation: any }) {
     Instance.GetInstance().preExecutionConfigCache.getCache().farm
   );
   const [plot, setPlot] = useState<string>("");
+  const [module, setModule] = useState<string>(
+    Instance.GetInstance().preExecutionConfigCache.getCache().module
+  );
   const [tractorName, setTractorName] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().tractorName
   );
@@ -81,6 +84,7 @@ function PreExecutionScreen(props: { navigation: any }) {
       weather: { errorMessage: undefined },
       tractorName: { errorMessage: undefined },
       farm: { errorMessage: undefined },
+      module: { errorMessage: undefined },
       rightApplicatorLoad: { errorMessage: undefined },
       leftApplicatorLoad: { errorMessage: undefined },
       activity: { errorMessage: undefined },
@@ -107,12 +111,17 @@ function PreExecutionScreen(props: { navigation: any }) {
   });
 
   const onNextPressed = useCallback(async () => {
+    props.navigation.navigate("ConfigScreen", {
+      level: 1,
+    });
+
     const data: IPreExecutionConfigProps = {
       activity,
       clientName,
       projectName,
       plot,
       farm,
+      module,
       weather: weather.name,
       tractorName,
       leftApplicatorLoad,
@@ -142,6 +151,8 @@ function PreExecutionScreen(props: { navigation: any }) {
           preExecutionConfigCache.activity +
           "_" +
           preExecutionConfigCache.plot +
+          "_" +
+          preExecutionConfigCache.module +
           "_" +
           preExecutionConfigCache.farm +
           "_" +
@@ -182,6 +193,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     deviceConnected,
     projectName,
     plot,
+    module,
     farm,
     weather,
     tractorName,
@@ -263,16 +275,19 @@ function PreExecutionScreen(props: { navigation: any }) {
             }
             onChangeText={setClientName}
           />
-          <FormInput
+
+          <SelectInput
             title="Projeto"
-            description="Preencha este campo com o nome do projeto"
-            errorMessage={validationResult.projectName.errorMessage}
-            placeholder="Projeto x"
+            onItemSelected={setProjectName}
+            items={mapStringToItemArray(
+              Instance.GetInstance().configCache.getCache().PROJECTS
+            )}
             defaultValue={
               Instance.GetInstance().preExecutionConfigCache.getCache()
                 .projectName
             }
-            onChangeText={setProjectName}
+            errorMessage={validationResult.projectName.errorMessage}
+            placeholder={"Escolha o projeto"}
           />
           <SelectInput
             title="Fazenda"
@@ -304,6 +319,18 @@ function PreExecutionScreen(props: { navigation: any }) {
               Instance.GetInstance().preExecutionConfigCache.getCache().activity
             }
             errorMessage={validationResult.activity.errorMessage}
+            placeholder={""}
+          />
+          <SelectInput
+            title="Módulos"
+            onItemSelected={setModule}
+            items={mapStringToItemArray(
+              Instance.GetInstance().configCache.getCache().MODULES
+            )}
+            defaultValue={
+              Instance.GetInstance().preExecutionConfigCache.getCache().module
+            }
+            errorMessage={validationResult.module.errorMessage}
             placeholder={""}
           />
           <Divider w="80%" />
