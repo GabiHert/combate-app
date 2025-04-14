@@ -279,9 +279,11 @@ function PreExecutionScreen(props: { navigation: any }) {
           <SelectInput
             title="Projeto"
             onItemSelected={setProjectName}
-            items={mapStringToItemArray(
-              Instance.GetInstance().configCache.getCache().PROJECTS
-            )}
+            items={
+              mapStringToItemArray(
+                Instance.GetInstance().configCache.getCache().PROJECTS
+              ) ?? []
+            }
             defaultValue={
               Instance.GetInstance().preExecutionConfigCache.getCache()
                 .projectName
@@ -292,9 +294,11 @@ function PreExecutionScreen(props: { navigation: any }) {
           <SelectInput
             title="Fazenda"
             onItemSelected={setFarm}
-            items={mapStringToItemArray(
-              Instance.GetInstance().configCache.getCache().FARMS
-            )}
+            items={
+              mapStringToItemArray(
+                Instance.GetInstance().configCache.getCache().FARMS
+              ) ?? []
+            }
             defaultValue={
               Instance.GetInstance().preExecutionConfigCache.getCache().farm
             }
@@ -304,9 +308,11 @@ function PreExecutionScreen(props: { navigation: any }) {
           <SelectInput
             title="Talhão"
             onItemSelected={setPlot}
-            items={mapStringToItemArray(
-              Instance.GetInstance().configCache.getCache().PLOTS
-            )}
+            items={
+              mapStringToItemArray(
+                Instance.GetInstance().configCache.getCache().PLOTS
+              ) ?? []
+            }
             defaultValue={""}
             errorMessage={validationResult.plot.errorMessage}
             placeholder={""}
@@ -324,9 +330,11 @@ function PreExecutionScreen(props: { navigation: any }) {
           <SelectInput
             title="Módulos"
             onItemSelected={setModule}
-            items={mapStringToItemArray(
-              Instance.GetInstance().configCache.getCache().MODULES
-            )}
+            items={
+              mapStringToItemArray(
+                Instance.GetInstance().configCache.getCache().MODULES
+              ) ?? []
+            }
             defaultValue={
               Instance.GetInstance().preExecutionConfigCache.getCache().module
             }
