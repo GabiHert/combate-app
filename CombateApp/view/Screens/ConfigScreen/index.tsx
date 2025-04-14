@@ -967,6 +967,14 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           <FormInput
             title="Matrícula do técnico"
             description="Preencha com a nova matrícula do técnico. Somente números"
+            defaultValue={
+              Instance.GetInstance()
+                .configCache.getCache()
+                .MATRICULA.toString() ?? ""
+            }
+            placeholder={Instance.GetInstance()
+              .configCache.getCache()
+              .MATRICULA.toString()}
             onChangeText={setMatricula}
             keyboardType={"numeric"}
             errorMessage={errors.matricula.errorMessage}
@@ -986,6 +994,12 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           <FormInput
             title="ID do equipamento"
             description="Preencha o ID do equipamento."
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().ID_EQUIPMENT ?? ""
+            }
+            placeholder={
+              Instance.GetInstance().configCache.getCache().ID_EQUIPMENT
+            }
             onChangeText={setIdEquipment}
             keyboardType={"default"}
             errorMessage={errors.idEquipment.errorMessage}
@@ -1362,34 +1376,6 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             }}
           >
             Velocidade
-          </FormControl.Label>
-
-          <SelectInput
-            onItemSelected={setMaxVelocity}
-            placeholder={
-              Instance.GetInstance()
-                .configCache.getCache()
-                .APPLICATION.MAX_VELOCITY.toString() + " Km/h"
-            }
-            title={"Velocidade máxima permitida"}
-            defaultValue={Instance.GetInstance()
-              .configCache.getCache()
-              .APPLICATION.MAX_VELOCITY.toString()}
-            disabled={level2(level)}
-            errorMessage={errors.maxVelocity.errorMessage}
-            items={CONSTANTS.CONFIG_SCREEN.MAX_VELOCITY_ITEMS}
-          />
-
-          <Divider w="80%" />
-
-          <FormControl.Label
-            mt={5}
-            _text={{
-              fontWeight: "bold",
-              fontSize: Theme().font.size.xl(appConfig.screen),
-            }}
-          >
-            Equipamento
           </FormControl.Label>
 
           <SelectInput

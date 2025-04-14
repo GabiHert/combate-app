@@ -111,10 +111,6 @@ function PreExecutionScreen(props: { navigation: any }) {
   });
 
   const onNextPressed = useCallback(async () => {
-    props.navigation.navigate("ConfigScreen", {
-      level: 1,
-    });
-
     const data: IPreExecutionConfigProps = {
       activity,
       clientName,
