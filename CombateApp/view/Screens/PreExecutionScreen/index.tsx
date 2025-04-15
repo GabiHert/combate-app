@@ -262,13 +262,14 @@ function PreExecutionScreen(props: { navigation: any }) {
           </FormControl.Label>
           <FormInput
             title="Nome"
+            keyboardType="default"
             description="Preencha este campo com o nome do cliente"
             errorMessage={validationResult.clientName.errorMessage}
             placeholder="Cliente X"
             defaultValue={
               Instance.GetInstance().preExecutionConfigCache.getCache()
-                .clientName
-                ??  ""}
+                .clientName ?? ""
+            }
             onChangeText={setClientName}
           />
 
@@ -282,7 +283,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             }
             defaultValue={
               Instance.GetInstance().preExecutionConfigCache.getCache()
-                .projectName ??  ""
+                .projectName ?? ""
             }
             errorMessage={validationResult.projectName.errorMessage}
             placeholder={"Escolha o projeto"}
@@ -296,8 +297,9 @@ function PreExecutionScreen(props: { navigation: any }) {
               ) ?? []
             }
             defaultValue={
-              Instance.GetInstance().preExecutionConfigCache.getCache().farm
-              ??  ""}
+              Instance.GetInstance().preExecutionConfigCache.getCache().farm ??
+              ""
+            }
             errorMessage={validationResult.farm.errorMessage}
             placeholder={""}
           />
@@ -318,8 +320,9 @@ function PreExecutionScreen(props: { navigation: any }) {
             onItemSelected={setActivity}
             items={CONSTANTS.ACTIVITY_ITEMS}
             defaultValue={
-              Instance.GetInstance().preExecutionConfigCache.getCache().activity
-              ??  ""}
+              Instance.GetInstance().preExecutionConfigCache.getCache()
+                .activity ?? ""
+            }
             errorMessage={validationResult.activity.errorMessage}
             placeholder={""}
           />
@@ -332,8 +335,9 @@ function PreExecutionScreen(props: { navigation: any }) {
               ) ?? []
             }
             defaultValue={
-              Instance.GetInstance().preExecutionConfigCache.getCache().module
-              ??  ""}
+              Instance.GetInstance().preExecutionConfigCache.getCache()
+                .module ?? ""
+            }
             errorMessage={validationResult.module.errorMessage}
             placeholder={""}
           />
@@ -349,12 +353,13 @@ function PreExecutionScreen(props: { navigation: any }) {
           </FormControl.Label>
           <FormInput
             title="Nome do trator"
+            keyboardType="default"
             description="Preencha este campo com o nome do trator que está sendo utilizado"
             errorMessage={validationResult.tractorName.errorMessage}
             defaultValue={
               Instance.GetInstance().preExecutionConfigCache.getCache()
-                .tractorName
-                ??  ""}
+                .tractorName ?? ""
+            }
             onChangeText={setTractorName}
           />
 
@@ -368,9 +373,11 @@ function PreExecutionScreen(props: { navigation: any }) {
                 .rightApplicatorLoad.toString() + " Kg"
             }
             title="Carga reservatório direito"
-            defaultValue={Instance.GetInstance()
-              .preExecutionConfigCache.getCache()
-              .rightApplicatorLoad.toString()??  ""}
+            defaultValue={
+              Instance.GetInstance()
+                .preExecutionConfigCache.getCache()
+                .rightApplicatorLoad.toString() ?? ""
+            }
             errorMessage={validationResult.rightApplicatorLoad.errorMessage}
             items={CONSTANTS.PRE_EXECUTION_SCREEN.APPLICATOR_LOAD_ITEMS(
               Instance.GetInstance().configCache.getCache().APPLICATION
@@ -387,9 +394,11 @@ function PreExecutionScreen(props: { navigation: any }) {
                 .centerApplicatorLoad.toString() + " Kg"
             }
             title="Carga reservatório central"
-            defaultValue={Instance.GetInstance()
-              .preExecutionConfigCache.getCache()
-              .centerApplicatorLoad.toString()??  ""}
+            defaultValue={
+              Instance.GetInstance()
+                .preExecutionConfigCache.getCache()
+                .centerApplicatorLoad.toString() ?? ""
+            }
             errorMessage={validationResult.centerApplicatorLoad.errorMessage}
             items={CONSTANTS.PRE_EXECUTION_SCREEN.APPLICATOR_LOAD_ITEMS(
               Instance.GetInstance().configCache.getCache().APPLICATION
@@ -407,9 +416,11 @@ function PreExecutionScreen(props: { navigation: any }) {
                 .leftApplicatorLoad.toString() + " Kg"
             }
             title="Carga reservatório esquerdo"
-            defaultValue={Instance.GetInstance()
-              .preExecutionConfigCache.getCache()
-              .leftApplicatorLoad.toString()??  ""}
+            defaultValue={
+              Instance.GetInstance()
+                .preExecutionConfigCache.getCache()
+                .leftApplicatorLoad.toString() ?? ""
+            }
             errorMessage={validationResult.leftApplicatorLoad.errorMessage}
             items={CONSTANTS.PRE_EXECUTION_SCREEN.APPLICATOR_LOAD_ITEMS(
               Instance.GetInstance().configCache.getCache().APPLICATION
@@ -431,9 +442,11 @@ function PreExecutionScreen(props: { navigation: any }) {
             onItemSelected={setStreetsAmountCallback}
             title="Número de ruas"
             items={CONSTANTS.STREET_AMOUNT_ITEMS}
-            defaultValue={Instance.GetInstance()
-              .preExecutionConfigCache.getCache()
-              .streetsAmount.toString()??  ""}
+            defaultValue={
+              Instance.GetInstance()
+                .preExecutionConfigCache.getCache()
+                .streetsAmount.toString() ?? ""
+            }
             errorMessage={validationResult.streetsAmount.errorMessage}
           />
           <Divider w="80%" />
@@ -453,8 +466,9 @@ function PreExecutionScreen(props: { navigation: any }) {
             items={weatherItems}
             errorMessage={validationResult.weather.errorMessage}
             defaultValue={
-              Instance.GetInstance().preExecutionConfigCache.getCache().weather
-              ??  ""}
+              Instance.GetInstance().preExecutionConfigCache.getCache()
+                .weather ?? ""
+            }
           />
           <Divider w="80%" />
           <FormControl.Label
@@ -470,7 +484,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             onItemSelected={setDeviceName}
             title="Selecione o dipositivo Bluetooth"
             placeholder="CB"
-            defaultValue={deviceName??  ""}
+            defaultValue={deviceName ?? ""}
             items={devices}
             errorMessage={validationResult.deviceName.errorMessage}
           />
