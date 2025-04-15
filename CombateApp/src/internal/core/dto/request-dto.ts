@@ -21,6 +21,7 @@ export class RequestDto {
   farm?: string;
   module?: string;
   idEquipment?: string;
+  underForest?: string;
   systematicMetersBetweenDose?: number;
   matricula?: number;
   constructor(args: IRequestDtoArgs) {
@@ -44,6 +45,7 @@ export class RequestDto {
     this.newId = args.newId;
     this.idEquipment = args.idEquipment;
     this.matricula = args.matricula;
+    this.underForest = args.underForest;
     this.systematicMetersBetweenDose = args.systematicMetersBetweenDose;
   }
 }

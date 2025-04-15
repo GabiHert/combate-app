@@ -25,6 +25,7 @@ interface Fields {
   "Peso por dose (g)": string;
   "Total aplicado (Kg)": string;
   "Velocidade maxima": string;
+  "Sub-Bosque": string;
   Clima: string;
   Ruas: string;
   Linhas: string;
@@ -86,6 +87,7 @@ export class CsvTableService implements PCsvTableService {
         "Peso por dose (g)": "",
         "Total aplicado (Kg)": "",
         "Velocidade maxima": "",
+        "Sub-Bosque": "",
         Clima: "",
         Ruas: "",
         Linhas: "",
@@ -252,6 +254,7 @@ export class CsvTableService implements PCsvTableService {
       "Doses totais": doseAmount.toString(),
       "Tipo de isca": requestDto.poisonType,
       "Peso por dose (g)": requestDto.doseWeightG.toString(),
+      "Sub-Bosque": requestDto.underForest,
       "Total aplicado (Kg)": (
         (requestDto.doseWeightG * doseAmount) /
         1000

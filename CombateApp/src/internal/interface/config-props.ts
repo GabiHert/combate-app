@@ -33,6 +33,7 @@ export interface IConfigsProps {
   FILE_PATH: string;
   MATRICULA: number;
   ID_EQUIPMENT: string;
+  UNDER_FOREST?: string;
 }
 
 export interface IPreExecutionConfigProps {

@@ -22,4 +22,5 @@ export interface IRequestDtoArgs {
   idEquipment?: string;
   matricula?: number;
   systematicMetersBetweenDose: number;
+  underForest?: string;
 }

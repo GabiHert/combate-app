@@ -48,7 +48,7 @@ function FinishExecutionModal(props: {
             .MAX_VELOCITY,
         plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
         poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
-        project:
+        projectName:
           Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
         streetsAmount:
           Instance.GetInstance().preExecutionConfigCache.getCache()
@@ -57,6 +57,7 @@ function FinishExecutionModal(props: {
           Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
         weather:
           Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+        underForest: Instance.GetInstance().configCache.getCache().UNDER_FOREST,
       },
       () => {
         callback();
@@ -67,8 +68,10 @@ function FinishExecutionModal(props: {
 
   const onUnderForestModalOkPress = useCallback(
     async (underForest: string) => {
-      // setUnderForest(underForest);
-
+      await Instance.GetInstance().configCache.update({
+        ...Instance.GetInstance().configCache.getCache(),
+        UNDER_FOREST: underForest,
+      });
       setUnderForestModalVisible(false);
       onOkPress(() => {
         props.onFinishExecutionPress(event);

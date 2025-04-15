@@ -535,7 +535,6 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const onAddFarmRequested = useCallback(
     (name: string) => {
       let cache = Instance.GetInstance().configCache.getCache();
-      console.log("Cache: ", cache);
       const id = v1();
       cache.FARMS[id] = name;
       Instance.GetInstance().configCache.update(cache);
@@ -618,7 +617,6 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     (name: string) => {
       let cache = Instance.GetInstance().configCache.getCache();
       const id = v1();
-      console.log("Cache: ", cache);
       cache.PLOTS[id] = name;
       Instance.GetInstance().configCache.update(cache);
       setPlots(mapStringToItemArray(cache.PLOTS));
