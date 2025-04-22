@@ -571,7 +571,7 @@ function ExecutionScreen(props: { navigation: any }) {
           />
         </Box>
 
-        <Box height={"60%"} width={"100%"}>
+        <Box height={"58%"} width={"100%"}>
           <PoisonAmountSelector onPresetPressed={onPresetPressed} />
         </Box>
 
@@ -580,6 +580,7 @@ function ExecutionScreen(props: { navigation: any }) {
           justifyContent="center"
           width="100%"
           height="15%"
+          marginTop={8}
         >
           <ApplicatorSelector
             leftApplicatorActive={leftApplicatorActiveState}

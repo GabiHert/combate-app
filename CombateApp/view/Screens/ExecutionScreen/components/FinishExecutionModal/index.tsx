@@ -1,6 +1,5 @@
 import { Button, FormControl, Modal } from "native-base";
 import { memo, useCallback, useState } from "react";
-import { CONSTANTS } from "../../../../../src/internal/config/config";
 import { RequestDto } from "../../../../../src/internal/core/dto/request-dto";
 import { EventEnum } from "../../../../../src/internal/core/enum/event";
 import { appConfig } from "../../../../app/config/app-config";
@@ -84,16 +83,11 @@ function FinishExecutionModal(props: {
     const errorMessage =
       Instance.GetInstance().validator.validateFinishExecutionForm(event);
     if (!errorMessage) {
-      if (event == CONSTANTS.FINISHED_WORK_REASON_NAME) {
-        setUnderForestModalVisible(true);
-      } else {
-        onOkPress(() => {
-          props.onFinishExecutionPress(event);
-        });
-      }
-    } else {
-      setEventError(errorMessage);
+      onOkPress(() => {
+        props.onFinishExecutionPress(event);
+      });
     }
+    setEventError(errorMessage);
   }, [event, eventError, setUnderForestModalVisible]);
 
   const onClose = useCallback(() => {

@@ -18,7 +18,7 @@ function FormInput(props: {
   defaultValue?: string;
 }) {
   const [defaultValue, setDefaultValue] = useState(props.defaultValue);
-  const [inputValue, setInputValue] = useState(props.defaultValue);
+  const [inputValue, setInputValue] = useState("");
 
   const onChangeText = useCallback(
     (text: string) => {

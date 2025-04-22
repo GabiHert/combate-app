@@ -3,6 +3,7 @@ export interface IPreExecutionFormResult {
   projectName: { errorMessage: string };
   farm: { errorMessage: string };
   plot: { errorMessage: string };
+  underForest: { errorMessage: string };
   module: { errorMessage: string };
   streetsAmount: { errorMessage: string };
   weather: { errorMessage: string };

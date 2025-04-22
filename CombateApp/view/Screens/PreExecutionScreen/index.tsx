@@ -42,6 +42,10 @@ function PreExecutionScreen(props: { navigation: any }) {
       .rightApplicatorLoad
   );
 
+  const [underForest, setUnderForest] = useState<string>(
+    Instance.GetInstance().configCache.getCache().UNDER_FOREST
+  );
+
   const [devices, setDevices] = useState<Array<IItem>>([]);
   const [deviceConnected, setDeviceConnected] = useState(false);
   const [clientName, setClientName] = useState<string>(
@@ -91,6 +95,7 @@ function PreExecutionScreen(props: { navigation: any }) {
       centerApplicatorLoad: { errorMessage: undefined },
       deviceName: { errorMessage: undefined },
       valid: true,
+      underForest: { errorMessage: undefined },
     });
 
   const searchDevicesCallback = useCallback(async () => {
@@ -117,6 +122,7 @@ function PreExecutionScreen(props: { navigation: any }) {
       projectName,
       plot,
       farm,
+      underForest,
       module,
       weather: weather.name,
       tractorName,
@@ -151,6 +157,8 @@ function PreExecutionScreen(props: { navigation: any }) {
           preExecutionConfigCache.module +
           "_" +
           preExecutionConfigCache.farm +
+          "_" +
+          preExecutionConfigCache.underForest +
           "_" +
           dateTimeFormatter.date(date) +
           "_" +
@@ -191,6 +199,7 @@ function PreExecutionScreen(props: { navigation: any }) {
     plot,
     module,
     farm,
+    underForest,
     weather,
     tractorName,
     leftApplicatorLoad,
@@ -339,6 +348,17 @@ function PreExecutionScreen(props: { navigation: any }) {
                 .module ?? ""
             }
             errorMessage={validationResult.module.errorMessage}
+            placeholder={""}
+          />
+          <SelectInput
+            title="Sub-Bosque"
+            onItemSelected={setUnderForest}
+            items={CONSTANTS.UNDER_FOREST_ITEMS}
+            defaultValue={
+              Instance.GetInstance().preExecutionConfigCache.getCache()
+                .underForest ?? ""
+            }
+            errorMessage={validationResult.underForest.errorMessage}
             placeholder={""}
           />
           <Divider w="80%" />
