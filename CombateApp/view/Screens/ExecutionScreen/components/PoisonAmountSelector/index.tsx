@@ -1,5 +1,6 @@
 import { Box, Button, Center, HStack, Stack } from "native-base";
 import React, { memo, useCallback, useRef, useState } from "react";
+import { View } from "react-native";
 import { appConfig } from "../../../../app/config/app-config";
 import { Instance } from "../../../../app/instance/instance";
 import { Theme } from "../../../../app/theme/theme";
@@ -184,11 +185,9 @@ function PoisonAmountSelector(props: {
   }, [loadingButtonsRef]);
 
   return (
-    <>
-      <Center>
+    <View style={{ width: "100%", paddingHorizontal: 10, marginTop: 5 }}>
+      <Center borderRadius={20} backgroundColor={Theme().color.b300}>
         <HStack
-          borderRadius={20}
-          backgroundColor={Theme().color.b300}
           width="94%"
           alignItems={"center"}
           justifyContent={"center"}
@@ -312,19 +311,19 @@ function PoisonAmountSelector(props: {
             </Button>
           </Stack>
         </HStack>
+        <Box width={"100%"} paddingX={5} marginTop={-5} paddingBottom={5}>
+          <Button
+            isLoadingText="Conectando"
+            _pressed={{ opacity: 0.8 }}
+            background={Theme().color.b400}
+            borderRadius={10}
+            onPress={onExtraPressed}
+          >
+            Extra
+          </Button>
+        </Box>
       </Center>
-      <Box width={"100%"} paddingX={5}>
-        <Button
-          isLoadingText="Conectando"
-          _pressed={{ opacity: 0.8 }}
-          background={Theme().color.b400}
-          borderRadius={10}
-          onPress={onExtraPressed}
-        >
-          Extra
-        </Button>
-      </Box>
-    </>
+    </View>
   );
 }
 

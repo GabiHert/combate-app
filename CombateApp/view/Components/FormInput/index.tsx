@@ -60,7 +60,7 @@ function FormInput(props: {
         onChangeText={onChangeText}
         keyboardType={props.keyboardType}
         borderRadius={20}
-        value={inputValue ?? defaultValue}
+        value={inputValue === "" ? defaultValue : inputValue}
         placeholder={props.placeholder}
         _invalid={{ borderColor: Theme().color.sError, borderWidth: 2 }}
         borderWidth={2}

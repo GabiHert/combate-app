@@ -1,10 +1,10 @@
 enum Weathers {
-  SECO = 'Seco',
-  HUMIDO = 'Humido',
-  ABAFADO = 'Abafado',
-  POS_CHUVA = 'Pós chuva',
-  CHANCE_DE_CHUVA = 'Chance de chuva',
-  ORVALHO = 'Orvalho',
+  SECO = "SECO",
+  HUMIDO = "HUMIDO",
+  ABAFADO = "ABAFADO",
+  POS_CHUVA = "POS CHUVA",
+  CHANCE_DE_CHUVA = "CHANCE DE CHUVA",
+  ORVALHO = "ORVALHO",
 }
 
 class WeatherEnum_ {

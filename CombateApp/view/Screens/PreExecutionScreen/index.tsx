@@ -21,6 +21,7 @@ import { SeverityEnum } from "../../../src/internal/core/enum/severity";
 import { dateTimeFormatter } from "../../../src/internal/core/utils/date-time-formatter";
 import { IItem } from "../../../src/internal/interface/item";
 import { Instance } from "../../app/instance/instance";
+import { sanitizeText } from "../../app/parser/sanitize-text";
 import { Theme } from "../../app/theme/theme";
 import { ShowToast } from "../../Components/AlertToast";
 import FormInput from "../../Components/FormInput";
@@ -57,7 +58,9 @@ function PreExecutionScreen(props: { navigation: any }) {
   const [farm, setFarm] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().farm
   );
-  const [plot, setPlot] = useState<string>("");
+  const [plot, setPlot] = useState<string>(
+    Instance.GetInstance().preExecutionConfigCache.getCache().plot
+  );
   const [module, setModule] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().module
   );
@@ -117,15 +120,15 @@ function PreExecutionScreen(props: { navigation: any }) {
 
   const onNextPressed = useCallback(async () => {
     const data: IPreExecutionConfigProps = {
-      activity,
-      clientName,
-      projectName,
-      plot,
-      farm,
-      underForest,
-      module,
-      weather: weather.name,
-      tractorName,
+      activity: sanitizeText(activity),
+      clientName: sanitizeText(clientName),
+      projectName: sanitizeText(projectName),
+      plot: sanitizeText(plot),
+      farm: sanitizeText(farm),
+      underForest: sanitizeText(underForest),
+      module: sanitizeText(module),
+      weather: sanitizeText(weather.name),
+      tractorName: sanitizeText(tractorName),
       leftApplicatorLoad,
       streetsAmount,
       rightApplicatorLoad,
@@ -146,19 +149,19 @@ function PreExecutionScreen(props: { navigation: any }) {
         const date = new Date();
 
         let fileName =
-          preExecutionConfigCache.clientName +
+          sanitizeText(preExecutionConfigCache.clientName) +
           "_" +
-          preExecutionConfigCache.projectName +
+          sanitizeText(preExecutionConfigCache.projectName) +
           "_" +
-          preExecutionConfigCache.activity +
+          sanitizeText(preExecutionConfigCache.activity) +
           "_" +
-          preExecutionConfigCache.plot +
+          sanitizeText(preExecutionConfigCache.plot) +
           "_" +
-          preExecutionConfigCache.module +
+          sanitizeText(preExecutionConfigCache.module) +
           "_" +
-          preExecutionConfigCache.farm +
+          sanitizeText(preExecutionConfigCache.farm) +
           "_" +
-          preExecutionConfigCache.underForest +
+          sanitizeText(preExecutionConfigCache.underForest) +
           "_" +
           dateTimeFormatter.date(date) +
           "_" +
@@ -211,7 +214,7 @@ function PreExecutionScreen(props: { navigation: any }) {
   const setWeatherCallback = useCallback(
     (value: string) => {
       try {
-        setWeather(new Weather(value));
+        setWeather(new Weather(sanitizeText(value)));
       } catch (err) {
         Instance.GetInstance().errorHandler.handle(err);
       }
@@ -320,7 +323,10 @@ function PreExecutionScreen(props: { navigation: any }) {
                 Instance.GetInstance().configCache.getCache().PLOTS
               ) ?? []
             }
-            defaultValue={""}
+            defaultValue={
+              Instance.GetInstance().preExecutionConfigCache.getCache().plot ??
+              ""
+            }
             errorMessage={validationResult.plot.errorMessage}
             placeholder={""}
           />
@@ -358,7 +364,7 @@ function PreExecutionScreen(props: { navigation: any }) {
               Instance.GetInstance().preExecutionConfigCache.getCache()
                 .underForest ?? ""
             }
-            errorMessage={validationResult.underForest.errorMessage}
+            errorMessage={validationResult?.underForest?.errorMessage}
             placeholder={""}
           />
           <Divider w="80%" />
