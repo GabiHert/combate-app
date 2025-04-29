@@ -1,7 +1,8 @@
 import { Button, FormControl, Modal } from 'native-base';
 import { memo, useCallback, useState } from 'react';
-import { Theme } from '../../../../app/theme/theme';
-import FormInput from '../../../../Components/FormInput';
+import { sanitizeText } from "../../../../app/parser/sanitize-text";
+import { Theme } from "../../../../app/theme/theme";
+import FormInput from "../../../../Components/FormInput";
 
 function ItemRegisterModal(props: {
   isOpen: boolean;
@@ -18,7 +19,7 @@ function ItemRegisterModal(props: {
 
   const onChangeDescription = useCallback(
     (text: string) => {
-      setName(text);
+      setName(sanitizeText(text));
     },
     [setName, name]
   );
@@ -59,7 +60,12 @@ function ItemRegisterModal(props: {
           </FormControl>
         </Modal.Body>
         <Modal.Footer
-          _text={{ color: Theme().color.sError, position: 'absolute', left: 12, right: 0 }}
+          _text={{
+            color: Theme().color.sError,
+            position: "absolute",
+            left: 12,
+            right: 0,
+          }}
         >
           <Button
             _pressed={{ opacity: 0.8 }}

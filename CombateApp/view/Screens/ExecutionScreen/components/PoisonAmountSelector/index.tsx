@@ -185,13 +185,18 @@ function PoisonAmountSelector(props: {
   }, [loadingButtonsRef]);
 
   return (
-    <View style={{ width: "100%", paddingHorizontal: 10, marginTop: 5 }}>
-      <Center borderRadius={20} backgroundColor={Theme().color.b300}>
+    <View style={{ width: "100%", paddingHorizontal: 10, padding: 5 }}>
+      <Center
+        borderRadius={20}
+        backgroundColor={Theme().color.b300}
+        paddingBottom={5}
+      >
         <HStack
           width="94%"
           alignItems={"center"}
           justifyContent={"center"}
-          height="95%"
+          height="85%"
+          marginBottom={5}
         >
           <Stack
             direction={"column"}
@@ -313,11 +318,17 @@ function PoisonAmountSelector(props: {
         </HStack>
         <Box width={"100%"} paddingX={5} marginTop={-5} paddingBottom={5}>
           <Button
-            isLoadingText="Conectando"
+            isLoadingText="Dosando"
+            isLoading={loadingButtons.EXTRA}
             _pressed={{ opacity: 0.8 }}
-            background={Theme().color.b400}
-            borderRadius={10}
+            background={Theme().color.b200}
+            borderRadius={20}
             onPress={onExtraPressed}
+            height={75}
+            _text={{
+              color: "black",
+              fontSize: Theme().font.size.m(appConfig.screen),
+            }}
           >
             Extra
           </Button>
