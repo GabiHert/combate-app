@@ -26,7 +26,7 @@ function FormInput(props: {
       setInputValue(null);
 
       let newText = text;
-      if (!props.isPassword && props.keyboardType === "default") {
+      if (!props.isPassword) {
         newText = text
           .toUpperCase()
           .normalize("NFD")

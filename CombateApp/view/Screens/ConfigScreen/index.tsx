@@ -22,6 +22,7 @@ import { appConfig } from "../../app/config/app-config";
 import { Instance } from "../../app/instance/instance";
 import { itemArrayToMapString } from "../../app/parser/item-array-to-map-string";
 import { mapStringToItemArray } from "../../app/parser/map-string-to-item-array";
+import { sanitizeText } from "../../app/parser/sanitize-text";
 import { Theme } from "../../app/theme/theme";
 import { ShowToast } from "../../Components/AlertToast";
 import FormInput from "../../Components/FormInput";
@@ -72,7 +73,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
       Instance.GetInstance().configCache.getCache().PRESETS.P1.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME,
   });
-  function setPreset1(value) {
+  function setPreset1(value: IPreset) {
     preset1.current = value;
   }
   const preset2 = useRef<IPreset>({
@@ -80,7 +81,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
       Instance.GetInstance().configCache.getCache().PRESETS.P2.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME,
   });
-  function setPreset2(value) {
+  function setPreset2(value: IPreset) {
     preset2.current = value;
   }
   const preset3 = useRef<IPreset>({
@@ -88,7 +89,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
       Instance.GetInstance().configCache.getCache().PRESETS.P3.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P3.NAME,
   });
-  function setPreset3(value) {
+  function setPreset3(value: IPreset) {
     preset3.current = value;
   }
   const preset4 = useRef<IPreset>({
@@ -215,9 +216,9 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     Instance.GetInstance().configCache.getCache().POISON_TYPE
   );
   function setPoison(value) {
-    poison.current = value;
+    poison.current = sanitizeText(value);
   }
-
+  console.log("re-render ConfigScreen");
   function level1(level: number): boolean {
     return level > 1;
   }
@@ -298,7 +299,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
 
   const newId = useRef("");
   function setNewId(value: string) {
-    newId.current = value;
+    newId.current = sanitizeText(value);
   }
 
   const isRenaming = useState(false);
@@ -370,7 +371,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const onPreset1NameChange = useCallback(
     (text: string) => {
       const aux = preset1.current;
-      aux.name = text;
+      aux.name = sanitizeText(text);
       preset1.current = aux;
     },
     [preset1]
@@ -379,7 +380,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const onPreset2NameChange = useCallback(
     (text: string) => {
       const aux = preset2.current;
-      aux.name = text;
+      aux.name = sanitizeText(text);
       setPreset2(aux);
     },
     [preset2]
@@ -388,7 +389,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const onPreset3NameChange = useCallback(
     (text: string) => {
       const aux = preset3.current;
-      aux.name = text;
+      aux.name = sanitizeText(text);
       setPreset3(aux);
     },
     [preset3]
@@ -397,7 +398,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const onPreset4NameChange = useCallback(
     (text: string) => {
       const aux = preset4.current;
-      aux.name = text;
+      aux.name = sanitizeText(text);
       setPreset4(aux);
     },
     [preset4]
@@ -406,7 +407,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const onPreset5NameChange = useCallback(
     (text: string) => {
       const aux = preset5.current;
-      aux.name = text;
+      aux.name = sanitizeText(text);
       setPreset5(aux);
     },
     [preset5]
@@ -415,7 +416,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const onPreset6NameChange = useCallback(
     (text: string) => {
       const aux = preset6.current;
-      aux.name = text;
+      aux.name = sanitizeText(text);
       setPreset6(aux);
     },
     [preset6]
