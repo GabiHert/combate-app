@@ -1,10 +1,10 @@
 enum Event_ {
-  Local = "Local",
-  TrackPoint = "Track",
-  StartTrackPoint = "StartTrack",
-  EndTrackPoint = "EndTrack",
-  Obstacle = "Obstacle",
-  Systematic = "Systematic",
+  Local = "LOCAL",
+  TrackPoint = "TRACKPOINT",
+  StartTrackPoint = "START_TRACKPOINT",
+  EndTrackPoint = "END_TRACKPOINT",
+  Obstacle = "OBSTACULO",
+  Systematic = "SISTEMATICO",
 }
 
 class EventEnum_ {
