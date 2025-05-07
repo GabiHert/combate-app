@@ -81,6 +81,7 @@ export class Validator implements PValidator {
 
     return result;
   }
+
   validateFarmForm(farm: string): string {
     Instance.GetInstance().logger.info({
       event: "FormValidator.validateFarmForm",
@@ -104,6 +105,55 @@ export class Validator implements PValidator {
 
     return result;
   }
+
+  validateModuleForm(module: string): string {
+    Instance.GetInstance().logger.info({
+      event: "FormValidator.validateModuleForm",
+      details: "Process started",
+      module,
+    });
+    let result: string;
+    if (!Validator.BasicStringValidation(module))
+      result = CONSTANTS.ERRORS.MODULES_FORM.INVALID_MODULES;
+    if (result && result.length > 0) {
+      Instance.GetInstance().logger.warn({
+        event: "FormValidator.validateModuleForm",
+        details: "Process warn - invalid farm",
+      });
+    }
+
+    Instance.GetInstance().logger.info({
+      event: "FormValidator.validateModuleForm",
+      details: "Process finished",
+    });
+
+    return result;
+  }
+
+  validateProjectForm(project: string): string {
+    Instance.GetInstance().logger.info({
+      event: "FormValidator.validateProjectForm",
+      details: "Process started",
+      project,
+    });
+    let result: string;
+    if (!Validator.BasicStringValidation(project))
+      result = CONSTANTS.ERRORS.PROJECTS_FORM.INVALID_PROJECTS;
+    if (result && result.length > 0) {
+      Instance.GetInstance().logger.warn({
+        event: "FormValidator.validateProjectForm",
+        details: "Process warn - invalid farm",
+      });
+    }
+
+    Instance.GetInstance().logger.info({
+      event: "FormValidator.validateProjectForm",
+      details: "Process finished",
+    });
+
+    return result;
+  }
+
   validateEventForm(event: string): string {
     Instance.GetInstance().logger.info({
       event: "FormValidator.validateEventForm",
@@ -145,6 +195,7 @@ export class Validator implements PValidator {
       rightApplicatorLoad: { errorMessage: undefined },
       streetsAmount: { errorMessage: undefined },
       deviceName: { errorMessage: undefined },
+      underForest: { errorMessage: undefined },
     };
     this._logger.info({
       event: "FormValidator.validatePreExecutionForm",
