@@ -28,6 +28,9 @@ import FormInput from "../../Components/FormInput";
 import SelectInput from "../../Components/SelectInput";
 
 function PreExecutionScreen(props: { navigation: any }) {
+  const [devices, setDevices] = useState<IItem[]>([]);
+  const [connectToBluetooth, setConnectToBluetooth] = useState(false);
+
   const [activity, setActivity] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().activity
   );
@@ -47,7 +50,6 @@ function PreExecutionScreen(props: { navigation: any }) {
     Instance.GetInstance().configCache.getCache().UNDER_FOREST
   );
 
-  const [devices, setDevices] = useState<Array<IItem>>([]);
   const [deviceConnected, setDeviceConnected] = useState(false);
   const [clientName, setClientName] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().clientName
@@ -75,7 +77,6 @@ function PreExecutionScreen(props: { navigation: any }) {
   const [deviceName, setDeviceName] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().deviceName
   );
-
   const [weather, setWeather] = useState<Weather>(
     new Weather(
       Instance.GetInstance().preExecutionConfigCache.getCache().weather
@@ -103,18 +104,24 @@ function PreExecutionScreen(props: { navigation: any }) {
 
   const searchDevicesCallback = useCallback(async () => {
     try {
-      await Instance.GetInstance().bluetoothApp.init();
+      setIsConnecting(true);
       const data = await Instance.GetInstance().bluetoothApp.getBondedDevices();
       setDevices(data);
     } catch (err) {
       await Instance.GetInstance().errorHandler.handle(err);
+      console.error(err);
+    } finally {
+      setIsConnecting(false);
     }
   }, [devices]);
 
   useFocusEffect(() => {
+    if (deviceConnected) return;
+
     const interval = setInterval(async () => {
       await searchDevicesCallback();
     }, 3000);
+
     return () => clearInterval(interval);
   });
 
@@ -230,16 +237,14 @@ function PreExecutionScreen(props: { navigation: any }) {
   );
 
   const connectToBluetoothCallback = useCallback(async () => {
-    setIsConnecting(true);
+    setConnectToBluetooth(true);
     try {
-      let deviceId: string;
       if (!devices.length) await searchDevicesCallback();
-      devices.forEach((device) => {
-        if (device.name == deviceName) {
-          deviceId = device.id;
-        }
-      });
-      await Instance.GetInstance().bluetoothApp.selectDevice(deviceId);
+
+      const device = devices.find((device) => device.name === deviceName);
+      if (!device) throw new Error("Dispositivo não encontrado");
+
+      await Instance.GetInstance().bluetoothApp.selectDevice(device.id);
       setDeviceConnected(true);
       ShowToast({
         durationMs: 3000,
@@ -249,10 +254,11 @@ function PreExecutionScreen(props: { navigation: any }) {
     } catch (err) {
       await Instance.GetInstance().errorHandler.handle(err);
       setDeviceConnected(false);
+    } finally {
+      setIsConnecting(false);
+      setConnectToBluetooth(false);
     }
-
-    setIsConnecting(false);
-  }, [deviceName, devices]);
+  }, []);
 
   return (
     <Box justifyContent={"center"} alignItems={"center"} h="100%">
@@ -515,7 +521,7 @@ function PreExecutionScreen(props: { navigation: any }) {
             errorMessage={validationResult.deviceName.errorMessage}
           />
           <Button
-            isLoading={isConnecting}
+            isLoading={connectToBluetooth}
             isLoadingText="Conectando"
             _pressed={{ opacity: 0.8 }}
             background={Theme().color.b300}

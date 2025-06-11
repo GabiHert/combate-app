@@ -215,10 +215,11 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const poison = useRef(
     Instance.GetInstance().configCache.getCache().POISON_TYPE
   );
-  function setPoison(value) {
+
+  function setPoison(value: string) {
     poison.current = sanitizeText(value);
   }
-  console.log("re-render ConfigScreen");
+
   function level1(level: number): boolean {
     return level > 1;
   }
@@ -967,13 +968,12 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             title="Matrícula do técnico"
             description="Preencha com a nova matrícula do técnico. Somente números"
             defaultValue={
-              Instance.GetInstance()
-                .configCache.getCache()
-                .MATRICULA.toString() ?? ""
+              String(Instance.GetInstance().configCache.getCache().MATRICULA) ??
+              ""
             }
-            placeholder={Instance.GetInstance()
-              .configCache.getCache()
-              .MATRICULA.toString()}
+            placeholder={String(
+              Instance.GetInstance().configCache.getCache().MATRICULA
+            )}
             onChangeText={setMatricula}
             keyboardType={"numeric"}
             errorMessage={errors.matricula.errorMessage}
@@ -1108,10 +1108,12 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={setPoison}
             items={poisonItems}
             title="Tipo de veneno"
-            placeholder=""
-            defaultValue={
+            placeholder={sanitizeText(
               Instance.GetInstance().configCache.getCache().POISON_TYPE
-            }
+            )}
+            defaultValue={sanitizeText(
+              Instance.GetInstance().configCache.getCache().POISON_TYPE
+            )}
             errorMessage={errors.poisonType.errorMessage}
           />
           <Divider w="80%" />
