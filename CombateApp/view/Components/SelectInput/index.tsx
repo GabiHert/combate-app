@@ -18,6 +18,7 @@ function SelectInput(props: {
 }) {
   return (
     <FormControl
+      isReadOnly
       w={props.w ? props.w : "60%"}
       isRequired={props.isRequired}
       isInvalid={props.errorMessage != undefined && props.errorMessage != ""}
@@ -38,6 +39,9 @@ function SelectInput(props: {
         defaultValue={props.defaultValue}
         placeholder={props.placeholder}
         isDisabled={props.disabled}
+        isHovered={false}
+        isFocusVisible={false}
+        isFocused={false}
         mt="1"
       >
         {props.items

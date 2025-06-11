@@ -121,26 +121,26 @@ export const CONSTANTS = {
     {
       LEVEL: 2,
       USER: "adm2",
-      PASSWORD: " ",
+      PASSWORD: "Cbt2007",
     },
     {
       LEVEL: 1,
       USER: "adm1",
-      PASSWORD: " ",
+      PASSWORD: "Cbt2007",
     },
   ],
   APPLICATION: {
-    VERSION: "2.1.4",
+    VERSION: "2.2.9",
     BLUETOOTH_WRITE_RETRIES: 5,
     BLUETOOTH_READ_TIMEOUT_MS: 60000,
     DOSE_TIMEOUT_MS: 7000,
   },
   FINISHED_WORK_REASON_NAME: "Fim Operação",
   ACTIVITY_ITEMS: [
-    { id: "0", name: "Manutenção" },
-    { id: "1", name: "Pré-Plantio" },
-    { id: "2", name: "Pós-Plantio" },
-    { id: "3", name: "Pré Corte" },
+    { id: "0", name: "Manutencao" },
+    { id: "1", name: "Pre-Plantio" },
+    { id: "2", name: "Pos-Plantio" },
+    { id: "3", name: "Pre-Corte" },
   ],
 
   // Keep all names equal
@@ -166,7 +166,7 @@ export const CONSTANTS = {
     Quadrante: 13.5,
     "Carreiro/Olheiro": 1,
     "Externa/Bordadura": 1,
-    "Muda Atacada": 1,
+    "Muda Atacada": 0,
   },
   EVENTS_TO_EXCLUDE: [EventEnum.TrackPoint.name],
   STREET_AMOUNT_ITEMS: [
@@ -176,9 +176,9 @@ export const CONSTANTS = {
     { id: "3", name: "5" },
   ],
   UNDER_FOREST_ITEMS: [
-    { name: "Sub-bosque 1", id: "1" },
-    { name: "Sub-bosque 2", id: "2" },
-    { name: "Sub-bosque 3", id: "3" },
+    { name: "1", id: "1" },
+    { name: "2", id: "2" },
+    { name: "3", id: "3" },
   ],
   REQUEST_V5: { HEADER: "INF5" },
   ERRORS: {

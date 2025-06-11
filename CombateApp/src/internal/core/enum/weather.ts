@@ -57,9 +57,9 @@ export class Weather {
 }
 
 export const weatherItems: Array<{ id: string; name: string }> = [
-  { id: WeatherEnum.POS_CHUVA.name, name: 'Pós chuva' },
-  { id: WeatherEnum.CHANCE_DE_CHUVA.name, name: 'Chance de chuva' },
-  { id: WeatherEnum.ORVALHO.name, name: 'Orvalho' },
-  { id: WeatherEnum.SECO.name, name: 'Seco' },
-  { id: WeatherEnum.HUMID.name, name: 'Humido' },
+  { id: WeatherEnum.POS_CHUVA.name, name: "Pos chuva" },
+  { id: WeatherEnum.CHANCE_DE_CHUVA.name, name: "Chance de chuva" },
+  { id: WeatherEnum.ORVALHO.name, name: "Orvalho" },
+  { id: WeatherEnum.SECO.name, name: "Seco" },
+  { id: WeatherEnum.HUMID.name, name: "Humido" },
 ];
