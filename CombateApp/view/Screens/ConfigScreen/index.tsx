@@ -469,7 +469,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   );
 
   const onPreset5DoseChange = useCallback(
-    (doses: number) => {
+    (dosesStr: string) => {
+      const doses = Number(dosesStr.split(" ")[0]);
       const aux = preset5.current;
       aux.doseAmount = doses;
       setPreset5(aux);
@@ -874,7 +875,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
       />
       <ItemRegisterModal
         title="Adicionar talhão"
-        formTitle="Nome talão"
+        formTitle="Nome talhão"
         formDescription="Digite nome do talhão a ser adicionado"
         onAddPressed={onAddPlotRequested}
         isOpen={addPlotModalVisible}
@@ -1136,7 +1137,10 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={onPreset1NameChange}
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
-            placeholder=""
+            placeholder={
+              Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME ||
+              ""
+            }
             defaultValue={
               Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME
             }
@@ -1174,7 +1178,10 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={onPreset2NameChange}
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
-            placeholder=""
+            placeholder={
+              Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME ||
+              ""
+            }
             defaultValue={
               Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME
             }
@@ -1210,7 +1217,10 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={onPreset3NameChange}
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
-            placeholder=""
+            placeholder={
+              Instance.GetInstance().configCache.getCache().PRESETS.P3.NAME ||
+              ""
+            }
             defaultValue={
               Instance.GetInstance().configCache.getCache().PRESETS.P3.NAME
             }
@@ -1248,7 +1258,10 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={onPreset4NameChange}
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
-            placeholder=""
+            placeholder={
+              Instance.GetInstance().configCache.getCache().PRESETS.P4.NAME ||
+              ""
+            }
             defaultValue={
               Instance.GetInstance().configCache.getCache().PRESETS.P4.NAME
             }
@@ -1259,7 +1272,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             placeholder={
               Instance.GetInstance()
                 .configCache.getCache()
-                .PRESETS.P4.DOSE_AMOUNT.toString() + " doses"
+                .PRESETS.P4.DOSE_AMOUNT.toString() + " doses" || ""
             }
             title="Doses"
             defaultValue={Instance.GetInstance()
@@ -1285,7 +1298,10 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={onPreset5NameChange}
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
-            placeholder=""
+            placeholder={
+              Instance.GetInstance().configCache.getCache().PRESETS.P5.NAME ||
+              ""
+            }
             defaultValue={
               Instance.GetInstance().configCache.getCache().PRESETS.P5.NAME
             }
@@ -1293,11 +1309,11 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           />
 
           <SelectInput
-            onItemSelected={onPreset4DoseChange}
+            onItemSelected={onPreset5DoseChange}
             placeholder={
               Instance.GetInstance()
                 .configCache.getCache()
-                .PRESETS.P5.DOSE_AMOUNT.toString() + " doses"
+                .PRESETS.P5.DOSE_AMOUNT.toString() + " doses" || ""
             }
             title="Doses"
             defaultValue={Instance.GetInstance()
@@ -1323,7 +1339,10 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={onPreset6NameChange}
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
-            placeholder=""
+            placeholder={
+              Instance.GetInstance().configCache.getCache().PRESETS.P6.NAME ||
+              ""
+            }
             defaultValue={
               Instance.GetInstance().configCache.getCache().PRESETS.P6.NAME
             }
