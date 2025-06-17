@@ -273,18 +273,23 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     }, 3000);
     return () => clearInterval(interval);
   });
+
   const connectToBluetoothCallback = useCallback(async () => {
     setIsConnecting(true);
     try {
       let deviceId: string;
+
       if (!devices.length) await searchDevicesCallback();
       devices.forEach((device) => {
         if (device.name == deviceName.current) {
           deviceId = device.id;
         }
       });
+
       await Instance.GetInstance().bluetoothApp.selectDevice(deviceId);
+
       deviceConnected.current = true;
+
       ShowToast({
         durationMs: 3000,
         title: "Bluetooth conectado com sucesso",

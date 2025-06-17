@@ -109,7 +109,6 @@ function PreExecutionScreen(props: { navigation: any }) {
       setDevices(data);
     } catch (err) {
       await Instance.GetInstance().errorHandler.handle(err);
-      console.error(err);
     } finally {
       setIsConnecting(false);
     }
@@ -236,10 +235,10 @@ function PreExecutionScreen(props: { navigation: any }) {
     [setStreetsAmount]
   );
 
-  const connectToBluetoothCallback = useCallback(async () => {
+  const connectToBluetoothCallback = async () => {
     setConnectToBluetooth(true);
     try {
-      if (!devices.length) await searchDevicesCallback();
+      if (devices.length === 0) await searchDevicesCallback();
 
       const device = devices.find((device) => device.name === deviceName);
       if (!device) throw new Error("Dispositivo não encontrado");
@@ -258,7 +257,7 @@ function PreExecutionScreen(props: { navigation: any }) {
       setIsConnecting(false);
       setConnectToBluetooth(false);
     }
-  }, []);
+  };
 
   return (
     <Box justifyContent={"center"} alignItems={"center"} h="100%">

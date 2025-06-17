@@ -24,7 +24,7 @@ function HomeScreen(props: { navigation: any; route: any }) {
   useEffect(() => {
     const execute = async () => {
       try {
-        await Instance.GetInstance().combateApp.permissions();
+        await Instance.GetInstance().permissionsServices.requestBluetoothPermissions();
       } catch (err) {
         await Instance.GetInstance().errorHandler.handle(err);
       }
