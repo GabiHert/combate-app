@@ -1,5 +1,5 @@
 import { Button, FormControl, Modal } from "native-base";
-import { memo, useCallback, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { CONSTANTS } from "../../../src/internal/config/config";
 import { Theme } from "../../../view/app/theme/theme";
 import { userToItemArray } from "../../app/parser/user-to-item-array";
@@ -14,15 +14,19 @@ function LoginModal(props: {
     password: string;
   }) => boolean;
 }) {
-  const user = useRef<{ USER: string; PASSWORD: string }>(CONSTANTS.USERS[0]);
-  function setUser(v: { USER: string; PASSWORD: string }) {
-    user.current = v;
-  }
+  useEffect(() => {
+    if (props.isOpen) {
+      setPassword("");
+    }
+  }, [props.isOpen]);
 
-  const password = useRef<string>();
-  function setPassword(v: string) {
-    password.current = v;
-  }
+  const [user, setUser] = useState<{ USER: string; PASSWORD: string }>({
+    USER: undefined,
+    PASSWORD: undefined,
+  });
+
+  const [password, setPassword] = useState("");
+
   const [validationError, setValidationError] = useState<string>();
   const [isValid, setIsValid] = useState<boolean>(true);
 
@@ -48,8 +52,8 @@ function LoginModal(props: {
 
   const onLogin = useCallback(() => {
     const data = {
-      user: user.current,
-      password: password.current,
+      user: user,
+      password: password,
     };
     const isValid = props.loginValidator(data);
     setIsValid(isValid);
@@ -73,7 +77,7 @@ function LoginModal(props: {
               onItemSelected={onChangeUser}
               title={"Usuário"}
               w="100%"
-              placeholder={user.current.USER}
+              placeholder={user.USER}
               items={userToItemArray(CONSTANTS.USERS)}
             />
           </FormControl>

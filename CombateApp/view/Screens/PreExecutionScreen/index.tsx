@@ -439,7 +439,7 @@ function PreExecutionScreen(props: { navigation: any }) {
 
           <SelectInput
             onItemSelected={(value: string) => {
-              setCenterApplicatorLoad(Number(value.split(" ")[0]));
+              setLeftApplicatorLoad(Number(value.split(" ")[0]));
             }}
             placeholder={
               Instance.GetInstance()

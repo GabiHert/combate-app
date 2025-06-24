@@ -13,120 +13,120 @@ const combate = require("../../app/assets/COMBATE.png");
 
 function HomeScreen(props: { navigation: any; route: any }) {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  function onStartButtonPressed() {
-    props.navigation.navigate("PreExecutionScreen");
-  }
+    function onStartButtonPressed() {
+      props.navigation.navigate("PreExecutionScreen");
+    }
 
-  function onSettingsButtonPressed() {
-    setIsLoginOpen(true);
-  }
+    function onSettingsButtonPressed() {
+      setIsLoginOpen(true);
+    }
 
-  useEffect(() => {
-    const execute = async () => {
-      try {
-        await Instance.GetInstance().permissionsServices.requestBluetoothPermissions();
-      } catch (err) {
-        await Instance.GetInstance().errorHandler.handle(err);
+    useEffect(() => {
+      const execute = async () => {
+        try {
+          await Instance.GetInstance().permissionsServices.requestBluetoothPermissions();
+        } catch (err) {
+          await Instance.GetInstance().errorHandler.handle(err);
+        }
+      };
+      execute();
+    }, []);
+
+    function loginValidator(loginProps: {
+      user: { USER: string; PASSWORD: string; LEVEL: number };
+      password: string;
+    }): boolean {
+      let valid = true;
+      if (loginProps.password != loginProps.user.PASSWORD) {
+        valid = false;
       }
-    };
-    execute();
-  }, []);
 
-  function loginValidator(loginProps: {
-    user: { USER: string; PASSWORD: string; LEVEL: number };
-    password: string;
-  }): boolean {
-    let valid = true;
-    if (loginProps.password != loginProps.user.PASSWORD) {
-      valid = false;
+      if (valid) {
+        props.navigation.navigate("ConfigScreen", {
+          level: loginProps.user.LEVEL,
+        });
+      }
+      return valid;
     }
-
-    if (valid) {
-      props.navigation.navigate("ConfigScreen", {
-        level: loginProps.user.LEVEL,
-      });
-    }
-    return valid;
-  }
-  return (
-    <SafeAreaView>
-      <ImageBackground
-        resizeMode="cover"
-        source={backgroundImage}
-        style={{
-          alignItems: "center",
-          width: "100%",
-          height: "100%",
-          justifyContent: "center",
-        }}
-      >
-        <LoginModal
-          onClose={() => {
-            setIsLoginOpen(false);
+    return (
+      <SafeAreaView>
+        <ImageBackground
+          resizeMode="cover"
+          source={backgroundImage}
+          style={{
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
           }}
-          isOpen={isLoginOpen}
-          loginValidator={loginValidator}
-        />
-        <IconButton
-          style={{ alignSelf: "flex-end" }}
-          _icon={{ as: Icon, name: "settings", size: 30, color: "white" }}
-          _pressed={{ opacity: 0.8 }}
-          onPress={() => {
-            onSettingsButtonPressed();
-          }}
-          background="transparent"
-        ></IconButton>
-
-        <Box
-          width={"100%"}
-          height={"90%"}
-          justifyContent="center"
-          alignItems="center"
         >
-          <Image
-            resizeMode="contain"
-            alt="Combate logo"
-            source={combate}
-            style={{
-              width: 150,
-              height: 42,
-              position: "absolute",
-              top: -20,
-              left: 10,
+          <LoginModal
+            onClose={() => {
+              setIsLoginOpen(false);
             }}
+            isOpen={isLoginOpen}
+            loginValidator={loginValidator}
           />
-
-          <Button
+          <IconButton
+            style={{ alignSelf: "flex-end" }}
+            _icon={{ as: Icon, name: "settings", size: 30, color: "white" }}
             _pressed={{ opacity: 0.8 }}
-            bgColor={Theme().color.b200}
-            _text={{
-              color: "black",
-              fontSize: Theme().font.size.xl(appConfig.screen),
-            }}
             onPress={() => {
-              onStartButtonPressed();
+              onSettingsButtonPressed();
             }}
-            width="40%"
-            height="15%"
-            borderRadius={50}
-          >
-            Iniciar
-          </Button>
-        </Box>
+            background="transparent"
+          ></IconButton>
 
-        <Box
-          width={"100%"}
-          height={"5%"}
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Text color="white" fontSize={20}>
-            {CONSTANTS.APPLICATION.VERSION}
-          </Text>
-        </Box>
-      </ImageBackground>
-    </SafeAreaView>
-  );
+          <Box
+            width={"100%"}
+            height={"90%"}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Image
+              resizeMode="contain"
+              alt="Combate logo"
+              source={combate}
+              style={{
+                width: 150,
+                height: 42,
+                position: "absolute",
+                top: -20,
+                left: 10,
+              }}
+            />
+
+            <Button
+              _pressed={{ opacity: 0.8 }}
+              bgColor={Theme().color.b200}
+              _text={{
+                color: "black",
+                fontSize: Theme().font.size.xl(appConfig.screen),
+              }}
+              onPress={() => {
+                onStartButtonPressed();
+              }}
+              width="40%"
+              height="15%"
+              borderRadius={50}
+            >
+              Iniciar
+            </Button>
+          </Box>
+
+          <Box
+            width={"100%"}
+            height={"5%"}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Text color="white" fontSize={20}>
+              {CONSTANTS.APPLICATION.VERSION}
+            </Text>
+          </Box>
+        </ImageBackground>
+      </SafeAreaView>
+    );
 }
 
 export default HomeScreen;

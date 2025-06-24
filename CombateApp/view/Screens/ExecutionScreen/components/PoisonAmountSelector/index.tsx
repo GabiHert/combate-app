@@ -3,6 +3,7 @@ import React, { memo, useCallback, useRef, useState } from "react";
 import { View } from "react-native";
 import { appConfig } from "../../../../app/config/app-config";
 import { Instance } from "../../../../app/instance/instance";
+import { sanitizeText } from "../../../../app/parser/sanitize-text";
 import { Theme } from "../../../../app/theme/theme";
 
 function PoisonAmountSelector(props: {
@@ -220,7 +221,9 @@ function PoisonAmountSelector(props: {
               }}
               _pressed={{ opacity: 0.8 }}
             >
-              {Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME}
+              {sanitizeText(
+                Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME
+              )}
             </Button>
             <Button
               isLoading={loadingButtons.P2}
@@ -237,7 +240,9 @@ function PoisonAmountSelector(props: {
               }}
               _pressed={{ opacity: 0.8 }}
             >
-              {Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME}
+              {sanitizeText(
+                Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME
+              )}
             </Button>
             <Button
               isLoading={loadingButtons.P3}
@@ -253,7 +258,9 @@ function PoisonAmountSelector(props: {
               }}
               _pressed={{ opacity: 0.8 }}
             >
-              {Instance.GetInstance().configCache.getCache().PRESETS.P3.NAME}
+              {sanitizeText(
+                Instance.GetInstance().configCache.getCache().PRESETS.P3.NAME
+              )}
             </Button>
           </Stack>
 
@@ -279,7 +286,9 @@ function PoisonAmountSelector(props: {
               }}
               _pressed={{ opacity: 0.8 }}
             >
-              {Instance.GetInstance().configCache.getCache().PRESETS.P4.NAME}
+              {sanitizeText(
+                Instance.GetInstance().configCache.getCache().PRESETS.P4.NAME
+              )}
             </Button>
             <Button
               isLoading={loadingButtons.P5}
@@ -296,7 +305,9 @@ function PoisonAmountSelector(props: {
               }}
               _pressed={{ opacity: 0.8 }}
             >
-              {Instance.GetInstance().configCache.getCache().PRESETS.P5.NAME}
+              {sanitizeText(
+                Instance.GetInstance().configCache.getCache().PRESETS.P5.NAME
+              )}
             </Button>
             <Button
               isLoading={loadingButtons.P6}
@@ -312,7 +323,9 @@ function PoisonAmountSelector(props: {
               }}
               _pressed={{ opacity: 0.8 }}
             >
-              {Instance.GetInstance().configCache.getCache().PRESETS.P6.NAME}
+              {sanitizeText(
+                Instance.GetInstance().configCache.getCache().PRESETS.P6.NAME
+              )}
             </Button>
           </Stack>
         </HStack>
@@ -330,7 +343,7 @@ function PoisonAmountSelector(props: {
               fontSize: Theme().font.size.m(appConfig.screen),
             }}
           >
-            Extra
+            EXTRA
           </Button>
         </Box>
       </Center>

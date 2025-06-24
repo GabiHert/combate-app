@@ -18,17 +18,21 @@ export class ResponseDtoParser {
         protocol,
       });
 
-      this._protocolRules.V5(protocol);
+      let fixedProtocol = protocol.replace("*2B", "*2C");
 
-      let sentence = protocol.substring(10);
-      sentence = sentence.substring(0, sentence.length - 1);
-      const status = protocol[2];
-      const errorCode = protocol.substring(3, 6);
+      this._protocolRules.V5(fixedProtocol);
+
+      let sentence = fixedProtocol.substring(10).trim();
+
+      const status = fixedProtocol[2];
+      const errorCode = fixedProtocol.substring(3, 6);
 
       const gprmc = "$GPRMC" + sentence;
+
       const data = gpsSentenceParser.parse(gprmc);
 
       let gpsData: IGpsData;
+
       if (data.valid) {
         const speed = Math.trunc(data.speed.knots * 1.852).toString();
 
@@ -46,9 +50,9 @@ export class ResponseDtoParser {
         };
       } else gpsData = { status: "V", speed: "?" };
 
-      const leftApplicator = protocol[6] == "1";
-      const centerApplicator = protocol[7] == "1";
-      const rightApplicator = protocol[8] == "1";
+      const leftApplicator = fixedProtocol[6] == "1";
+      const centerApplicator = fixedProtocol[7] == "1";
+      const rightApplicator = fixedProtocol[8] == "1";
 
       const responseDto = new ResponseDto(
         gpsData,

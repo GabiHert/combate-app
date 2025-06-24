@@ -287,105 +287,100 @@ function ExecutionScreen(props: { navigation: any }) {
     []
   );
 
-  useFocusEffect(() => {
-    async function trackPoint() {
-      try {
-        setRequestOnProgress(true);
-        const requestDto = new RequestDto({
-          activity:
-            Instance.GetInstance().preExecutionConfigCache.getCache().activity,
-          client:
-            Instance.GetInstance().preExecutionConfigCache.getCache()
-              .clientName,
-          deviceName:
-            Instance.GetInstance().preExecutionConfigCache.getCache()
-              .deviceName,
-          doseWeightG:
-            Instance.GetInstance().configCache.getCache().APPLICATION
-              .DOSE_WEIGHT_G,
-          event: EventEnum.TrackPoint.name,
-          maxVelocity:
-            Instance.GetInstance().configCache.getCache().APPLICATION
-              .MAX_VELOCITY,
-          linesSpacing:
-            Instance.GetInstance().configCache.getCache().LINE_SPACING,
-          plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
-          farm: Instance.GetInstance().preExecutionConfigCache.getCache().farm,
-          module:
-            Instance.GetInstance().preExecutionConfigCache.getCache().module,
-          matricula: Instance.GetInstance().configCache.getCache().MATRICULA,
-          idEquipment:
-            Instance.GetInstance().configCache.getCache().ID_EQUIPMENT,
-          poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
-          projectName:
-            Instance.GetInstance().preExecutionConfigCache.getCache()
-              .projectName,
-          streetsAmount:
-            Instance.GetInstance().preExecutionConfigCache.getCache()
-              .streetsAmount,
-          tractorName:
-            Instance.GetInstance().preExecutionConfigCache.getCache()
-              .tractorName,
-          weather:
-            Instance.GetInstance().preExecutionConfigCache.getCache().weather,
-          systematicMetersBetweenDose:
-            Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE
-              .METERS_BETWEEN_DOSE,
-        });
-        const responseDto = await Instance.GetInstance().combateApp.request(
-          requestDto,
-          doseCallback
-        );
-        setVelocity(responseDto.gps.speed);
-        updateApplicatorsStatus(responseDto);
+useFocusEffect(() => {
+  async function trackPoint() {
+    try {
+      setRequestOnProgress(true);
+      const requestDto = new RequestDto({
+        activity:
+          Instance.GetInstance().preExecutionConfigCache.getCache().activity,
+        client:
+          Instance.GetInstance().preExecutionConfigCache.getCache().clientName,
+        deviceName:
+          Instance.GetInstance().preExecutionConfigCache.getCache().deviceName,
+        doseWeightG:
+          Instance.GetInstance().configCache.getCache().APPLICATION
+            .DOSE_WEIGHT_G,
+        event: EventEnum.TrackPoint.name,
+        maxVelocity:
+          Instance.GetInstance().configCache.getCache().APPLICATION
+            .MAX_VELOCITY,
+        linesSpacing:
+          Instance.GetInstance().configCache.getCache().LINE_SPACING,
+        plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
+        farm: Instance.GetInstance().preExecutionConfigCache.getCache().farm,
+        module:
+          Instance.GetInstance().preExecutionConfigCache.getCache().module,
+        matricula: Instance.GetInstance().configCache.getCache().MATRICULA,
+        idEquipment: Instance.GetInstance().configCache.getCache().ID_EQUIPMENT,
+        poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
+        projectName:
+          Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
+        streetsAmount:
+          Instance.GetInstance().preExecutionConfigCache.getCache()
+            .streetsAmount,
+        tractorName:
+          Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
+        weather:
+          Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+        systematicMetersBetweenDose:
+          Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE
+            .METERS_BETWEEN_DOSE,
+      });
+      const responseDto = await Instance.GetInstance().combateApp.request(
+        requestDto,
+        doseCallback
+      );
+      setVelocity(responseDto.gps.speed);
+      updateApplicatorsStatus(responseDto);
 
-        if (!applicatorsLoadPercentage) {
-          if (leftApplicatorAvailable && !leftApplicatorActive) {
-            setLeftApplicatorActive(true);
-          }
-          if (rightApplicatorAvailable && !rightApplicatorActive) {
-            setRightApplicatorActive(true);
-          }
-          if (centerApplicatorAvailable && !centerApplicatorActive) {
-            setCenterApplicatorActive(true);
-          }
-
-          setApplicatorsLoadPercentage({
-            center: calculateApplicatorsLoadPercentage(
-              Instance.GetInstance().configCache.getCache().APPLICATION
-                .CENTER_TANK_MAX_LOAD,
-              centerApplicatorLoad.current
-            ),
-            left: calculateApplicatorsLoadPercentage(
-              Instance.GetInstance().configCache.getCache().APPLICATION
-                .LEFT_TANK_MAX_LOAD,
-              leftApplicatorLoad.current
-            ),
-            right: calculateApplicatorsLoadPercentage(
-              Instance.GetInstance().configCache.getCache().APPLICATION
-                .RIGHT_TANK_MAX_LOAD,
-              rightApplicatorLoad.current
-            ),
-          });
+      if (!applicatorsLoadPercentage) {
+        if (leftApplicatorAvailable && !leftApplicatorActive) {
+          setLeftApplicatorActive(true);
         }
-      } catch (err) {
-        await Instance.GetInstance().errorHandler.handle(err);
-      } finally {
-        setRequestOnProgress(false);
-      }
-    }
+        if (rightApplicatorAvailable && !rightApplicatorActive) {
+          setRightApplicatorActive(true);
+        }
+        if (centerApplicatorAvailable && !centerApplicatorActive) {
+          setCenterApplicatorActive(true);
+        }
 
-    const interval = setInterval(() => {
-      const length = promises.current.length;
-      if (length < 2) {
-        promises.current.push({
-          type: EventEnum.TrackPoint.name,
-          process: trackPoint,
+        setApplicatorsLoadPercentage({
+          center: calculateApplicatorsLoadPercentage(
+            Instance.GetInstance().configCache.getCache().APPLICATION
+              .CENTER_TANK_MAX_LOAD,
+            centerApplicatorLoad.current
+          ),
+          left: calculateApplicatorsLoadPercentage(
+            Instance.GetInstance().configCache.getCache().APPLICATION
+              .LEFT_TANK_MAX_LOAD,
+            leftApplicatorLoad.current
+          ),
+          right: calculateApplicatorsLoadPercentage(
+            Instance.GetInstance().configCache.getCache().APPLICATION
+              .RIGHT_TANK_MAX_LOAD,
+            rightApplicatorLoad.current
+          ),
         });
       }
-    }, 5000);
-    return () => clearInterval(interval);
-  });
+    } catch (err) {
+      await Instance.GetInstance().errorHandler.handle(err);
+    } finally {
+      setRequestOnProgress(false);
+    }
+  }
+
+  const interval = setInterval(() => {
+    const length = promises.current.length;
+    if (length < 2) {
+      promises.current.push({
+        type: EventEnum.TrackPoint.name,
+        process: trackPoint,
+      });
+    }
+  }, 5000);
+  return () => clearInterval(interval);
+});
 
   useEffect(() => {
     const interval = setInterval(async () => {
