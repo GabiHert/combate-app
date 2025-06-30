@@ -1,7 +1,6 @@
 import { Button, FormControl, Modal } from "native-base";
 import { memo, useCallback, useState } from "react";
 import { RequestDto } from "../../../../../src/internal/core/dto/request-dto";
-import { EventEnum } from "../../../../../src/internal/core/enum/event";
 import { appConfig } from "../../../../app/config/app-config";
 import { Instance } from "../../../../app/instance/instance";
 import { mapStringToItemArray } from "../../../../app/parser/map-string-to-item-array";
@@ -24,7 +23,7 @@ function FinishExecutionModal(props: {
     setUnderForestModalVisible(false);
   }, [setUnderForestModalVisible]);
 
-  const onOkPress = useCallback((callback: () => void) => {
+  const onOkPress = useCallback((event: string, callback: () => void) => {
     setUnderForestModalVisible(false);
     setLoading(true);
 
@@ -39,7 +38,7 @@ function FinishExecutionModal(props: {
         doseWeightG:
           Instance.GetInstance().configCache.getCache().APPLICATION
             .DOSE_WEIGHT_G,
-        event: EventEnum.EndTrackPoint.name,
+        event,
         linesSpacing:
           Instance.GetInstance().configCache.getCache().LINE_SPACING,
         maxVelocity:
@@ -72,7 +71,7 @@ function FinishExecutionModal(props: {
         UNDER_FOREST: underForest,
       });
       setUnderForestModalVisible(false);
-      onOkPress(() => {
+      onOkPress(event, () => {
         props.onFinishExecutionPress(event);
       });
     },

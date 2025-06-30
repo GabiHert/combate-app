@@ -30,6 +30,8 @@ import {
   IConfigsProps,
   IPreExecutionConfigProps,
 } from "../../../src/internal/interface/config-props";
+import { BluetoothAppMock } from "../../../src/mocks/bluetooth-app-mock";
+import { BluetoothMock } from "../../../src/mocks/bluetooth-mock";
 
 export class Instance {
   readonly logger: PLogger;
@@ -59,7 +61,7 @@ export class Instance {
   private constructor() {
     this.logger = new ALogger(false);
 
-    const bluetooth = new ABluetooth(this.logger);
+    const bluetooth =  new ABluetooth(this.logger);//new BluetoothMock()
     const fileSystem = new AFileSystem(this.logger);
     const csvTableService = new CsvTableService(this.logger, fileSystem);
     const checkSumBuilder = new CheckSumBuilder(this.logger);

@@ -1,11 +1,8 @@
-import { EventEnum } from "../core/enum/event";
-import { poisonItems } from "../core/enum/poison";
-import { WeatherEnum } from "../core/enum/weather";
-import {
-  IConfigsProps,
-  IPreExecutionConfigProps,
-} from "../interface/config-props";
-import { IItem } from "../interface/item";
+import {EventEnum} from "../core/enum/event";
+import {poisonItems} from "../core/enum/poison";
+import {WeatherEnum} from "../core/enum/weather";
+import {IConfigsProps, IPreExecutionConfigProps,} from "../interface/config-props";
+import {IItem} from "../interface/item";
 
 export const CONSTANTS = {
   PRE_EXECUTION_SCREEN: {
