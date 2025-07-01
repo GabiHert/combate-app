@@ -9,10 +9,7 @@ import { dateTimeFormatter } from "../utils/date-time-formatter";
 
 interface Fields {
   ID: string;
-  MATRICULA: number;
-  "SUB-BOSQUE": string;
   CLIENTE: string;
-  PROJETO: string;
   MODULO: string;
   EQUIPAMENTO: string;
   FAZENDA: string;
@@ -21,11 +18,11 @@ interface Fields {
   MAQUINA: string;
   CB: string;
   DOSADORES: string;
-  "DOSES TOTAIS": string;
-  "TIPO DE ISCA": string;
-  "PESO POR DOSE (G)": string;
-  "TOTAL APLICADO (KG)": string;
-  "VELOCIDADE MAXIMA": string;
+  DOSES_TOTAIS: string;
+  TIPO_DE_ISCA: string;
+  "PESO_POR_DOSE_(G)": string;
+  "TOTAL_APLICADO_(KG)": string;
+  VELOCIDADE_MAXIMA: string;
   CLIMA: string;
   RUAS: string;
   LINHAS: string;
@@ -39,7 +36,7 @@ interface Fields {
   SUP_TS: string;
   LATITUDE: string;
   LONGITUDE: string;
-  "VELOCIDADE (KM/H)": string;
+  "VELOCIDADE_(KM/H)": string;
 }
 export class CsvTableService implements PCsvTableService {
   private _id: number = 0;
@@ -72,22 +69,19 @@ export class CsvTableService implements PCsvTableService {
       const fields: Fields = {
         ID: "",
         CLIENTE: "",
-        PROJETO: "",
-        MATRICULA: 0,
+        MODULO: "",
         EQUIPAMENTO: "",
         FAZENDA: "",
-        MODULO: "",
         ATIVIDADE: "",
         TALHAO: "",
         MAQUINA: "",
         CB: "",
         DOSADORES: "",
-        "DOSES TOTAIS": "",
-        "TIPO DE ISCA": "",
-        "PESO POR DOSE (G)": "",
-        "TOTAL APLICADO (KG)": "",
-        "VELOCIDADE MAXIMA": "",
-        "SUB-BOSQUE": "",
+        DOSES_TOTAIS: "",
+        TIPO_DE_ISCA: "",
+        "PESO_POR_DOSE_(G)": "",
+        "TOTAL_APLICADO_(KG)": "",
+        VELOCIDADE_MAXIMA: "",
         CLIMA: "",
         RUAS: "",
         LINHAS: "",
@@ -101,7 +95,7 @@ export class CsvTableService implements PCsvTableService {
         SUP_TS: "",
         LATITUDE: "",
         LONGITUDE: "",
-        "VELOCIDADE (KM/H)": "",
+        "VELOCIDADE_(KM/H)": "",
       };
 
       let data = [];
@@ -237,29 +231,25 @@ export class CsvTableService implements PCsvTableService {
     if (Evento.length > 0) {
       SUP_TS = CONSTANTS.SUP_TS_PARSE_TABLE[Evento];
     }
-
-    return {
+    console.log("buildFields: ", {
       ID: this._id.toString(),
       CLIENTE: requestDto.client,
-      PROJETO: requestDto.projectName,
-      MATRICULA: requestDto.matricula,
+      MODULO: requestDto.module,
       EQUIPAMENTO: requestDto.idEquipment,
       FAZENDA: requestDto.farm,
-      MODULO: requestDto.module,
       ATIVIDADE: requestDto.activity,
       TALHAO: requestDto.plot,
       MAQUINA: requestDto.tractorName,
       CB: requestDto.deviceName,
       DOSADORES: applicatorsAmount.toString(),
-      "DOSES TOTAIS": doseAmount.toString(),
-      "TIPO DE ISCA": requestDto.poisonType,
-      "PESO POR DOSE (G)": requestDto.doseWeightG.toString(),
-      "SUB-BOSQUE": requestDto.underForest,
-      "TOTAL APLICADO (KG)": (
-      (requestDto.doseWeightG * doseAmount) /
-      1000
+      DOSES_TOTAIS: doseAmount.toString(),
+      TIPO_DE_ISCA: requestDto.poisonType,
+      "PESO_POR_DOSE_(G)": requestDto.doseWeightG.toString(),
+      "TOTAL_APLICADO_(KG)": (
+        (requestDto.doseWeightG * doseAmount) /
+        1000
       ).toFixed(2),
-      "VELOCIDADE MAXIMA": requestDto.maxVelocity.toString(),
+      VELOCIDADE_MAXIMA: requestDto.maxVelocity.toString(),
       CLIMA: requestDto.weather,
       RUAS: requestDto.streetsAmount.toString(),
       LINHAS: requestDto.linesSpacing.toString(),
@@ -272,12 +262,50 @@ export class CsvTableService implements PCsvTableService {
       T_A,
       SUP_TS,
       LATITUDE: responseDto.gps.latitude
-      ? responseDto.gps.latitude.toString()
-      : "",
+        ? responseDto.gps.latitude.toString()
+        : "",
       LONGITUDE: responseDto.gps.longitude
-      ? responseDto.gps.longitude.toString()
-      : "",
-      "VELOCIDADE (KM/H)": responseDto.gps.speed,
+        ? responseDto.gps.longitude.toString()
+        : "",
+      "VELOCIDADE_(KM/H)": responseDto.gps.speed,
+    });
+    return {
+      ID: this._id.toString(),
+      CLIENTE: requestDto.client,
+      MODULO: requestDto.module,
+      EQUIPAMENTO: requestDto.idEquipment,
+      FAZENDA: requestDto.farm,
+      ATIVIDADE: requestDto.activity,
+      TALHAO: requestDto.plot,
+      MAQUINA: requestDto.tractorName,
+      CB: requestDto.deviceName,
+      DOSADORES: applicatorsAmount.toString(),
+      DOSES_TOTAIS: doseAmount.toString(),
+      TIPO_DE_ISCA: requestDto.poisonType,
+      "PESO_POR_DOSE_(G)": requestDto.doseWeightG.toString(),
+      "TOTAL_APLICADO_(KG)": (
+        (requestDto.doseWeightG * doseAmount) /
+        1000
+      ).toFixed(2),
+      VELOCIDADE_MAXIMA: requestDto.maxVelocity.toString(),
+      CLIMA: requestDto.weather,
+      RUAS: requestDto.streetsAmount.toString(),
+      LINHAS: requestDto.linesSpacing.toString(),
+      DATA: dateTimeFormatter.date(date),
+      HORA: Hora,
+      TZ,
+      ERRO: responseDto.errorCode,
+      ALERTA: requestDto.alert ? requestDto.alert.toUpperCase() : "",
+      EVENTO: Evento ? Evento.toUpperCase() : "",
+      T_A,
+      SUP_TS,
+      LATITUDE: responseDto.gps.latitude
+        ? responseDto.gps.latitude.toString()
+        : "",
+      LONGITUDE: responseDto.gps.longitude
+        ? responseDto.gps.longitude.toString()
+        : "",
+      "VELOCIDADE_(KM/H)": responseDto.gps.speed,
     };
   }
 }

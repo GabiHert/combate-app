@@ -21,7 +21,10 @@ import { SeverityEnum } from "../../../src/internal/core/enum/severity";
 import { dateTimeFormatter } from "../../../src/internal/core/utils/date-time-formatter";
 import { IItem } from "../../../src/internal/interface/item";
 import { Instance } from "../../app/instance/instance";
-import { sanitizeText } from "../../app/parser/sanitize-text";
+import {
+  sanitizeText,
+  sanitizeTextUnderline,
+} from "../../app/parser/sanitize-text";
 import { Theme } from "../../app/theme/theme";
 import { ShowToast } from "../../Components/AlertToast";
 import FormInput from "../../Components/FormInput";
@@ -127,12 +130,12 @@ function PreExecutionScreen(props: { navigation: any }) {
   const onNextPressed = useCallback(async () => {
     const data: IPreExecutionConfigProps = {
       activity: sanitizeText(activity),
+      module: sanitizeText(module),
       clientName: sanitizeText(clientName),
       projectName: sanitizeText(projectName),
       plot: sanitizeText(plot),
       farm: sanitizeText(farm),
       underForest: sanitizeText(underForest),
-      module: sanitizeText(module),
       weather: sanitizeText(weather.name),
       tractorName: sanitizeText(tractorName),
       leftApplicatorLoad,
@@ -155,19 +158,15 @@ function PreExecutionScreen(props: { navigation: any }) {
         const date = new Date();
 
         let fileName =
-          sanitizeText(preExecutionConfigCache.clientName) +
+          sanitizeTextUnderline(preExecutionConfigCache.clientName) +
           "_" +
-          sanitizeText(preExecutionConfigCache.projectName) +
+          sanitizeTextUnderline(preExecutionConfigCache.module) +
           "_" +
-          sanitizeText(preExecutionConfigCache.activity) +
+          sanitizeTextUnderline(preExecutionConfigCache.activity) +
           "_" +
-          sanitizeText(preExecutionConfigCache.plot) +
+          sanitizeTextUnderline(preExecutionConfigCache.plot) +
           "_" +
-          sanitizeText(preExecutionConfigCache.module) +
-          "_" +
-          sanitizeText(preExecutionConfigCache.farm) +
-          "_" +
-          sanitizeText(preExecutionConfigCache.underForest) +
+          sanitizeTextUnderline(preExecutionConfigCache.idEquipment) +
           "_" +
           dateTimeFormatter.date(date) +
           "_" +

@@ -24,3 +24,4 @@ export class ResponseDto {
     this.status = status;
   }
 }
+  
