@@ -26,16 +26,26 @@ export interface IConfigsProps {
   EVENTS: TMapString;
   FARMS: TMapString;
   PLOTS: TMapString;
+  MODULES: TMapString;
+  PROJECTS: TMapString;
   POISON_TYPE: string;
   LINE_SPACING: number;
   FILE_PATH: string;
+  MATRICULA: number;
+  ID_EQUIPMENT: string;
+  UNDER_FOREST?: string;
 }
 
 export interface IPreExecutionConfigProps {
   clientName: string;
   projectName: string;
   farm: string;
+  underForest: string;
   plot: string;
+  newId?: string;
+  module: string;
+  matricula?: number;
+  idEquipment?: string;
   tractorName: string;
   weather: string;
   leftApplicatorLoad: number;

@@ -9,33 +9,38 @@ import { calculateAppliedDoses } from "../utils/applied-doses-calculator";
 import { dateTimeFormatter } from "../utils/date-time-formatter";
 
 interface Fields {
-  Id: string;
-  Cliente: string;
-  Projeto: string;
-  Atividade: string;
-  Talhao: string;
-  Maquina: string;
+  ID: string;
+  MATRICULA: number;
+  "SUB-BOSQUE": string;
+  CLIENTE: string;
+  PROJETO: string;
+  MODULO: string;
+  EQUIPAMENTO: string;
+  FAZENDA: string;
+  ATIVIDADE: string;
+  TALHAO: string;
+  MAQUINA: string;
   CB: string;
-  Dosadores: string;
-  "Doses totais": string;
-  "Tipo de isca": string;
-  "Peso por dose (g)": string;
-  "Total aplicado (Kg)": string;
-  "Velocidade maxima": string;
-  Clima: string;
-  Ruas: string;
-  Linhas: string;
-  Data: string;
-  Hora: string;
+  DOSADORES: string;
+  "DOSES TOTAIS": string;
+  "TIPO DE ISCA": string;
+  "PESO POR DOSE (G)": string;
+  "TOTAL APLICADO (KG)": string;
+  "VELOCIDADE MAXIMA": string;
+  CLIMA: string;
+  RUAS: string;
+  LINHAS: string;
+  DATA: string;
+  HORA: string;
   TZ: string;
-  Erro: string;
-  Alerta: string;
-  Evento: string;
+  ERRO: string;
+  ALERTA: string;
+  EVENTO: string;
   T_A: string;
   SUP_TS: string;
-  Latitude: string;
-  Longitude: string;
-  "Velocidade (Km/h)": string;
+  LATITUDE: string;
+  LONGITUDE: string;
+  "VELOCIDADE (KM/H)": string;
 }
 export class CsvTableService implements PCsvTableService {
   private _id: number = 0;
@@ -66,33 +71,38 @@ export class CsvTableService implements PCsvTableService {
 
       this._id = 0;
       const fields: Fields = {
-        Id: "",
-        Cliente: "",
-        Projeto: "",
-        Atividade: "",
-        Talhao: "",
-        Maquina: "",
+        ID: "",
+        CLIENTE: "",
+        PROJETO: "",
+        MATRICULA: 0,
+        EQUIPAMENTO: "",
+        FAZENDA: "",
+        MODULO: "",
+        ATIVIDADE: "",
+        TALHAO: "",
+        MAQUINA: "",
         CB: "",
-        Dosadores: "",
-        "Doses totais": "",
-        "Tipo de isca": "",
-        "Peso por dose (g)": "",
-        "Total aplicado (Kg)": "",
-        "Velocidade maxima": "",
-        Clima: "",
-        Ruas: "",
-        Linhas: "",
-        Data: "",
-        Hora: "",
+        DOSADORES: "",
+        "DOSES TOTAIS": "",
+        "TIPO DE ISCA": "",
+        "PESO POR DOSE (G)": "",
+        "TOTAL APLICADO (KG)": "",
+        "VELOCIDADE MAXIMA": "",
+        "SUB-BOSQUE": "",
+        CLIMA: "",
+        RUAS: "",
+        LINHAS: "",
+        DATA: "",
+        HORA: "",
         TZ: "",
-        Erro: "",
-        Alerta: "",
-        Evento: "",
+        ERRO: "",
+        ALERTA: "",
+        EVENTO: "",
         T_A: "",
         SUP_TS: "",
-        Latitude: "",
-        Longitude: "",
-        "Velocidade (Km/h)": "",
+        LATITUDE: "",
+        LONGITUDE: "",
+        "VELOCIDADE (KM/H)": "",
       };
 
       let data = [];
@@ -163,7 +173,7 @@ export class CsvTableService implements PCsvTableService {
           requestedApplicatorsAmount,
           doseAmount,
           responseDto,
-          Evento,
+          EventEnum.Systematic.name,
           EventEnum.Systematic.name
         );
         await this.write(fieldsSystematic, path);
@@ -202,40 +212,45 @@ export class CsvTableService implements PCsvTableService {
     }
 
     return {
-      Id: this._id.toString(),
-      Cliente: requestDto.client,
-      Projeto: requestDto.project,
-      Atividade: requestDto.activity,
-      Talhao: requestDto.plot,
-      Maquina: requestDto.tractorName,
+      ID: this._id.toString(),
+      CLIENTE: requestDto.client,
+      PROJETO: requestDto.projectName,
+      MATRICULA: requestDto.matricula,
+      EQUIPAMENTO: requestDto.idEquipment,
+      FAZENDA: requestDto.farm,
+      MODULO: requestDto.module,
+      ATIVIDADE: requestDto.activity,
+      TALHAO: requestDto.plot,
+      MAQUINA: requestDto.tractorName,
       CB: requestDto.deviceName,
-      Dosadores: applicatorsAmount.toString(),
-      "Doses totais": doseAmount.toString(),
-      "Tipo de isca": requestDto.poisonType,
-      "Peso por dose (g)": requestDto.doseWeightG.toString(),
-      "Total aplicado (Kg)": (
-        (requestDto.doseWeightG * doseAmount) /
-        1000
+      DOSADORES: applicatorsAmount.toString(),
+      "DOSES TOTAIS": doseAmount.toString(),
+      "TIPO DE ISCA": requestDto.poisonType,
+      "PESO POR DOSE (G)": requestDto.doseWeightG.toString(),
+      "SUB-BOSQUE": requestDto.underForest,
+      "TOTAL APLICADO (KG)": (
+      (requestDto.doseWeightG * doseAmount) /
+      1000
       ).toFixed(2),
-      "Velocidade maxima": requestDto.maxVelocity.toString(),
-      Clima: requestDto.weather,
-      Ruas: requestDto.streetsAmount.toString(),
-      Linhas: requestDto.linesSpacing.toString(),
-      Data: dateTimeFormatter.date(date),
-      Hora,
+      "VELOCIDADE MAXIMA": requestDto.maxVelocity.toString(),
+      CLIMA: requestDto.weather,
+      RUAS: requestDto.streetsAmount.toString(),
+      LINHAS: requestDto.linesSpacing.toString(),
+      DATA: dateTimeFormatter.date(date),
+      HORA: Hora,
       TZ,
-      Erro: responseDto.errorCode,
-      Alerta: requestDto.alert,
-      Evento,
+      ERRO: responseDto.errorCode,
+      ALERTA: requestDto.alert ? requestDto.alert.toUpperCase() : "",
+      EVENTO: Evento ? Evento.toUpperCase() : "",
       T_A,
       SUP_TS,
-      Latitude: responseDto.gps.latitude
-        ? responseDto.gps.latitude.toString()
-        : "",
-      Longitude: responseDto.gps.longitude
-        ? responseDto.gps.longitude.toString()
-        : "",
-      "Velocidade (Km/h)": responseDto.gps.speed,
+      LATITUDE: responseDto.gps.latitude
+      ? responseDto.gps.latitude.toString()
+      : "",
+      LONGITUDE: responseDto.gps.longitude
+      ? responseDto.gps.longitude.toString()
+      : "",
+      "VELOCIDADE (KM/H)": responseDto.gps.speed,
     };
   }
 }

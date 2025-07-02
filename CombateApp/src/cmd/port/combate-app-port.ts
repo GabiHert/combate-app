@@ -23,5 +23,5 @@ export interface PCombateApp {
    */
   begin(filePath: string, systematicMetersBetweenDose: number): Promise<void>;
 
-  permissions(): Promise<void>;
+  permissions(): Promise<boolean>;
 }

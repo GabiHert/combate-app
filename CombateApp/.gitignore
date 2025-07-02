@@ -21,6 +21,9 @@ DerivedData
 *.ipa
 *.xcuserstate
 ios/.xcode.env.local
+node_modules
+package-lock.json
+yarn.lock
 
 # Android/IntelliJ
 #

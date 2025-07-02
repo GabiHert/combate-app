@@ -62,4 +62,18 @@ export interface PValidator {
    * @return an error message if event is invalid
    */
   validateEventForm(event: string): string;
+
+  /**
+   *
+   * @param module configuration to be validated
+   * @return an error message if plot is invalid
+   */
+  validateModuleForm(module: string): string;
+
+  /**
+   *
+   * @param project configuration to be validated
+   * @return an error message if plot is invalid
+   */
+  validateProjectForm(project: string): string;
 }

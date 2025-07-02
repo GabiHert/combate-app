@@ -81,6 +81,7 @@ export class Validator implements PValidator {
 
     return result;
   }
+
   validateFarmForm(farm: string): string {
     Instance.GetInstance().logger.info({
       event: "FormValidator.validateFarmForm",
@@ -104,6 +105,55 @@ export class Validator implements PValidator {
 
     return result;
   }
+
+  validateModuleForm(module: string): string {
+    Instance.GetInstance().logger.info({
+      event: "FormValidator.validateModuleForm",
+      details: "Process started",
+      module,
+    });
+    let result: string;
+    if (!Validator.BasicStringValidation(module))
+      result = CONSTANTS.ERRORS.MODULES_FORM.INVALID_MODULES;
+    if (result && result.length > 0) {
+      Instance.GetInstance().logger.warn({
+        event: "FormValidator.validateModuleForm",
+        details: "Process warn - invalid farm",
+      });
+    }
+
+    Instance.GetInstance().logger.info({
+      event: "FormValidator.validateModuleForm",
+      details: "Process finished",
+    });
+
+    return result;
+  }
+
+  validateProjectForm(project: string): string {
+    Instance.GetInstance().logger.info({
+      event: "FormValidator.validateProjectForm",
+      details: "Process started",
+      project,
+    });
+    let result: string;
+    if (!Validator.BasicStringValidation(project))
+      result = CONSTANTS.ERRORS.PROJECTS_FORM.INVALID_PROJECTS;
+    if (result && result.length > 0) {
+      Instance.GetInstance().logger.warn({
+        event: "FormValidator.validateProjectForm",
+        details: "Process warn - invalid farm",
+      });
+    }
+
+    Instance.GetInstance().logger.info({
+      event: "FormValidator.validateProjectForm",
+      details: "Process finished",
+    });
+
+    return result;
+  }
+
   validateEventForm(event: string): string {
     Instance.GetInstance().logger.info({
       event: "FormValidator.validateEventForm",
@@ -137,6 +187,7 @@ export class Validator implements PValidator {
       projectName: { errorMessage: undefined },
       farm: { errorMessage: undefined },
       plot: { errorMessage: undefined },
+      module: { errorMessage: undefined },
       tractorName: { errorMessage: undefined },
       weather: { errorMessage: undefined },
       leftApplicatorLoad: { errorMessage: undefined },
@@ -144,6 +195,7 @@ export class Validator implements PValidator {
       rightApplicatorLoad: { errorMessage: undefined },
       streetsAmount: { errorMessage: undefined },
       deviceName: { errorMessage: undefined },
+      underForest: { errorMessage: undefined },
     };
     this._logger.info({
       event: "FormValidator.validatePreExecutionForm",
@@ -207,6 +259,18 @@ export class Validator implements PValidator {
         event: "FormValidator.validatePreExecutionForm",
         details: "Process warn - plot is invalid",
         plotNumber: data.plot,
+      });
+    }
+
+    if (!data.module || data.module.length === 0) {
+      // plot is invalid
+      result.valid = false;
+      result.module.errorMessage =
+        CONSTANTS.ERRORS.PRE_EXECUTION_FORM_VALIDATOR.INVALID_MODULES;
+      this._logger.warn({
+        event: "FormValidator.validatePreExecutionForm",
+        details: "Process warn - module is invalid",
+        plotNumber: data.module,
       });
     }
 
@@ -337,6 +401,10 @@ export class Validator implements PValidator {
       farms: { errorMessage: undefined },
       filePath: { errorMessage: undefined },
       plots: { errorMessage: undefined },
+      modules: { errorMessage: undefined },
+      projects: { errorMessage: undefined },
+      matricula: { errorMessage: undefined },
+      idEquipment: { errorMessage: undefined },
       poisonType: { errorMessage: undefined },
       preset5Dose: { errorMessage: undefined },
       preset5Name: { errorMessage: undefined },
@@ -524,6 +592,28 @@ export class Validator implements PValidator {
           this._logger.warn({
             event: "FormValidator.validateConfigForm",
             details: "Process warn - Invalid PLOTS attribute",
+          });
+        }
+      }
+    }
+
+    if (!data.MODULES) {
+      result.valid = false;
+      result.modules.errorMessage =
+        CONSTANTS.ERRORS.CONFIG_FORM.INVALID_MODULES;
+      this._logger.warn({
+        event: "FormValidator.validateConfigForm",
+        details: "Process warn - Invalid MODULES",
+      });
+    } else {
+      for (const key in data.MODULES) {
+        if (!data.MODULES[key] || data.MODULES[key].length === 0) {
+          result.valid = false;
+          result.plots.errorMessage =
+            CONSTANTS.ERRORS.CONFIG_FORM.INVALID_MODULES;
+          this._logger.warn({
+            event: "FormValidator.validateConfigForm",
+            details: "Process warn - Invalid MODULES attribute",
           });
         }
       }

@@ -1,24 +1,28 @@
-import {Box, Button, Divider, FormControl, IconButton, ScrollView, VStack,} from "native-base";
-import React, {useCallback, useState} from "react";
+import { Box, Button, Divider, FormControl, IconButton, ScrollView, VStack, } from "native-base";
+import React, { useCallback, useState } from "react";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
-import {Weather, weatherItems} from "../../../src/internal/core/enum/weather";
-import {IPreExecutionConfigProps} from "../../../src/internal/interface/config-props";
-import {IPreExecutionFormResult} from "../../../src/internal/interface/pre-execution-form-result";
-import {appConfig} from "../../app/config/app-config";
-import {mapStringToItemArray} from "../../app/parser/map-string-to-item-array";
+import { Weather, weatherItems } from "../../../src/internal/core/enum/weather";
+import { IPreExecutionConfigProps } from "../../../src/internal/interface/config-props";
+import { IPreExecutionFormResult } from "../../../src/internal/interface/pre-execution-form-result";
+import { appConfig } from "../../app/config/app-config";
+import { mapStringToItemArray } from "../../app/parser/map-string-to-item-array";
 
-import {useFocusEffect} from "@react-navigation/native";
-import {CONSTANTS} from "../../../src/internal/config/config";
-import {SeverityEnum} from "../../../src/internal/core/enum/severity";
-import {dateTimeFormatter} from "../../../src/internal/core/utils/date-time-formatter";
-import {IItem} from "../../../src/internal/interface/item";
-import {Instance} from "../../app/instance/instance";
-import {Theme} from "../../app/theme/theme";
-import {ShowToast} from "../../Components/AlertToast";
+import { useFocusEffect } from "@react-navigation/native";
+import { CONSTANTS } from "../../../src/internal/config/config";
+import { SeverityEnum } from "../../../src/internal/core/enum/severity";
+import { dateTimeFormatter } from "../../../src/internal/core/utils/date-time-formatter";
+import { IItem } from "../../../src/internal/interface/item";
+import { Instance } from "../../app/instance/instance";
+import { sanitizeText } from "../../app/parser/sanitize-text";
+import { Theme } from "../../app/theme/theme";
+import { ShowToast } from "../../Components/AlertToast";
 import FormInput from "../../Components/FormInput";
 import SelectInput from "../../Components/SelectInput";
 
 function PreExecutionScreen(props: { navigation: any }) {
+  const [devices, setDevices] = useState<IItem[]>([]);
+  const [connectToBluetooth, setConnectToBluetooth] = useState(false);
+
   const [activity, setActivity] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().activity
   );
@@ -34,7 +38,10 @@ function PreExecutionScreen(props: { navigation: any }) {
       .rightApplicatorLoad
   );
 
-  const [devices, setDevices] = useState<Array<IItem>>([]);
+  const [underForest, setUnderForest] = useState<string>(
+    Instance.GetInstance().configCache.getCache().UNDER_FOREST
+  );
+
   const [deviceConnected, setDeviceConnected] = useState(false);
   const [clientName, setClientName] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().clientName
@@ -45,7 +52,12 @@ function PreExecutionScreen(props: { navigation: any }) {
   const [farm, setFarm] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().farm
   );
-  const [plot, setPlot] = useState<string>("");
+  const [plot, setPlot] = useState<string>(
+    Instance.GetInstance().preExecutionConfigCache.getCache().plot
+  );
+  const [module, setModule] = useState<string>(
+    Instance.GetInstance().preExecutionConfigCache.getCache().module
+  );
   const [tractorName, setTractorName] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().tractorName
   );
@@ -57,7 +69,6 @@ function PreExecutionScreen(props: { navigation: any }) {
   const [deviceName, setDeviceName] = useState<string>(
     Instance.GetInstance().preExecutionConfigCache.getCache().deviceName
   );
-
   const [weather, setWeather] = useState<Weather>(
     new Weather(
       Instance.GetInstance().preExecutionConfigCache.getCache().weather
@@ -73,40 +84,49 @@ function PreExecutionScreen(props: { navigation: any }) {
       weather: { errorMessage: undefined },
       tractorName: { errorMessage: undefined },
       farm: { errorMessage: undefined },
+      module: { errorMessage: undefined },
       rightApplicatorLoad: { errorMessage: undefined },
       leftApplicatorLoad: { errorMessage: undefined },
       activity: { errorMessage: undefined },
       centerApplicatorLoad: { errorMessage: undefined },
       deviceName: { errorMessage: undefined },
       valid: true,
+      underForest: { errorMessage: undefined },
     });
 
   const searchDevicesCallback = useCallback(async () => {
     try {
-      await Instance.GetInstance().bluetoothApp.init();
+      setIsConnecting(true);
       const data = await Instance.GetInstance().bluetoothApp.getBondedDevices();
       setDevices(data);
     } catch (err) {
       await Instance.GetInstance().errorHandler.handle(err);
+    } finally {
+      setIsConnecting(false);
     }
   }, [devices]);
 
   useFocusEffect(() => {
+    if (deviceConnected) return;
+
     const interval = setInterval(async () => {
       await searchDevicesCallback();
     }, 3000);
+
     return () => clearInterval(interval);
   });
 
   const onNextPressed = useCallback(async () => {
     const data: IPreExecutionConfigProps = {
-      activity,
-      clientName,
-      projectName,
-      plot,
-      farm,
-      weather: weather.name,
-      tractorName,
+      activity: sanitizeText(activity),
+      clientName: sanitizeText(clientName),
+      projectName: sanitizeText(projectName),
+      plot: sanitizeText(plot),
+      farm: sanitizeText(farm),
+      underForest: sanitizeText(underForest),
+      module: sanitizeText(module),
+      weather: sanitizeText(weather.name),
+      tractorName: sanitizeText(tractorName),
       leftApplicatorLoad,
       streetsAmount,
       rightApplicatorLoad,
@@ -127,15 +147,19 @@ function PreExecutionScreen(props: { navigation: any }) {
         const date = new Date();
 
         let fileName =
-          preExecutionConfigCache.clientName +
+          sanitizeText(preExecutionConfigCache.clientName) +
           "_" +
-          preExecutionConfigCache.projectName +
+          sanitizeText(preExecutionConfigCache.projectName) +
           "_" +
-          preExecutionConfigCache.activity +
+          sanitizeText(preExecutionConfigCache.activity) +
           "_" +
-          preExecutionConfigCache.plot +
+          sanitizeText(preExecutionConfigCache.plot) +
           "_" +
-          preExecutionConfigCache.farm +
+          sanitizeText(preExecutionConfigCache.module) +
+          "_" +
+          sanitizeText(preExecutionConfigCache.farm) +
+          "_" +
+          sanitizeText(preExecutionConfigCache.underForest) +
           "_" +
           dateTimeFormatter.date(date) +
           "_" +
@@ -174,7 +198,9 @@ function PreExecutionScreen(props: { navigation: any }) {
     deviceConnected,
     projectName,
     plot,
+    module,
     farm,
+    underForest,
     weather,
     tractorName,
     leftApplicatorLoad,
@@ -186,7 +212,7 @@ function PreExecutionScreen(props: { navigation: any }) {
   const setWeatherCallback = useCallback(
     (value: string) => {
       try {
-        setWeather(new Weather(value));
+        setWeather(new Weather(sanitizeText(value)));
       } catch (err) {
         Instance.GetInstance().errorHandler.handle(err);
       }
@@ -201,17 +227,15 @@ function PreExecutionScreen(props: { navigation: any }) {
     [setStreetsAmount]
   );
 
-  const connectToBluetoothCallback = useCallback(async () => {
-    setIsConnecting(true);
+  const connectToBluetoothCallback = async () => {
+    setConnectToBluetooth(true);
     try {
-      let deviceId: string;
-      if (!devices.length) await searchDevicesCallback();
-      devices.forEach((device) => {
-        if (device.name == deviceName) {
-          deviceId = device.id;
-        }
-      });
-      await Instance.GetInstance().bluetoothApp.selectDevice(deviceId);
+      if (devices.length === 0) await searchDevicesCallback();
+
+      const device = devices.find((device) => device.name === deviceName);
+      if (!device) throw new Error("Dispositivo não encontrado");
+
+      await Instance.GetInstance().bluetoothApp.selectDevice(device.id);
       setDeviceConnected(true);
       ShowToast({
         durationMs: 3000,
@@ -221,10 +245,11 @@ function PreExecutionScreen(props: { navigation: any }) {
     } catch (err) {
       await Instance.GetInstance().errorHandler.handle(err);
       setDeviceConnected(false);
+    } finally {
+      setIsConnecting(false);
+      setConnectToBluetooth(false);
     }
-
-    setIsConnecting(false);
-  }, [deviceName, devices]);
+  };
 
   return (
     <Box justifyContent={"center"} alignItems={"center"} h="100%">
@@ -246,34 +271,43 @@ function PreExecutionScreen(props: { navigation: any }) {
           </FormControl.Label>
           <FormInput
             title="Nome"
+            keyboardType="default"
             description="Preencha este campo com o nome do cliente"
             errorMessage={validationResult.clientName.errorMessage}
             placeholder="Cliente X"
             defaultValue={
               Instance.GetInstance().preExecutionConfigCache.getCache()
-                .clientName
+                .clientName ?? ""
             }
             onChangeText={setClientName}
           />
-          <FormInput
+
+          <SelectInput
             title="Projeto"
-            description="Preencha este campo com o nome do projeto"
-            errorMessage={validationResult.projectName.errorMessage}
-            placeholder="Projeto x"
+            onItemSelected={setProjectName}
+            items={
+              mapStringToItemArray(
+                Instance.GetInstance().configCache.getCache().PROJECTS
+              ) ?? []
+            }
             defaultValue={
               Instance.GetInstance().preExecutionConfigCache.getCache()
-                .projectName
+                .projectName ?? ""
             }
-            onChangeText={setProjectName}
+            errorMessage={validationResult.projectName.errorMessage}
+            placeholder={"Escolha o projeto"}
           />
           <SelectInput
             title="Fazenda"
             onItemSelected={setFarm}
-            items={mapStringToItemArray(
-              Instance.GetInstance().configCache.getCache().FARMS
-            )}
+            items={
+              mapStringToItemArray(
+                Instance.GetInstance().configCache.getCache().FARMS
+              ) ?? []
+            }
             defaultValue={
-              Instance.GetInstance().preExecutionConfigCache.getCache().farm
+              Instance.GetInstance().preExecutionConfigCache.getCache().farm ??
+              ""
             }
             errorMessage={validationResult.farm.errorMessage}
             placeholder={""}
@@ -281,10 +315,15 @@ function PreExecutionScreen(props: { navigation: any }) {
           <SelectInput
             title="Talhão"
             onItemSelected={setPlot}
-            items={mapStringToItemArray(
-              Instance.GetInstance().configCache.getCache().PLOTS
-            )}
-            defaultValue={""}
+            items={
+              mapStringToItemArray(
+                Instance.GetInstance().configCache.getCache().PLOTS
+              ) ?? []
+            }
+            defaultValue={
+              Instance.GetInstance().preExecutionConfigCache.getCache().plot ??
+              ""
+            }
             errorMessage={validationResult.plot.errorMessage}
             placeholder={""}
           />
@@ -293,9 +332,36 @@ function PreExecutionScreen(props: { navigation: any }) {
             onItemSelected={setActivity}
             items={CONSTANTS.ACTIVITY_ITEMS}
             defaultValue={
-              Instance.GetInstance().preExecutionConfigCache.getCache().activity
+              Instance.GetInstance().preExecutionConfigCache.getCache()
+                .activity ?? ""
             }
             errorMessage={validationResult.activity.errorMessage}
+            placeholder={""}
+          />
+          <SelectInput
+            title="Módulos"
+            onItemSelected={setModule}
+            items={
+              mapStringToItemArray(
+                Instance.GetInstance().configCache.getCache().MODULES
+              ) ?? []
+            }
+            defaultValue={
+              Instance.GetInstance().preExecutionConfigCache.getCache()
+                .module ?? ""
+            }
+            errorMessage={validationResult.module.errorMessage}
+            placeholder={""}
+          />
+          <SelectInput
+            title="Sub-Bosque"
+            onItemSelected={setUnderForest}
+            items={CONSTANTS.UNDER_FOREST_ITEMS}
+            defaultValue={
+              Instance.GetInstance().preExecutionConfigCache.getCache()
+                .underForest ?? ""
+            }
+            errorMessage={validationResult?.underForest?.errorMessage}
             placeholder={""}
           />
           <Divider w="80%" />
@@ -310,11 +376,12 @@ function PreExecutionScreen(props: { navigation: any }) {
           </FormControl.Label>
           <FormInput
             title="Nome do trator"
+            keyboardType="default"
             description="Preencha este campo com o nome do trator que está sendo utilizado"
             errorMessage={validationResult.tractorName.errorMessage}
             defaultValue={
               Instance.GetInstance().preExecutionConfigCache.getCache()
-                .tractorName
+                .tractorName ?? ""
             }
             onChangeText={setTractorName}
           />
@@ -329,9 +396,11 @@ function PreExecutionScreen(props: { navigation: any }) {
                 .rightApplicatorLoad.toString() + " Kg"
             }
             title="Carga reservatório direito"
-            defaultValue={Instance.GetInstance()
-              .preExecutionConfigCache.getCache()
-              .rightApplicatorLoad.toString()}
+            defaultValue={
+              Instance.GetInstance()
+                .preExecutionConfigCache.getCache()
+                .rightApplicatorLoad.toString() ?? ""
+            }
             errorMessage={validationResult.rightApplicatorLoad.errorMessage}
             items={CONSTANTS.PRE_EXECUTION_SCREEN.APPLICATOR_LOAD_ITEMS(
               Instance.GetInstance().configCache.getCache().APPLICATION
@@ -348,9 +417,11 @@ function PreExecutionScreen(props: { navigation: any }) {
                 .centerApplicatorLoad.toString() + " Kg"
             }
             title="Carga reservatório central"
-            defaultValue={Instance.GetInstance()
-              .preExecutionConfigCache.getCache()
-              .centerApplicatorLoad.toString()}
+            defaultValue={
+              Instance.GetInstance()
+                .preExecutionConfigCache.getCache()
+                .centerApplicatorLoad.toString() ?? ""
+            }
             errorMessage={validationResult.centerApplicatorLoad.errorMessage}
             items={CONSTANTS.PRE_EXECUTION_SCREEN.APPLICATOR_LOAD_ITEMS(
               Instance.GetInstance().configCache.getCache().APPLICATION
@@ -368,9 +439,11 @@ function PreExecutionScreen(props: { navigation: any }) {
                 .leftApplicatorLoad.toString() + " Kg"
             }
             title="Carga reservatório esquerdo"
-            defaultValue={Instance.GetInstance()
-              .preExecutionConfigCache.getCache()
-              .leftApplicatorLoad.toString()}
+            defaultValue={
+              Instance.GetInstance()
+                .preExecutionConfigCache.getCache()
+                .leftApplicatorLoad.toString() ?? ""
+            }
             errorMessage={validationResult.leftApplicatorLoad.errorMessage}
             items={CONSTANTS.PRE_EXECUTION_SCREEN.APPLICATOR_LOAD_ITEMS(
               Instance.GetInstance().configCache.getCache().APPLICATION
@@ -392,9 +465,11 @@ function PreExecutionScreen(props: { navigation: any }) {
             onItemSelected={setStreetsAmountCallback}
             title="Número de ruas"
             items={CONSTANTS.STREET_AMOUNT_ITEMS}
-            defaultValue={Instance.GetInstance()
-              .preExecutionConfigCache.getCache()
-              .streetsAmount.toString()}
+            defaultValue={
+              Instance.GetInstance()
+                .preExecutionConfigCache.getCache()
+                .streetsAmount.toString() ?? ""
+            }
             errorMessage={validationResult.streetsAmount.errorMessage}
           />
           <Divider w="80%" />
@@ -414,7 +489,8 @@ function PreExecutionScreen(props: { navigation: any }) {
             items={weatherItems}
             errorMessage={validationResult.weather.errorMessage}
             defaultValue={
-              Instance.GetInstance().preExecutionConfigCache.getCache().weather
+              Instance.GetInstance().preExecutionConfigCache.getCache()
+                .weather ?? ""
             }
           />
           <Divider w="80%" />
@@ -431,12 +507,12 @@ function PreExecutionScreen(props: { navigation: any }) {
             onItemSelected={setDeviceName}
             title="Selecione o dipositivo Bluetooth"
             placeholder="CB"
-            defaultValue={deviceName}
+            defaultValue={deviceName ?? ""}
             items={devices}
             errorMessage={validationResult.deviceName.errorMessage}
           />
           <Button
-            isLoading={isConnecting}
+            isLoading={connectToBluetooth}
             isLoadingText="Conectando"
             _pressed={{ opacity: 0.8 }}
             background={Theme().color.b300}
