@@ -5,7 +5,6 @@ import { EventEnum } from "../enum/event";
 import { PCsvTableService } from "../port/csv-table-service-port";
 import { PFileSystem } from "../port/file-system-port";
 import { PLogger } from "../port/logger-port";
-import { calculateAppliedDoses } from "../utils/applied-doses-calculator";
 import { dateTimeFormatter } from "../utils/date-time-formatter";
 
 interface Fields {
@@ -141,8 +140,36 @@ export class CsvTableService implements PCsvTableService {
         requestDto,
       });
 
-      const { requestedApplicatorsAmount, doseAmount, systematicDoses } =
-        calculateAppliedDoses(requestDto, responseDto);
+      let requestedApplicatorsAmount = 0;
+      if (requestDto.dose) {
+        requestedApplicatorsAmount =
+          (requestDto.dose.centerApplicator ? 1 : 0) +
+          (requestDto.dose.leftApplicator ? 1 : 0) +
+          (requestDto.dose.rightApplicator ? 1 : 0);
+      }
+
+      let respondedApplicatorsAmount =
+        (responseDto.centerApplicator ? 1 : 0) +
+        (responseDto.leftApplicator ? 1 : 0) +
+        (responseDto.rightApplicator ? 1 : 0);
+
+      let doseAmount: number = 0;
+      let systematicDoses: number = 0;
+      const requestedDoses = requestDto?.dose?.amount || 0;
+
+      if (responseDto.status != "N" && responseDto.status != "E") {
+        let aux = Number(responseDto.status);
+        if (aux == 0) {
+          aux = 10;
+        }
+
+        if (aux > requestedDoses) {
+          systematicDoses = (aux - requestedDoses) * respondedApplicatorsAmount;
+          doseAmount = requestedDoses * requestedApplicatorsAmount;
+        } else {
+          doseAmount = aux * requestedApplicatorsAmount;
+        }
+      }
 
       let T_A: string;
       let Evento: string = "";

@@ -11,7 +11,6 @@ import {
   Severity,
   SeverityEnum,
 } from "../../../src/internal/core/enum/severity";
-import { calculateAppliedDoses } from "../../../src/internal/core/utils/applied-doses-calculator";
 import { IDoseRequest } from "../../../src/internal/interface/dose-request";
 import { appConfig } from "../../app/config/app-config";
 import { Instance } from "../../app/instance/instance";
@@ -169,24 +168,18 @@ function ExecutionScreen(props: { navigation: any }) {
 
   const doseCallback = useCallback(
     async (requestDto: RequestDto, responseDto: ResponseDto) => {
-      let totalDosedKg = 0;
+      let systematicDoses = 0;
       let appliedKg = 0;
 
       if (responseDto.status != "N") {
-        const { systematicDoses, doseAmount } = calculateAppliedDoses(
-          requestDto,
-          responseDto
-        );
-        const totalDosed = systematicDoses + doseAmount;
-        ShowToast({
-          title: "Total Dosed",
-          message: totalDosed.toString(),
-          severity: SeverityEnum.WARN,
-          durationMs: 1000,
-        });
-        totalDosedKg = (totalDosed * requestDto.doseWeightG) / 1000;
+        let aux = Number(responseDto.status);
+        if (aux == 0) {
+          aux = 10;
+        }
+        systematicDoses += aux;
+        systematicDoses = (systematicDoses * requestDto.doseWeightG) / 1000;
         addAppliedDosesCallback({
-          amount: totalDosed,
+          amount: aux,
           centerApplicator: responseDto.centerApplicator,
           leftApplicator: responseDto.leftApplicator,
           rightApplicator: responseDto.rightApplicator,
@@ -202,9 +195,9 @@ function ExecutionScreen(props: { navigation: any }) {
           centerApplicatorLoad.current =
             centerApplicatorLoad.current - appliedKg;
         }
-        if (totalDosedKg > 0) {
+        if (systematicDoses > 0) {
           centerApplicatorLoad.current =
-            centerApplicatorLoad.current - totalDosedKg;
+            centerApplicatorLoad.current - systematicDoses;
         }
 
         if (centerApplicatorLoad.current <= 0) {
@@ -223,9 +216,9 @@ function ExecutionScreen(props: { navigation: any }) {
         if (requestDto.dose && requestDto.dose.leftApplicator) {
           leftApplicatorLoad.current = leftApplicatorLoad.current - appliedKg;
         }
-        if (totalDosedKg > 0) {
+        if (systematicDoses > 0) {
           leftApplicatorLoad.current =
-            leftApplicatorLoad.current - totalDosedKg;
+            leftApplicatorLoad.current - systematicDoses;
         }
 
         if (leftApplicatorLoad.current <= 0) {
@@ -244,9 +237,9 @@ function ExecutionScreen(props: { navigation: any }) {
         if (requestDto.dose && requestDto.dose.rightApplicator) {
           rightApplicatorLoad.current = rightApplicatorLoad.current - appliedKg;
         }
-        if (totalDosedKg > 0) {
+        if (systematicDoses > 0) {
           rightApplicatorLoad.current =
-            rightApplicatorLoad.current - totalDosedKg;
+            rightApplicatorLoad.current - systematicDoses;
         }
 
         if (rightApplicatorLoad.current <= 0) {
