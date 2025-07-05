@@ -1,8 +1,10 @@
 import { BluetoothApp } from "../../../src/cmd/bluetoothapp/bluetooth-app";
 import { CombateApp } from "../../../src/cmd/combateapp/combate-app";
 import { Validator } from "../../../src/cmd/formvalidator/form-validator";
+import { PermissionService } from "../../../src/cmd/permissions/permission-services";
 import { PBluetoothApp } from "../../../src/cmd/port/bluetooth-app-port";
 import { PCombateApp } from "../../../src/cmd/port/combate-app-port";
+import { IPermissionService } from "../../../src/cmd/port/permission-services-port";
 import { PValidator } from "../../../src/cmd/port/validator-port";
 import { ABluetooth } from "../../../src/internal/adapter/bluetooth/bluetooth";
 import { AConfigCache } from "../../../src/internal/adapter/cache/config-cache";
@@ -28,12 +30,11 @@ import {
   IConfigsProps,
   IPreExecutionConfigProps,
 } from "../../../src/internal/interface/config-props";
-import { BluetoothAppMock } from "../../../src/mocks/bluetooth-app-mock";
-import { BluetoothMock } from "../../../src/mocks/bluetooth-mock";
 
 export class Instance {
   readonly logger: PLogger;
   readonly combateApp: PCombateApp;
+  readonly permissionsServices: IPermissionService;
   readonly configCache: PCache<IConfigsProps>;
   readonly bluetoothApp: PBluetoothApp;
   readonly validator: PValidator;
@@ -58,12 +59,13 @@ export class Instance {
   private constructor() {
     this.logger = new ALogger(false);
 
-    const bluetooth =  new ABluetooth(this.logger);//new BluetoothMock()
+    const bluetooth = new ABluetooth(this.logger);
     const fileSystem = new AFileSystem(this.logger);
     const csvTableService = new CsvTableService(this.logger, fileSystem);
     const checkSumBuilder = new CheckSumBuilder(this.logger);
     const protocolRules = new ProtocolRules(this.logger, checkSumBuilder);
     const responseDtoParser = new ResponseDtoParser(this.logger, protocolRules);
+    const permissionService = new PermissionService();
     const cbService = new CbV5Service(
       this.logger,
       bluetooth,
@@ -71,6 +73,8 @@ export class Instance {
     );
     const repository = new AAsyncStorage(this.logger);
     const requestFactory = new RequestFactory(this.logger);
+
+    this.permissionsServices = permissionService;
 
     this.combateApp = new CombateApp(
       this.logger,
@@ -83,7 +87,11 @@ export class Instance {
       repository,
       DEFAULT_CONFIG
     );
-    this.bluetoothApp =  new BluetoothApp(this.logger, bluetooth);//new BluetoothAppMock()
+    this.bluetoothApp = new BluetoothApp(
+      this.logger,
+      bluetooth,
+      permissionService
+    );
     this.validator = new Validator(this.logger, this.configCache);
     this.preExecutionConfigCache = new APreExecutionConfigCache(
       this.logger,

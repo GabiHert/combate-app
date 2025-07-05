@@ -7,6 +7,7 @@ import { BluetoothErrorType } from "../../core/error/error-type";
 import { PBluetooth } from "../../core/port/bluetooth-port";
 import { PLogger } from "../../core/port/logger-port";
 import { timeout } from "../../core/utils/timeout";
+import { IItem } from "../../interface/item";
 
 export class ABluetooth implements PBluetooth {
   private _device: BluetoothDevice;
@@ -53,38 +54,6 @@ export class ABluetooth implements PBluetooth {
     // this._logger.info({ event: 'ABluetooth.checkPermissions', details: 'Process finished' });
   }
 
-  async isBluetoothAvailable(): Promise<void> {
-    try {
-      this._logger.info({
-        event: "ABluetooth.isBluetoothAvailable",
-        details: "Process started",
-      });
-
-      const result = await RNBluetoothClassic.isBluetoothAvailable();
-      if (!result) {
-        this._logger.warn({
-          event: "ABluetooth.isBluetoothAvailable",
-          details: "Process warn - not available",
-        });
-        throw new BluetoothErrorType(
-          CONSTANTS.ERRORS.A_BLUETOOTH.NOT_AVAILABLE
-        );
-      }
-      this._logger.info({
-        event: "ABluetooth.isBluetoothAvailable",
-        details: "Process finished",
-      });
-    } catch (err) {
-      this._logger.error({
-        event: "ABluetooth.isBluetoothAvailable",
-        details: "Process error",
-        error: err.message,
-      });
-
-      throw err;
-    }
-  }
-
   async isBluetoothEnabled(): Promise<void> {
     try {
       this._logger.info({
@@ -92,7 +61,7 @@ export class ABluetooth implements PBluetooth {
         details: "Process started",
       });
 
-      const result = await RNBluetoothClassic.isBluetoothAvailable();
+      const result = await RNBluetoothClassic.isBluetoothEnabled();
 
       if (!result) {
         this._logger.warn({
@@ -114,6 +83,17 @@ export class ABluetooth implements PBluetooth {
       });
 
       throw err;
+    }
+  }
+
+  async connectToDevice(deviceId: string): Promise<BluetoothDevice> {
+    try {
+      // 2. Conectar
+      const connected = await RNBluetoothClassic.connectToDevice(deviceId);
+      if (!connected) throw new Error("Conexão falhou");
+      return connected;
+    } catch (error) {
+      return null;
     }
   }
 
@@ -247,7 +227,7 @@ export class ABluetooth implements PBluetooth {
 
         let count = 0;
         do {
-          const result = await this._device.write(data, "ascii");
+          const result = await this._device.write(data);
 
           if (result) break;
           count++;
@@ -289,12 +269,14 @@ export class ABluetooth implements PBluetooth {
       });
 
       const isConnected = await device.isConnected();
+
       if (!isConnected) {
         this._logger.warn({
           event: "ABluetooth.selectDevice",
           details: "device is not connected",
         });
-        const result = await device.connect().catch(() => {
+
+        const result = await device.connect().catch((err) => {
           this._logger.warn({
             event: "ABluetooth.selectDevice",
             details: "device could not be connected",
@@ -320,6 +302,78 @@ export class ABluetooth implements PBluetooth {
     } catch (err) {
       this._logger.error({
         event: "ABluetooth.selectDevice",
+        details: "Process error",
+        error: err.message,
+      });
+
+      throw err;
+    }
+  }
+
+  async discoverUnpairedDevices(): Promise<Array<IItem>> {
+    try {
+      this._logger.info({
+        event: "BluetoothApp.discoverUnpairedDevices",
+        details: "Process started",
+      });
+
+      const devices = await RNBluetoothClassic.getBondedDevices();
+      const items: Array<IItem> = devices.map((device) => ({
+        id: device.id,
+        name: device.name,
+      }));
+
+      this._logger.info({
+        event: "BluetoothApp.discoverUnpairedDevices",
+        details: "Process finished",
+        items,
+      });
+
+      return items;
+    } catch (err) {
+      this._logger.error({
+        event: "BluetoothApp.discoverUnpairedDevices",
+        details: "Process error",
+        error: err.message,
+      });
+      throw err;
+    }
+  }
+
+  async pairDevice(deviceId: string): Promise<void> {
+    try {
+      this._logger.info({
+        event: "BluetoothApp.pairDevice",
+        details: "Process started",
+        deviceId,
+      });
+
+      if (deviceId) {
+        // Aqui você pode usar outro método para descobrir dispositivos não pareados (se implementado)
+        const unpairedDevices = await this.discoverUnpairedDevices?.();
+        const device = unpairedDevices?.find((d) => d.id === deviceId);
+
+        if (!device) {
+          throw new BluetoothErrorType(
+            CONSTANTS.ERRORS.BLUETOOTH_APP.DEVICE_NOT_AVAILABLE
+          );
+        }
+
+        await RNBluetoothClassic.pairDevice(device.id);
+      } else {
+        this._logger.info({
+          event: "BluetoothApp.pairDevice",
+          details: "Device already bonded",
+        });
+      }
+
+      this._logger.info({
+        event: "BluetoothApp.pairDevice",
+        details: "Process finished",
+      });
+    } catch (err) {
+      this._logger.error({
+        event: "BluetoothApp.pairDevice",
         details: "Process error",
         error: err.message,
       });

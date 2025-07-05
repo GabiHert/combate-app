@@ -1,7 +1,7 @@
 import { Button, FormControl, Modal } from "native-base";
 import { memo, useCallback, useState } from "react";
-import { CONSTANTS } from "../../../../../src/internal/config/config";
 import { RequestDto } from "../../../../../src/internal/core/dto/request-dto";
+import { EventEnum } from "../../../../../src/internal/core/enum/event";
 import { appConfig } from "../../../../app/config/app-config";
 import { Instance } from "../../../../app/instance/instance";
 import { mapStringToItemArray } from "../../../../app/parser/map-string-to-item-array";
@@ -24,7 +24,7 @@ function FinishExecutionModal(props: {
     setUnderForestModalVisible(false);
   }, [setUnderForestModalVisible]);
 
-  const onOkPress = useCallback((event: string, callback: () => void) => {
+  const onOkPress = useCallback((callback: () => void) => {
     setUnderForestModalVisible(false);
     setLoading(true);
 
@@ -39,7 +39,7 @@ function FinishExecutionModal(props: {
         doseWeightG:
           Instance.GetInstance().configCache.getCache().APPLICATION
             .DOSE_WEIGHT_G,
-        event,
+        event: EventEnum.EndTrackPoint.name,
         linesSpacing:
           Instance.GetInstance().configCache.getCache().LINE_SPACING,
         maxVelocity:
@@ -47,7 +47,7 @@ function FinishExecutionModal(props: {
             .MAX_VELOCITY,
         plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
         poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
-        project:
+        projectName:
           Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
         streetsAmount:
           Instance.GetInstance().preExecutionConfigCache.getCache()
@@ -56,6 +56,7 @@ function FinishExecutionModal(props: {
           Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
         weather:
           Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+        underForest: Instance.GetInstance().configCache.getCache().UNDER_FOREST,
       },
       () => {
         callback();
@@ -66,10 +67,12 @@ function FinishExecutionModal(props: {
 
   const onUnderForestModalOkPress = useCallback(
     async (underForest: string) => {
-      // setUnderForest(underForest);
-
+      await Instance.GetInstance().configCache.update({
+        ...Instance.GetInstance().configCache.getCache(),
+        UNDER_FOREST: underForest,
+      });
       setUnderForestModalVisible(false);
-      onOkPress(event, () => {
+      onOkPress(() => {
         props.onFinishExecutionPress(event);
       });
     },
@@ -80,16 +83,11 @@ function FinishExecutionModal(props: {
     const errorMessage =
       Instance.GetInstance().validator.validateFinishExecutionForm(event);
     if (!errorMessage) {
-      if (event == CONSTANTS.FINISHED_WORK_REASON_NAME) {
-        setUnderForestModalVisible(true);
-      } else {
-        onOkPress(event, () => {
-          props.onFinishExecutionPress(event);
-        });
-      }
-    } else {
-      setEventError(errorMessage);
+      onOkPress(() => {
+        props.onFinishExecutionPress(event);
+      });
     }
+    setEventError(errorMessage);
   }, [event, eventError, setUnderForestModalVisible]);
 
   const onClose = useCallback(() => {

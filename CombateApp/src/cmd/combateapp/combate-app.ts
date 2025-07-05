@@ -25,16 +25,16 @@ export class CombateApp implements PCombateApp {
     this._velocityExceededRecord = [];
   }
 
-  async permissions() {
+  async permissions(): Promise<boolean> {
     this._logger.info({
       event: "CombateApp.permissions",
       details: "Process started",
     });
 
-    await PermissionsAndroid.request(
+    const writeGranted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
       {
-        title: "Pernissão para escrita de arquivos",
+        title: "Permissão para escrita de arquivos",
         message:
           "O aplicativo necessita desta autorização para realizar a escrita de arquivos.",
         buttonNegative: "Negar",
@@ -42,10 +42,10 @@ export class CombateApp implements PCombateApp {
       }
     );
 
-    await PermissionsAndroid.request(
+    const scanGranted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
       {
-        title: "Permissão para buscar dispositivos bluetooth ",
+        title: "Permissão para buscar dispositivos bluetooth",
         message:
           "O aplicativo necessita desta autorização para buscar dispositivos bluetooth.",
         buttonNegative: "Negar",
@@ -53,10 +53,10 @@ export class CombateApp implements PCombateApp {
       }
     );
 
-    await PermissionsAndroid.request(
+    const connectGranted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
       {
-        title: "Permissão para conexão com dispositivos bluetooth ",
+        title: "Permissão para conexão com dispositivos bluetooth",
         message:
           "O aplicativo necessita desta autorização para realizar a conexão bluetooth.",
         buttonNegative: "Negar",
@@ -64,10 +64,17 @@ export class CombateApp implements PCombateApp {
       }
     );
 
+    const allGranted =
+      writeGranted === PermissionsAndroid.RESULTS.GRANTED &&
+      scanGranted === PermissionsAndroid.RESULTS.GRANTED &&
+      connectGranted === PermissionsAndroid.RESULTS.GRANTED;
+
     this._logger.info({
       event: "CombateApp.permissions",
-      details: "Process finished",
+      details: `Process finished. Permissions granted: ${allGranted}`,
     });
+
+    return allGranted;
   }
 
   async begin(filePath: string): Promise<void> {

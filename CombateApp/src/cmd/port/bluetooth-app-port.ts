@@ -19,4 +19,16 @@ export interface PBluetoothApp {
    * @throws an error if bluetooth cannot be selected.
    */
   selectDevice(deviceId: string): Promise<void>;
+
+  /**
+   * Pairs with a Bluetooth device
+   * @param device Bluetooth device to pair
+   */
+  pairDevice(device: string): Promise<void>;
+
+  /**
+   * Discovers unpaired Bluetooth devices
+   * @returns List of unpaired devices
+   */
+  discoverUnpairedDevices(): Promise<IItem[]>;
 }

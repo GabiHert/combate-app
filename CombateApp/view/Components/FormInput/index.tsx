@@ -18,13 +18,24 @@ function FormInput(props: {
   defaultValue?: string;
 }) {
   const [defaultValue, setDefaultValue] = useState(props.defaultValue);
+  const [inputValue, setInputValue] = useState("");
 
   const onChangeText = useCallback(
     (text: string) => {
       setDefaultValue(null);
-      props.onChangeText(text);
+      setInputValue(null);
+
+      let newText = text;
+      if (!props.isPassword) {
+        newText = text
+          .toUpperCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+      }
+      setInputValue(text);
+      props.onChangeText(newText);
     },
-    [setDefaultValue, props.onChangeText]
+    [setDefaultValue, props.onChangeText, props.isPassword, setInputValue]
   );
 
   return (
@@ -49,7 +60,7 @@ function FormInput(props: {
         onChangeText={onChangeText}
         keyboardType={props.keyboardType}
         borderRadius={20}
-        value={defaultValue}
+        value={inputValue === "" ? defaultValue : inputValue}
         placeholder={props.placeholder}
         _invalid={{ borderColor: Theme().color.sError, borderWidth: 2 }}
         borderWidth={2}

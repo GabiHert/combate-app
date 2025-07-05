@@ -1,10 +1,10 @@
 import { Button, FormControl, Modal } from 'native-base';
 import { memo, useCallback, useState } from 'react';
-import { appConfig } from '../../../../app/config/app-config';
-import { Instance } from '../../../../app/instance/instance';
-import { Theme } from '../../../../app/theme/theme';
-import SelectInput from '../../../../Components/SelectInput';
-import { CONSTANTS } from '../../../../../src/internal/config/config';
+import { CONSTANTS } from "../../../../../src/internal/config/config";
+import { appConfig } from "../../../../app/config/app-config";
+import { Instance } from "../../../../app/instance/instance";
+import { Theme } from "../../../../app/theme/theme";
+import SelectInput from "../../../../Components/SelectInput";
 
 function UnderForestModal(props: {
   isOpen: boolean;
@@ -22,7 +22,9 @@ function UnderForestModal(props: {
   );
 
   const onFinishPressed = useCallback(async () => {
-    const errorMessage = Instance.GetInstance().validator.validateUnderForestForm(underForest);
+    const errorMessage =
+      Instance.GetInstance().validator.validateUnderForestForm(underForest);
+
     if (!errorMessage) {
       await props.onOkPress(underForest);
     } else {
@@ -31,32 +33,35 @@ function UnderForestModal(props: {
   }, [underForest]);
 
   const onClose = useCallback(() => {
-    setUnderForestError('');
+    setUnderForestError("");
     props.onClose();
   }, []);
 
   return (
     <Modal isOpen={props.isOpen} onClose={onClose}>
-      <Modal.Content maxWidth="500px" maxH={'500px'}>
+      <Modal.Content maxWidth="500px" maxH={"500px"}>
         <Modal.CloseButton />
         <Modal.Header
           _text={{
-            fontWeight: 'bold',
+            fontWeight: "bold",
             fontSize: Theme().font.size.xl(appConfig.screen),
           }}
         >
           Finalizar execução
         </Modal.Header>
-        <Modal.Body h={'100%'}>
+        <Modal.Body h={"100%"}>
           <FormControl.Label
             mt={5}
-            _text={{ fontWeight: 'bold', fontSize: Theme().font.size.m(appConfig.screen) }}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.m(appConfig.screen),
+            }}
           >
             Sub-bosque
           </FormControl.Label>
           <SelectInput
             onItemSelected={onEventChange}
-            w={'100%'}
+            w={"100%"}
             h={20}
             title="Selecione o sub-bosque"
             placeholder=""
@@ -65,7 +70,12 @@ function UnderForestModal(props: {
           />
         </Modal.Body>
         <Modal.Footer
-          _text={{ color: Theme().color.sError, position: 'absolute', left: 12, right: 0 }}
+          _text={{
+            color: Theme().color.sError,
+            position: "absolute",
+            left: 12,
+            right: 0,
+          }}
         >
           <Button
             _pressed={{ opacity: 0.8 }}

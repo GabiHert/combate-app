@@ -1,11 +1,13 @@
 import { BluetoothDevice } from 'react-native-bluetooth-classic';
+import { IItem } from "../../interface/item";
 
 export interface PBluetooth {
   /**
-   * Checks if bluetooth is available.
-   * @throws an error if bluetooth is not available in the current device.
+   * Connect to Bluetooth devices already paired.
+   * @param device device to connection
+   * @return Bluetooth connected
    */
-  isBluetoothAvailable(): Promise<void>;
+  connectToDevice(deviceId: string): Promise<BluetoothDevice>;
 
   /**
    * Checks if bluetooth is enabled.
@@ -39,4 +41,16 @@ export interface PBluetooth {
    * @throws an error if bluetooth cannot be selected.
    */
   setDevice(device: BluetoothDevice): Promise<void>;
+
+  /**
+   * Pairs with a Bluetooth device
+   * @param device Bluetooth device to pair
+   */
+  pairDevice(device: string): Promise<void>;
+
+  /**
+   * Discovers unpaired Bluetooth devices
+   * @returns List of unpaired devices
+   */
+  discoverUnpairedDevices(): Promise<IItem[]>;
 }

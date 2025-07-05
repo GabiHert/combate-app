@@ -11,7 +11,6 @@ import {
   Severity,
   SeverityEnum,
 } from "../../../src/internal/core/enum/severity";
-import { calculateAppliedDoses } from "../../../src/internal/core/utils/applied-doses-calculator";
 import { IDoseRequest } from "../../../src/internal/interface/dose-request";
 import { appConfig } from "../../app/config/app-config";
 import { Instance } from "../../app/instance/instance";
@@ -169,24 +168,18 @@ function ExecutionScreen(props: { navigation: any }) {
 
   const doseCallback = useCallback(
     async (requestDto: RequestDto, responseDto: ResponseDto) => {
-      let totalDosedKg = 0;
+      let systematicDoses = 0;
       let appliedKg = 0;
 
       if (responseDto.status != "N") {
-        const { systematicDoses, doseAmount } = calculateAppliedDoses(
-          requestDto,
-          responseDto
-        );
-        const totalDosed = systematicDoses + doseAmount;
-        ShowToast({
-          title: "Total Dosed",
-          message: totalDosed.toString(),
-          severity: SeverityEnum.WARN,
-          durationMs: 1000,
-        });
-        totalDosedKg = (totalDosed * requestDto.doseWeightG) / 1000;
+        let aux = Number(responseDto.status);
+        if (aux == 0) {
+          aux = 10;
+        }
+        systematicDoses += aux;
+        systematicDoses = (systematicDoses * requestDto.doseWeightG) / 1000;
         addAppliedDosesCallback({
-          amount: totalDosed,
+          amount: aux,
           centerApplicator: responseDto.centerApplicator,
           leftApplicator: responseDto.leftApplicator,
           rightApplicator: responseDto.rightApplicator,
@@ -202,9 +195,9 @@ function ExecutionScreen(props: { navigation: any }) {
           centerApplicatorLoad.current =
             centerApplicatorLoad.current - appliedKg;
         }
-        if (totalDosedKg > 0) {
+        if (systematicDoses > 0) {
           centerApplicatorLoad.current =
-            centerApplicatorLoad.current - totalDosedKg;
+            centerApplicatorLoad.current - systematicDoses;
         }
 
         if (centerApplicatorLoad.current <= 0) {
@@ -223,9 +216,9 @@ function ExecutionScreen(props: { navigation: any }) {
         if (requestDto.dose && requestDto.dose.leftApplicator) {
           leftApplicatorLoad.current = leftApplicatorLoad.current - appliedKg;
         }
-        if (totalDosedKg > 0) {
+        if (systematicDoses > 0) {
           leftApplicatorLoad.current =
-            leftApplicatorLoad.current - totalDosedKg;
+            leftApplicatorLoad.current - systematicDoses;
         }
 
         if (leftApplicatorLoad.current <= 0) {
@@ -244,9 +237,9 @@ function ExecutionScreen(props: { navigation: any }) {
         if (requestDto.dose && requestDto.dose.rightApplicator) {
           rightApplicatorLoad.current = rightApplicatorLoad.current - appliedKg;
         }
-        if (totalDosedKg > 0) {
+        if (systematicDoses > 0) {
           rightApplicatorLoad.current =
-            rightApplicatorLoad.current - totalDosedKg;
+            rightApplicatorLoad.current - systematicDoses;
         }
 
         if (rightApplicatorLoad.current <= 0) {
@@ -317,8 +310,14 @@ function ExecutionScreen(props: { navigation: any }) {
           linesSpacing:
             Instance.GetInstance().configCache.getCache().LINE_SPACING,
           plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
+          farm: Instance.GetInstance().preExecutionConfigCache.getCache().farm,
+          module:
+            Instance.GetInstance().preExecutionConfigCache.getCache().module,
+          matricula: Instance.GetInstance().configCache.getCache().MATRICULA,
+          idEquipment:
+            Instance.GetInstance().configCache.getCache().ID_EQUIPMENT,
           poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
-          project:
+          projectName:
             Instance.GetInstance().preExecutionConfigCache.getCache()
               .projectName,
           streetsAmount:
@@ -442,8 +441,14 @@ function ExecutionScreen(props: { navigation: any }) {
           linesSpacing:
             Instance.GetInstance().configCache.getCache().LINE_SPACING,
           plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
+          farm: Instance.GetInstance().preExecutionConfigCache.getCache().farm,
+          module:
+            Instance.GetInstance().preExecutionConfigCache.getCache().module,
+          matricula: Instance.GetInstance().configCache.getCache().MATRICULA,
+          idEquipment:
+            Instance.GetInstance().configCache.getCache().ID_EQUIPMENT,
           poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
-          project:
+          projectName:
             Instance.GetInstance().preExecutionConfigCache.getCache()
               .projectName,
           streetsAmount:
@@ -566,7 +571,7 @@ function ExecutionScreen(props: { navigation: any }) {
           />
         </Box>
 
-        <Box height={"60%"} width={"100%"}>
+        <Box height={"58%"} width={"100%"}>
           <PoisonAmountSelector onPresetPressed={onPresetPressed} />
         </Box>
 
@@ -575,6 +580,7 @@ function ExecutionScreen(props: { navigation: any }) {
           justifyContent="center"
           width="100%"
           height="15%"
+          marginTop={8}
         >
           <ApplicatorSelector
             leftApplicatorActive={leftApplicatorActiveState}

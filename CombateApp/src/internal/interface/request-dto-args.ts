@@ -4,8 +4,10 @@ export interface IRequestDtoArgs {
   dose?: IDoseRequest;
   event: string;
   client: string;
-  project: string;
+  projectName: string;
   plot: string;
+  module: string;
+  farm: string;
   tractorName: string;
   poisonType: string;
   doseWeightG: number;
@@ -17,5 +19,8 @@ export interface IRequestDtoArgs {
   alert?: string;
   linesSpacing: number;
   newId?: number;
+  idEquipment?: string;
+  matricula?: number;
   systematicMetersBetweenDose: number;
+  underForest?: string;
 }

@@ -1,8 +1,11 @@
-import {EventEnum} from "../core/enum/event";
-import {poisonItems} from "../core/enum/poison";
-import {WeatherEnum} from "../core/enum/weather";
-import {IConfigsProps, IPreExecutionConfigProps,} from "../interface/config-props";
-import {IItem} from "../interface/item";
+import { EventEnum } from "../core/enum/event";
+import { poisonItems } from "../core/enum/poison";
+import { WeatherEnum } from "../core/enum/weather";
+import {
+  IConfigsProps,
+  IPreExecutionConfigProps,
+} from "../interface/config-props";
+import { IItem } from "../interface/item";
 
 export const CONSTANTS = {
   PRE_EXECUTION_SCREEN: {
@@ -118,26 +121,26 @@ export const CONSTANTS = {
     {
       LEVEL: 2,
       USER: "adm2",
-      PASSWORD: " ",
+      PASSWORD: "Cbt2007",
     },
     {
       LEVEL: 1,
       USER: "adm1",
-      PASSWORD: " ",
+      PASSWORD: "Cbt2007",
     },
   ],
   APPLICATION: {
-    VERSION: "2.1.7",
+    VERSION: "2.2.9",
     BLUETOOTH_WRITE_RETRIES: 5,
     BLUETOOTH_READ_TIMEOUT_MS: 60000,
     DOSE_TIMEOUT_MS: 7000,
   },
   FINISHED_WORK_REASON_NAME: "Fim Operação",
   ACTIVITY_ITEMS: [
-    { id: "0", name: "Manutenção" },
-    { id: "1", name: "Pré-Plantio" },
-    { id: "2", name: "Pós-Plantio" },
-    { id: "3", name: "Pré Corte" },
+    { id: "0", name: "Manutencao" },
+    { id: "1", name: "Pre-Plantio" },
+    { id: "2", name: "Pos-Plantio" },
+    { id: "3", name: "Pre-Corte" },
   ],
 
   // Keep all names equal
@@ -163,7 +166,7 @@ export const CONSTANTS = {
     Quadrante: 13.5,
     "Carreiro/Olheiro": 1,
     "Externa/Bordadura": 1,
-    "Muda Atacada": 1,
+    "Muda Atacada": 0,
   },
   EVENTS_TO_EXCLUDE: [EventEnum.TrackPoint.name],
   STREET_AMOUNT_ITEMS: [
@@ -173,9 +176,9 @@ export const CONSTANTS = {
     { id: "3", name: "5" },
   ],
   UNDER_FOREST_ITEMS: [
-    { name: "Sub-bosque 1", id: "1" },
-    { name: "Sub-bosque 2", id: "2" },
-    { name: "Sub-bosque 3", id: "3" },
+    { name: "1", id: "1" },
+    { name: "2", id: "2" },
+    { name: "3", id: "3" },
   ],
   REQUEST_V5: { HEADER: "INF5" },
   ERRORS: {
@@ -189,6 +192,12 @@ export const CONSTANTS = {
     },
     FARM_FORM: {
       INVALID_FARM: "ERROR",
+    },
+    MODULES_FORM: {
+      INVALID_MODULES: "ERROR",
+    },
+    PROJECTS_FORM: {
+      INVALID_PROJECTS: "ERROR",
     },
     EVENT_FORM: {
       INVALID_EVENT: "ERROR",
@@ -236,6 +245,7 @@ export const CONSTANTS = {
       INVALID_PROJECT_NAME: "Nome do projeto deve ser informado.",
       INVALID_FARM: "Fazenda deve ser informada.",
       INVALID_PLOT: "Talhão deve ser informado.",
+      INVALID_MODULES: "Talhão deve ser informado.",
       INVALID_TRACTOR_NAME: "Nome do trator deve ser informado.",
       INVALID_WEATHER: "Clima deve ser informado.",
       INVALID_LEFT_APPLICATOR_LOAD: "ERRO",
@@ -257,8 +267,10 @@ export const CONSTANTS = {
       INVALID_STOP_REASONS_EVENTS: "ERRO",
       INVALID_PLOTS: "ERRO",
       INVALID_FILE_PATH: "ERRO",
+      INVALID_MATRICULA: "ERRO",
       INVALID_POISON_TYPE: "ERRO",
       INVALID_FARMS: "ERRO",
+      INVALID_MODULES: "ERRO",
       INVALID_MAX_VELOCITY: "ERRO",
       INVALID_METERS_BETWEEN_DOSE: "ERRO",
     },
@@ -306,7 +318,11 @@ export const DEFAULT_CONFIG: IConfigsProps = {
   },
   FARMS: {},
   PLOTS: {},
+  MODULES: {},
+  PROJECTS: {},
   FILE_PATH: "CombateApp/Resultados",
+  MATRICULA: 0,
+  ID_EQUIPMENT: "",
   POISON_TYPE: poisonItems[0].name,
   LINE_SPACING: 1,
 };
@@ -314,10 +330,15 @@ export const DEFAULT_CONFIG: IConfigsProps = {
 export const DEFAULT_PRE_EXECUTION_CONFIG: IPreExecutionConfigProps = {
   activity: "",
   farm: "",
+  module: "",
+  newId: "",
   clientName: "",
+  underForest: "",
   plot: "",
   projectName: "",
   tractorName: "",
+  matricula: 0,
+  idEquipment: "",
   weather: WeatherEnum.SECO.name,
   centerApplicatorLoad: 23,
   leftApplicatorLoad: 23,

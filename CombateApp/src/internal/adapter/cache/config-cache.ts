@@ -1,7 +1,7 @@
-import { IConfigsProps } from '../../interface/config-props';
 import { PCache } from '../../core/port/cache-port';
-import { PRepository } from '../../core/port/repository-port';
 import { PLogger } from '../../core/port/logger-port';
+import { PRepository } from '../../core/port/repository-port';
+import { IConfigsProps } from '../../interface/config-props';
 
 export class AConfigCache implements PCache<IConfigsProps> {
   constructor(

@@ -1,22 +1,30 @@
-import {useFocusEffect} from "@react-navigation/native";
-import {Box, Button, Divider, FormControl, ScrollView, VStack,} from "native-base";
-import {useCallback, useRef, useState} from "react";
-import {v1} from "uuid";
-import {Validator} from "../../../src/cmd/formvalidator/form-validator";
-import {CONSTANTS} from "../../../src/internal/config/config";
-import {RequestDto} from "../../../src/internal/core/dto/request-dto";
-import {EventEnum} from "../../../src/internal/core/enum/event";
-import {poisonItems} from "../../../src/internal/core/enum/poison";
-import {SeverityEnum} from "../../../src/internal/core/enum/severity";
-import {IConfigFormResult} from "../../../src/internal/interface/config-form-result";
-import {IConfigsProps} from "../../../src/internal/interface/config-props";
-import {IItem} from "../../../src/internal/interface/item";
-import {appConfig} from "../../app/config/app-config";
-import {Instance} from "../../app/instance/instance";
-import {itemArrayToMapString} from "../../app/parser/item-array-to-map-string";
-import {mapStringToItemArray} from "../../app/parser/map-string-to-item-array";
-import {Theme} from "../../app/theme/theme";
-import {ShowToast} from "../../Components/AlertToast";
+import { useFocusEffect } from "@react-navigation/native";
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  ScrollView,
+  VStack,
+} from "native-base";
+import { useCallback, useRef, useState } from "react";
+import { v1 } from "uuid";
+import { Validator } from "../../../src/cmd/formvalidator/form-validator";
+import { CONSTANTS } from "../../../src/internal/config/config";
+import { RequestDto } from "../../../src/internal/core/dto/request-dto";
+import { EventEnum } from "../../../src/internal/core/enum/event";
+import { poisonItems } from "../../../src/internal/core/enum/poison";
+import { SeverityEnum } from "../../../src/internal/core/enum/severity";
+import { IConfigFormResult } from "../../../src/internal/interface/config-form-result";
+import { IConfigsProps } from "../../../src/internal/interface/config-props";
+import { IItem } from "../../../src/internal/interface/item";
+import { appConfig } from "../../app/config/app-config";
+import { Instance } from "../../app/instance/instance";
+import { itemArrayToMapString } from "../../app/parser/item-array-to-map-string";
+import { mapStringToItemArray } from "../../app/parser/map-string-to-item-array";
+import { sanitizeText } from "../../app/parser/sanitize-text";
+import { Theme } from "../../app/theme/theme";
+import { ShowToast } from "../../Components/AlertToast";
 import FormInput from "../../Components/FormInput";
 import SelectInput from "../../Components/SelectInput";
 import ItemListInput from "./components/ItemListInput";
@@ -53,6 +61,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     Instance.GetInstance().configCache.getCache().SYSTEMATIC_DOSE
       .METERS_BETWEEN_DOSE
   );
+
   function setMetersBetweenDose(value) {
     metersBetweenDose.current = value;
   }
@@ -64,7 +73,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
       Instance.GetInstance().configCache.getCache().PRESETS.P1.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME,
   });
-  function setPreset1(value) {
+  function setPreset1(value: IPreset) {
     preset1.current = value;
   }
   const preset2 = useRef<IPreset>({
@@ -72,7 +81,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
       Instance.GetInstance().configCache.getCache().PRESETS.P2.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME,
   });
-  function setPreset2(value) {
+  function setPreset2(value: IPreset) {
     preset2.current = value;
   }
   const preset3 = useRef<IPreset>({
@@ -80,7 +89,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
       Instance.GetInstance().configCache.getCache().PRESETS.P3.DOSE_AMOUNT,
     name: Instance.GetInstance().configCache.getCache().PRESETS.P3.NAME,
   });
-  function setPreset3(value) {
+  function setPreset3(value: IPreset) {
     preset3.current = value;
   }
   const preset4 = useRef<IPreset>({
@@ -113,6 +122,21 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   function setMaxVelocity(value: string) {
     maxVelocity.current = Number(value.split(" ")[0]);
   }
+
+  const matricula = useRef(
+    Instance.GetInstance().configCache.getCache().MATRICULA
+  );
+  function setMatricula(value: string) {
+    matricula.current = Number(value);
+  }
+
+  const idEquipment = useRef(
+    Instance.GetInstance().configCache.getCache().ID_EQUIPMENT
+  );
+  function setIdEquipment(value: string) {
+    idEquipment.current = value;
+  }
+
   const lineSpacing = useRef<number>(
     Instance.GetInstance().configCache.getCache().LINE_SPACING
   );
@@ -138,12 +162,16 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     farms: { errorMessage: undefined },
     filePath: { errorMessage: undefined },
     plots: { errorMessage: undefined },
+    modules: { errorMessage: undefined },
+    projects: { errorMessage: undefined },
     poisonType: { errorMessage: undefined },
     preset5Dose: { errorMessage: undefined },
     preset5Name: { errorMessage: undefined },
     preset6Dose: { errorMessage: undefined },
     preset6Name: { errorMessage: undefined },
     lineSpacing: { errorMessage: undefined },
+    matricula: { errorMessage: undefined },
+    idEquipment: { errorMessage: undefined },
     metersBetweenDose: { errorMessage: undefined },
     stopReasonEvent: { errorMessage: undefined },
     rightTankMaxLoad: { errorMessage: undefined },
@@ -168,11 +196,28 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     mapStringToItemArray(Instance.GetInstance().configCache.getCache().PLOTS)
   );
 
+  const [modules, setModules] = useState<Array<{ id: string; name: string }>>(
+    mapStringToItemArray(
+      Instance.GetInstance().configCache.getCache().MODULES
+        ? Instance.GetInstance().configCache.getCache().MODULES
+        : {}
+    )
+  );
+
+  const [projects, setProjects] = useState<Array<{ id: string; name: string }>>(
+    mapStringToItemArray(
+      Instance.GetInstance().configCache.getCache().PROJECTS
+        ? Instance.GetInstance().configCache.getCache().PROJECTS
+        : {}
+    )
+  );
+
   const poison = useRef(
     Instance.GetInstance().configCache.getCache().POISON_TYPE
   );
-  function setPoison(value) {
-    poison.current = value;
+
+  function setPoison(value: string) {
+    poison.current = sanitizeText(value);
   }
 
   function level1(level: number): boolean {
@@ -186,6 +231,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const [addReasonModalVisible, setAddReasonModalVisible] = useState(false);
   const [addEventModalVisible, setAddEventModalVisible] = useState(false);
   const [addFarmModalVisible, setAddFarmModalVisible] = useState(false);
+  const [addModulesModalVisible, setAddModulesModalVisible] = useState(false);
+  const [addProjectsModalVisible, setAddProjectsModalVisible] = useState(false);
   const [addPlotModalVisible, setAddPlotModalVisible] = useState(false);
 
   function onRightTankMaxLoadChange(text: string) {
@@ -209,6 +256,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const [devices, setDevices] = useState<Array<IItem>>([]);
   const deviceConnected = useRef(false);
   const newIdError = useState("");
+  const matriculaError = useState("");
   const searchDevicesCallback = useCallback(async () => {
     try {
       await Instance.GetInstance().bluetoothApp.init();
@@ -225,18 +273,23 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     }, 3000);
     return () => clearInterval(interval);
   });
+
   const connectToBluetoothCallback = useCallback(async () => {
     setIsConnecting(true);
     try {
       let deviceId: string;
+
       if (!devices.length) await searchDevicesCallback();
       devices.forEach((device) => {
         if (device.name == deviceName.current) {
           deviceId = device.id;
         }
       });
+
       await Instance.GetInstance().bluetoothApp.selectDevice(deviceId);
+
       deviceConnected.current = true;
+
       ShowToast({
         durationMs: 3000,
         title: "Bluetooth conectado com sucesso",
@@ -252,7 +305,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
 
   const newId = useRef("");
   function setNewId(value: string) {
-    newId.current = value;
+    newId.current = sanitizeText(value);
   }
 
   const isRenaming = useState(false);
@@ -287,7 +340,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           Instance.GetInstance().configCache.getCache().LINE_SPACING,
         plot: Instance.GetInstance().preExecutionConfigCache.getCache().plot,
         poisonType: Instance.GetInstance().configCache.getCache().POISON_TYPE,
-        project:
+        projectName:
           Instance.GetInstance().preExecutionConfigCache.getCache().projectName,
         streetsAmount:
           Instance.GetInstance().preExecutionConfigCache.getCache()
@@ -296,13 +349,18 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           Instance.GetInstance().preExecutionConfigCache.getCache().tractorName,
         weather:
           Instance.GetInstance().preExecutionConfigCache.getCache().weather,
+        module:
+          Instance.GetInstance().preExecutionConfigCache.getCache().module,
+        farm: Instance.GetInstance().preExecutionConfigCache.getCache().farm,
       });
 
       const id = Number(newId.current);
       requestDto.newId = Math.trunc(id);
+
       const responseDto = await Instance.GetInstance().combateApp.request(
         requestDto
       );
+
       ShowToast({
         durationMs: 5000,
         severity: SeverityEnum.OK,
@@ -319,47 +377,52 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
   const onPreset1NameChange = useCallback(
     (text: string) => {
       const aux = preset1.current;
-      aux.name = text;
+      aux.name = sanitizeText(text);
       preset1.current = aux;
     },
     [preset1]
   );
+
   const onPreset2NameChange = useCallback(
     (text: string) => {
       const aux = preset2.current;
-      aux.name = text;
+      aux.name = sanitizeText(text);
       setPreset2(aux);
     },
     [preset2]
   );
+
   const onPreset3NameChange = useCallback(
     (text: string) => {
       const aux = preset3.current;
-      aux.name = text;
+      aux.name = sanitizeText(text);
       setPreset3(aux);
     },
     [preset3]
   );
+
   const onPreset4NameChange = useCallback(
     (text: string) => {
       const aux = preset4.current;
-      aux.name = text;
+      aux.name = sanitizeText(text);
       setPreset4(aux);
     },
     [preset4]
   );
+
   const onPreset5NameChange = useCallback(
     (text: string) => {
       const aux = preset5.current;
-      aux.name = text;
+      aux.name = sanitizeText(text);
       setPreset5(aux);
     },
     [preset5]
   );
+
   const onPreset6NameChange = useCallback(
     (text: string) => {
       const aux = preset6.current;
-      aux.name = text;
+      aux.name = sanitizeText(text);
       setPreset6(aux);
     },
     [preset6]
@@ -374,6 +437,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     },
     [preset1]
   );
+
   const onPreset2DoseChange = useCallback(
     (dosesStr: string) => {
       const doses = Number(dosesStr.split(" ")[0]);
@@ -383,6 +447,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     },
     [preset2]
   );
+
   const onPreset3DoseChange = useCallback(
     (dosesStr: string) => {
       const doses = Number(dosesStr.split(" ")[0]);
@@ -392,6 +457,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     },
     [preset3]
   );
+
   const onPreset4DoseChange = useCallback(
     (dosesStr: string) => {
       const doses = Number(dosesStr.split(" ")[0]);
@@ -401,6 +467,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     },
     [preset4]
   );
+
   const onPreset5DoseChange = useCallback(
     (dosesStr: string) => {
       const doses = Number(dosesStr.split(" ")[0]);
@@ -453,6 +520,22 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     setAddFarmModalVisible(true);
   }, []);
 
+  const onAddModulesModalClose = useCallback(() => {
+    setAddModulesModalVisible(false);
+  }, []);
+
+  const onAddProjectsModalClose = useCallback(() => {
+    setAddProjectsModalVisible(false);
+  }, []);
+
+  const onAddModulesPress = useCallback(() => {
+    setAddModulesModalVisible(true);
+  }, []);
+
+  const onAddProjectsPress = useCallback(() => {
+    setAddProjectsModalVisible(true);
+  }, []);
+
   const onAddFarmModalClose = useCallback(() => {
     setAddFarmModalVisible(false);
   }, []);
@@ -476,6 +559,58 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
       setFarms(mapStringToItemArray(cache.FARMS));
     },
     [setFarms, farms]
+  );
+
+  const onAddModulesRequested = useCallback(
+    (name: string) => {
+      let cache = Instance.GetInstance().configCache.getCache();
+      const id = v1();
+
+      if (!cache.MODULES) {
+        cache.MODULES = {};
+      }
+
+      cache.MODULES[id] = name;
+      Instance.GetInstance().configCache.update(cache);
+      setModules(mapStringToItemArray(cache.MODULES));
+    },
+    [setModules, modules]
+  );
+
+  const onDeleteModulesRequested = useCallback(
+    async (id: string) => {
+      let cache = Instance.GetInstance().configCache.getCache();
+      delete cache.MODULES[id];
+      Instance.GetInstance().configCache.update(cache);
+      setFarms(mapStringToItemArray(cache.MODULES));
+    },
+    [setModules, modules]
+  );
+
+  const onAddProjectsRequested = useCallback(
+    (name: string) => {
+      let cache = Instance.GetInstance().configCache.getCache();
+      const id = v1();
+
+      if (!cache.PROJECTS) {
+        cache.PROJECTS = {};
+      }
+
+      cache.PROJECTS[id] = name;
+      Instance.GetInstance().configCache.update(cache);
+      setProjects(mapStringToItemArray(cache.PROJECTS));
+    },
+    [setProjects, projects]
+  );
+
+  const onDeleteProjectsRequested = useCallback(
+    async (id: string) => {
+      let cache = Instance.GetInstance().configCache.getCache();
+      delete cache.PROJECTS[id];
+      Instance.GetInstance().configCache.update(cache);
+      setFarms(mapStringToItemArray(cache.PROJECTS));
+    },
+    [setProjects, projects]
   );
 
   const onAddPlotPress = useCallback(() => {
@@ -539,6 +674,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
         EVENTS: itemArrayToMapString(events),
         FARMS: itemArrayToMapString(farms),
         PLOTS: itemArrayToMapString(plots),
+        MODULES: itemArrayToMapString(modules),
+        PROJECTS: itemArrayToMapString(projects),
         STOP_REASONS_EVENTS: itemArrayToMapString(stopReasons),
         APPLICATION: {
           MAX_VELOCITY: maxVelocity.current,
@@ -574,6 +711,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           },
         },
         FILE_PATH: filePath.current,
+        MATRICULA: matricula.current,
+        ID_EQUIPMENT: idEquipment.current,
         POISON_TYPE: poison.current,
         LINE_SPACING: lineSpacing.current,
         SYSTEMATIC_DOSE: { METERS_BETWEEN_DOSE: metersBetweenDose.current },
@@ -614,6 +753,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           cache.LINE_SPACING = lineSpacing.current;
           cache.SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE = metersBetweenDose.current;
           cache.FILE_PATH = filePath.current;
+          cache.MATRICULA = matricula.current;
+          cache.ID_EQUIPMENT = idEquipment.current;
 
           await Instance.GetInstance().configCache.update(cache);
 
@@ -651,6 +792,8 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
     plots,
     errors,
     maxVelocity,
+    matricula,
+    idEquipment,
   ]);
 
   return (
@@ -732,7 +875,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
       />
       <ItemRegisterModal
         title="Adicionar talhão"
-        formTitle="Nome talão"
+        formTitle="Nome talhão"
         formDescription="Digite nome do talhão a ser adicionado"
         onAddPressed={onAddPlotRequested}
         isOpen={addPlotModalVisible}
@@ -755,6 +898,62 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
         }}
       />
 
+      <ItemRegisterModal
+        title="Adicionar módulos"
+        formTitle="Nome do módulo"
+        formDescription="Digite nome do módulo a ser adicionado"
+        onAddPressed={onAddModulesRequested}
+        isOpen={addModulesModalVisible}
+        onClose={onAddModulesModalClose}
+        validator={(value) => {
+          if (!Validator.BasicStringValidation(value)) {
+            return CONSTANTS.ERRORS.MODULES_FORM.INVALID_MODULES;
+          }
+          let error = undefined;
+          Object.keys(
+            Instance.GetInstance().configCache.getCache().MODULES
+              ? Instance.GetInstance().configCache.getCache().MODULES
+              : {}
+          ).forEach((key) => {
+            if (
+              value ==
+              Instance.GetInstance().configCache.getCache().MODULES[key]
+            ) {
+              error = CONSTANTS.ERRORS.MODULES_FORM.INVALID_MODULES;
+            }
+          });
+          return error;
+        }}
+      />
+
+      <ItemRegisterModal
+        title="Adicionar projetos"
+        formTitle="Nome do projeto"
+        formDescription="Digite nome do projeto a ser adicionado"
+        onAddPressed={onAddProjectsRequested}
+        isOpen={addProjectsModalVisible}
+        onClose={onAddProjectsModalClose}
+        validator={(value) => {
+          if (!Validator.BasicStringValidation(value)) {
+            return CONSTANTS.ERRORS.PROJECTS_FORM.INVALID_PROJECTS;
+          }
+          let error = undefined;
+          Object.keys(
+            Instance.GetInstance().configCache.getCache().PROJECTS
+              ? Instance.GetInstance().configCache.getCache().PROJECTS
+              : {}
+          ).forEach((key) => {
+            if (
+              value ==
+              Instance.GetInstance().configCache.getCache().PROJECTS[key]
+            ) {
+              error = CONSTANTS.ERRORS.PROJECTS_FORM.INVALID_PROJECTS;
+            }
+          });
+          return error;
+        }}
+      />
+
       <ScrollView w="100%">
         <VStack
           space={4}
@@ -762,6 +961,57 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           alignItems={"center"}
           overflow={"hidden"}
         >
+          <FormControl.Label
+            mt={5}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
+          >
+            Informações do Técnico
+          </FormControl.Label>
+          <FormInput
+            title="Matrícula do técnico"
+            description="Preencha com a nova matrícula do técnico. Somente números"
+            defaultValue={
+              String(Instance.GetInstance().configCache.getCache().MATRICULA) ??
+              ""
+            }
+            placeholder={String(
+              Instance.GetInstance().configCache.getCache().MATRICULA
+            )}
+            onChangeText={setMatricula}
+            keyboardType={"numeric"}
+            errorMessage={errors.matricula.errorMessage}
+            disabled={level1(level)}
+          />
+          <Divider w="80%" />
+
+          <FormControl.Label
+            mt={5}
+            _text={{
+              fontWeight: "bold",
+              fontSize: Theme().font.size.xl(appConfig.screen),
+            }}
+          >
+            Identificação do equipamento
+          </FormControl.Label>
+          <FormInput
+            title="ID do equipamento"
+            description="Preencha o ID do equipamento."
+            defaultValue={
+              Instance.GetInstance().configCache.getCache().ID_EQUIPMENT ?? ""
+            }
+            placeholder={
+              Instance.GetInstance().configCache.getCache().ID_EQUIPMENT
+            }
+            onChangeText={setIdEquipment}
+            keyboardType={"default"}
+            errorMessage={errors.idEquipment.errorMessage}
+            disabled={level1(level)}
+          />
+          <Divider w="80%" />
+
           <FormControl.Label
             mt={5}
             _text={{
@@ -864,10 +1114,12 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={setPoison}
             items={poisonItems}
             title="Tipo de veneno"
-            placeholder=""
-            defaultValue={
+            placeholder={sanitizeText(
               Instance.GetInstance().configCache.getCache().POISON_TYPE
-            }
+            )}
+            defaultValue={sanitizeText(
+              Instance.GetInstance().configCache.getCache().POISON_TYPE
+            )}
             errorMessage={errors.poisonType.errorMessage}
           />
           <Divider w="80%" />
@@ -885,7 +1137,10 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={onPreset1NameChange}
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
-            placeholder=""
+            placeholder={
+              Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME ||
+              ""
+            }
             defaultValue={
               Instance.GetInstance().configCache.getCache().PRESETS.P1.NAME
             }
@@ -923,7 +1178,10 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={onPreset2NameChange}
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
-            placeholder=""
+            placeholder={
+              Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME ||
+              ""
+            }
             defaultValue={
               Instance.GetInstance().configCache.getCache().PRESETS.P2.NAME
             }
@@ -959,7 +1217,10 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={onPreset3NameChange}
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
-            placeholder=""
+            placeholder={
+              Instance.GetInstance().configCache.getCache().PRESETS.P3.NAME ||
+              ""
+            }
             defaultValue={
               Instance.GetInstance().configCache.getCache().PRESETS.P3.NAME
             }
@@ -997,7 +1258,10 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={onPreset4NameChange}
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
-            placeholder=""
+            placeholder={
+              Instance.GetInstance().configCache.getCache().PRESETS.P4.NAME ||
+              ""
+            }
             defaultValue={
               Instance.GetInstance().configCache.getCache().PRESETS.P4.NAME
             }
@@ -1008,7 +1272,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             placeholder={
               Instance.GetInstance()
                 .configCache.getCache()
-                .PRESETS.P4.DOSE_AMOUNT.toString() + " doses"
+                .PRESETS.P4.DOSE_AMOUNT.toString() + " doses" || ""
             }
             title="Doses"
             defaultValue={Instance.GetInstance()
@@ -1034,7 +1298,10 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={onPreset5NameChange}
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
-            placeholder=""
+            placeholder={
+              Instance.GetInstance().configCache.getCache().PRESETS.P5.NAME ||
+              ""
+            }
             defaultValue={
               Instance.GetInstance().configCache.getCache().PRESETS.P5.NAME
             }
@@ -1046,7 +1313,7 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             placeholder={
               Instance.GetInstance()
                 .configCache.getCache()
-                .PRESETS.P5.DOSE_AMOUNT.toString() + " doses"
+                .PRESETS.P5.DOSE_AMOUNT.toString() + " doses" || ""
             }
             title="Doses"
             defaultValue={Instance.GetInstance()
@@ -1072,7 +1339,10 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
             onItemSelected={onPreset6NameChange}
             items={CONSTANTS.PRESET_NAME_ITEMS}
             title="Nome preset"
-            placeholder=""
+            placeholder={
+              Instance.GetInstance().configCache.getCache().PRESETS.P6.NAME ||
+              ""
+            }
             defaultValue={
               Instance.GetInstance().configCache.getCache().PRESETS.P6.NAME
             }
@@ -1202,6 +1472,37 @@ function ConfigScreen(props: { navigation: any; route: any; level: number }) {
           />
 
           <Divider w="80%" />
+
+          <ItemListInput
+            id={5}
+            items={mapStringToItemArray(
+              Instance.GetInstance().configCache.getCache().MODULES
+                ? Instance.GetInstance().configCache.getCache().MODULES
+                : {}
+            )}
+            onAddItemPress={onAddModulesPress}
+            onDeleteItemRequested={onDeleteModulesRequested}
+            title={"Módulos"}
+            errorMessage={errors.modules.errorMessage}
+            disabled={level2(level)}
+          />
+
+          <ItemListInput
+            id={5}
+            items={mapStringToItemArray(
+              Instance.GetInstance().configCache.getCache().PROJECTS
+                ? Instance.GetInstance().configCache.getCache().PROJECTS
+                : {}
+            )}
+            onAddItemPress={onAddProjectsPress}
+            onDeleteItemRequested={onDeleteProjectsRequested}
+            title={"Projetos"}
+            errorMessage={errors.projects.errorMessage}
+            disabled={level2(level)}
+          />
+
+          <Divider w="80%" />
+
           <FormControl.Label
             mt={5}
             _text={{

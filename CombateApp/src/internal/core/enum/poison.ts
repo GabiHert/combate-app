@@ -1,10 +1,13 @@
+import { sanitizeText } from "../../../../view/app/parser/sanitize-text";
+
 enum Poisons {
-  SL = 'Granel SL',
-  FP = 'Granel FP',
-  SL_R = 'Granel SL-R',
-  MEBIO = 'Mebio',
-  OUTRO = 'Outro'
-}class PoisonEnum_ {
+  SL = "GRANEL SL",
+  FP = "GRANEL FP",
+  SL_R = "GRANEL SL-R",
+  MEBIO = "MEBIO",
+  OUTRO = "OUTRO",
+}
+class PoisonEnum_ {
   readonly MEBIO: { name: string } = {
     name: Poisons.MEBIO,
   };
@@ -27,25 +30,14 @@ export const PoisonEnum = new PoisonEnum_();
 export class Poison {
   readonly name: string;
   constructor(poison: string) {
-    switch (poison) {
+    switch (sanitizeText(poison)) {
       case PoisonEnum.FP.name:
-        this.name = PoisonEnum.FP.name;
-        break;
-
       case PoisonEnum.MEBIO.name:
-        this.name = PoisonEnum.MEBIO.name;
-        break;
-
       case PoisonEnum.SL.name:
-        this.name = PoisonEnum.SL.name;
-        break;
-
       case PoisonEnum.SL_R.name:
-        this.name = PoisonEnum.SL_R.name;
+      case PoisonEnum.OUTRO.name:
+        this.name = poison;
         break;
-        case PoisonEnum.OUTRO.name:
-          this.name = PoisonEnum.OUTRO.name;
-          break;
       default:
         throw new Error(`Unknown poison ${poison}`);
     }
@@ -53,10 +45,9 @@ export class Poison {
 }
 
 export const poisonItems: Array<{ id: string; name: string }> = [
-  { id: PoisonEnum.FP.name, name: 'Granel SL' },
-  { id: PoisonEnum.MEBIO.name, name: 'Granel FP' },
-  { id: PoisonEnum.SL.name, name: 'Grandel SL-R' },
-  { id: PoisonEnum.SL_R.name, name: 'Mebio' },
-  { id: PoisonEnum.OUTRO.name, name: 'Outro' },
-
+  { id: PoisonEnum.SL.name, name: "GRANEL SL" },
+  { id: PoisonEnum.FP.name, name: "GRANEL FP" },
+  { id: PoisonEnum.SL_R.name, name: "GRANEL SL-R" },
+  { id: PoisonEnum.MEBIO.name, name: "MEBIO" },
+  { id: PoisonEnum.OUTRO.name, name: "OUTRO" },
 ];
