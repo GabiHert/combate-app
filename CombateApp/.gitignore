@@ -62,6 +62,7 @@ buck-out/
 **/fastlane/screenshots
 **/fastlane/test_output
 
+../.DS_Store
 # Bundle artifact
 *.jsbundle
 

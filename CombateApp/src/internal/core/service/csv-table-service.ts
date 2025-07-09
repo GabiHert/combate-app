@@ -11,7 +11,7 @@ import { dateTimeFormatter } from "../utils/date-time-formatter";
 interface Fields {
   ID: string;
   MATRICULA: number;
-  "SUB-BOSQUE": string;
+  SUB_BOSQUE: string;
   CLIENTE: string;
   PROJETO: string;
   MODULO: string;
@@ -22,11 +22,11 @@ interface Fields {
   MAQUINA: string;
   CB: string;
   DOSADORES: string;
-  "DOSES TOTAIS": string;
-  "TIPO DE ISCA": string;
-  "PESO POR DOSE (G)": string;
-  "TOTAL APLICADO (KG)": string;
-  "VELOCIDADE MAXIMA": string;
+  DOSES_TOTAIS: string;
+  TIPO_DE_ISCA: string;
+  "PESO_POR_DOSE_(G)": string;
+  "TOTAL_APLICADO_(KG)": string;
+  VELOCIDADE_MAXIMA: string;
   CLIMA: string;
   RUAS: string;
   LINHAS: string;
@@ -40,7 +40,7 @@ interface Fields {
   SUP_TS: string;
   LATITUDE: string;
   LONGITUDE: string;
-  "VELOCIDADE (KM/H)": string;
+  "VELOCIDADE_(KM/H)": string;
 }
 export class CsvTableService implements PCsvTableService {
   private _id: number = 0;
@@ -83,12 +83,12 @@ export class CsvTableService implements PCsvTableService {
         MAQUINA: "",
         CB: "",
         DOSADORES: "",
-        "DOSES TOTAIS": "",
-        "TIPO DE ISCA": "",
-        "PESO POR DOSE (G)": "",
-        "TOTAL APLICADO (KG)": "",
-        "VELOCIDADE MAXIMA": "",
-        "SUB-BOSQUE": "",
+        DOSES_TOTAIS: "",
+        TIPO_DE_ISCA: "",
+        "PESO_POR_DOSE_(G)": "",
+        "TOTAL_APLICADO_(KG)": "",
+        VELOCIDADE_MAXIMA: "",
+        SUB_BOSQUE: "",
         CLIMA: "",
         RUAS: "",
         LINHAS: "",
@@ -102,7 +102,7 @@ export class CsvTableService implements PCsvTableService {
         SUP_TS: "",
         LATITUDE: "",
         LONGITUDE: "",
-        "VELOCIDADE (KM/H)": "",
+        "VELOCIDADE_(KM/H)": "",
       };
 
       let data = [];
@@ -149,7 +149,7 @@ export class CsvTableService implements PCsvTableService {
       if (CONSTANTS.PRESET_NAMES.includes(requestDto.event)) {
         T_A = EventEnum.Local.name;
       } else {
-        T_A = EventEnum.TrackPoint.name;
+        T_A = EventEnum.Local.name;
       }
 
       if (!CONSTANTS.EVENTS_TO_EXCLUDE.includes(requestDto.event)) {
@@ -224,15 +224,15 @@ export class CsvTableService implements PCsvTableService {
       MAQUINA: requestDto.tractorName,
       CB: requestDto.deviceName,
       DOSADORES: applicatorsAmount.toString(),
-      "DOSES TOTAIS": doseAmount.toString(),
-      "TIPO DE ISCA": requestDto.poisonType,
-      "PESO POR DOSE (G)": requestDto.doseWeightG.toString(),
-      "SUB-BOSQUE": requestDto.underForest,
-      "TOTAL APLICADO (KG)": (
-      (requestDto.doseWeightG * doseAmount) /
-      1000
+      DOSES_TOTAIS: doseAmount.toString(),
+      TIPO_DE_ISCA: requestDto.poisonType,
+      "PESO_POR_DOSE_(G)": requestDto.doseWeightG.toString(),
+      SUB_BOSQUE: requestDto.underForest,
+      "TOTAL_APLICADO_(KG)": (
+        (requestDto.doseWeightG * doseAmount) /
+        1000
       ).toFixed(2),
-      "VELOCIDADE MAXIMA": requestDto.maxVelocity.toString(),
+      VELOCIDADE_MAXIMA: requestDto.maxVelocity.toString(),
       CLIMA: requestDto.weather,
       RUAS: requestDto.streetsAmount.toString(),
       LINHAS: requestDto.linesSpacing.toString(),
@@ -245,12 +245,12 @@ export class CsvTableService implements PCsvTableService {
       T_A,
       SUP_TS,
       LATITUDE: responseDto.gps.latitude
-      ? responseDto.gps.latitude.toString()
-      : "",
+        ? responseDto.gps.latitude.toString()
+        : "",
       LONGITUDE: responseDto.gps.longitude
-      ? responseDto.gps.longitude.toString()
-      : "",
-      "VELOCIDADE (KM/H)": responseDto.gps.speed,
+        ? responseDto.gps.longitude.toString()
+        : "",
+      "VELOCIDADE_(KM/H)": responseDto.gps.speed,
     };
   }
 }

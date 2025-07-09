@@ -1,4 +1,3 @@
-import { BluetoothApp } from "../../../src/cmd/bluetoothapp/bluetooth-app";
 import { CombateApp } from "../../../src/cmd/combateapp/combate-app";
 import { Validator } from "../../../src/cmd/formvalidator/form-validator";
 import { PermissionService } from "../../../src/cmd/permissions/permission-services";
@@ -6,7 +5,6 @@ import { PBluetoothApp } from "../../../src/cmd/port/bluetooth-app-port";
 import { PCombateApp } from "../../../src/cmd/port/combate-app-port";
 import { IPermissionService } from "../../../src/cmd/port/permission-services-port";
 import { PValidator } from "../../../src/cmd/port/validator-port";
-import { ABluetooth } from "../../../src/internal/adapter/bluetooth/bluetooth";
 import { AConfigCache } from "../../../src/internal/adapter/cache/config-cache";
 import { APreExecutionConfigCache } from "../../../src/internal/adapter/cache/pre-execution-config-cache";
 import { AFileSystem } from "../../../src/internal/adapter/filesystem/file-system";
@@ -30,6 +28,8 @@ import {
   IConfigsProps,
   IPreExecutionConfigProps,
 } from "../../../src/internal/interface/config-props";
+import { BluetoothAppMock } from "../../../src/mocks/bluetooth-app-mock";
+import { BluetoothMock } from "../../../src/mocks/bluetooth-mock";
 
 export class Instance {
   readonly logger: PLogger;
@@ -59,7 +59,8 @@ export class Instance {
   private constructor() {
     this.logger = new ALogger(false);
 
-    const bluetooth =  new ABluetooth(this.logger);//new BluetoothMock()
+    //const bluetooth =  new ABluetooth(this.logger);//new BluetoothMock()
+    const bluetooth = new BluetoothMock(); //new BluetoothMock()
     const fileSystem = new AFileSystem(this.logger);
     const csvTableService = new CsvTableService(this.logger, fileSystem);
     const checkSumBuilder = new CheckSumBuilder(this.logger);
@@ -87,11 +88,15 @@ export class Instance {
       repository,
       DEFAULT_CONFIG
     );
-    this.bluetoothApp = new BluetoothApp(
+
+    this.bluetoothApp = new BluetoothAppMock();
+    {
+      /*this.bluetoothApp = new BluetoothApp(
       this.logger,
       bluetooth,
       permissionService
-    );
+    );*/
+    }
     this.validator = new Validator(this.logger, this.configCache);
     this.preExecutionConfigCache = new APreExecutionConfigCache(
       this.logger,

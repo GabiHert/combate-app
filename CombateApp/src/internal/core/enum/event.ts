@@ -1,6 +1,6 @@
 enum Event_ {
   Local = "LOCAL",
-  TrackPoint = "TRACKPOINT",
+  TrackPoint = "TRACK",
   StartTrackPoint = "START_TRACKPOINT",
   EndTrackPoint = "END_TRACKPOINT",
   Obstacle = "OBSTACULO",

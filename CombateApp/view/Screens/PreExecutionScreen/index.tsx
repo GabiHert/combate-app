@@ -149,17 +149,13 @@ function PreExecutionScreen(props: { navigation: any }) {
         let fileName =
           sanitizeText(preExecutionConfigCache.clientName) +
           "_" +
-          sanitizeText(preExecutionConfigCache.projectName) +
+          sanitizeText(preExecutionConfigCache.module) +
           "_" +
           sanitizeText(preExecutionConfigCache.activity) +
           "_" +
           sanitizeText(preExecutionConfigCache.plot) +
           "_" +
-          sanitizeText(preExecutionConfigCache.module) +
-          "_" +
-          sanitizeText(preExecutionConfigCache.farm) +
-          "_" +
-          sanitizeText(preExecutionConfigCache.underForest) +
+          sanitizeText(preExecutionConfigCache.tractorName) +
           "_" +
           dateTimeFormatter.date(date) +
           "_" +
