@@ -13,7 +13,10 @@ import { SeverityEnum } from "../../../src/internal/core/enum/severity";
 import { dateTimeFormatter } from "../../../src/internal/core/utils/date-time-formatter";
 import { IItem } from "../../../src/internal/interface/item";
 import { Instance } from "../../app/instance/instance";
-import { sanitizeText } from "../../app/parser/sanitize-text";
+import {
+  sanitizeText,
+  sanitizeTextUnderline,
+} from "../../app/parser/sanitize-text";
 import { Theme } from "../../app/theme/theme";
 import { ShowToast } from "../../Components/AlertToast";
 import FormInput from "../../Components/FormInput";
@@ -146,24 +149,24 @@ function PreExecutionScreen(props: { navigation: any }) {
         const configCache = Instance.GetInstance().configCache.getCache();
         const date = new Date();
 
-        let fileName =
-          sanitizeText(preExecutionConfigCache.clientName) +
-          "_" +
-          sanitizeText(preExecutionConfigCache.module) +
-          "_" +
-          sanitizeText(preExecutionConfigCache.activity) +
-          "_" +
-          sanitizeText(preExecutionConfigCache.plot) +
-          "_" +
-          sanitizeText(preExecutionConfigCache.tractorName) +
-          "_" +
-          dateTimeFormatter.date(date) +
-          "_" +
-          dateTimeFormatter.time(date) +
-          ".csv";
+        const fields = [
+          preExecutionConfigCache.clientName,
+          preExecutionConfigCache.module,
+          preExecutionConfigCache.activity,
+          preExecutionConfigCache.plot,
+          preExecutionConfigCache.idEquipment,
+        ].map(sanitizeTextUnderline);
 
-        fileName = fileName.replace(/\//g, "-");
-        fileName = fileName.replace(/\:/g, "-");
+        const fileName =
+          (
+            fields.join("_") +
+            "_" +
+            dateTimeFormatter.date(date) +
+            "_" +
+            dateTimeFormatter.time(date)
+          )
+            .replace(/\//g, "-")
+            .replace(/\:/g, "-") + ".csv";
 
         Instance.GetInstance().errorHandler.begin(fileName);
 
@@ -171,9 +174,9 @@ function PreExecutionScreen(props: { navigation: any }) {
           fileName,
           configCache.SYSTEMATIC_DOSE.METERS_BETWEEN_DOSE
         );
-
         props.navigation.navigate("ExecutionScreen");
       } catch (err) {
+        console.error(err);
         await Instance.GetInstance().errorHandler.handle(err);
       }
     } else {
